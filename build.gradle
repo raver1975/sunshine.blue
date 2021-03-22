@@ -30,6 +30,7 @@ allprojects {
 //        ashleyVersion = '1.7.3'
         aiVersion = '1.8.2'
         gdxControllersVersion = '2.1.0'
+        shapedrawerVersion = '2.4.0'
     }
 
     repositories {
@@ -39,6 +40,7 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
         maven { url "https://plugins.gradle.org/m2/" }
+        maven { url 'https://jitpack.io' }
     }
 }
 
@@ -123,6 +125,7 @@ project(":html") {
 
     dependencies {
         implementation project(":core")
+        implementation "space.earlygrey:shapedrawer:$shapedrawerVersion:sources"
         api "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
         api "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
         api "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
@@ -161,7 +164,9 @@ project(":core") {
     apply plugin: "java-library"
 
 
+
     dependencies {
+        implementation "space.earlygrey:shapedrawer:$shapedrawerVersion"
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         api "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"

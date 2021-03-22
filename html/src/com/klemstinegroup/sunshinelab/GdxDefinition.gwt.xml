@@ -8,6 +8,7 @@
     <inherits name='Box2DLights'/>
     <!--	<inherits name='com.badlogic.ashley_gwt' />-->
     <inherits name='com.badlogic.gdx.ai'/>
+    <inherits name="space.earlygrey.shapedrawer"/>
     <inherits name='com.badlogic.gdx.controllers'/>
     <inherits name='com.badlogic.gdx.controllers.controllers-gwt'/>
     <!--	<inherits name='com.kotcrab.vis.vis-ui' />-->

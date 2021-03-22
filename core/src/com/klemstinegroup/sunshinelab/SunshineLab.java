@@ -15,10 +15,11 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.klemstinegroup.sunshinelab.engine.objexts.RectTexture;
 
 public class SunshineLab extends ApplicationAdapter {
-    Batch batch;
+
     //    Camera camera;
 
     Viewport viewport;
@@ -29,15 +30,16 @@ public class SunshineLab extends ApplicationAdapter {
     Matrix4 mx4Batch = new Matrix4();
     private FileHandle[] fontList;
 
-    RectTexture badlogic;
+    RectTexture badlogic1;
+    RectTexture badlogic2;
 
     @Override
     public void create() {
 //        img = new Texture("badlogic.jpg");
-        badlogic=new RectTexture(new Texture("badlogic.jpg"));
+        badlogic1=new RectTexture(new Texture("badlogic.jpg"));
+        badlogic2=new RectTexture(new Texture("badlogic.jpg"));
 
-        batch = new PolygonSpriteBatch();
-        mx4Batch = batch.getTransformMatrix().cpy();
+        mx4Batch = Statics.batch.getTransformMatrix().cpy();
 //        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         viewport = new ScreenViewport();
 
@@ -103,23 +105,28 @@ public class SunshineLab extends ApplicationAdapter {
                 generator = new FreeTypeFontGenerator(fontList[MathUtils.random(fontList.length - 1)]);
             return;
         }
-        batch.setProjectionMatrix(viewport.getCamera().combined);
+        Statics.batch.setProjectionMatrix(viewport.getCamera().combined);
 //        viewport.setScreenPosition(x++,y++);
-        batch.begin();
+        Statics.batch.begin();
 //        batch.draw(img, 0, 0);
-        badlogic.draw(batch);
-        badlogic.translate(new Vector3(-1f,-1f,0));
-        badlogic.rotate(10);
+        badlogic1.draw(Statics.batch);
+        badlogic1.position.translate(new Vector3(-.1f,-.1f,0));
+        badlogic1.rotation.rotate(10);
+
+        badlogic2.draw(Statics.batch);
+        badlogic2.rotation.rotate(-1);
+
+
         mx4Font.setToRotation(new Vector3(0, 0, 1), d++);
-        batch.setTransformMatrix(mx4Font);
-        font12.draw(batch, "hello", 10, 10);
-        batch.end();
-        batch.setTransformMatrix(mx4Batch);
+        Statics.batch.setTransformMatrix(mx4Font);
+        font12.draw(Statics.batch, "hello", 10, 10);
+        Statics.batch.end();
+        Statics.batch.setTransformMatrix(mx4Batch);
     }
 
     @Override
     public void dispose() {
-        batch.dispose();
+        Statics.batch.dispose();
     }
 
     @Override
