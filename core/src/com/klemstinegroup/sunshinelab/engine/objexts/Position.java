@@ -6,7 +6,7 @@ public abstract interface Position{
     Vector3 position = new Vector3();
 
     default Vector3 getPosition() {
-        return position;
+        return position.cpy();
     }
 
     default void setPosition(Vector3 vec) {

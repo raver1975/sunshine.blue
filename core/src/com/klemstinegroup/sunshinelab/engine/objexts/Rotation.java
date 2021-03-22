@@ -1,16 +1,25 @@
 package com.klemstinegroup.sunshinelab.engine.objexts;
 
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector3;
 
 public abstract interface Rotation {
-    Matrix4 rotation = new Matrix4();
+    float[] rotation=new float[1];
+    Vector3 center =new Vector3();
 
-    default Matrix4 getRotation() {
-        return rotation.cpy();
+    default float getRotation() {
+        return rotation[0];
     }
 
-    default void setRotation(Matrix4 mat) {
-        rotation.set(mat);
+    default void setRotation(float rot) {
+        rotation[0]=rot;
     }
 
+    default void setCenter(Vector3 vec){
+        center.set(vec);
+    }
+
+    default void rotate(float degrees){
+        rotation[0]+=degrees;
+    }
 }

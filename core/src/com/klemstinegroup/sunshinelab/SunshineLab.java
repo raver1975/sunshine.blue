@@ -108,7 +108,8 @@ public class SunshineLab extends ApplicationAdapter {
         batch.begin();
 //        batch.draw(img, 0, 0);
         badlogic.draw(batch);
-        badlogic.translate(new Vector3(-1,-1,0));
+        badlogic.translate(new Vector3(-1f,-1f,0));
+        badlogic.rotate(10);
         mx4Font.setToRotation(new Vector3(0, 0, 1), d++);
         batch.setTransformMatrix(mx4Font);
         font12.draw(batch, "hello", 10, 10);
