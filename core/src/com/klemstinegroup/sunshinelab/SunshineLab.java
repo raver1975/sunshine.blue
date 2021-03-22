@@ -3,54 +3,42 @@ package com.klemstinegroup.sunshinelab;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.klemstinegroup.sunshinelab.engine.Statics;
-import com.klemstinegroup.sunshinelab.engine.objexts.RectTexture;
+import com.klemstinegroup.sunshinelab.engine.objects.FontObject;
+import com.klemstinegroup.sunshinelab.engine.objects.RectTextureObject;
 
 public class SunshineLab extends ApplicationAdapter {
 
     //    Camera camera;
 
     Viewport viewport;
-    BitmapFont font12;
-    FreeTypeFontGenerator generator;
-    FreeTypeFontGenerator.FreeTypeFontParameter parameter;
-    Matrix4 mx4Font = new Matrix4();
     Matrix4 mx4Batch = new Matrix4();
-    private FileHandle[] fontList;
 
-    RectTexture badlogic1;
-    RectTexture badlogic2;
+    RectTextureObject badlogic1;
+    RectTextureObject badlogic2;
+    FontObject fontObject1;
+    FontObject fontObject2;
 
     @Override
     public void create() {
 //        img = new Texture("badlogic.jpg");
-        badlogic1=new RectTexture(new Texture("badlogic.jpg"));
-        badlogic2=new RectTexture(new Texture("badlogic.jpg"));
+        badlogic1 = new RectTextureObject(new Texture("badlogic.jpg"));
+        badlogic2 = new RectTextureObject(new Texture("badlogic.jpg"));
+        fontObject1 = new FontObject(FontObject.fontList[MathUtils.random(FontObject.fontList.length - 1)], 50);
+        fontObject2 = new FontObject(FontObject.fontList[MathUtils.random(FontObject.fontList.length - 1)], 50);
+        fontObject2.setText("er433434343yeghhghgt");
 
         mx4Batch = Statics.batch.getTransformMatrix().cpy();
 //        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         viewport = new ScreenViewport();
 
-        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/42-Regular.ttf"));
-
-        parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 40;
-        parameter.color = new Color(0f, 1f, 0f, 1f);
-        font12 = generator.generateFont(parameter); // font size 12 pixels
-        FileHandle dirHandle = Gdx.files.internal("fonts");
-        fontList = dirHandle.list();
 //        generator.dispose(); // don't forget to dispose to avoid memory leaks!
 
     }
@@ -68,58 +56,25 @@ public class SunshineLab extends ApplicationAdapter {
 //        batch.setProjectionMatrix(viewport.getCamera().combined);
         viewport.apply();
 
-        if (Math.random() > .5f) {
-            parameter.size += 1f;
-        } else {
-            parameter.size -= 1f;
-        }
-        parameter.color = new Color(1f, 1f, 0f, 1f);
-        if (d % 1 == 0) {
-            generator.dispose();
-            fh=fontList[MathUtils.random(fontList.length - 1)];
-            generator = new FreeTypeFontGenerator(fh);
-        }
-        try {
-            font12.dispose();
-        } catch (Exception e) {
-            e.printStackTrace();
-//            generator.dispose();
-//            generator = new FreeTypeFontGenerator(fontList[MathUtils.random(fontList.length - 1)]);
-//            font12 = generator.generateFont(parameter);
-        }
-        try {
-            font12 = generator.generateFont(parameter);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(fh.name());
-//            generator.dispose();
-//            generator = new FreeTypeFontGenerator(fontList[MathUtils.random(fontList.length - 1)]);
-//            font12 = generator.generateFont(parameter);
-            try {
-                generator.dispose();
-            }
-            catch (Exception e1){
-
-            }
-
-                generator = new FreeTypeFontGenerator(fontList[MathUtils.random(fontList.length - 1)]);
-            return;
-        }
         Statics.batch.setProjectionMatrix(viewport.getCamera().combined);
-//        viewport.setScreenPosition(x++,y++);
         Statics.batch.begin();
-//        batch.draw(img, 0, 0);
+
         badlogic1.draw(Statics.batch);
-        badlogic1.position.translate(new Vector3(-.1f,-.1f,0));
-        badlogic1.rotation.rotate(10);
+        badlogic1.position.translate(new Vector3(-.1f, -.1f, 0));
+        badlogic1.position.rotate(10);
+        badlogic1.position.setScale(badlogic1.position.getScale() - .001f);
 
         badlogic2.draw(Statics.batch);
-        badlogic2.rotation.rotate(-1);
+        badlogic2.position.rotate(-1);
 
+        fontObject1.draw(Statics.batch);
+        fontObject1.position.rotate(.1f);
+        fontObject1.position.setScale(fontObject1.position.getScale() + .001f);
 
-        mx4Font.setToRotation(new Vector3(0, 0, 1), d++);
-        Statics.batch.setTransformMatrix(mx4Font);
-        font12.draw(Statics.batch, "hello", 10, 10);
+          fontObject2.draw(Statics.batch);
+        fontObject2.position.rotate(-.1f);
+        fontObject2.position.setScale(fontObject2.position.getScale() - .002f);
+
         Statics.batch.end();
         Statics.batch.setTransformMatrix(mx4Batch);
     }

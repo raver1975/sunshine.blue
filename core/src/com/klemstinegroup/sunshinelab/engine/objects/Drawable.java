@@ -1,4 +1,4 @@
-package com.klemstinegroup.sunshinelab.engine.objexts;
+package com.klemstinegroup.sunshinelab.engine.objects;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 
