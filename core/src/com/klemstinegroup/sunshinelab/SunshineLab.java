@@ -11,10 +11,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.klemstinegroup.sunshinelab.engine.Statics;
-import com.klemstinegroup.sunshinelab.engine.objects.BaseObject;
-import com.klemstinegroup.sunshinelab.engine.objects.Drawable;
-import com.klemstinegroup.sunshinelab.engine.objects.FontObject;
-import com.klemstinegroup.sunshinelab.engine.objects.RectTextureObject;
+import com.klemstinegroup.sunshinelab.engine.objects.*;
 
 public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 
@@ -29,9 +26,9 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
     public void create() {
 //        img = new Texture("badlogic.jpg");
 
-        Statics.objects.add(new RectTextureObject(new Texture("badlogic.jpg")));
         Statics.objects.add(new RectTextureObject("https://i.redd.it/0h1nbwj4bto61.jpg"));
-        ((RectTextureObject)Statics.objects.get(1)).position.translate(-300,-300);
+        Statics.objects.add(new RectTextureObject("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/477px-PNG_Test.png"));
+        ((ScreenObject)Statics.objects.get(1)).translate(-300,-300);
         Statics.objects.add(new FontObject(FontObject.fontList[MathUtils.random(FontObject.fontList.length - 1)], 50));
         Statics.objects.add(new FontObject(FontObject.fontList[MathUtils.random(FontObject.fontList.length - 1)], 50));
 
@@ -61,9 +58,9 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
         Statics.batch.end();
         Statics.batch.setTransformMatrix(mx4Batch);
 
-        ((RectTextureObject)Statics.objects.get(1)).position.setScale(((RectTextureObject)Statics.objects.get(1)).position.getScale()-.0005f);
-        ((RectTextureObject)Statics.objects.get(1)).position.rotate(.01f);
-        ((FontObject)Statics.objects.get(2)).position.rotate(-.01f);
+        ((ScreenObject)Statics.objects.get(1)).setScale(((RectTextureObject)Statics.objects.get(1)).getScale()-.0005f);
+        ((ScreenObject)Statics.objects.get(1)).rotate(.01f);
+        ((ScreenObject)Statics.objects.get(2)).rotate(-.01f);
     }
 
     @Override

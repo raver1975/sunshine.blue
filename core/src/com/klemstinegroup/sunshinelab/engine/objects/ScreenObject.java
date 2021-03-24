@@ -2,8 +2,8 @@ package com.klemstinegroup.sunshinelab.engine.objects;
 
 import com.badlogic.gdx.math.Vector3;
 
-public class Position{
-    private Vector3 position = new Vector3();
+public class ScreenObject extends BaseObject {
+    Vector3 position = new Vector3();
     private float rotation=1f;
     private Vector3 center =new Vector3();
     float scale = 1f;
