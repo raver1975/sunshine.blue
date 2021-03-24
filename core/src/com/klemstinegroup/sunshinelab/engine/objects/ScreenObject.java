@@ -39,6 +39,10 @@ public class ScreenObject extends BaseObject {
         center.set(vec);
     }
 
+    public void setCenter(float x,float y){
+        center.set(x,y,0);
+    }
+
     public void rotate(float degrees){
         rotation+=degrees;
     }
@@ -65,5 +69,9 @@ public class ScreenObject extends BaseObject {
 
     public void setBounds(float width, float height) {
         setBounds(new Vector3(width,height,0));
+    }
+
+    public void setPosition(float x, float y) {
+        position.set(x,y,0);
     }
 }

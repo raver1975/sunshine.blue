@@ -11,7 +11,8 @@ import com.klemstinegroup.sunshinelab.engine.objects.BaseObject;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public class Statics {
-    public static final boolean debug = true;
+    public static final boolean debug = false;
+//    public static final boolean debug = true;
     static TextureRegion whitePixel;
 
     static {

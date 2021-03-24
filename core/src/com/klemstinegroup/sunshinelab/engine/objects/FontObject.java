@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -28,7 +29,9 @@ generate(fontFile,size);
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(fontFile);
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = size;
-        parameter.color = new Color(0f, 1f, 0f, 1f);
+        int a= MathUtils.randomBoolean()?0:1;
+        int b= MathUtils.randomBoolean()?0:1;
+        parameter.color = new Color(a, b, 1-(a+b)/2f, 1f);
         font = generator.generateFont(parameter);
         generator.dispose();
        setBounds();
@@ -37,7 +40,9 @@ generate(fontFile,size);
     private void setBounds() {
         GlyphLayout nn = new GlyphLayout();
         nn.setText(font, text);
-        setBounds(nn.width+font.getSpaceXadvance(),font.getLineHeight());
+        setBounds(nn.width,nn.height);
+        setCenter(getBounds().x/2f,getBounds().y/2f);
+        setPosition(-getCenter().x,-getCenter().y);
     }
 
     public void setText(String text){
@@ -55,11 +60,14 @@ generate(fontFile,size);
 //                .translate(-position.x, -position.y, 0)
                         .translate(-getCenter().x , -getCenter().y , 0)
         );
-        font.draw(batch,text,0,0);
+        font.draw(batch,text,0,+getBounds().y);
         if (Statics.debug) {
             Statics.shapedrawer.setColor(Color.CYAN);
-            Statics.shapedrawer.rectangle(new Rectangle(-font.getSpaceXadvance()/2f, -font.getCapHeight()+font.getDescent(), getBounds().x, getBounds().y));
+            Statics.shapedrawer.rectangle(new Rectangle(0, 0, getBounds().x, getBounds().y));
             Statics.shapedrawer.setColor(Color.CYAN);
+
+            getCenter().add(getCenter().x+ getPosition().x, getCenter().y+getPosition().y, 0).rotate(0,0,1,getRotation()).scl(getScale(),getScale(),1).sub(getCenter().x,getCenter().y,0);
+            Statics.shapedrawer.setColor(Color.RED);
             Statics.shapedrawer.filledCircle(getCenter().x,getCenter().y,5);
         }
     }

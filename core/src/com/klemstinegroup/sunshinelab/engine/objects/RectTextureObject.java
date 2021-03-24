@@ -1,8 +1,5 @@
 package com.klemstinegroup.sunshinelab.engine.objects;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Net;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,26 +8,18 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.klemstinegroup.sunshinelab.engine.Statics;
-import com.klemstinegroup.sunshinelab.engine.util.MemoryFileHandle;
-import com.klemstinegroup.sunshinelab.engine.util.UUID;
-
-import java.io.ByteArrayInputStream;
-import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 
 public class RectTextureObject extends ScreenObject implements Drawable {
     private com.badlogic.gdx.graphics.Texture texture;
 
     public RectTextureObject(String url) {
 //
+        url = "https://api.codetabs.com/v1/proxy?quest=" + url;
         Pixmap.downloadFromUrl(url, new Pixmap.DownloadPixmapResponseListener() {
             @Override
             public void downloadComplete(Pixmap pixmap) {
-                texture=new Texture(pixmap);
+                texture = new Texture(pixmap);
+                setBound();
             }
 
             @Override
@@ -49,6 +38,7 @@ public class RectTextureObject extends ScreenObject implements Drawable {
     private void setBound() {
         setBounds(new Vector3(texture.getWidth(), texture.getHeight(), 0));
         setCenter(new Vector3(texture.getWidth() / 2f, texture.getHeight() / 2f, 0));
+        setPosition(-getCenter().x,-getCenter().y);
     }
 
     @Override
@@ -58,10 +48,10 @@ public class RectTextureObject extends ScreenObject implements Drawable {
                         .rotate(0, 0, 1, getRotation())
                         .scale(getScale(), getScale(), 1)
 //                .translate(-x, -y, 0)
-                        .translate(-getCenter().x, -getCenter().y, 0)
+//                        .translate(-getCenter().x, -getCenter().y, 0)
         );
         if (texture != null) {
-            batch.draw(texture, 0, 0);
+            batch.draw(texture, getPosition().x, getPosition().y);
         }
         if (Statics.debug) {
 //            batch.setColor(Color.RED);
