@@ -17,7 +17,7 @@ public class FontObject extends BaseObject implements Drawable{
     static final public FileHandle[] fontList = Gdx.files.internal("fonts").list();;
 
     BitmapFont font;
-    String text="Hellgo";
+    String text="Sunshine Labs";
     FreeTypeFontGenerator.FreeTypeFontParameter parameter;
     public Position position=new Position();
 
@@ -60,6 +60,8 @@ generate(fontFile,size);
         if (Statics.debug) {
             Statics.shapedrawer.setColor(Color.CYAN);
             Statics.shapedrawer.rectangle(new Rectangle(-font.getSpaceXadvance()/2f, -font.getCapHeight()+font.getDescent(), position.getBounds().x, position.getBounds().y));
+            Statics.shapedrawer.setColor(Color.CYAN);
+            Statics.shapedrawer.filledCircle(position.getCenter().x,position.getCenter().y,5);
         }
     }
 }

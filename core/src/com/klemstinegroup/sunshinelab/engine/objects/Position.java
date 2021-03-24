@@ -59,6 +59,10 @@ public class Position{
         position.add(vector3);
     }
 
+    public void translate(float x,float y){
+        position.add(x,y,0);
+    }
+
     public void setBounds(float width, float height) {
         setBounds(new Vector3(width,height,0));
     }
