@@ -13,7 +13,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 
-public class FontObject extends ScreenObject implements Drawable{
+public class FontObject extends ScreenObject implements Drawable, Touchable{
 
     static final public FileHandle[] fontList = Gdx.files.internal("fonts").list();;
 
@@ -40,9 +40,9 @@ generate(fontFile,size);
     private void setBounds() {
         GlyphLayout nn = new GlyphLayout();
         nn.setText(font, text);
-        setBounds(nn.width,nn.height);
-        setCenter(getBounds().x/2f,getBounds().y/2f);
-        setPosition(-getCenter().x,-getCenter().y);
+        bounds.set(nn.width,nn.height,0);
+        center.set(bounds.x/2f,bounds.y/2f,0);
+        position.set(-center.x,-center.y,0);
     }
 
     public void setText(String text){
@@ -54,21 +54,61 @@ generate(fontFile,size);
     @Override
     public void draw(Batch batch) {
         batch.setTransformMatrix(new Matrix4().idt()
-                        .translate(getCenter().x+ getPosition().x, getCenter().y + getPosition().y, 0)
-                        .rotate(0, 0, 1, getRotation())
-                        .scale(getScale(), getScale(), 1)
+                        .translate(center.x+ position.x, center.y + position.y, 0)
+                        .rotate(0, 0, 1, rotation)
+                        .scale(scale, scale, 1)
 //                .translate(-position.x, -position.y, 0)
-                        .translate(-getCenter().x , -getCenter().y , 0)
+                        .translate(-center.x , -center.y , 0)
         );
-        font.draw(batch,text,0,+getBounds().y);
+        font.draw(batch,text,0,+bounds.y);
         if (Statics.debug) {
             Statics.shapedrawer.setColor(Color.CYAN);
-            Statics.shapedrawer.rectangle(new Rectangle(0, 0, getBounds().x, getBounds().y));
+            Statics.shapedrawer.rectangle(new Rectangle(0, 0, bounds.x, bounds.y));
             Statics.shapedrawer.setColor(Color.CYAN);
 
-            getCenter().add(getCenter().x+ getPosition().x, getCenter().y+getPosition().y, 0).rotate(0,0,1,getRotation()).scl(getScale(),getScale(),1).sub(getCenter().x,getCenter().y,0);
+//            center.add(position).rotate(0,0,1,rotation).scl(scale,scale,1).sub(center.x,center.y,0);
             Statics.shapedrawer.setColor(Color.RED);
-            Statics.shapedrawer.filledCircle(getCenter().x,getCenter().y,5);
+            Statics.shapedrawer.filledCircle(center.x,center.y,5);
         }
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(float amountX, float amountY) {
+        return false;
     }
 }

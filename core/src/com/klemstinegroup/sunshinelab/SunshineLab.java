@@ -23,7 +23,7 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 
     Viewport viewport;
     Matrix4 mx4Batch = new Matrix4();
-    Vector3 touchdown=new Vector3();
+    Vector3 touchdown = new Vector3();
 
 
     @Override
@@ -32,13 +32,18 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 
         Statics.objects.add(new RectTextureObject("i.redd.it/0h1nbwj4bto61.jpg"));
         Statics.objects.add(new RectTextureObject("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/477px-PNG_Test.png"));
-        ((ScreenObject)Statics.objects.get(1)).translate(500,500);
-        for (int i=-4;i<4;i++) {
-            for (int j = -4; j < 4; j++) {
-                FontObject fo=new FontObject(FontObject.fontList[MathUtils.random(FontObject.fontList.length - 1)], MathUtils.random(30,60));
-                fo.setPosition((i-1)*150-fo.getCenter().x,(j-1)*100-fo.getCenter().y);
-                Statics.objects.add(fo);
+        ((ScreenObject) Statics.objects.get(0)).position.set(-200, -100,0);
+        ((ScreenObject) Statics.objects.get(1)).position.set(0, 100,0);
 
+        ((ScreenObject) Statics.objects.get(0)).scale=.4f;
+        ((ScreenObject) Statics.objects.get(1)).scale=.4f;
+        for (int i=-1;i<2;i++) {
+            for (int j = -1; j < 2; j++) {
+        FontObject fo = new FontObject(FontObject.fontList[MathUtils.random(FontObject.fontList.length - 1)], MathUtils.random(30, 60));
+        fo.position.set((i) * 200 - fo.center.x, (j) * 100 - fo.center.y,0);
+        fo.scale=.7f;
+        Statics.objects.add(fo);
+//
             }
         }
         mx4Batch = Statics.batch.getTransformMatrix().cpy();
@@ -59,19 +64,20 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 
         Statics.batch.setProjectionMatrix(viewport.getCamera().combined);
         Statics.batch.begin();
-        boolean flip=true;
+        boolean flip = true;
         for (BaseObject bo : Statics.objects) {
 
             if (bo instanceof Drawable) {
                 ((Drawable) bo).draw(Statics.batch);
-                ((ScreenObject)bo).rotate(flip?.2f:-.2f);
-                flip=!flip;
+                ((ScreenObject) bo).rotation+=flip ? .2f : -.2f;
+                flip = !flip;
 //                ((ScreenObject)bo).rotate(MathUtils.random(-.2f,2f));
 //                ((ScreenObject)bo).setScale(((ScreenObject)bo).getScale()+MathUtils.random(-.01f,.01f));
             }
         }
-        Statics.batch.end();
         Statics.batch.setTransformMatrix(mx4Batch);
+        Statics.batch.end();
+
     }
 
     @Override
@@ -101,9 +107,9 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        Gdx.app.log("Screenxy",screenX+","+screenY);
-        viewport.unproject(touchdown.set(screenX,screenY,0));
-        Gdx.app.log("worldxy",touchdown.x+","+touchdown.y);
+        Gdx.app.log("Screenxy", screenX + "," + screenY);
+        viewport.unproject(touchdown.set(screenX, screenY, 0));
+        Gdx.app.log("worldxy", touchdown.x + "," + touchdown.y);
 
 //        Gdx.input.setOnscreenKeyboardVisible(true, Input.OnscreenKeyboardType.URI);
         return false;
