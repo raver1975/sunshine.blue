@@ -65,7 +65,6 @@ public class RectTextureObject extends ScreenObject implements Drawable {
                         .translate(-center.x,-center.y, 0)
         );
         if (texture != null) {
-            System.out.println(position);
             batch.draw(texture,0,0);
 
         }

@@ -35,7 +35,7 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
         ((ScreenObject) Statics.objects.get(0)).position.set(-200, -100,0);
         ((ScreenObject) Statics.objects.get(1)).position.set(0, 100,0);
 
-        ((ScreenObject) Statics.objects.get(0)).scale=.4f;
+        ((ScreenObject) Statics.objects.get(0)).scale=.1f;
         ((ScreenObject) Statics.objects.get(1)).scale=.4f;
         for (int i=-1;i<2;i++) {
             for (int j = -1; j < 2; j++) {
@@ -70,6 +70,7 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
             if (bo instanceof Drawable) {
                 ((Drawable) bo).draw(Statics.batch);
                 ((ScreenObject) bo).rotation+=flip ? .2f : -.2f;
+                ((ScreenObject) bo).scale=flip ? 2f : .5f;
                 flip = !flip;
 //                ((ScreenObject)bo).rotate(MathUtils.random(-.2f,2f));
 //                ((ScreenObject)bo).setScale(((ScreenObject)bo).getScale()+MathUtils.random(-.01f,.01f));
@@ -92,6 +93,11 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
+        for (BaseObject bo:Statics.objects){
+            if (bo instanceof Touchable){
+                ((Touchable) bo).keyDown(keycode);
+            }
+        }
         return false;
     }
 
@@ -102,14 +108,17 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public boolean keyTyped(char character) {
+        for (BaseObject bo:Statics.objects){
+            if (bo instanceof Touchable){
+                ((Touchable) bo).keyTyped(character);
+            }
+        }
         return false;
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        Gdx.app.log("Screenxy", screenX + "," + screenY);
-        viewport.unproject(touchdown.set(screenX, screenY, 0));
-        Gdx.app.log("worldxy", touchdown.x + "," + touchdown.y);
+
 
 //        Gdx.input.setOnscreenKeyboardVisible(true, Input.OnscreenKeyboardType.URI);
         return false;
