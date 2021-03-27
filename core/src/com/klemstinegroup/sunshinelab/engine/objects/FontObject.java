@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Align;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 
 public class FontObject extends ScreenObject implements Drawable, Touchable {
@@ -20,7 +21,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
 
     boolean editing = true;
     BitmapFont font;
-    String text = "Sunshine Labs";
+    String text = "Sunshine\nLabs";
     FreeTypeFontGenerator.FreeTypeFontParameter parameter;
     private int caretFlash = 0;
 
@@ -63,7 +64,8 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
                         .translate(-center.x, -center.y, 0)
         );
         String b = (caretFlash++ % 10 <= 3) ? "|" : "";
-        font.draw(batch, text + b, 0, +bounds.y);
+        font.draw(batch, text + b, 0, +bounds.y,Float.MAX_VALUE, Align.left,true);
+
         if (Statics.debug) {
             Statics.shapedrawer.setColor(Color.CYAN);
             Statics.shapedrawer.rectangle(new Rectangle(0, 0, bounds.x, bounds.y));
@@ -87,12 +89,16 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
 
     @Override
     public boolean keyTyped(char character) {
+        if (character==13){
+            text=text+'\n';
+        }
         if (character == '\b'){
             if (!text.isEmpty()) {
                 text = text.substring(0, text.length() - 1);
             }
         } else {
             text = text + character;
+//            System.out.println((int)character);
         }
         setBounds();
         return false;
