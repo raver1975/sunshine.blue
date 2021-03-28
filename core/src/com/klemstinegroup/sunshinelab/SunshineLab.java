@@ -2,6 +2,7 @@ package com.klemstinegroup.sunshinelab;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -37,23 +38,27 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 
         ((ScreenObject) Statics.objects.get(0)).scale=.1f;
         ((ScreenObject) Statics.objects.get(1)).scale=.4f;
-        FontObject fo = null;
-        for (int i=-1;i<2;i++) {
-            for (int j = -1; j < 2; j++) {
-         fo = new FontObject(FontObject.fontList[MathUtils.random(FontObject.fontList.length - 1)], MathUtils.random(30, 60));
-        fo.position.set((i) * 200 - fo.center.x, (j) * 100 - fo.center.y,0);
-        fo.scale=.7f;
-        Statics.objects.add(fo);
+//        FontObject fo = null;
+//        for (int i=-1;i<2;i++) {
+//            for (int j = -1; j < 2; j++) {
+//         fo = new FontObject(FontObject.fontList[MathUtils.random(FontObject.fontList.length - 1)], MathUtils.random(30, 60));
+//        fo.position.set((i) * 200 - fo.center.x, (j) * 100 - fo.center.y,0);
+//        fo.scale=.7f;
+//        Statics.objects.add(fo);
+////
+//            }
 //
-            }
-
-        }
-        fo.center.set(0,0,0);
+//        }
+//        fo.center.set(0,0,0);
         viewport = new ScreenViewport();
-        Statics.objects.add(new BasicUIOverlay());
+        InputMultiplexer im=new InputMultiplexer();
+        BasicUIOverlay ov=new BasicUIOverlay();
+        Gdx.input.setInputProcessor(im);
+        im.addProcessor(this);
+        im.addProcessor(ov.stage);
+        Statics.objects.add(ov);
         mx4Batch = Statics.batch.getTransformMatrix().cpy();
 //        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        Gdx.input.setInputProcessor(this);
 
 
 //        generator.dispose(); // don't forget to dispose to avoid memory leaks!

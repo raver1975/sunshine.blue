@@ -91,6 +91,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
 
     @Override
     public boolean keyTyped(char character) {
+        System.out.println((int)character);
         if (character == 13) {
             text = text + '\n';
         }

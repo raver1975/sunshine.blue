@@ -8,10 +8,13 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -20,10 +23,10 @@ import com.klemstinegroup.sunshinelab.engine.Statics;
 
 public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
 
-    private final Stage stage;
+    public final Stage stage;
 
     public BasicUIOverlay() {
-        Viewport viewport = new FitViewport( Gdx.graphics.getWidth()/4f,Gdx.graphics.getHeight()/4f);
+        Viewport viewport = new FitViewport( Gdx.graphics.getWidth()/2f,Gdx.graphics.getHeight()/2f);
         stage = new Stage( viewport);
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(FontObject.fontList[MathUtils.random(FontObject.fontList.length-1)]);
@@ -34,10 +37,17 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         parameter.color = Color.CYAN;
         textButtonStyle.font = generator.generateFont(parameter);
         textButtonStyle.overFontColor=Color.WHITE;
-        Skin skin=new Skin(Gdx.files.internal("skins/default/skin/uiskin.json"));
-        Actor fontButton = new TextButton("Tt",skin, "default");
-        fontButton.setColor(Color.WHITE);
+        Skin skin=new Skin(Gdx.files.internal("skins/comic/skin/comic-ui.json"));
+        Actor fontButton = new TextButton("Tt",skin);
+//        fontButton.setColor(Color.WHITE);
 
+fontButton.addListener(new ChangeListener() {
+    @Override
+    public void changed(ChangeEvent event, Actor actor) {
+        Gdx.input.setOnscreenKeyboardVisible(true);
+        Statics.objects.add(new FontObject(FontObject.fontList[MathUtils.random(FontObject.fontList.length - 1)], 40));
+    }
+});
         stage.addActor(fontButton);
     }
 
