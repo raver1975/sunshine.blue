@@ -37,18 +37,22 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 
         ((ScreenObject) Statics.objects.get(0)).scale=.1f;
         ((ScreenObject) Statics.objects.get(1)).scale=.4f;
+        FontObject fo = null;
         for (int i=-1;i<2;i++) {
             for (int j = -1; j < 2; j++) {
-        FontObject fo = new FontObject(FontObject.fontList[MathUtils.random(FontObject.fontList.length - 1)], MathUtils.random(30, 60));
+         fo = new FontObject(FontObject.fontList[MathUtils.random(FontObject.fontList.length - 1)], MathUtils.random(30, 60));
         fo.position.set((i) * 200 - fo.center.x, (j) * 100 - fo.center.y,0);
         fo.scale=.7f;
         Statics.objects.add(fo);
 //
             }
+
         }
+        fo.center.set(0,0,0);
+        viewport = new ScreenViewport();
+        Statics.objects.add(new BasicUIOverlay());
         mx4Batch = Statics.batch.getTransformMatrix().cpy();
 //        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        viewport = new ScreenViewport();
         Gdx.input.setInputProcessor(this);
 
 
@@ -69,16 +73,19 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 
             if (bo instanceof Drawable) {
                 ((Drawable) bo).draw(Statics.batch);
-                ((ScreenObject) bo).rotation+=flip ? .2f : -.2f;
-                ((ScreenObject) bo).scale=flip ? 2f : .5f;
-                flip = !flip;
+                if (!(bo instanceof Overlay)) {
+                    ((ScreenObject) bo).rotation += flip ? .2f : -.2f;
+                    ((ScreenObject) bo).scale = flip ? 2f : .5f;
+                    flip = !flip;
+                }
 //                ((ScreenObject)bo).rotate(MathUtils.random(-.2f,2f));
 //                ((ScreenObject)bo).setScale(((ScreenObject)bo).getScale()+MathUtils.random(-.01f,.01f));
             }
+            Statics.batch.setTransformMatrix(mx4Batch);
         }
-        Statics.batch.setTransformMatrix(mx4Batch);
-        Statics.batch.end();
 
+
+        Statics.batch.end();
     }
 
     @Override

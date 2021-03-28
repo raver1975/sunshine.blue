@@ -24,6 +24,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
     String text = "Sunshine\nLabs";
     FreeTypeFontGenerator.FreeTypeFontParameter parameter;
     private int caretFlash = 0;
+    private GlyphLayout nn;
 
     public FontObject(FileHandle fontFile, int size) {
         generate(fontFile, size);
@@ -31,7 +32,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
 
     private void generate(FileHandle fontFile, int size) {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(fontFile);
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = size;
         int a = MathUtils.randomBoolean() ? 0 : 1;
         int b = MathUtils.randomBoolean() ? 0 : 1;
@@ -39,13 +40,14 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
         font = generator.generateFont(parameter);
         generator.dispose();
         setBounds();
+        center.set(bounds.x / 2f, bounds.y / 2f, 0);
     }
 
     private void setBounds() {
-        GlyphLayout nn = new GlyphLayout();
+        nn = new GlyphLayout();
         nn.setText(font, text);
         bounds.set(nn.width, nn.height, 0);
-        center.set(bounds.x / 2f, bounds.y / 2f, 0);
+
     }
 
     public void setText(String text) {
@@ -63,16 +65,16 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
 //                .translate(-position.x, -position.y, 0)
                         .translate(-center.x, -center.y, 0)
         );
-        String b = (caretFlash++ % 10 <= 3) ? "|" : "";
-        font.draw(batch, text + b, 0, +bounds.y,Float.MAX_VALUE, Align.left,true);
+        font.draw(batch, text, 0, +bounds.y, Float.MAX_VALUE, Align.left, true);
+
+        boolean b = (caretFlash++ % 50 <= 15);
+        Statics.shapedrawer.setColor(parameter.color);
+        if (b) {
+            Statics.shapedrawer.filledRectangle(nn.runs.size>0?nn.runs.get(nn.runs.size-1).width:0 +font.getSpaceXadvance()/2f, 0, 5, font.getCapHeight());
+        }
 
         if (Statics.debug) {
-            Statics.shapedrawer.setColor(Color.CYAN);
             Statics.shapedrawer.rectangle(new Rectangle(0, 0, bounds.x, bounds.y));
-            Statics.shapedrawer.setColor(Color.CYAN);
-
-//            center.add(position).rotate(0,0,1,rotation).scl(scale,scale,1).sub(center.x,center.y,0);
-            Statics.shapedrawer.setColor(Color.RED);
             Statics.shapedrawer.filledCircle(center.x, center.y, 5);
         }
     }
@@ -89,10 +91,10 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
 
     @Override
     public boolean keyTyped(char character) {
-        if (character==13){
-            text=text+'\n';
+        if (character == 13) {
+            text = text + '\n';
         }
-        if (character == '\b'){
+        if (character == '\b') {
             if (!text.isEmpty()) {
                 text = text.substring(0, text.length() - 1);
             }
@@ -101,6 +103,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
 //            System.out.println((int)character);
         }
         setBounds();
+
         return false;
     }
 
