@@ -26,7 +26,7 @@ public class MemoryFileHandle extends FileHandle {
     }
 
     public MemoryFileHandle() {
-        super(UUID.randomUUID().toString().replaceAll("-",""),FileType.Classpath);
+        super(UUID.randomUUID().toString().replaceAll("-", ""), FileType.Classpath);
     }
 
 //	@Override
@@ -58,47 +58,47 @@ public class MemoryFileHandle extends FileHandle {
 
     @Override
     public OutputStream write(boolean append) {
-		System.out.println("writing");
-		if (!append){
-		    ba.clear();
+//        System.out.println("writing");
+        if (!append) {
+            ba.clear();
         }
         return new OutputStream() {
             @Override
             public void write(int b) throws IOException {
-                ba.add((byte)b);
+                ba.add((byte) b);
             }
         };
     }
 
     @Override
     public InputStream read() {
-		System.out.println("reading");
+//        System.out.println("reading");
         return new InputStream() {
             int cnt = 0;
 
             @Override
             public int read() throws IOException {
-            	if (cnt>=ba.size){
-            	    return -1;
+                if (cnt >= ba.size) {
+                    return -1;
                 }
-                return ba.get(cnt++)&0xff;
+                return ba.get(cnt++) & 0xff;
             }
         };
     }
 
-	public void write (InputStream input, boolean append) {
-		OutputStream output = null;
-		try {
-			output = write(append);
-			StreamUtils.copyStream(input, output);
-		} catch (Exception ex) {
-			throw new GdxRuntimeException("Error stream writing to file: " + file + " (" + type + ")", ex);
-		} finally {
-			StreamUtils.closeQuietly(input);
-			StreamUtils.closeQuietly(output);
-		}
+    public void write(InputStream input, boolean append) {
+        OutputStream output = null;
+        try {
+            output = write(append);
+            StreamUtils.copyStream(input, output);
+        } catch (Exception ex) {
+            throw new GdxRuntimeException("Error stream writing to file: " + file + " (" + type + ")", ex);
+        } finally {
+            StreamUtils.closeQuietly(input);
+            StreamUtils.closeQuietly(output);
+        }
 
-	}
+    }
 
 //	@Override
 //	public boolean exists() {
@@ -107,7 +107,7 @@ public class MemoryFileHandle extends FileHandle {
 
     @Override
     public long length() {
-        return ba.size-1;
+        return ba.size - 1;
     }
 
 //	@Override

@@ -11,15 +11,14 @@ import com.klemstinegroup.sunshinelab.engine.objects.BaseObject;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public class Statics {
-//    public static final boolean debug = false;
-    public static final boolean debug = true;
-    static TextureRegion whitePixel;
+    public static final boolean debug = false;
+//    public static final boolean debug = true;
 
+    static TextureRegion whitePixel;
     static {
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGB888);
         pixmap.setColor(Color.WHITE);
         pixmap.drawPixel(0, 0);
-        Texture texture;
         whitePixel = new TextureRegion(new Texture(pixmap));
     }
 
@@ -27,4 +26,6 @@ public class Statics {
     public static final ShapeDrawer shapedrawer = new ShapeDrawer(batch, whitePixel);
 
     public static final Array<BaseObject> objects = new Array<BaseObject>();
+    public static final Array<BaseObject> selectedobjects = new Array<BaseObject>();
+
 }

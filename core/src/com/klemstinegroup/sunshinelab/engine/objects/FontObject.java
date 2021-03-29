@@ -8,22 +8,22 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.Align;
 import com.klemstinegroup.sunshinelab.engine.Statics;
+
+import java.util.Arrays;
 
 public class FontObject extends ScreenObject implements Drawable, Touchable {
 
     static final public FileHandle[] fontList = Gdx.files.internal("fonts").list();
-
+    Matrix4 m4 = new Matrix4();
     boolean editing = true;
     BitmapFont font;
     String text = "Sunshine\nLabs";
     FreeTypeFontGenerator.FreeTypeFontParameter parameter;
     private int caretFlash = 0;
+    Vector2 touched=new Vector2();
     private GlyphLayout nn;
 
     public FontObject(FileHandle fontFile, int size) {
@@ -70,10 +70,10 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
         boolean b = (caretFlash++ % 50 <= 15);
         Statics.shapedrawer.setColor(parameter.color);
         if (b) {
-            Statics.shapedrawer.filledRectangle(nn.runs.size>0?nn.runs.get(nn.runs.size-1).width:0 +font.getSpaceXadvance()/2f, 0, 5, font.getCapHeight());
+            Statics.shapedrawer.filledRectangle(nn.runs.size > 0 ? nn.runs.get(nn.runs.size - 1).width : 0 + font.getSpaceXadvance() / 2f, 0, 5, font.getCapHeight());
         }
 
-        if (Statics.debug) {
+        if (Statics.debug||Statics.selectedobjects.contains(this,true)) {
             Statics.shapedrawer.rectangle(new Rectangle(0, 0, bounds.x, bounds.y));
             Statics.shapedrawer.filledCircle(center.x, center.y, 5);
         }
@@ -91,7 +91,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
 
     @Override
     public boolean keyTyped(char character) {
-        System.out.println((int)character);
+        System.out.println((int) character);
         if (character == 13) {
             text = text + '\n';
         }
@@ -131,5 +131,27 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
     @Override
     public boolean scrolled(float amountX, float amountY) {
         return false;
+    }
+
+    @Override
+    public boolean isSelected(Vector2 touch) {
+//        m4=new Matrix4().idt()
+//                .translate(center.x + position.x, center.y + position.y, 0)
+//                .rotate(0, 0, 1, rotation)
+//                .scale(scale, scale, 1)
+////                .translate(-position.x, -position.y, 0)
+//                .translate(-center.x, -center.y, 0);
+
+        Polygon polygon=new Polygon(new float[]{-center.x,-center.y,bounds.x-center.x,-center.y,bounds.x-center.x,bounds.y-center.y,-center.x,bounds.y-center.y});
+        polygon.rotate(rotation);
+        polygon.scale(scale);
+
+        System.out.println(Arrays.toString(polygon.getTransformedVertices()));
+        return polygon.contains(touch);
+//        touch.sub(position.x,position.y).add(center.x,center.y).rotateDeg(rotation).scl(scale);
+//        System.out.println("rotated touch:" + touch);
+//        center.set(touch,0);
+//        return true;
+
     }
 }

@@ -7,6 +7,6 @@ public class ScreenObject extends BaseObject {
     public float rotation=1f;
     public Vector3 center =new Vector3();
     public float scale = 1f;
-    Vector3 bounds=new Vector3();
+    public Vector3 bounds=new Vector3();
 
 }

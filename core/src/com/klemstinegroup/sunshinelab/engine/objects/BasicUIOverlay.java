@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -26,28 +27,39 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
     public final Stage stage;
 
     public BasicUIOverlay() {
-        Viewport viewport = new FitViewport( Gdx.graphics.getWidth()/2f,Gdx.graphics.getHeight()/2f);
-        stage = new Stage( viewport);
+        Viewport viewport = new FitViewport(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f);
+        stage = new Stage(viewport);
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(FontObject.fontList[MathUtils.random(FontObject.fontList.length-1)]);
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(FontObject.fontList[MathUtils.random(FontObject.fontList.length - 1)]);
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 20;
 //        int a = MathUtils.randomBoolean() ? 0 : 1;
 //        int b = MathUtils.randomBoolean() ? 0 : 1;
         parameter.color = Color.CYAN;
         textButtonStyle.font = generator.generateFont(parameter);
-        textButtonStyle.overFontColor=Color.WHITE;
-        Skin skin=new Skin(Gdx.files.internal("skins/comic/skin/comic-ui.json"));
-        Actor fontButton = new TextButton("Tt",skin);
+        textButtonStyle.overFontColor = Color.WHITE;
+//        Skin skin=new Skin(Gdx.files.internal("skins/comic/skin/comic-ui.json"));
+        Skin skin = new Skin(Gdx.files.internal("skins/default/skin/uiskin.json"));
+        Actor fontButton = new TextButton("Tt", skin);
 //        fontButton.setColor(Color.WHITE);
 
-fontButton.addListener(new ChangeListener() {
-    @Override
-    public void changed(ChangeEvent event, Actor actor) {
-        Gdx.input.setOnscreenKeyboardVisible(true);
-        Statics.objects.add(new FontObject(FontObject.fontList[MathUtils.random(FontObject.fontList.length - 1)], 40));
-    }
-});
+        fontButton.addListener(new ClickListener() {
+//            @Override
+//            public void changed(ChangeEvent event, Actor actor) {
+//                Gdx.input.setOnscreenKeyboardVisible(true);
+//                Statics.objects.add(new FontObject(FontObject.fontList[MathUtils.random(FontObject.fontList.length - 1)], 40));
+//            }
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                Gdx.input.setOnscreenKeyboardVisible(true);
+                FontObject ff = new FontObject(FontObject.fontList[MathUtils.random(FontObject.fontList.length - 1)], 40);
+                Statics.objects.add(ff);
+                ff.position.set(-ff.center.x,-ff.center.y,0);
+//        ((ScreenObject) Statics.objects.get(0)).position.set(-((ScreenObject) Statics.objects.get(0)).bounds.x/2, -((ScreenObject) Statics.objects.get(0)).bounds.y/2, 0);
+            }
+        });
         stage.addActor(fontButton);
     }
 
@@ -99,9 +111,14 @@ fontButton.addListener(new ChangeListener() {
 //        mx4Overlay.
 
 //        Statics.batch.setProjectionMatrix(mx4Overlay.idt());
-        for (int i=0;i<10;i++) {
-            Statics.shapedrawer.filledCircle(30*i, 10, 10);
+        for (int i = 0; i < 10; i++) {
+            Statics.shapedrawer.filledCircle(30 * i, 10, 10);
         }
         stage.draw();
+    }
+
+    @Override
+    public boolean isSelected(Vector2 touch) {
+        return false;
     }
 }
