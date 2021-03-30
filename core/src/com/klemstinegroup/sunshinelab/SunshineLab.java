@@ -5,24 +5,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.BufferUtils;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.klemstinegroup.sunshinelab.engine.FrameBufferUtils;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.klemstinegroup.sunshinelab.engine.objects.*;
-import com.klemstinegroup.sunshinelab.engine.util.MemoryFileHandle;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.sql.Statement;
 
 public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 
@@ -30,7 +20,7 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 
     Viewport viewport;
   public static  Matrix4 mx4Batch = new Matrix4();
-    Vector2 touch = new Vector2();
+    Vector2 touchdown = new Vector2();
 
 
     @Override
@@ -83,8 +73,8 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 
             if (bo instanceof Drawable) {
                 if (!(bo instanceof Overlay)) {
-                    ((ScreenObject) bo).rotation += flip ? .2f : -.2f;
-                    ((ScreenObject) bo).scale -=.02f;
+                    ((ScreenObject) bo).rotation += flip ? .001f : -.001f;
+                    ((ScreenObject) bo).scale -=.00002f;
                     flip = !flip;
 //                    byte[] pixels = ScreenUtils.getFrameBufferPixels(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), true);
 
@@ -110,7 +100,7 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
             Statics.batch.setTransformMatrix(mx4Batch);
         }
 
-
+        Statics.batch.draw(new Texture(FrameBufferUtils.drawObjects(viewport,Statics.objects)),-300,-300);
         Statics.batch.end();
     }
 
@@ -156,12 +146,12 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        viewport.unproject(touch.set(screenX,screenY));
-        System.out.println(touch);
+        viewport.unproject(touchdown.set(screenX,screenY));
+        System.out.println(touchdown);
         Statics.selectedobjects.clear();
         for (BaseObject bo : Statics.objects) {
             if (bo instanceof Touchable) {
-                    if(((Touchable)bo).isSelected(touch.cpy())){
+                    if(((Touchable)bo).isSelected(touchdown.cpy())){
                         Statics.selectedobjects.add(bo);
                     };
             }

@@ -57,6 +57,7 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
         position.add(-center.x, -center.y, 0);
     }
 
+
     @Override
     public void draw(Batch batch) {
         batch.setTransformMatrix(new Matrix4().idt()
