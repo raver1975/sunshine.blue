@@ -29,7 +29,7 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
     //    Camera camera;
 
     Viewport viewport;
-    Matrix4 mx4Batch = new Matrix4();
+  public static  Matrix4 mx4Batch = new Matrix4();
     Vector2 touch = new Vector2();
 
 
@@ -84,7 +84,7 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
             if (bo instanceof Drawable) {
                 if (!(bo instanceof Overlay)) {
                     ((ScreenObject) bo).rotation += flip ? .2f : -.2f;
-                    ((ScreenObject) bo).scale = flip ? 2f : .5f;
+                    ((ScreenObject) bo).scale -=.02f;
                     flip = !flip;
 //                    byte[] pixels = ScreenUtils.getFrameBufferPixels(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), true);
 
@@ -161,11 +161,9 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
         Statics.selectedobjects.clear();
         for (BaseObject bo : Statics.objects) {
             if (bo instanceof Touchable) {
-                if (bo instanceof FontObject){
-                    if(((Touchable)bo).isSelected(touch)){
+                    if(((Touchable)bo).isSelected(touch.cpy())){
                         Statics.selectedobjects.add(bo);
                     };
-                }
             }
         }
 //        Gdx.input.setOnscreenKeyboardVisible(true, Input.OnscreenKeyboardType.URI);

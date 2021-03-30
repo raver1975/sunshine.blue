@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.Align;
+import com.klemstinegroup.sunshinelab.SunshineLab;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 
 import java.util.Arrays;
@@ -23,8 +24,9 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
     String text = "Sunshine\nLabs";
     FreeTypeFontGenerator.FreeTypeFontParameter parameter;
     private int caretFlash = 0;
-    Vector2 touched=new Vector2();
+    Vector2 touched = new Vector2();
     private GlyphLayout nn;
+    private Polygon polygon;
 
     public FontObject(FileHandle fontFile, int size) {
         generate(fontFile, size);
@@ -73,9 +75,16 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
             Statics.shapedrawer.filledRectangle(nn.runs.size > 0 ? nn.runs.get(nn.runs.size - 1).width : 0 + font.getSpaceXadvance() / 2f, 0, 5, font.getCapHeight());
         }
 
-        if (Statics.debug||Statics.selectedobjects.contains(this,true)) {
+        if (Statics.debug || Statics.selectedobjects.contains(this, true)) {
             Statics.shapedrawer.rectangle(new Rectangle(0, 0, bounds.x, bounds.y));
             Statics.shapedrawer.filledCircle(center.x, center.y, 5);
+        }
+        batch.end();
+        batch.setTransformMatrix(SunshineLab.mx4Batch);
+        batch.begin();
+        if (polygon != null) {
+            Statics.shapedrawer.setColor(Color.WHITE);
+            Statics.shapedrawer.polygon(polygon);
         }
     }
 
@@ -92,13 +101,16 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
     @Override
     public boolean keyTyped(char character) {
         System.out.println((int) character);
+
         if (character == 13) {
             text = text + '\n';
-        }
-        if (character == '\b') {
+        } else if (character == '\b') {
             if (!text.isEmpty()) {
                 text = text.substring(0, text.length() - 1);
             }
+
+        } else if (character == Input.Keys.SHIFT_LEFT || character == Input.Keys.SHIFT_RIGHT || character < 13) {
+
         } else {
             text = text + character;
 //            System.out.println((int)character);
@@ -142,16 +154,27 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
 ////                .translate(-position.x, -position.y, 0)
 //                .translate(-center.x, -center.y, 0);
 
-        Polygon polygon=new Polygon(new float[]{-center.x,-center.y,bounds.x-center.x,-center.y,bounds.x-center.x,bounds.y-center.y,-center.x,bounds.y-center.y});
+       /* Polygon polygon = new Polygon(new float[]{position.x, position.y, position.x+bounds.x, position.y, position.x+bounds.x, position.y+bounds.y, position.x,position.y+bounds.y,position.x,position.y});
+//        polygon.translate(position.x, position.y);
         polygon.rotate(rotation);
-        polygon.scale(scale);
-
-        System.out.println(Arrays.toString(polygon.getTransformedVertices()));
+        polygon.setScale(scale, scale);
+//        System.out.println(Arrays.toString(polygon.getTransformedVertices()));
         return polygon.contains(touch);
 //        touch.sub(position.x,position.y).add(center.x,center.y).rotateDeg(rotation).scl(scale);
 //        System.out.println("rotated touch:" + touch);
 //        center.set(touch,0);
-//        return true;
+//        return true;*/
+
+        polygon = new Polygon(new float[]{0, 0, bounds.x, 0, bounds.x, bounds.y, 0,  bounds.y, 0, 0});
+//        polygon.translate(center.x,center.y);
+        polygon.setOrigin(center.x,center.y);
+        polygon.setScale(scale,scale);
+        polygon.rotate(rotation);
+        polygon.translate(position.x,position.y);
+//        polygon.translate(s);
+
+        System.out.println(Arrays.toString(polygon.getTransformedVertices()));
+        return polygon.contains(touch);
 
     }
 }
