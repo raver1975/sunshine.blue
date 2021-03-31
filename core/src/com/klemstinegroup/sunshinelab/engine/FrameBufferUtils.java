@@ -17,7 +17,8 @@ public class FrameBufferUtils {
         draw(viewport);
         Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, viewport.getScreenWidth(), viewport.getScreenHeight());
         fb.end();
-return        flipPixmap(pixmap);
+        fb.dispose();
+        return flipPixmap(pixmap);
 //        return pixmap;
     }
 
@@ -27,9 +28,10 @@ return        flipPixmap(pixmap);
         Pixmap flipped = new Pixmap(width, height, src.getFormat());
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                flipped.drawPixel(x, y, src.getPixel( x, height-y-1));
+                flipped.drawPixel(x, y, src.getPixel(x, height - y - 1));
             }
         }
+        src.dispose();
         return flipped;
     }
 

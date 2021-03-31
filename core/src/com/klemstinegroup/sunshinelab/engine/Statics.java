@@ -14,6 +14,7 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 public class Statics {
     public static final boolean debug = false;
     public static Matrix4 mx4Batch = new Matrix4();
+    public static String test="test1234";
 //    public static final boolean debug = true;
 
     static TextureRegion whitePixel;
