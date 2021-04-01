@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Array;
 import com.klemstinegroup.sunshinelab.engine.objects.BaseObject;
 import com.klemstinegroup.sunshinelab.engine.util.MemoryFileHandle;
+import com.madgag.gif.fmsware.AnimatedGifEncoder;
 import com.squareup.gifencoder.GifEncoder;
 import com.squareup.gifencoder.ImageOptions;
 import space.earlygrey.shapedrawer.ShapeDrawer;
@@ -18,9 +19,10 @@ public class Statics {
     public static final boolean debug = false;
     public static Matrix4 mx4Batch = new Matrix4();
     public static String test="test1234";
-    public static GifEncoder gifEncoder;
+//    public static GifEncoder gifEncoder;
     public static MemoryFileHandle gifEncoderFile;
     public static ImageOptions gifOptions;
+    public static AnimatedGifEncoder gifEncoderA;
 //    public static final boolean debug = true;
 
     static TextureRegion whitePixel;

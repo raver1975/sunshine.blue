@@ -2,6 +2,7 @@ package com.madgag.gif.fmsware;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.klemstinegroup.sunshinelab.engine.util.MemoryFileHandle;
 
 import java.io.*;
 
@@ -287,15 +288,11 @@ public class AnimatedGifEncoder {
      * @param file String containing output file name.
      * @return false if open or initial write failed.
      */
-    public boolean start(String file) {
+    public boolean start(MemoryFileHandle file) {
         boolean ok = true;
-        try {
-            out = new BufferedOutputStream(new FileOutputStream(file));
+            out = file.write(false);
             ok = start(out);
             closeStream = true;
-        } catch (IOException e) {
-            ok = false;
-        }
         return started = ok;
     }
 
@@ -314,12 +311,12 @@ public class AnimatedGifEncoder {
         // initialize quantizer
         colorTab = nq.process(); // create reduced palette
         // convert map from BGR to RGB
-        for (int i = 0; i < colorTab.length; i += 3) {
-            byte temp = colorTab[i];
-            colorTab[i] = colorTab[i + 2];
-            colorTab[i + 2] = temp;
-            usedEntry[i / 3] = false;
-        }
+//        for (int i = 0; i < colorTab.length; i += 3) {
+//            byte temp = colorTab[i];
+//            colorTab[i] = colorTab[i + 2];
+//            colorTab[i + 2] = temp;
+//            usedEntry[i / 3] = false;
+//        }
         // map image pixels to new palette
         int k = 0;
         for (int i = 0; i < nPix; i++) {
@@ -327,6 +324,7 @@ public class AnimatedGifEncoder {
                     nq.map(pixels[k++] & 0xff,
                             pixels[k++] & 0xff,
                             pixels[k++] & 0xff);
+//            k++;//alpha
             usedEntry[index] = true;
             indexedPixels[i] = (byte) index;
         }
@@ -401,7 +399,18 @@ public class AnimatedGifEncoder {
     protected void getImagePixels() {
         int w = image.getWidth();
         int h = image.getHeight();
-        pixels =image.getPixels().array();
+        pixels=new byte[w*h*4];
+        int cnt=0;
+        int col=0;
+        for (int j=0;j<h;j++){
+        for (int i=0;i<w;i++){
+                col=image.getPixel(i,j);
+            pixels[cnt++]=(byte)((col>>24)&0xff);
+            pixels[cnt++]=(byte)((col>>16)&0xff);
+            pixels[cnt++]=(byte)((col>>8)&0xff);
+            }
+        }
+
     }
 
     /**

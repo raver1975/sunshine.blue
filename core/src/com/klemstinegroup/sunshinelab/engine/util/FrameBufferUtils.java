@@ -1,4 +1,4 @@
-package com.klemstinegroup.sunshinelab.engine;
+package com.klemstinegroup.sunshinelab.engine.util;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.klemstinegroup.sunshinelab.engine.objects.BaseObject;
 import com.klemstinegroup.sunshinelab.engine.objects.Drawable;
 import com.klemstinegroup.sunshinelab.engine.objects.Overlay;
@@ -90,5 +91,22 @@ public class FrameBufferUtils {
         }
         pixmap.dispose();
         return pixels;
+    }
+
+    public static Pixmap drawObjectsPix(Viewport viewport, Array<BaseObject> objects,int width,int height) {
+        FrameBuffer fb = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, true);
+        fb.begin();
+//        ((OrthographicCamera)viewport.getCamera()).setToOrtho(false,width,height);
+        draw(viewport);
+        Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, width, height);
+        fb.end();
+        fb.dispose();
+        int[][] pixels = new int[height][width];
+        for (int x = 0; x <width; x++) {
+            for (int y = 0; y < height; y++) {
+                pixels[y][x] = pixmap.getPixel(x, (int) (height - y - 1))>>8;
+            }
+        }
+        return flipPixmap(pixmap);
     }
 }

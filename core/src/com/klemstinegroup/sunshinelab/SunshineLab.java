@@ -4,10 +4,7 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.net.HttpRequestHeader;
 import com.badlogic.gdx.net.HttpStatus;
-import com.badlogic.gdx.utils.Base64Coder;
-import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -15,18 +12,20 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.igormaznitsa.jjjvm.impl.JJJVMClassImpl;
 import com.igormaznitsa.jjjvm.impl.jse.JSEProviderImpl;
 import com.igormaznitsa.jjjvm.model.JJJVMProvider;
-import com.klemstinegroup.sunshinelab.engine.FrameBufferUtils;
+import com.klemstinegroup.sunshinelab.engine.util.FrameBufferUtils;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.klemstinegroup.sunshinelab.engine.objects.*;
 import com.klemstinegroup.sunshinelab.engine.util.MemoryFileHandle;
 import com.klemstinegroup.sunshinelab.engine.util.UUID;
-import com.squareup.gifencoder.GifEncoder;
+import com.madgag.gif.fmsware.AnimatedGifEncoder;
 import com.squareup.gifencoder.ImageOptions;
 
 import java.io.*;
-import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 import static com.badlogic.gdx.Application.LOG_INFO;
+import static com.klemstinegroup.sunshinelab.engine.Statics.gifEncoderA;
 import static com.klemstinegroup.sunshinelab.engine.Statics.gifEncoderFile;
 
 public class SunshineLab extends ApplicationAdapter implements InputProcessor {
@@ -101,15 +100,14 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
         //--------------------------------------------------------------------------------------------------
         viewport.apply();
         gifEncoderFile = new MemoryFileHandle();
-        OutputStream outputStream = gifEncoderFile.write(false);
+
+//        OutputStream outputStream = gifEncoderFile.write(false);
         Statics.gifOptions = new ImageOptions();
-        try {
-            Statics.gifEncoder = new GifEncoder(outputStream, 400, 400, 0);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
+//            Statics.gifEncoder = new GifEncoder(outputStream, 400, 400, 0);
+        Statics.gifEncoderA = new AnimatedGifEncoder();
+        Statics.gifEncoderA.setDelay(100);
+        gifEncoderA.setSize(400, 400);
+        Statics.gifEncoderA.start(gifEncoderFile);
     }
 
 
@@ -154,24 +152,15 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
         }
 
 //        int pix[][]=FrameBufferUtils.drawObjectsInt(viewport,Statics.objects,200,200);
-        System.out.println(cntr);
-        if (cntr < 150 && cntr > 20 && cntr % 3 == 0) {
-            try {
+//        System.out.println(cntr);
+        if (cntr < 400 && cntr > 380) {
 
-                Statics.gifEncoder.addImage(FrameBufferUtils.drawObjectsInt(viewport, Statics.objects, 400, 400), Statics.gifOptions);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//                Statics.gifEncoder.addImage(FrameBufferUtils.drawObjectsInt(viewport, Statics.objects, 400, 400), Statics.gifOptions);
+            Statics.gifEncoderA.addFrame(FrameBufferUtils.drawObjectsPix(viewport, Statics.objects, 400, 400));
 
-        } else if (cntr == 150) {
-            try {
-                Statics.gifEncoder.finishEncoding();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            String data = "data:image/gif;base64," + new String(Base64Coder.encode(gifEncoderFile.readBytes()));
-            Gdx.app.log("data", data);
-//                Gdx.files.external("test.gif").writeBytes(gifEncoderFile.readBytes(),false);
+        } else if (cntr == 400) {
+//                Statics.gifEncoder.finishEncoding();
+            Statics.gifEncoderA.finish();
             try {
                 uploadFile(gifEncoderFile.readBytes(), UUID.randomUUID().toString());
             } catch (IOException e) {
@@ -183,20 +172,21 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
         }
         cntr++;
         Statics.batch.end();
-        try {
-            jjjvmClass.findMethod("main", "([Ljava/lang/String;)V").invoke(null, null);
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        }
+//        try {
+//            jjjvmClass.findMethod("main", "([Ljava/lang/String;)V").invoke(null, null);
+//        } catch (Throwable throwable) {
+//            throwable.printStackTrace();
+//        }
     }
 
     public void uploadFile(byte[] data, String filename) throws IOException {
+        Gdx.app.log("upload", data.length + "");
         String url = "https://ipfs.infura.io:5001/api/v0/add";
         String charset = "US-ASCII";
 //        String param = "file";
 //        File textFile = new File("/path/to/file.txt");
 //        File binaryFile = new File("/path/to/file.bin");
-        String boundary = Long.toHexString(System.currentTimeMillis()); // Just generate some unique random value.
+        String boundary = "12345678901234567890"; // Just generate some unique random value.
         String CRLF = "\r\n"; // Line separator required by multipart/form-data.
 
         Net.HttpRequest request = new Net.HttpRequest(Net.HttpMethods.POST);
@@ -204,37 +194,57 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
         request.setHeader("Content-Type", "multipart/form-data; boundary=" + boundary);
 //        request.setHeader("Content-Transfer-Encoding", "base64");
 //        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        ByteArrayOutputStream ba=new ByteArrayOutputStream();
-        OutputStreamWriter writer = new OutputStreamWriter(ba);
+//        ByteArrayOutputStream ba=new ByteArrayOutputStream();
+//        PipedInputStream pi=new PipedInputStream();
+//        BufferedOutputStream po=new BufferedOutputStream(new PipedOutputStream(pi));
+//        ByteArrayOutputStream ba = new ByteArrayOutputStream(data.length+400);
+//MemoryFileHandle ma=new MemoryFileHandle();
+//        OutputStreamWriter writer = new OutputStreamWriter(ba);
         // Send normal param.
-        writer.append("--" + boundary).append(CRLF);
-        writer.append("Content-Disposition: form-data; name=\"file\"").append(CRLF);
-        writer.append("Content-Type: image/gif; charset=" + charset).append(CRLF);
-        writer.append(CRLF).flush();
-        writer.flush();
-        ba.write(data);
-        ba.flush();
-        writer.append(CRLF).flush();
-        writer.append("--" + boundary + "--").append(CRLF).flush();
-        request.setContent(new ByteArrayInputStream(ba.toByteArray()),ba.size());
-        System.out.println(writer);
+        Gdx.app.log("test", "1");
+        String out="--" + boundary + CRLF+"Content-Disposition: form-data; name=\"file\"" + CRLF+"Content-Type: image/gif" + CRLF+CRLF+new String(data,"US-ASCII")+CRLF+"--" + boundary + "--" + CRLF;
+        Gdx.app.log("test", "2");
+//        ma.writeBytes(("--" + boundary + CRLF).getBytes("ISO-8859-1"),false);
+//        Gdx.app.log("test", "2");
+//        ma.writeBytes(("Content-Disposition: form-data; name=\"file\"" + CRLF).getBytes("ISO-8859-1"),true);
+//        Gdx.app.log("test", "3");
+//        ma.writeBytes(("Content-Type: image/gif" + CRLF).getBytes("ISO-8859-1"),true);
+//        Gdx.app.log("test", "4");
+//        ma.writeBytes(CRLF.getBytes("ISO-8859-1"),true);
+//        Gdx.app.log("test", "5");
+//        ma.writeBytes(data,true);
+//        Gdx.app.log("test", "6");
+//        ma.writeBytes(CRLF.getBytes("ISO-8859-1"),true);
+//        ma.writeBytes(("--" + boundary + "--" + CRLF).getBytes("ISO-8859-1"),true);
+//        writer.close();
+//        int ff=0;
+//        while(po.read()!=-1){
+//            ff++;
+//            System.out.println(ff+"\t"+(ff-data.length));
+//        }
+//        Gdx.app.log("tr", new String(ma.ba.toArray()));
+        request.setContent(new BufferedInputStream(new ByteArrayInputStream(out.getBytes("US-ASCII"))),out.getBytes().length);
+//        ba.close();
+        Gdx.app.log("here", "here");
         Net.HttpResponseListener listener = new Net.HttpResponseListener() {
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
-                if (httpResponse.getStatus().getStatusCode()== HttpStatus.SC_OK) {
+                String res = httpResponse.getResultAsString();
+                Gdx.app.log("response", res);
+                if (httpResponse.getStatus().getStatusCode() == HttpStatus.SC_OK) {
 //                    Gdx.app.log("response",httpResponse.getResultAsString());
 //                    JsonParser jsonParser = new JsonParser();
-                    JsonReader jsonReader=new JsonReader();
-                    String res=httpResponse.getResultAsString();
-                    Gdx.app.log("code",res);
+                    JsonReader jsonReader = new JsonReader();
+
+                    Gdx.app.log("code", res);
                     JsonValue jons = jsonReader.parse(res);
-                    Gdx.app.log("code",jons.toString());
-                    String hash=jons.getString("Hash");
-                    if (hash!=null){
+                    Gdx.app.log("code", jons.toString());
+                    String hash = jons.getString("Hash");
+                    if (hash != null) {
                         Gdx.net.openURI("https://ipfs.io/ipfs/" + hash + "?filename=" + filename);
                     }
                 }
-                            }
+            }
 
             @Override
             public void failed(Throwable t) {
@@ -246,11 +256,19 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 
             }
         };
-        Gdx.app.log("here","here");
+        Gdx.app.log("here", "here");
         Gdx.net.sendHttpRequest(request, listener);
-        Gdx.app.log("here","here1");
+        Gdx.app.log("here", "here1");
 //
 
+    }
+
+    public static String stringFromBytes(byte byteData[]) {
+        char charData[] = new char[byteData.length];
+        for(int i = 0; i < charData.length; i++) {
+            charData[i] = (char) (((int) byteData[i]) & 0xFF);
+        }
+        return new String(charData);
     }
 
     @Override

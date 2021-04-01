@@ -11,7 +11,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class MemoryFileHandle extends FileHandle {
-    ByteArray ba = new ByteArray();
+   public ByteArray ba = new ByteArray();
 
 //	public MemoryFileHandle(ZipFile archive, File file) {
 //		super(file, FileType.Classpath);
@@ -107,7 +107,7 @@ public class MemoryFileHandle extends FileHandle {
 
     @Override
     public long length() {
-        return ba.size - 1;
+        return ba.size;
     }
 
 //	@Override
