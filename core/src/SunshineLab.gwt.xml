@@ -3,6 +3,8 @@
 <module>
 	<source path="com/klemstinegroup/sunshinelab" />
 	<source path="com/igormaznitsa/jjjvm" />
+	<source path="com/squareup/gifencoder" />
+	<source path="madgag.gif.fmsware" />
 	<extend-configuration-property name="gdx.reflect.include" value="java.io" />
 	<extend-configuration-property name="gdx.reflect.include" value="java.lang" />
 	<extend-configuration-property name="gdx.reflect.include" value="java.lang.annotation" />

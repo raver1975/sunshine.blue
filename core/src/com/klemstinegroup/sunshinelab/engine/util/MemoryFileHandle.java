@@ -115,4 +115,14 @@ public class MemoryFileHandle extends FileHandle {
 //		return archiveEntry.getTime();
 //	}
 
+    @Override
+    public byte[] readBytes() {
+        return ba.toArray();
+    }
+
+    @Override
+    public void writeBytes(byte[] bytes, boolean append) {
+        if (!append)ba.clear();
+        ba.addAll(bytes);
+    }
 }

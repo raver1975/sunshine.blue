@@ -1,5 +1,6 @@
 package com.klemstinegroup.sunshinelab.engine;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.utils.Array;
@@ -20,6 +21,32 @@ public class FrameBufferUtils {
         fb.dispose();
         return flipPixmap(pixmap);
 //        return pixmap;
+    }
+
+    public static void flipPixmap1(Pixmap p) {
+        int w = p.getWidth();
+        int h = p.getHeight();
+        int hold;
+
+        //change blending to 'none' so that alpha areas will not show
+        //previous orientation of image
+        p.setBlending(Pixmap.Blending.None);
+        for (int y = 0; y < h / 2; y++) {
+            for (int x = 0; x < w / 2; x++) {
+                //get color of current pixel
+                hold = p.getPixel(x, y);
+                //draw color of pixel from opposite side of pixmap to current position
+                p.drawPixel(x, y, p.getPixel(w - x - 1, y));
+                //draw saved color to other side of pixmap
+                p.drawPixel(w - x - 1, y, hold);
+                //repeat for height/width inverted pixels
+                hold = p.getPixel(x, h - y - 1);
+                p.drawPixel(x, h - y - 1, p.getPixel(w - x - 1, h - y - 1));
+                p.drawPixel(w - x - 1, h - y - 1, hold);
+            }
+        }
+        //set blending back to default
+        p.setBlending(Pixmap.Blending.SourceOver);
     }
 
     public static Pixmap flipPixmap(Pixmap src) {
@@ -47,4 +74,21 @@ public class FrameBufferUtils {
         }
     }
 
+    public static int[][] drawObjectsInt(Viewport viewport, Array<BaseObject> objects,int width,int height) {
+        FrameBuffer fb = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, true);
+        fb.begin();
+//        ((OrthographicCamera)viewport.getCamera()).setToOrtho(false,width,height);
+        draw(viewport);
+        Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, width, height);
+        fb.end();
+        fb.dispose();
+        int[][] pixels = new int[height][width];
+        for (int x = 0; x <width; x++) {
+            for (int y = 0; y < height; y++) {
+                pixels[y][x] = pixmap.getPixel(x, (int) (height - y - 1))>>8;
+            }
+        }
+        pixmap.dispose();
+        return pixels;
+    }
 }

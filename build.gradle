@@ -59,7 +59,7 @@ project(":desktop") {
 //        api "de.tomgrill.gdxdialogs:gdx-dialogs-desktop:1.2.5"
         api "de.golfgl.gdxgamesvcs:gdx-gamesvcs-core-gamejolt:1.0.2"
         implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-        api 'com.squareup:gifencoder:0.10.1'
+
     }
 }
 
@@ -184,6 +184,5 @@ project(":core") {
 //        api "com.github.czyzby:gdx-lml-vis:1.9.1.9.6"
         api "de.golfgl.gdxgamesvcs:gdx-gamesvcs-core:1.0.2"
         implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-
     }
 }
