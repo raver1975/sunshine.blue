@@ -4,9 +4,10 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.net.HttpRequestBuilder;
 import com.badlogic.gdx.net.HttpStatus;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.*;
+import com.badlogic.gdx.utils.StringBuilder;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.igormaznitsa.jjjvm.impl.JJJVMClassImpl;
@@ -21,8 +22,10 @@ import com.madgag.gif.fmsware.AnimatedGifEncoder;
 import com.squareup.gifencoder.ImageOptions;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 import static com.badlogic.gdx.Application.LOG_INFO;
 import static com.klemstinegroup.sunshinelab.engine.Statics.gifEncoderA;
@@ -105,7 +108,7 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
         Statics.gifOptions = new ImageOptions();
 //            Statics.gifEncoder = new GifEncoder(outputStream, 400, 400, 0);
         Statics.gifEncoderA = new AnimatedGifEncoder();
-        Statics.gifEncoderA.setDelay(100);
+        Statics.gifEncoderA.setDelay(10);
         gifEncoderA.setSize(400, 400);
         Statics.gifEncoderA.start(gifEncoderFile);
     }
@@ -124,7 +127,7 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 
             if (bo instanceof Drawable) {
                 if (!(bo instanceof Overlay)) {
-                    ((ScreenObject) bo).rotation += flip ? .001f : -.001f;
+                    ((ScreenObject) bo).rotation += flip ? 1f : -1f;
                     ((ScreenObject) bo).scale -= .00002f;
                     flip = !flip;
 //                    byte[] pixels = ScreenUtils.getFrameBufferPixels(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), true);
@@ -153,19 +156,15 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 
 //        int pix[][]=FrameBufferUtils.drawObjectsInt(viewport,Statics.objects,200,200);
 //        System.out.println(cntr);
-        if (cntr < 400 && cntr > 380) {
+        if (cntr < 100 && cntr > 60) {
 
 //                Statics.gifEncoder.addImage(FrameBufferUtils.drawObjectsInt(viewport, Statics.objects, 400, 400), Statics.gifOptions);
             Statics.gifEncoderA.addFrame(FrameBufferUtils.drawObjectsPix(viewport, Statics.objects, 400, 400));
 
-        } else if (cntr == 400) {
+        } else if (cntr == 100) {
 //                Statics.gifEncoder.finishEncoding();
             Statics.gifEncoderA.finish();
-            try {
-                uploadFile(gifEncoderFile.readBytes(), UUID.randomUUID().toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            uploadFile(gifEncoderFile.readBytes());
 //            Gdx.net.openURI(data);
 //                System.exit(0);
 
@@ -179,52 +178,77 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 //        }
     }
 
-    public void uploadFile(byte[] data, String filename) throws IOException {
+    public void uploadFile(byte[] data) {
         Gdx.app.log("upload", data.length + "");
         String url = "https://ipfs.infura.io:5001/api/v0/add";
-        String charset = "US-ASCII";
 //        String param = "file";
 //        File textFile = new File("/path/to/file.txt");
 //        File binaryFile = new File("/path/to/file.bin");
         String boundary = "12345678901234567890"; // Just generate some unique random value.
         String CRLF = "\r\n"; // Line separator required by multipart/form-data.
 
-        Net.HttpRequest request = new Net.HttpRequest(Net.HttpMethods.POST);
-        request.setUrl(url);
+        HttpRequestBuilder builder = new HttpRequestBuilder();
+        Net.HttpRequest request = builder.newRequest().method(Net.HttpMethods.POST).url(url).timeout(1000000).build();
         request.setHeader("Content-Type", "multipart/form-data; boundary=" + boundary);
-//        request.setHeader("Content-Transfer-Encoding", "base64");
-//        ByteArrayOutputStream output = new ByteArrayOutputStream();
-//        ByteArrayOutputStream ba=new ByteArrayOutputStream();
-//        PipedInputStream pi=new PipedInputStream();
-//        BufferedOutputStream po=new BufferedOutputStream(new PipedOutputStream(pi));
-//        ByteArrayOutputStream ba = new ByteArrayOutputStream(data.length+400);
-//MemoryFileHandle ma=new MemoryFileHandle();
-//        OutputStreamWriter writer = new OutputStreamWriter(ba);
-        // Send normal param.
         Gdx.app.log("test", "1");
-        String out="--" + boundary + CRLF+"Content-Disposition: form-data; name=\"file\"" + CRLF+"Content-Type: image/gif" + CRLF+CRLF+new String(data,"US-ASCII")+CRLF+"--" + boundary + "--" + CRLF;
+        String out1 = "--" + boundary +
+                CRLF + "Content-Disposition: form-data; name=\"file\"" +
+                CRLF + "Content-Type: image/gif" +
+                CRLF + CRLF;
+        String out2 = CRLF + "--" + boundary + "--" + CRLF;
+        ByteArray byteArr = new ByteArray();
+        byteArr.addAll(new byte[]{45, 45, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 13, 10, 67, 111, 110, 116, 101, 110, 116, 45, 68, 105, 115, 112, 111, 115, 105, 116, 105, 111, 110, 58, 32, 102, 111, 114, 109, 45, 100, 97, 116, 97, 59, 32, 110, 97, 109, 101, 61, 34, 102, 105, 108, 101, 34, 13, 10, 67, 111, 110, 116, 101, 110, 116, 45, 84, 121, 112, 101, 58, 32, 105, 109, 97, 103, 101, 47, 103, 105, 102, 13, 10, 13, 10});
+        byteArr.addAll(data);
+        byteArr.addAll(new byte[]{13, 10, 45, 45, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 45, 45, 13, 10});
         Gdx.app.log("test", "2");
-//        ma.writeBytes(("--" + boundary + CRLF).getBytes("ISO-8859-1"),false);
-//        Gdx.app.log("test", "2");
-//        ma.writeBytes(("Content-Disposition: form-data; name=\"file\"" + CRLF).getBytes("ISO-8859-1"),true);
-//        Gdx.app.log("test", "3");
-//        ma.writeBytes(("Content-Type: image/gif" + CRLF).getBytes("ISO-8859-1"),true);
-//        Gdx.app.log("test", "4");
-//        ma.writeBytes(CRLF.getBytes("ISO-8859-1"),true);
-//        Gdx.app.log("test", "5");
-//        ma.writeBytes(data,true);
-//        Gdx.app.log("test", "6");
-//        ma.writeBytes(CRLF.getBytes("ISO-8859-1"),true);
-//        ma.writeBytes(("--" + boundary + "--" + CRLF).getBytes("ISO-8859-1"),true);
-//        writer.close();
-//        int ff=0;
-//        while(po.read()!=-1){
-//            ff++;
-//            System.out.println(ff+"\t"+(ff-data.length));
-//        }
-//        Gdx.app.log("tr", new String(ma.ba.toArray()));
-        request.setContent(new BufferedInputStream(new ByteArrayInputStream(out.getBytes("US-ASCII"))),out.getBytes().length);
-//        ba.close();
+//        request.setContent(new InputStream() {
+//            int cnt = 0;
+//
+//            @Override
+//            public int available(){
+//                return byteArr.size;
+//            }
+//
+//            @Override
+//            public int read(byte[] b, int off, int len) throws IOException {
+//                Gdx.app.log("test",b.length+"");
+//                int g=0;
+//                for (int i=0;i<b.length;i++){
+//                    g=read();
+//                    if (g>-1)b[i+off]= (byte)(g&0xff);
+//                    else return -1;
+//                }
+//                return b.length;
+//            }
+//
+//            @Override
+//            public int read(byte[] b) throws IOException {
+//                Gdx.app.log("test",b.length+"");
+//                int g=0;
+//                for (int i=0;i<b.length;i++){
+//                    g=read();
+//                    if (g>-1)b[i]= (byte)(g&0xff);
+//                    else return -1;
+//                }
+//                return b.length;
+//            }
+//
+//            @Override
+//            public int read() throws IOException {
+//                if (cnt >= byteArr.size) return -1;
+//                else return byteArr.get(cnt++) & 0xff;
+//            }
+//        }, byteArr.size);
+        CharArray ca = new CharArray();
+//
+//        StringBuffer ss=new StringBuffer();
+        for (int i = 0; i < data.length / 2; i++) {
+            ca.add((char) ((((data[i * 2+1] << 8)) | (data[i * 2]))&0xffff));
+        }
+//        new String(ca.toArray(),true);
+        String datauri="<html><body><img src='data:image/gif;base64,"+new String(Base64Coder.encode(data))+"'/></body></html>";
+
+        request.setContent(out1+datauri+out2);
         Gdx.app.log("here", "here");
         Net.HttpResponseListener listener = new Net.HttpResponseListener() {
             @Override
@@ -241,7 +265,7 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
                     Gdx.app.log("code", jons.toString());
                     String hash = jons.getString("Hash");
                     if (hash != null) {
-                        Gdx.net.openURI("https://ipfs.io/ipfs/" + hash + "?filename=" + filename);
+                        Gdx.net.openURI("https://ipfs.io/ipfs/" + hash + "?filename=index.html");
                     }
                 }
             }
@@ -262,14 +286,50 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 //
 
     }
+//
+//    public byte[] GetBytes(String str)
+//    {
+//        char[] chars = str.toCharArray();
+//        byte[] bytes = new byte[chars.length * 2];
+//        for (int i = 0; i < chars.length; i++)
+//        {
+//            bytes[i * 2] = (byte) (chars[i] >> 8);
+//            bytes[i * 2 + 1] = (byte) chars[i];
+//        }
+//
+//        return bytes;
+//    }
+//
+//    public String GetString(byte[] bytes) {
+//        char[] chars2 = new char[bytes.length / 2];
+//        for (int i = 0; i < chars2.length; i++)
+//            chars2[i] = (char) ((bytes[i * 2+1] << 8) + (bytes[i * 2 ] & 0xFF));
+//        return new String(chars2);
+//
+//    }
 
-    public static String stringFromBytes(byte byteData[]) {
-        char charData[] = new char[byteData.length];
-        for(int i = 0; i < charData.length; i++) {
-            charData[i] = (char) (((int) byteData[i]) & 0xFF);
+    public static String getString2(byte[] bytes, int bytesPerChar) {
+        if (bytes == null) throw new IllegalArgumentException("bytes cannot be null");
+        if (bytesPerChar < 1) throw new IllegalArgumentException("bytesPerChar must be greater than 1");
+
+        final int length = bytes.length / bytesPerChar;
+        StringBuilder sb = new StringBuilder();
+
+
+        for (int i = 0; i < length; i++) {
+            char thisChar = 0;
+
+            for (int j = 0; j < bytesPerChar; j++) {
+                int shift = (bytesPerChar - 1 - j) * 8;
+                thisChar |= (0x000000FF << shift) & (((int) bytes[i * bytesPerChar + j]) << shift);
+            }
+
+            sb.append(thisChar);
         }
-        return new String(charData);
+
+        return sb.toString();
     }
+
 
     @Override
     public void dispose() {
