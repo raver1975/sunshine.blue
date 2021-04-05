@@ -6,6 +6,7 @@
 	<source path="com/squareup/gifencoder" />
 	<source path="com/madgag/gif/fmsware" />
 	<source path="ar/com/hjg/pngj" />
+	<source path="net/sf/jazzlib" />
 	<extend-configuration-property name="gdx.reflect.include" value="java.io" />
 	<extend-configuration-property name="gdx.reflect.include" value="java.lang" />
 	<extend-configuration-property name="gdx.reflect.include" value="java.lang.annotation" />

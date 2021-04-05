@@ -1,9 +1,9 @@
 package ar.com.hjg.pngj.pixels;
 
-import java.util.zip.Deflater;
 
 import ar.com.hjg.pngj.IdatChunkWriter;
 import ar.com.hjg.pngj.PngjOutputException;
+import net.sf.jazzlib.Deflater;
 
 /**
  * This class uses a quick compressor to get a rough estimate of deflate

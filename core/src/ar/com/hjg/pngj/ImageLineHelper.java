@@ -326,21 +326,21 @@ public class ImageLineHelper {
 		return buf;
 	}
 
-/*	*//**
-	 * what follows is pretty uninteresting/untested/obsolete, subject to change
-	 *//*
-	*//**
-	 * Just for basic info or debugging. Shows values for first and last pixel.
-	 * Does not include alpha
-	 *//*
-	public static String infoFirstLastPixels(ImageLineInt line) {
-		return line.imgInfo.channels == 1
-				? String.format("first=(%d) last=(%d)", line.scanline[0], line.scanline[line.scanline.length - 1])
-				: String.format("first=(%d %d %d) last=(%d %d %d)", line.scanline[0], line.scanline[1],
-						line.scanline[2], line.scanline[line.scanline.length - line.imgInfo.channels],
-						line.scanline[line.scanline.length - line.imgInfo.channels + 1],
-						line.scanline[line.scanline.length - line.imgInfo.channels + 2]);
-	}*/
+//	/**
+//	 * what follows is pretty uninteresting/untested/obsolete, subject to change
+//	 */
+//	/**
+//	 * Just for basic info or debugging. Shows values for first and last pixel.
+//	 * Does not include alpha
+//	 */
+//	public static String infoFirstLastPixels(ImageLineInt line) {
+//		return line.imgInfo.channels == 1
+//				? String.format("first=(%d) last=(%d)", line.scanline[0], line.scanline[line.scanline.length - 1])
+//				: String.format("first=(%d %d %d) last=(%d %d %d)", line.scanline[0], line.scanline[1],
+//						line.scanline[2], line.scanline[line.scanline.length - line.imgInfo.channels],
+//						line.scanline[line.scanline.length - line.imgInfo.channels + 1],
+//						line.scanline[line.scanline.length - line.imgInfo.channels + 2]);
+//	}
 
 	/**
 	 * Returns pixel as integer packed [A R G B]

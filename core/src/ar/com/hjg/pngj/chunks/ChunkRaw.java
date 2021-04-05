@@ -2,13 +2,14 @@ package ar.com.hjg.pngj.chunks;
 
 import java.io.ByteArrayInputStream;
 import java.io.OutputStream;
-import java.util.logging.Logger;
-import java.util.zip.CRC32;
 
 import ar.com.hjg.pngj.PngHelperInternal;
 import ar.com.hjg.pngj.PngjBadCrcException;
 import ar.com.hjg.pngj.PngjException;
+import ar.com.hjg.pngj.PngjInputException;
 import ar.com.hjg.pngj.PngjOutputException;
+import com.badlogic.gdx.Gdx;
+import net.sf.jazzlib.CRC32;
 
 /**
  * Raw (physical) chunk.
@@ -18,7 +19,6 @@ import ar.com.hjg.pngj.PngjOutputException;
  * See http://www.libpng.org/pub/png/spec/1.2/PNG-Structure.html
  */
 public class ChunkRaw {
-	private static final Logger LOGGER = Logger.getLogger(ChunkRaw.class.getName());
 	/**
 	 * The length counts only the data field, not itself, the chunk type code,
 	 * or the CRC. Zero is a valid length. Although encoders and decoders should
@@ -116,11 +116,11 @@ public class ChunkRaw {
 		int crcComputed = (int) crcengine.getValue();
 		int crcExpected = PngHelperInternal.readInt4fromBytes(crcval, 0);
 		if (crcComputed != crcExpected) {
-			String msg = "Bad CRC in chunk";
+			String msg = "Bad CRC in chunk:";// %s (offset:%d). Expected:%x Got:%x", id, offset, crcExpected,	crcComputed);
 			if (throwExcep)
 				throw new PngjBadCrcException(msg);
 			else
-				LOGGER.warning(msg);
+				Gdx.app.log("warn",msg);
 		}
 	}
 

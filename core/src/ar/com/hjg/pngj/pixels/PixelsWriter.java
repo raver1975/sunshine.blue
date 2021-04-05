@@ -1,13 +1,13 @@
 package ar.com.hjg.pngj.pixels;
 
 import java.io.OutputStream;
-import java.util.zip.Deflater;
 
 import ar.com.hjg.pngj.FilterType;
 import ar.com.hjg.pngj.IdatChunkWriter;
 import ar.com.hjg.pngj.ImageInfo;
 import ar.com.hjg.pngj.PngHelperInternal;
 import ar.com.hjg.pngj.PngjOutputException;
+import net.sf.jazzlib.Deflater;
 
 /**
  * Encodes a set of rows (pixels) as a continuous deflated stream (does not know
@@ -260,14 +260,18 @@ public abstract class PixelsWriter {
 			return FilterType.FILTER_PAETH;
 	}
 
-/*	*//** informational stats : filter used, in percentages *//*
+/*
+	*/
+/** informational stats : filter used, in percentages *//*
+
 	final public String getFiltersUsed() {
 		return String.format("%d,%d,%d,%d,%d", (int) (filtersUsed[0] * 100.0 / imgInfo.rows + 0.5),
 				(int) (filtersUsed[1] * 100.0 / imgInfo.rows + 0.5),
 				(int) (filtersUsed[2] * 100.0 / imgInfo.rows + 0.5),
 				(int) (filtersUsed[3] * 100.0 / imgInfo.rows + 0.5),
 				(int) (filtersUsed[4] * 100.0 / imgInfo.rows + 0.5));
-	}*/
+	}
+*/
 
 	public void setIdatMaxSize(int idatMaxSize) {
 		this.idatMaxSize = idatMaxSize;

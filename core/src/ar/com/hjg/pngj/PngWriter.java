@@ -17,6 +17,7 @@ import ar.com.hjg.pngj.chunks.PngChunkPLTE;
 import ar.com.hjg.pngj.chunks.PngMetadata;
 import ar.com.hjg.pngj.pixels.PixelsWriter;
 import ar.com.hjg.pngj.pixels.PixelsWriterDefault;
+import com.badlogic.gdx.files.FileHandle;
 
 /**
  * Writes a PNG image, line by line.
@@ -74,7 +75,7 @@ public class PngWriter implements Closeable {
 	 *            If false and file exists, an {@link PngjOutputException} is
 	 *            thrown
 	 */
-	public PngWriter(File file, ImageInfo imgInfo, boolean allowoverwrite) {
+	public PngWriter(FileHandle file, ImageInfo imgInfo, boolean allowoverwrite) {
 		this(PngHelperInternal.ostreamFromFile(file, allowoverwrite), imgInfo);
 		setShouldCloseStream(true);
 	}
@@ -82,7 +83,7 @@ public class PngWriter implements Closeable {
 	/**
 	 * @see #PngWriter(File, ImageInfo, boolean) (overwrite=true)
 	 */
-	public PngWriter(File file, ImageInfo imgInfo) {
+	public PngWriter(FileHandle file, ImageInfo imgInfo) {
 		this(file, imgInfo, true);
 	}
 

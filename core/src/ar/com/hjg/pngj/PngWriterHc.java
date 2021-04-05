@@ -5,16 +5,17 @@ import java.io.OutputStream;
 
 import ar.com.hjg.pngj.pixels.PixelsWriter;
 import ar.com.hjg.pngj.pixels.PixelsWriterMultiple;
+import com.badlogic.gdx.files.FileHandle;
 
 /** Pngwriter with High compression EXPERIMENTAL */
 public class PngWriterHc extends PngWriter {
 
-	public PngWriterHc(File file, ImageInfo imgInfo, boolean allowoverwrite) {
+	public PngWriterHc(FileHandle file, ImageInfo imgInfo, boolean allowoverwrite) {
 		super(file, imgInfo, allowoverwrite);
 		setFilterType(FilterType.FILTER_SUPER_ADAPTIVE);
 	}
 
-	public PngWriterHc(File file, ImageInfo imgInfo) {
+	public PngWriterHc(FileHandle file, ImageInfo imgInfo) {
 		super(file, imgInfo);
 	}
 

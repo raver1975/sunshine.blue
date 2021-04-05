@@ -58,30 +58,36 @@ public class IPFSUtils {
 
 
     public static void writePng(Pixmap pixmap) {
-        MemoryFileHandle mfh = new MemoryFileHandle();
-        ImageInfo imi = new ImageInfo(pixmap.getHeight(), pixmap.getWidth(), 8, true);
-        PngWriter pngw = new PngWriter(mfh.write(false), imi);
-        int[] temp = new int[pixmap.getHeight()*4];
-        Color col=new Color();
-        for (int i = 0; i < pixmap.getWidth(); i++) {
-            for (int j = 0; j < pixmap.getHeight(); j++) {
-                int c=pixmap.getPixel(j,i);
-                col.set(c);
-                temp[j*4+0]= (int) (col.r*255);
-                temp[j*4+1]= (int) (col.g*255);
-                temp[j*4+2]= (int) (col.b*255);
-                temp[j*4+3]= (int) (col.a*255);
-            }
-            pngw.writeRowInt(temp);
-        }
-        pngw.end();
-
-        uploadFile(mfh.readBytes(),"image/png", new IPFSResponseListener() {
+        Gdx.app.postRunnable(new Runnable(){
             @Override
-            public void qid(String qid) {
-                Gdx.net.openURI("https://ipfs.io/ipfs/QmWWoB9DUFXz8v1ZVGXT8KjjZ7r7kbUQJPzPDxfpz36ei6?url=" + qid);
+            public void run() {
+                MemoryFileHandle mfh = new MemoryFileHandle();
+                ImageInfo imi = new ImageInfo(pixmap.getHeight(), pixmap.getWidth(), 8, true);
+                PngWriter pngw = new PngWriter(mfh.write(false), imi);
+                int[] temp = new int[pixmap.getHeight()*4];
+                Color col=new Color();
+                for (int i = 0; i < pixmap.getWidth(); i++) {
+                    for (int j = 0; j < pixmap.getHeight(); j++) {
+                        int c=pixmap.getPixel(j,i);
+                        col.set(c);
+                        temp[j*4+0]= (int) (col.r*255);
+                        temp[j*4+1]= (int) (col.g*255);
+                        temp[j*4+2]= (int) (col.b*255);
+                        temp[j*4+3]= (int) (col.a*255);
+                    }
+                    pngw.writeRowInt(temp);
+                }
+                pngw.end();
+
+                uploadFile(mfh.readBytes(),"image/png", new IPFSResponseListener() {
+                    @Override
+                    public void qid(String qid) {
+                        Gdx.net.openURI("https://ipfs.io/ipfs/QmWWoB9DUFXz8v1ZVGXT8KjjZ7r7kbUQJPzPDxfpz36ei6?url=" + qid);
+                    }
+                });
             }
         });
+
 
     }
 }

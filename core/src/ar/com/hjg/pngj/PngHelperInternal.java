@@ -1,7 +1,7 @@
 package ar.com.hjg.pngj;
 
-import java.io.File;
-import java.io.FileInputStream;
+import com.badlogic.gdx.files.FileHandle;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -269,32 +269,16 @@ public final class PngHelperInternal {
 		debug(obj, offset, true);
 	}
 
-	public static InputStream istreamFromFile(File f) {
-		FileInputStream is;
-		try {
-			is = new FileInputStream(f);
-		} catch (Exception e) {
-			throw new PngjInputException("Could not open " + f, e);
-		}
-		return is;
+	public static InputStream istreamFromFile(FileHandle f) {
+		return f.read();
 	}
 
-	static OutputStream ostreamFromFile(File f) {
+	static OutputStream ostreamFromFile(FileHandle f) {
 		return ostreamFromFile(f, true);
 	}
 
-	static OutputStream ostreamFromFile(File f, boolean allowoverwrite) {
-		// In old versions of GAE (Google App Engine) this could trigger
-		// issues because java.io.FileOutputStream was not whitelisted.
-		java.io.FileOutputStream os = null;
-		if (f.exists() && !allowoverwrite)
-			throw new PngjOutputException("File already exists: " + f);
-		try {
-			os = new java.io.FileOutputStream(f);
-		} catch (Exception e) {
-			throw new PngjInputException("Could not open for write" + f, e);
-		}
-		return os;
+	static OutputStream ostreamFromFile(FileHandle f, boolean allowoverwrite) {
+		return f.write(false);
 	}
 
 	/**

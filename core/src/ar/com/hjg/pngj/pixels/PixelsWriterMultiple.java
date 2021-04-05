@@ -1,10 +1,10 @@
 package ar.com.hjg.pngj.pixels;
 
 import java.util.LinkedList;
-import java.util.zip.Deflater;
 
 import ar.com.hjg.pngj.FilterType;
 import ar.com.hjg.pngj.ImageInfo;
+import net.sf.jazzlib.Deflater;
 
 /** Special pixels writer for experimental super adaptive strategy */
 public class PixelsWriterMultiple extends PixelsWriter {

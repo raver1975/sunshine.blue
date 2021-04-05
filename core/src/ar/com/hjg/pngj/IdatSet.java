@@ -1,9 +1,10 @@
 package ar.com.hjg.pngj;
 
+import net.sf.jazzlib.Checksum;
+import net.sf.jazzlib.Inflater;
+
 import java.util.Arrays;
 import java.util.logging.Logger;
-import java.util.zip.Checksum;
-import java.util.zip.Inflater;
 
 /**
  * This object process the concatenation of IDAT chunks.

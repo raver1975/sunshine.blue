@@ -1,7 +1,7 @@
 package ar.com.hjg.pngj;
 
 
-import java.util.zip.Checksum;
+import net.sf.jazzlib.Checksum;
 
 /**
  * Simple immutable wrapper for basic image info.

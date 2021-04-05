@@ -9,12 +9,13 @@ import ar.com.hjg.pngj.chunks.PngChunkACTL;
 import ar.com.hjg.pngj.chunks.PngChunkFCTL;
 import ar.com.hjg.pngj.chunks.PngChunkFDAT;
 import ar.com.hjg.pngj.chunks.PngChunkIDAT;
+import com.badlogic.gdx.files.FileHandle;
 
 /**
  */
 public class PngReaderApng extends PngReaderByte {
 
-	public PngReaderApng(File file) {
+	public PngReaderApng(FileHandle file) {
 		super(file);
 		dontSkipChunk(PngChunkFCTL.ID);
 	}

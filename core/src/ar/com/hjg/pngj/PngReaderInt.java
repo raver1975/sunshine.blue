@@ -1,5 +1,7 @@
 package ar.com.hjg.pngj;
 
+import com.badlogic.gdx.files.FileHandle;
+
 import java.io.File;
 import java.io.InputStream;
 
@@ -14,7 +16,7 @@ import java.io.InputStream;
  */
 public class PngReaderInt extends PngReader {
 
-	public PngReaderInt(File file) {
+	public PngReaderInt(FileHandle file) {
 		super(file); // not necessary to set factory, PngReader already does that
 	}
 

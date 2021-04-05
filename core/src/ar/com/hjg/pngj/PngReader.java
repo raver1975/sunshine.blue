@@ -3,9 +3,6 @@ package ar.com.hjg.pngj;
 import java.io.Closeable;
 import java.io.File;
 import java.io.InputStream;
-import java.util.logging.Logger;
-import java.util.zip.Adler32;
-import java.util.zip.CRC32;
 
 import ar.com.hjg.pngj.chunks.ChunkLoadBehaviour;
 import ar.com.hjg.pngj.chunks.ChunksList;
@@ -13,6 +10,10 @@ import ar.com.hjg.pngj.chunks.PngChunkFCTL;
 import ar.com.hjg.pngj.chunks.PngChunkFDAT;
 import ar.com.hjg.pngj.chunks.PngChunkIDAT;
 import ar.com.hjg.pngj.chunks.PngMetadata;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import net.sf.jazzlib.Adler32;
+import net.sf.jazzlib.CRC32;
 
 /**
  * Reads a PNG image (pixels and/or metadata) from a file or stream.
@@ -50,7 +51,6 @@ import ar.com.hjg.pngj.chunks.PngMetadata;
  * samples).
  */
 public class PngReader implements Closeable {
-	private static final Logger LOGGER = Logger.getLogger(PngReader.class.getName());
 
 	// some performance/defensive limits
 	/**
@@ -186,7 +186,7 @@ public class PngReader implements Closeable {
 	 * @param file
 	 *            PNG image file
 	 */
-	public PngReader(File file) {
+	public PngReader(FileHandle file) {
 		this(PngHelperInternal.istreamFromFile(file), true);
 	}
 
@@ -544,7 +544,7 @@ public class PngReader implements Closeable {
 			if (chunkseq != null)
 				chunkseq.close();
 		} catch (Exception e) {
-			LOGGER.warning("error closing chunk sequence:" + e.getMessage());
+			Gdx.app.log("error","error closing chunk sequence:" + e.getMessage());
 		}
 		if (streamFeeder != null)
 			streamFeeder.close();

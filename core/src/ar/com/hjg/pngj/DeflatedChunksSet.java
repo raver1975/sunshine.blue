@@ -1,7 +1,8 @@
 package ar.com.hjg.pngj;
 
-import java.util.zip.DataFormatException;
-import java.util.zip.Inflater;
+
+import net.sf.jazzlib.DataFormatException;
+import net.sf.jazzlib.Inflater;
 
 /**
  * A set of IDAT-like chunks which, concatenated, form a zlib stream.

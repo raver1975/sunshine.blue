@@ -13,12 +13,12 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
-import java.util.zip.DeflaterOutputStream;
-import java.util.zip.InflaterInputStream;
 
 import ar.com.hjg.pngj.PngHelperInternal;
 import ar.com.hjg.pngj.PngjException;
 import ar.com.hjg.pngj.PngjInputException;
+import net.sf.jazzlib.DeflaterOutputStream;
+import net.sf.jazzlib.InflaterInputStream;
 
 /**
  * Helper methods and constants related to Chunk processing.

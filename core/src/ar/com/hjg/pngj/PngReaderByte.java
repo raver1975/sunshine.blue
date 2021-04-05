@@ -1,5 +1,7 @@
 package ar.com.hjg.pngj;
 
+import com.badlogic.gdx.files.FileHandle;
+
 import java.io.File;
 import java.io.InputStream;
 
@@ -11,7 +13,7 @@ import java.io.InputStream;
  */
 public class PngReaderByte extends PngReader {
 
-	public PngReaderByte(File file) {
+	public PngReaderByte(FileHandle file) {
 		super(file);
 		setLineSetFactory(ImageLineSetDefault.getFactoryByte());
 	}
