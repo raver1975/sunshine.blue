@@ -95,7 +95,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
             public boolean longPress(Actor actor, float x, float y) {
                 ta.setText(Gdx.app.getClipboard().getContents());
                 tfl.keyTyped(ta,(char)13);
-                return super.longPress(actor, x, y);
+                return true;// super.longPress(actor, x, y);
             }
 
         });

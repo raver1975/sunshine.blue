@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<img id="image"/>
+</body>
+<script>
+
+    function getQueryVariable(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split('&');
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split('=');
+            if (decodeURIComponent(pair[0]) == variable) {
+                return decodeURIComponent(pair[1]);
+            }
+        }
+        console.log('Query variable %s not found', variable);
+    }
+
+
+     var   url = "https://ipfs.io/ipfs/" + getQueryVariable('url')
+    var storedText;
+
+    fetch(url)
+        .then(function (response) {
+            response.text().then(function (text) {
+                storedText = text;
+                done();
+            });
+        });
+
+    function done() {
+        var image = document.getElementById("image");
+        // var image = document.createElement("img");
+        // var imageParent = document.getElementById("body");
+        image.src = storedText;            // image.src = "IMAGE URL/PATH"
+        // imageParent.appendChild(image);
+    }
+
+
+</script>
+</html>

@@ -219,7 +219,7 @@ public class HtmlLauncher extends GwtApplication {
 //                            ie.setSrc(text);
                         final RootPanel root = RootPanel.get("embed-image");
                         root.add(img);
-                        img.setVisible(true);
+                        img.setVisible(false);
                         Gdx.app.postRunnable(new Runnable() {
                             @Override
                             public void run() {
@@ -228,6 +228,7 @@ public class HtmlLauncher extends GwtApplication {
                                     if (img.getWidth() > 0 || img.getHeight() > 0) {
                                         break;
                                     }
+
                                 }
                                 Statics.objects.add(new RectTextureObject(new Pixmap(ImageElement.as(img.getElement()))));
                             }

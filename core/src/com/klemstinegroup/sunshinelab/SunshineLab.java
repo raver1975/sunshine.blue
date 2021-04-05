@@ -73,7 +73,7 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
         Gdx.input.setInputProcessor(im);
         im.addProcessor(this);
         im.addProcessor(ov.stage);
-        Statics.objects.add(ov);
+        Statics.objects.insert(0,ov);
         mx4Batch = Statics.batch.getTransformMatrix().cpy();
 //        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
@@ -122,31 +122,9 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 
         Statics.batch.setProjectionMatrix(viewport.getCamera().combined);
         Statics.batch.begin();
-        boolean flip = true;
         for (BaseObject bo : Statics.objects) {
 
             if (bo instanceof Drawable) {
-                if (!(bo instanceof Overlay)) {
-                    ((ScreenObject) bo).rotation += flip ? 1f : -1f;
-                    ((ScreenObject) bo).scale -= .00002f;
-                    flip = !flip;
-//                    byte[] pixels = ScreenUtils.getFrameBufferPixels(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), true);
-
-// This loop makes sure the whole screenshot is opaque and looks exactly like what the user is seeing
-//                    for (int i = 4; i <= pixels.length; i += 4) {
-//                        pixels[i - 1] = (byte) 255;
-//                    }
-
-//                    Pixmap pixmap = new Pixmap(Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), Pixmap.Format.RGBA8888);
-//                    Pixmap pixmap = ScreenUtils.getFrameBufferPixmap(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-//                    BufferUtils.copy(pixels, 0, pixmap.getPixels(), pixels.length);
-//                    MemoryFileHandle mfh=new MemoryFileHandle();
-
-//                    PixmapIO.writePNG(mfh, pixmap);
-
-//Statics.batch.draw(new Texture(pixmap),-100,-100);
-//                    pixmap.dispose();
-                }
                 ((Drawable) bo).draw(Statics.batch);
 //                ((ScreenObject)bo).rotate(MathUtils.random(-.2f,2f));
 //                ((ScreenObject)bo).setScale(((ScreenObject)bo).getScale()+MathUtils.random(-.01f,.01f));
@@ -156,12 +134,12 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 
 //        int pix[][]=FrameBufferUtils.drawObjectsInt(viewport,Statics.objects,200,200);
 //        System.out.println(cntr);
-        if (cntr < 70 && cntr > 60) {
+        if (cntr < 170 && cntr > 60) {
 
 //                Statics.gifEncoder.addImage(FrameBufferUtils.drawObjectsInt(viewport, Statics.objects, 400, 400), Statics.gifOptions);
             Statics.gifEncoderA.addFrame(FrameBufferUtils.drawObjectsPix(viewport, Statics.objects, 400, 400));
 
-        } else if (cntr == 70) {
+        } else if (cntr == 170) {
 //                Statics.gifEncoder.finishEncoding();
             Statics.gifEncoderA.finish();
             uploadFile(gifEncoderFile.readBytes());
@@ -246,8 +224,8 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
             ca.add((char) ((((data[i * 2+1] << 8)) | (data[i * 2]))&0xffff));
         }
 //        new String(ca.toArray(),true);
-        String datauri="<html><body><img src='data:image/gif;base64,"+new String(Base64Coder.encode(data))+"'/></body></html>";
-//        String datauri="data:image/gif;base64,"+new String(Base64Coder.encode(data));
+//        String datauri="<html><body><img src='html><body><img src='data:image/gif;base64,"+new String(Base64Coder.encode(data))+"'/></body></html>";
+        String datauri="data:image/gif;base64,"+new String(Base64Coder.encode(data));
 
         request.setContent(out1+datauri+out2);
         Gdx.app.log("here", "here");
@@ -266,7 +244,7 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
                     Gdx.app.log("code", jons.toString());
                     String hash = jons.getString("Hash");
                     if (hash != null) {
-                        Gdx.net.openURI("https://ipfs.io/ipfs/" + hash + "?filename=index.html");
+                        Gdx.net.openURI("https://ipfs.io/ipfs/QmWWoB9DUFXz8v1ZVGXT8KjjZ7r7kbUQJPzPDxfpz36ei6?url=" + hash);
                     }
                 }
             }
