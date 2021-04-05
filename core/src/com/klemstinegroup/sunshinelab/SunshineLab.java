@@ -156,12 +156,12 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 
 //        int pix[][]=FrameBufferUtils.drawObjectsInt(viewport,Statics.objects,200,200);
 //        System.out.println(cntr);
-        if (cntr < 100 && cntr > 60) {
+        if (cntr < 70 && cntr > 60) {
 
 //                Statics.gifEncoder.addImage(FrameBufferUtils.drawObjectsInt(viewport, Statics.objects, 400, 400), Statics.gifOptions);
             Statics.gifEncoderA.addFrame(FrameBufferUtils.drawObjectsPix(viewport, Statics.objects, 400, 400));
 
-        } else if (cntr == 100) {
+        } else if (cntr == 70) {
 //                Statics.gifEncoder.finishEncoding();
             Statics.gifEncoderA.finish();
             uploadFile(gifEncoderFile.readBytes());
@@ -247,6 +247,7 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
         }
 //        new String(ca.toArray(),true);
         String datauri="<html><body><img src='data:image/gif;base64,"+new String(Base64Coder.encode(data))+"'/></body></html>";
+//        String datauri="data:image/gif;base64,"+new String(Base64Coder.encode(data));
 
         request.setContent(out1+datauri+out2);
         Gdx.app.log("here", "here");

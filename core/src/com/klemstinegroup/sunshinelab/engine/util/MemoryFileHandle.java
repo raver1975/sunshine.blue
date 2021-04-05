@@ -19,6 +19,10 @@ public class MemoryFileHandle extends FileHandle {
 //		archiveEntry = this.archive.getEntry(file.getPath());
 //	}
 
+    public MemoryFileHandle(byte[] b){
+        ba.addAll(b);
+    }
+
     public MemoryFileHandle(String fileName) {
         super(fileName.replace('\\', '/'), FileType.Classpath);
 //		this.archive = archive;

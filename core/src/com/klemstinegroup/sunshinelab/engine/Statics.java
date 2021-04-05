@@ -11,7 +11,6 @@ import com.badlogic.gdx.utils.Array;
 import com.klemstinegroup.sunshinelab.engine.objects.BaseObject;
 import com.klemstinegroup.sunshinelab.engine.util.MemoryFileHandle;
 import com.madgag.gif.fmsware.AnimatedGifEncoder;
-import com.squareup.gifencoder.GifEncoder;
 import com.squareup.gifencoder.ImageOptions;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 

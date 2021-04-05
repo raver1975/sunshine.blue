@@ -1,12 +1,17 @@
 package com.klemstinegroup.sunshinelab.engine.objects;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.loaders.AssetLoader;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.utils.Base64Coder;
 import com.klemstinegroup.sunshinelab.SunshineLab;
 import com.klemstinegroup.sunshinelab.engine.Statics;
+import com.klemstinegroup.sunshinelab.engine.util.MemoryFileHandle;
 
 import java.util.Arrays;
 
@@ -18,7 +23,57 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
     public RectTextureObject(String url) {
 //
 //        url = "https://api.codetabs.com/v1/proxy?quest=" + url;
-        Pixmap.downloadFromUrl(url, new Pixmap.DownloadPixmapResponseListener() {
+        Gdx.app.log("url", url);
+        if (url.startsWith("data")) {
+            final byte[] b = Base64Coder.decode(url.split(",")[1]);
+            this.texture=new Texture(new Pixmap(new MemoryFileHandle(b)));
+
+//            Pixmap.downloadFromUrl(url,new Pixmap.DownloadPixmapResponseListener(){
+//                @Override
+//                public void downloadComplete(Pixmap pixmap) {
+//                    texture = new Texture(pixmap);
+//                    setBound();
+//                }
+//
+//                @Override
+//                public void downloadFailed(Throwable t) {
+//Statics.objects.removeValue(RectTextureObject.this,true);
+//                }
+//            });
+//           Pixmap pixmap=new Pixmap(new FileHandle(){
+//               @Override
+//               public byte[] readBytes() {
+//                   return b;
+//               }
+//           });
+//           if (pixmap!=null){
+//               texture=new Texture(pixmap);
+//               setBound();
+//           }
+//            Pixmap.DownloadPixmapResponseListener responseListener = new Pixmap.DownloadPixmapResponseListener() {
+//                @Override
+//                public void downloadComplete(Pixmap pixmap) {
+//                    texture = new Texture(pixmap);
+//                    setBound();
+//                }
+//
+//                @Override
+//                public void downloadFailed(Throwable t) {
+//
+//                }
+//            };
+//            Gdx.app.postRunnable(new Runnable() {
+//                @Override
+//                public void run() {
+//                    try {
+//                        Pixmap pixmap = new Pixmap(b, 0,b.length);
+//                        responseListener.downloadComplete(pixmap);
+//                    } catch (Throwable t) {
+//                        Statics.objects.removeValue(RectTextureObject.this, true);
+//                    }
+//                }
+//            });
+        } else Pixmap.downloadFromUrl(url, new Pixmap.DownloadPixmapResponseListener() {
             @Override
             public void downloadComplete(Pixmap pixmap) {
                 texture = new Texture(pixmap);
@@ -37,7 +92,7 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
 
                     @Override
                     public void downloadFailed(Throwable t) {
-
+                        Statics.objects.removeValue(RectTextureObject.this, true);
                     }
                 });
 
@@ -46,8 +101,13 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
     }
 
 
-    public RectTextureObject(com.badlogic.gdx.graphics.Texture texture) {
+    public RectTextureObject(Texture texture) {
         this.texture = texture;
+        setBound();
+    }
+
+    public RectTextureObject(Pixmap pixmap) {
+        this.texture=new Texture(pixmap);
         setBound();
     }
 
@@ -93,12 +153,12 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
 
     @Override
     public boolean isSelected(Vector2 touch) {
-        polygon = new Polygon(new float[]{0, 0, bounds.x, 0, bounds.x, bounds.y, 0,  bounds.y, 0, 0});
+        polygon = new Polygon(new float[]{0, 0, bounds.x, 0, bounds.x, bounds.y, 0, bounds.y, 0, 0});
 //        polygon.translate(center.x,center.y);
-        polygon.setOrigin(center.x,center.y);
-        polygon.setScale(scale,scale);
+        polygon.setOrigin(center.x, center.y);
+        polygon.setScale(scale, scale);
         polygon.rotate(rotation);
-        polygon.translate(position.x,position.y);
+        polygon.translate(position.x, position.y);
 //        polygon.translate(s);
 
         System.out.println(Arrays.toString(polygon.getTransformedVertices()));
