@@ -68,6 +68,11 @@ public class MemoryFileHandle extends FileHandle {
         }
         return new OutputStream() {
             @Override
+            public void write(byte[] b, int off, int len) throws IOException {
+                ba.addAll(b,off,len);
+            }
+
+            @Override
             public void write(int b) throws IOException {
                 ba.add((byte) b);
             }

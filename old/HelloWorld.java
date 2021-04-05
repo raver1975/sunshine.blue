@@ -11,6 +11,6 @@ public class HelloWorld {
     public static void main(final String... args) {
         Gdx.app.log("out", "hello world");
         Gdx.app.log("out", Arrays.toString(Statics.objects.toArray()));
-        ((ScreenObject)Statics.objects.get(0)).rotation+=1;
+        ((ScreenObject)Statics.objects.get(1)).rotation+=1;
     }
 }

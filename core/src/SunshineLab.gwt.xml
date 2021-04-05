@@ -5,6 +5,7 @@
 	<source path="com/igormaznitsa/jjjvm" />
 	<source path="com/squareup/gifencoder" />
 	<source path="com/madgag/gif/fmsware" />
+	<source path="ar/com/hjg/pngj" />
 	<extend-configuration-property name="gdx.reflect.include" value="java.io" />
 	<extend-configuration-property name="gdx.reflect.include" value="java.lang" />
 	<extend-configuration-property name="gdx.reflect.include" value="java.lang.annotation" />

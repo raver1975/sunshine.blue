@@ -13,11 +13,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.igormaznitsa.jjjvm.impl.JJJVMClassImpl;
 import com.igormaznitsa.jjjvm.impl.jse.JSEProviderImpl;
 import com.igormaznitsa.jjjvm.model.JJJVMProvider;
-import com.klemstinegroup.sunshinelab.engine.util.FrameBufferUtils;
+import com.klemstinegroup.sunshinelab.engine.util.*;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.klemstinegroup.sunshinelab.engine.objects.*;
-import com.klemstinegroup.sunshinelab.engine.util.MemoryFileHandle;
-import com.klemstinegroup.sunshinelab.engine.util.UUID;
 import com.madgag.gif.fmsware.AnimatedGifEncoder;
 import com.squareup.gifencoder.ImageOptions;
 
@@ -73,7 +71,7 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
         Gdx.input.setInputProcessor(im);
         im.addProcessor(this);
         im.addProcessor(ov.stage);
-        Statics.objects.insert(0,ov);
+        Statics.objects.insert(0, ov);
         mx4Batch = Statics.batch.getTransformMatrix().cpy();
 //        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
@@ -142,129 +140,30 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
         } else if (cntr == 170) {
 //                Statics.gifEncoder.finishEncoding();
             Statics.gifEncoderA.finish();
-            uploadFile(gifEncoderFile.readBytes());
+            IPFSResponseListener irl = new IPFSResponseListener() {
+                @Override
+                public void qid(String qid) {
+                    Gdx.net.openURI("https://ipfs.io/ipfs/QmWWoB9DUFXz8v1ZVGXT8KjjZ7r7kbUQJPzPDxfpz36ei6?url=" + qid);
+                }
+            };
+            IPFSUtils.uploadFile(gifEncoderFile.readBytes(),"image/gif", irl);
 //            Gdx.net.openURI(data);
 //                System.exit(0);
 
         }
         cntr++;
         Statics.batch.end();
-//        try {
-//            jjjvmClass.findMethod("main", "([Ljava/lang/String;)V").invoke(null, null);
-//        } catch (Throwable throwable) {
-//            throwable.printStackTrace();
-//        }
-    }
 
-    public void uploadFile(byte[] data) {
-        Gdx.app.log("upload", data.length + "");
-        String url = "https://ipfs.infura.io:5001/api/v0/add";
-//        String param = "file";
-//        File textFile = new File("/path/to/file.txt");
-//        File binaryFile = new File("/path/to/file.bin");
-        String boundary = "12345678901234567890"; // Just generate some unique random value.
-        String CRLF = "\r\n"; // Line separator required by multipart/form-data.
-
-        HttpRequestBuilder builder = new HttpRequestBuilder();
-        Net.HttpRequest request = builder.newRequest().method(Net.HttpMethods.POST).url(url).timeout(1000000).build();
-        request.setHeader("Content-Type", "multipart/form-data; boundary=" + boundary);
-        Gdx.app.log("test", "1");
-        String out1 = "--" + boundary +
-                CRLF + "Content-Disposition: form-data; name=\"file\"" +
-                CRLF + "Content-Type: image/gif" +
-                CRLF + CRLF;
-        String out2 = CRLF + "--" + boundary + "--" + CRLF;
-        ByteArray byteArr = new ByteArray();
-        byteArr.addAll(new byte[]{45, 45, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 13, 10, 67, 111, 110, 116, 101, 110, 116, 45, 68, 105, 115, 112, 111, 115, 105, 116, 105, 111, 110, 58, 32, 102, 111, 114, 109, 45, 100, 97, 116, 97, 59, 32, 110, 97, 109, 101, 61, 34, 102, 105, 108, 101, 34, 13, 10, 67, 111, 110, 116, 101, 110, 116, 45, 84, 121, 112, 101, 58, 32, 105, 109, 97, 103, 101, 47, 103, 105, 102, 13, 10, 13, 10});
-        byteArr.addAll(data);
-        byteArr.addAll(new byte[]{13, 10, 45, 45, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 45, 45, 13, 10});
-        Gdx.app.log("test", "2");
-//        request.setContent(new InputStream() {
-//            int cnt = 0;
-//
-//            @Override
-//            public int available(){
-//                return byteArr.size;
-//            }
-//
-//            @Override
-//            public int read(byte[] b, int off, int len) throws IOException {
-//                Gdx.app.log("test",b.length+"");
-//                int g=0;
-//                for (int i=0;i<b.length;i++){
-//                    g=read();
-//                    if (g>-1)b[i+off]= (byte)(g&0xff);
-//                    else return -1;
-//                }
-//                return b.length;
-//            }
-//
-//            @Override
-//            public int read(byte[] b) throws IOException {
-//                Gdx.app.log("test",b.length+"");
-//                int g=0;
-//                for (int i=0;i<b.length;i++){
-//                    g=read();
-//                    if (g>-1)b[i]= (byte)(g&0xff);
-//                    else return -1;
-//                }
-//                return b.length;
-//            }
-//
-//            @Override
-//            public int read() throws IOException {
-//                if (cnt >= byteArr.size) return -1;
-//                else return byteArr.get(cnt++) & 0xff;
-//            }
-//        }, byteArr.size);
-        CharArray ca = new CharArray();
-//
-//        StringBuffer ss=new StringBuffer();
-        for (int i = 0; i < data.length / 2; i++) {
-            ca.add((char) ((((data[i * 2+1] << 8)) | (data[i * 2]))&0xffff));
+        /*//------------------------------------------------------------
+        try {
+            jjjvmClass.findMethod("main", "([Ljava/lang/String;)V").invoke(null, null);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
         }
-//        new String(ca.toArray(),true);
-//        String datauri="<html><body><img src='html><body><img src='data:image/gif;base64,"+new String(Base64Coder.encode(data))+"'/></body></html>";
-        String datauri="data:image/gif;base64,"+new String(Base64Coder.encode(data));
-
-        request.setContent(out1+datauri+out2);
-        Gdx.app.log("here", "here");
-        Net.HttpResponseListener listener = new Net.HttpResponseListener() {
-            @Override
-            public void handleHttpResponse(Net.HttpResponse httpResponse) {
-                String res = httpResponse.getResultAsString();
-                Gdx.app.log("response", res);
-                if (httpResponse.getStatus().getStatusCode() == HttpStatus.SC_OK) {
-//                    Gdx.app.log("response",httpResponse.getResultAsString());
-//                    JsonParser jsonParser = new JsonParser();
-                    JsonReader jsonReader = new JsonReader();
-
-                    Gdx.app.log("code", res);
-                    JsonValue jons = jsonReader.parse(res);
-                    Gdx.app.log("code", jons.toString());
-                    String hash = jons.getString("Hash");
-                    if (hash != null) {
-                        Gdx.net.openURI("https://ipfs.io/ipfs/QmWWoB9DUFXz8v1ZVGXT8KjjZ7r7kbUQJPzPDxfpz36ei6?url=" + hash);
-                    }
-                }
-            }
-
-            @Override
-            public void failed(Throwable t) {
-                Gdx.app.log("response", t.toString());
-            }
-
-            @Override
-            public void cancelled() {
-
-            }
-        };
-        Gdx.app.log("here", "here");
-        Gdx.net.sendHttpRequest(request, listener);
-        Gdx.app.log("here", "here1");
-//
-
+        //------------------------------------------------------------*/
     }
+
+
 //
 //    public byte[] GetBytes(String str)
 //    {

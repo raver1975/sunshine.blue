@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.Base64Coder;
 import com.klemstinegroup.sunshinelab.SunshineLab;
 import com.klemstinegroup.sunshinelab.engine.Statics;
+import com.klemstinegroup.sunshinelab.engine.util.IPFSUtils;
 import com.klemstinegroup.sunshinelab.engine.util.MemoryFileHandle;
 
 import java.util.Arrays;
@@ -76,6 +77,7 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
         } else Pixmap.downloadFromUrl(url, new Pixmap.DownloadPixmapResponseListener() {
             @Override
             public void downloadComplete(Pixmap pixmap) {
+                IPFSUtils.writePng(pixmap);
                 texture = new Texture(pixmap);
                 setBound();
             }
@@ -86,6 +88,7 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
                 Pixmap.downloadFromUrl(url1, new Pixmap.DownloadPixmapResponseListener() {
                     @Override
                     public void downloadComplete(Pixmap pixmap) {
+                        IPFSUtils.writePng(pixmap);
                         texture = new Texture(pixmap);
                         setBound();
                     }
@@ -101,12 +104,13 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
     }
 
 
-    public RectTextureObject(Texture texture) {
-        this.texture = texture;
-        setBound();
-    }
+//    public RectTextureObject(Texture texture) {
+//        this.texture = texture;
+//        setBound();
+//    }
 
     public RectTextureObject(Pixmap pixmap) {
+        IPFSUtils.writePng(pixmap);
         this.texture=new Texture(pixmap);
         setBound();
     }
