@@ -1,16 +1,13 @@
 package com.klemstinegroup.sunshinelab.engine.util;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.klemstinegroup.sunshinelab.engine.objects.BaseObject;
 import com.klemstinegroup.sunshinelab.engine.objects.Drawable;
 import com.klemstinegroup.sunshinelab.engine.objects.Overlay;
-import com.klemstinegroup.sunshinelab.engine.objects.ScreenObject;
 
 public class FrameBufferUtils {
     static public Pixmap drawObjects(Viewport viewport, Array<BaseObject> objects) {
@@ -66,8 +63,8 @@ public class FrameBufferUtils {
     private static void draw(Viewport viewport) {
         Statics.batch.setProjectionMatrix(viewport.getCamera().combined);
         Statics.batch.setTransformMatrix(Statics.mx4Batch);
-        for (BaseObject bo : Statics.objects) {
-            if (bo instanceof Drawable && !(bo instanceof Overlay)) {
+        for (BaseObject bo : Statics.userObjects) {
+            if (bo instanceof Drawable) {
                 ((Drawable) bo).draw(Statics.batch);
             }
             Statics.batch.setTransformMatrix(Statics.mx4Batch);

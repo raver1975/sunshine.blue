@@ -1,8 +1,6 @@
 package com.klemstinegroup.sunshinelab.engine.objects;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.loaders.AssetLoader;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -77,7 +75,7 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
         } else Pixmap.downloadFromUrl(url, new Pixmap.DownloadPixmapResponseListener() {
             @Override
             public void downloadComplete(Pixmap pixmap) {
-                IPFSUtils.writePng(pixmap);
+                IPFSUtils.uploadPng(pixmap);
                 texture = new Texture(pixmap);
                 setBound();
             }
@@ -88,14 +86,14 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
                 Pixmap.downloadFromUrl(url1, new Pixmap.DownloadPixmapResponseListener() {
                     @Override
                     public void downloadComplete(Pixmap pixmap) {
-                        IPFSUtils.writePng(pixmap);
+                        IPFSUtils.uploadPng(pixmap);
                         texture = new Texture(pixmap);
                         setBound();
                     }
 
                     @Override
                     public void downloadFailed(Throwable t) {
-                        Statics.objects.removeValue(RectTextureObject.this, true);
+                        Statics.userObjects.removeValue(RectTextureObject.this, true);
                     }
                 });
 
@@ -110,7 +108,7 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
 //    }
 
     public RectTextureObject(Pixmap pixmap) {
-        IPFSUtils.writePng(pixmap);
+        IPFSUtils.uploadPng(pixmap);
         this.texture=new Texture(pixmap);
         setBound();
     }
@@ -136,7 +134,7 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
 
         }
 
-        if (Statics.debug || Statics.selectedobjects.contains(this, true)) {
+        if (Statics.debug || Statics.selectedObjects.contains(this, true)) {
 //            batch.setColor(Color.RED);
             Statics.shapedrawer.setColor(Color.RED);
             Statics.shapedrawer.rectangle(new Rectangle(0, 0, bounds.x, bounds.y));

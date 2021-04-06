@@ -4,19 +4,13 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
-import com.badlogic.gdx.backends.gwt.GwtFileHandle;
-import com.badlogic.gdx.backends.gwt.preloader.AssetDownloader;
 import com.badlogic.gdx.backends.gwt.preloader.Preloader;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.g2d.freetype.gwt.FreetypeInjector;
 import com.badlogic.gdx.graphics.g2d.freetype.gwt.inject.OnCompletion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
-import com.badlogic.gdx.utils.Base64Coder;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.CanvasElement;
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.*;
@@ -25,9 +19,6 @@ import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.klemstinegroup.sunshinelab.engine.objects.BaseObject;
 import com.klemstinegroup.sunshinelab.engine.objects.BasicUIOverlay;
 import com.klemstinegroup.sunshinelab.engine.objects.RectTextureObject;
-import javafx.scene.input.GestureEvent;
-
-import java.io.*;
 
 public class HtmlLauncher extends GwtApplication {
     private static HtmlLauncher instance;
@@ -199,7 +190,7 @@ public class HtmlLauncher extends GwtApplication {
 //        if (!oldText.equals(text)) {
         getClipboard().setContents(text);
         Gdx.app.log("cliboard paste", text);
-        for (BaseObject bo : Statics.objects) {
+        for (BaseObject bo : Statics.userObjects) {
             if (bo instanceof BasicUIOverlay) {
                 Actor focusedActor = ((BasicUIOverlay) bo).stage.getKeyboardFocus();
                 if (focusedActor != null && focusedActor instanceof TextArea) {
@@ -230,12 +221,12 @@ public class HtmlLauncher extends GwtApplication {
                                     }
 
                                 }
-                                Statics.objects.add(new RectTextureObject(new Pixmap(ImageElement.as(img.getElement()))));
+                                Statics.userObjects.add(new RectTextureObject(new Pixmap(ImageElement.as(img.getElement()))));
                             }
                         });
 //                            img.setVisible(false);
 //                            root.remove(img);
-                    } else Statics.objects.add(new RectTextureObject(text.replaceAll("\n", "")));
+                    } else Statics.userObjects.add(new RectTextureObject(text.replaceAll("\n", "")));
                     ta.setVisible(false);
                     ta.setText("");
 //                        ta.setText("");

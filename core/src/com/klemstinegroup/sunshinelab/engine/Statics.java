@@ -15,6 +15,8 @@ import com.squareup.gifencoder.ImageOptions;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public class Statics {
+    public static final String IPFSGateway="https://ipfs.io/ipfs/";
+    public static final String IPFSMediaViewer="QmWWoB9DUFXz8v1ZVGXT8KjjZ7r7kbUQJPzPDxfpz36ei6";
     public static final boolean debug = false;
     public static Matrix4 mx4Batch = new Matrix4();
     public static String test="test1234";
@@ -35,7 +37,8 @@ public class Statics {
     public static final Batch batch = new PolygonSpriteBatch();
     public static final ShapeDrawer shapedrawer = new ShapeDrawer(batch, whitePixel);
 
-    public static final Array<BaseObject> objects = new Array<BaseObject>();
-    public static final Array<BaseObject> selectedobjects = new Array<BaseObject>();
+    public static final Array<BaseObject> userObjects = new Array<BaseObject>();
+    public static final Array<BaseObject> selectedObjects = new Array<BaseObject>();
+    public static final Array<BaseObject> overlayObjects = new Array<BaseObject>();
 
 }

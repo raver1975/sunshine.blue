@@ -75,7 +75,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
             Statics.shapedrawer.filledRectangle(nn.runs.size > 0 ? nn.runs.get(nn.runs.size - 1).width : 0 + font.getSpaceXadvance() / 2f, 0, 5, font.getCapHeight());
         }
 
-        if (Statics.debug || Statics.selectedobjects.contains(this, true)) {
+        if (Statics.debug || Statics.selectedObjects.contains(this, true)) {
             Statics.shapedrawer.rectangle(new Rectangle(0, 0, bounds.x, bounds.y));
             Statics.shapedrawer.filledCircle(center.x, center.y, 5);
         }

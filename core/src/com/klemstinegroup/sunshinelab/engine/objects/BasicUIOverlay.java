@@ -2,28 +2,19 @@ package com.klemstinegroup.sunshinelab.engine.objects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.ui.TextArea.TextAreaListener;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.klemstinegroup.sunshinelab.SunshineLab;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 
 public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
@@ -59,7 +50,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 super.clicked(event, x, y);
                 Gdx.input.setOnscreenKeyboardVisible(true);
                 FontObject ff = new FontObject(FontObject.fontList[MathUtils.random(FontObject.fontList.length - 1)], 40);
-                Statics.objects.add(ff);
+                Statics.userObjects.add(ff);
                 ff.position.set(-ff.center.x,-ff.center.y,0);
 //        ((ScreenObject) Statics.objects.get(0)).position.set(-((ScreenObject) Statics.objects.get(0)).bounds.x/2, -((ScreenObject) Statics.objects.get(0)).bounds.y/2, 0);
             }
@@ -84,7 +75,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                     Gdx.app.log("ta",ta.getText());
                     RectTextureObject bg = new RectTextureObject(ta.getText().replaceAll("\n", ""));
                     if (bg!=null){
-                        Statics.objects.add(bg);
+                        Statics.userObjects.add(bg);
                     }
                     ta.setText("");
                 }
