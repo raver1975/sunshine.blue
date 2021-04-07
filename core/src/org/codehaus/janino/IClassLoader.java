@@ -40,8 +40,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Loads an {@link IClass} by type name.
@@ -49,7 +47,6 @@ import java.util.logging.Logger;
 public abstract
 class IClassLoader {
 
-    private static final Logger LOGGER = Logger.getLogger(IClassLoader.class.getName());
 
     // The following are constants, but cannot be declared FINAL, because they are only initialized by
     // "postConstruct()".
@@ -261,7 +258,6 @@ class IClassLoader {
      */
     @Nullable public final IClass
     loadIClass(String fieldDescriptor) throws ClassNotFoundException {
-        IClassLoader.LOGGER.entering(null, "loadIClass", fieldDescriptor);
 
         if (Descriptor.isPrimitive(fieldDescriptor)) {
             return (
@@ -315,7 +311,6 @@ class IClassLoader {
 
             // Load the class through the {@link #findIClass(String)} method implemented by the derived class.
             // By contract, {@link findIClass(String)} <em>must</em> invoke {@link #defineIClass(IClass)}!
-            IClassLoader.LOGGER.log(Level.FINE, "About to call \"findIClass({0})\"", fieldDescriptor);
             result = this.findIClass(fieldDescriptor);
             if (result == null) {
                 if (this.loadedIClasses.containsKey(fieldDescriptor)) {
@@ -347,7 +342,6 @@ class IClassLoader {
             );
         }
 
-        IClassLoader.LOGGER.exiting(null, "loadIClass", result);
         return result;
     }
 
@@ -394,7 +388,6 @@ class IClassLoader {
     protected final void
     defineIClass(IClass iClass) {
         String descriptor = iClass.getDescriptor();
-        IClassLoader.LOGGER.log(Level.FINE, "{0}: Defined type \"{0}\"", descriptor);
 
         // Define.
         IClass prev = (IClass) this.loadedIClasses.put(descriptor, iClass);

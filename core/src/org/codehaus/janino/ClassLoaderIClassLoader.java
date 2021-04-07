@@ -25,10 +25,10 @@
 
 package org.codehaus.janino;
 
+import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.badlogic.gdx.utils.reflect.ReflectionException;
 import org.codehaus.commons.nullanalysis.Nullable;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * An {@link IClassLoader} that loads {@link IClass}es through a reflection {@link ClassLoader}.
@@ -36,44 +36,41 @@ import java.util.logging.Logger;
 public
 class ClassLoaderIClassLoader extends IClassLoader {
 
-    private static final Logger LOGGER = Logger.getLogger(ClassLoaderIClassLoader.class.getName());
 
     /**
      * @param classLoader The delegate that loads the classes
      */
     public
-    ClassLoaderIClassLoader(ClassLoader classLoader) {
+    ClassLoaderIClassLoader() {
         super(
             null   // parentIClassLoader
         );
-        this.classLoader = classLoader;
 
         super.postConstruct();
     }
 
-    /**
-     * Equivalent to
-     * <pre>
-     *   ClassLoaderIClassLoader(Thread.currentThread().getContextClassLoader())
-     * </pre>
-     */
-    public
-    ClassLoaderIClassLoader() { this(Thread.currentThread().getContextClassLoader()); }
-
-    /**
-     * @return The delegate {@link ClassLoader}
-     */
-    public ClassLoader
-    getClassLoader() { return this.classLoader; }
+//    /**
+//     * Equivalent to
+//     * <pre>
+//     *   ClassLoaderIClassLoader(Thread.currentThread().getContextClassLoader())
+//     * </pre>
+//     */
+//    public
+//    ClassLoaderIClassLoader() { this(Thread.currentThread().getContextClassLoader()); }
+//
+//    /**
+//     * @return The delegate {@link ClassLoader}
+//     */
+//    public ClassLoader
+//    getClassLoader() { return this.classLoader; }
 
     @Override @Nullable protected IClass
     findIClass(String descriptor) throws ClassNotFoundException {
-        ClassLoaderIClassLoader.LOGGER.entering(null, "findIClass", descriptor);
 
-        Class<?> clazz;
+        Class<?> clazz = null;
         try {
-            clazz = this.classLoader.loadClass(Descriptor.toClassName(descriptor));
-        } catch (ClassNotFoundException e) {
+            clazz = ClassReflection.forName(Descriptor.toClassName(descriptor));
+        } catch (ReflectionException e) {
 
             // Determine whether the class DOES NOT EXIST, or whether there were problems loading it. That's easier
             // said than done... the following seems to work:
@@ -83,16 +80,17 @@ class ClassLoaderIClassLoader extends IClassLoader {
                 while (t instanceof ClassNotFoundException) t = t.getCause();
                 if (t == null) return null;
             }
-
-            throw e;
+            try {
+                throw e;
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
         }
 
-        ClassLoaderIClassLoader.LOGGER.log(Level.FINE, "clazz={0}", clazz);
 
         IClass result = new ReflectionIClass(clazz, this);
         this.defineIClass(result);
         return result;
     }
 
-    private final ClassLoader classLoader;
 }

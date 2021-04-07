@@ -66,7 +66,6 @@ import java.util.regex.Pattern;
  */
 public
 class UnitCompiler {
-    private static final Logger LOGGER = Logger.getLogger(UnitCompiler.class.getName());
 
     // Some debug flags; controlled by system properties.
     private static final boolean disassembleClassFilesToStdout = SystemProperties.getBooleanClassProperty(UnitCompiler.class, "disassembleClassFilesToStdout");
@@ -8427,7 +8426,6 @@ class UnitCompiler {
         String rhs = identifiers[n - 1];
 
         // 6.5.2.2.1
-        UnitCompiler.LOGGER.log(Level.FINE, "lhs={0}", lhs);
         if (lhs instanceof Package) {
             String className = ((Package) lhs).name + '.' + rhs;
             IClass result    = this.findTypeByName(location, className);
@@ -9272,12 +9270,6 @@ class UnitCompiler {
         boolean            boxingPermitted,
         Scope              contextScope
     ) throws CompileException {
-        if (UnitCompiler.LOGGER.isLoggable(Level.FINER)) {
-            UnitCompiler.LOGGER.entering(null, "findMostSpecificIInvocable", new Object[] {
-                locatable, Arrays.toString(iInvocables), Arrays.toString(argumentTypes), boxingPermitted, contextScope
-            });
-        }
-
         // Select applicable methods (15.12.2.1).
         List<IInvocable> applicableIInvocables = new ArrayList<IInvocable>();
         List<IInvocable> varargApplicables     = new ArrayList<IInvocable>();
@@ -9322,11 +9314,11 @@ class UnitCompiler {
                     for (int idx = lastActualArg; idx >= formalParamCount; --idx) {
 
                         // Is method invocation conversion possible (5.3)?
-                        UnitCompiler.LOGGER.log(
-                            Level.FINE,
-                            "{0} <=> {1}",
-                            new Object[] { lastParamType, argumentTypes[idx] }
-                        );
+//                        UnitCompiler.LOGGER.log(
+//                            Level.FINE,
+//                            "{0} <=> {1}",
+//                            new Object[] { lastParamType, argumentTypes[idx] }
+//                        );
                         if (!this.isMethodInvocationConvertible(argumentTypes[idx], lastParamType, boxingPermitted)) {
                             formalParamCount++;
                             break VARARGS;
@@ -9340,11 +9332,11 @@ class UnitCompiler {
 
             if (formalParamCount == nUncheckedArg) {
                 for (int j = 0; j < nUncheckedArg; ++j) {
-                    UnitCompiler.LOGGER.log(
-                        Level.FINE,
-                        "{0}: {1} <=> {2}",
-                        new Object[] { j, parameterTypes[j], argumentTypes[j] }
-                    );
+//                    UnitCompiler.LOGGER.log(
+//                        Level.FINE,
+//                        "{0}: {1} <=> {2}",
+//                        new Object[] { j, parameterTypes[j], argumentTypes[j] }
+//                    );
 
                     // Is method invocation conversion possible (5.3)?
                     if (!this.isMethodInvocationConvertible(argumentTypes[j], parameterTypes[j], boxingPermitted)) {
@@ -9353,7 +9345,7 @@ class UnitCompiler {
                 }
 
                 // Applicable!
-                UnitCompiler.LOGGER.fine("Applicable!");
+//                UnitCompiler.LOGGER.fine("Applicable!");
 
                 // Varargs has lower priority.
                 if (isVarargs) {
@@ -9405,7 +9397,7 @@ class UnitCompiler {
             {
                 ;
             }
-            UnitCompiler.LOGGER.log(Level.FINE, "maximallySpecificIInvocables={0}", maximallySpecificIInvocables);
+//            UnitCompiler.LOGGER.log(Level.FINE, "maximallySpecificIInvocables={0}", maximallySpecificIInvocables);
         }
 
         if (maximallySpecificIInvocables.size() == 1) return (IInvocable) maximallySpecificIInvocables.get(0);
@@ -10845,11 +10837,11 @@ class UnitCompiler {
         IClass           targetType,
         @Nullable Object constantValue
     ) throws CompileException {
-        UnitCompiler.LOGGER.entering(
-            null,
-            "tryAssignmentConversion",
-            new Object[] { locatable, sourceType, targetType, constantValue }
-        );
+//        UnitCompiler.LOGGER.entering(
+//            null,
+//            "tryAssignmentConversion",
+//            new Object[] { locatable, sourceType, targetType, constantValue }
+//        );
 
         // JLS7 5.1.1 Identity conversion.
         if (this.tryIdentityConversion(sourceType, targetType)) return true;
@@ -11346,11 +11338,11 @@ class UnitCompiler {
     private boolean
     tryConstantAssignmentConversion(Locatable locatable, @Nullable Object constantValue, IClass targetType)
     throws CompileException {
-        UnitCompiler.LOGGER.entering(
-            null,
-            "tryConstantAssignmentConversion",
-            new Object[] { locatable, constantValue, targetType }
-        );
+//        UnitCompiler.LOGGER.entering(
+//            null,
+//            "tryConstantAssignmentConversion",
+//            new Object[] { locatable, constantValue, targetType }
+//        );
 
         int cv;
         if (constantValue instanceof Byte) {

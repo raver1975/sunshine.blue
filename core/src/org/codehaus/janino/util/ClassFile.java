@@ -157,7 +157,7 @@ class ClassFile implements Annotatable {
      * @throws ClassFileException <var>attributes</var> contains <em>more than one</em> attribute with that name
      */
     @Nullable private AttributeInfo
-    findAttribute(List<AttributeInfo> attributes, String attributeName) throws ClassFormatError {
+    findAttribute(List<AttributeInfo> attributes, String attributeName) {
 
         Short nameIndex = (Short) this.constantPoolMap.get(new ConstantUtf8Info(attributeName));
         if (nameIndex == null) return null;

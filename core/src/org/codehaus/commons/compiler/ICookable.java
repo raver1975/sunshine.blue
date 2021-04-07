@@ -27,7 +27,6 @@ package org.codehaus.commons.compiler;
 
 import org.codehaus.commons.nullanalysis.Nullable;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -98,22 +97,22 @@ interface ICookable {
      * Reads, scans, parses and compiles Java tokens from the given {@link File}, encoded in the "platform default
      * encoding".
      */
-    void cookFile(File file) throws CompileException, IOException;
+   // void cookFile(File file) throws CompileException, IOException;
 
     /**
      * Reads, scans, parses and compiles Java tokens from the given {@link File} with the given {@code encoding}.
      */
-    void cookFile(File file, @Nullable String encoding) throws CompileException, IOException;
+   // void cookFile(File file, @Nullable String encoding) throws CompileException, IOException;
 
     /**
      * Reads, scans, parses and compiles Java tokens from the named file, encoded in the "platform default encoding".
      */
-    void cookFile(String fileName) throws CompileException, IOException;
+    //void cookFile(String fileName) throws CompileException, IOException;
 
     /**
      * Reads, scans, parses and compiles Java tokens from the named file with the given <var>encoding</var>.
      */
-    void cookFile(String fileName, @Nullable String encoding) throws CompileException, IOException;
+    //void cookFile(String fileName, @Nullable String encoding) throws CompileException, IOException;
 
     /**
      * Specifies the version of source code accepted, in analogy with JAVAC's {@code -source} command line option.

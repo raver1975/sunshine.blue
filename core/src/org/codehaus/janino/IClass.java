@@ -43,8 +43,6 @@ import java.util.logging.Logger;
 public abstract
 class IClass {
 
-    private static final Logger LOGGER = Logger.getLogger(IClass.class.getName());
-
     /**
      * Special return value for {@link IField#getConstantValue()} indicating that the field does <em>not</em> have a
      * constant value.
@@ -1003,7 +1001,6 @@ class IClass {
          */
         public boolean
         isMoreSpecificThan(IInvocable that) throws CompileException {
-            IClass.LOGGER.entering(null, "isMoreSpecificThan", that);
 
             // a variable-length argument is always less specific than a fixed arity.
             final boolean thatIsVarargs;
@@ -1110,13 +1107,11 @@ class IClass {
             IClass[] thatParameterTypes = that.getParameterTypes();
             for (int i = 0; i < thisParameterTypes.length; ++i) {
                 if (!thatParameterTypes[i].isAssignableFrom(thisParameterTypes[i])) {
-                    IClass.LOGGER.exiting(null, "isMoreSpecificThan", false);
                     return false;
                 }
             }
 
             boolean result = !Arrays.equals(thisParameterTypes, thatParameterTypes);
-            IClass.LOGGER.exiting(null, "isMoreSpecificThan", result);
             return result;
         }
 

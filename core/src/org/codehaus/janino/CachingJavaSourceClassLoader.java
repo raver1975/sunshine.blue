@@ -113,7 +113,7 @@ class CachingJavaSourceClassLoader extends JavaSourceClassLoader {
         ResourceFinder   classFileCacheResourceFinder,
         ResourceCreator  classFileCacheResourceCreator
     ) {
-        super(parentClassLoader, sourceFinder, characterEncoding);
+        super(sourceFinder, characterEncoding);
         this.classFileCacheResourceFinder  = classFileCacheResourceFinder;
         this.classFileCacheResourceCreator = classFileCacheResourceCreator;
         this.sourceFinder                  = sourceFinder;

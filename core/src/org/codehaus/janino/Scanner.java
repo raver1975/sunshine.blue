@@ -25,6 +25,7 @@
 
 package org.codehaus.janino;
 
+import com.klemstinegroup.sunshinelab.engine.util.MemoryFileHandle;
 import org.codehaus.commons.compiler.CompileException;
 import org.codehaus.commons.compiler.Location;
 import org.codehaus.commons.compiler.io.Readers;
@@ -197,28 +198,75 @@ class Scanner {
         //     org.codehaus.janino.source_debugging.dir
         // JANINO is designed to compile in memory to save the overhead of disk I/O, so writing this file is only
         // recommended for source code level debugging purposes.
-        if (fileName == null && Boolean.getBoolean(Scanner.SYSTEM_PROPERTY_SOURCE_DEBUGGING_ENABLE)) {
+        if (fileName == null && false) {
 
             String  dirName = System.getProperty(Scanner.SYSTEM_PROPERTY_SOURCE_DEBUGGING_DIR);
-            boolean keep    = Boolean.getBoolean(Scanner.SYSTEM_PROPERTY_SOURCE_DEBUGGING_KEEP);
+            boolean keep    = false;
 
-            File dir           = dirName == null ? null : new File(dirName);
-            File temporaryFile = File.createTempFile("janino", ".java", dir);
+//            File dir           = dirName == null ? null : new File(dirName);
+//            File temporaryFile = File.createTempFile("janino", ".java", dir);
 
-            if (!keep) temporaryFile.deleteOnExit();
+//            if (!keep) temporaryFile.deleteOnExit();
 
-            in = Readers.teeReader(
+            in = teeReader(
                 in,                            // in
-                new FileWriter(temporaryFile), // out
+                new MemoryFileHandle(), // out
                 true                           // closeWriterOnEoi
             );
-            fileName = temporaryFile.getAbsolutePath();
+//            fileName = temporaryFile.getAbsolutePath();
         }
 
         this.fileName             = fileName;
         this.in                   = new UnicodeUnescapeReader(in);
         this.nextCharLineNumber   = initialLineNumber;
         this.nextCharColumnNumber = initialColumnNumber;
+    }
+    /**
+     * @return A {@link Reader} that copies the bytes being passed through to a given {@link Writer}; this is in
+     *         analogy with the UNIX "tee" command
+     */
+    public static Reader
+    teeReader(Reader in, final MemoryFileHandle outmfh, final boolean closeWriterOnEoi) {
+
+        OutputStreamWriter out = new OutputStreamWriter(outmfh.write(false));
+        return new FilterReader(in) {
+
+            @Override public void
+            close() throws IOException {
+                this.in.close();
+                out.close();
+            }
+
+            @Override public int
+            read() throws IOException {
+                int c = this.in.read();
+                if (c == -1) {
+                    if (closeWriterOnEoi) {
+                        out.close();
+                    } else {
+                        out.flush();
+                    }
+                } else {
+                    out.write(c);
+                }
+                return c;
+            }
+
+            @Override public int
+            read(@Nullable char[] cbuf, int off, int len) throws IOException {
+                int bytesRead = this.in.read(cbuf, off, len);
+                if (bytesRead == -1) {
+                    if (closeWriterOnEoi) {
+                        out.close();
+                    } else {
+                        out.flush();
+                    }
+                } else {
+                    out.write(cbuf, off, bytesRead);
+                }
+                return bytesRead;
+            }
+        };
     }
 
     /**

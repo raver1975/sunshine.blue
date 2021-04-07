@@ -59,13 +59,10 @@ import java.util.Set;
 public
 class JavaSourceClassLoader extends AbstractJavaSourceClassLoader {
 
-    public
-    JavaSourceClassLoader() { this(ClassLoader.getSystemClassLoader()); }
 
     public
-    JavaSourceClassLoader(ClassLoader parentClassLoader) {
+    JavaSourceClassLoader() {
         this(
-            parentClassLoader,
             (File[]) null,     // sourcePath
             null               // characterEncoding
         );
@@ -75,7 +72,6 @@ class JavaSourceClassLoader extends AbstractJavaSourceClassLoader {
      * Sets up a {@link JavaSourceClassLoader} that finds Java source code in a file that resides in either of
      * the directories specified by the given source path.
      *
-     * @param parentClassLoader         See {@link ClassLoader}
      * @param sourcePath        A collection of directories that are searched for Java source files in
      *                                  the given order
      * @param characterEncoding The encoding of the Java source files ({@code null} for platform
@@ -83,12 +79,11 @@ class JavaSourceClassLoader extends AbstractJavaSourceClassLoader {
      */
     public
     JavaSourceClassLoader(
-        ClassLoader      parentClassLoader,
         @Nullable File[] sourcePath,
         @Nullable String characterEncoding
     ) {
         this(
-            parentClassLoader, // parentClassLoader
+           // parentClassLoader
             (                  // sourceFinder
                 sourcePath == null
                 ? new DirectoryResourceFinder(new File("."))
@@ -106,21 +101,19 @@ class JavaSourceClassLoader extends AbstractJavaSourceClassLoader {
      *   want to debug through the generated classes (see {@link Scanner#Scanner(String, Reader)}).
      * </p>
      *
-     * @param parentClassLoader         See {@link ClassLoader}
      * @param sourceFinder              Used to locate additional source files
      * @param characterEncoding The encoding of the Java source files ({@code null} for platform
      *                                  default encoding)
      */
     public
     JavaSourceClassLoader(
-        ClassLoader      parentClassLoader,
         ResourceFinder   sourceFinder,
         @Nullable String characterEncoding
     ) {
-        this(parentClassLoader, new JavaSourceIClassLoader(
+        this(new JavaSourceIClassLoader(
             sourceFinder,                                  // sourceFinder
             characterEncoding,                             // characterEncoding
-            new ClassLoaderIClassLoader(parentClassLoader) // parentIClassLoader
+            new ClassLoaderIClassLoader() // parentIClassLoader
         ));
     }
 
@@ -128,8 +121,8 @@ class JavaSourceClassLoader extends AbstractJavaSourceClassLoader {
      * Constructs a {@link JavaSourceClassLoader} that finds classes through an {@link JavaSourceIClassLoader}.
      */
     public
-    JavaSourceClassLoader(ClassLoader parentClassLoader, JavaSourceIClassLoader iClassLoader) {
-        super(parentClassLoader);
+    JavaSourceClassLoader(JavaSourceIClassLoader iClassLoader) {
+        super();
         this.iClassLoader = iClassLoader;
     }
 

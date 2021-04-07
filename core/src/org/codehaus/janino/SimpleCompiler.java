@@ -111,10 +111,10 @@ class SimpleCompiler extends Cookable implements ISimpleCompiler {
      * @see #SimpleCompiler()
      * @see Cookable#cookFile(String)
      */
-    public
-    SimpleCompiler(String fileName) throws IOException, CompileException {
-        this.cookFile(fileName);
-    }
+//    public
+//    SimpleCompiler(String fileName) throws IOException, CompileException {
+//        this.cookFile(fileName);
+//    }
 
     /**
      * Equivalent to

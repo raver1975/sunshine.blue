@@ -29,6 +29,7 @@ import org.codehaus.commons.nullanalysis.Nullable;
 
 import java.io.*;
 
+
 /**
  * Base class for a simple {@link ICookable}.
  * <p>
@@ -81,31 +82,31 @@ class Cookable implements ICookable {
         }
     }
 
-    @Override public final void
-    cookFile(File file) throws CompileException, IOException { this.cookFile(file, null); }
+   // @Override public final void
+  //  cookFile(File file) throws CompileException, IOException { this.cookFile(file, null); }
 
-    @Override public final void
-    cookFile(File file, @Nullable String encoding) throws CompileException, IOException {
-        InputStream is = new FileInputStream(file);
-        try {
-            this.cook(
-                file.getAbsolutePath(),
-                encoding == null ? new InputStreamReader(is) : new InputStreamReader(is, encoding)
-            );
-            is.close();
-            is = null;
-        } finally {
-            if (is != null) try { is.close(); } catch (IOException ex) {}
-        }
-    }
+//    @Override public final void
+//    cookFile(File file, @Nullable String encoding) throws CompileException, IOException {
+//        InputStream is = new FileInputStream(file);
+//        try {
+//            this.cook(
+//                file.getAbsolutePath(),
+//                encoding == null ? new InputStreamReader(is) : new InputStreamReader(is, encoding)
+//            );
+//            is.close();
+//            is = null;
+//        } finally {
+//            if (is != null) try { is.close(); } catch (IOException ex) {}
+//        }
+//    }
 
-    @Override public final void
-    cookFile(String fileName) throws CompileException, IOException {
-        this.cookFile(fileName, null);
-    }
-
-    @Override public final void
-    cookFile(String fileName, @Nullable String encoding) throws CompileException, IOException {
-        this.cookFile(new File(fileName), encoding);
-    }
+//    @Override public final void
+//    cookFile(String fileName) throws CompileException, IOException {
+//        this.cookFile(fileName, null);
+//    }
+//
+//    @Override public final void
+//    cookFile(String fileName, @Nullable String encoding) throws CompileException, IOException {
+//        this.cookFile(new File(fileName), encoding);
+//    }
 }
