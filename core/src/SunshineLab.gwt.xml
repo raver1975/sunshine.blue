@@ -12,18 +12,18 @@
 	<source path="org/codehaus/janino" />
 	<extend-configuration-property name="gdx.reflect.include" value="java.io" />
 	<extend-configuration-property name="gdx.reflect.include" value="java.lang" />
-<!--	<extend-configuration-property name="gdx.reflect.include" value="java.lang.annotation" />-->
-<!--	<extend-configuration-property name="gdx.reflect.include" value="java.reflect" />-->
-<!--	<extend-configuration-property name="gdx.reflect.include" value="java.math" />-->
+	<extend-configuration-property name="gdx.reflect.include" value="java.lang.annotation" />
+	<extend-configuration-property name="gdx.reflect.include" value="java.reflect" />
+	<extend-configuration-property name="gdx.reflect.include" value="java.math" />
 	<extend-configuration-property name="gdx.reflect.include" value="java.nio.charset" />
 <!--	<extend-configuration-property name="gdx.reflect.include" value="java.security" />-->
 <!--	<extend-configuration-property name="gdx.reflect.include" value="java.sql" />-->
-<!--	<extend-configuration-property name="gdx.reflect.include" value="java.text" />-->
-<!--	<extend-configuration-property name="gdx.reflect.include" value="java.util" />-->
-	<extend-configuration-property name="gdx.reflect.include" value="java.util.Iterator" />
-	<extend-configuration-property name="gdx.reflect.include" value="java.util.Arrays" />
+	<extend-configuration-property name="gdx.reflect.include" value="java.text" />
+	<extend-configuration-property name="gdx.reflect.include" value="java.util" />
+<!--	<extend-configuration-property name="gdx.reflect.include" value="java.util.Iterator" />-->
+<!--	<extend-configuration-property name="gdx.reflect.include" value="java.util.Arrays" />-->
 <!--	<extend-configuration-property name="gdx.reflect.include" value="org.codehaus.commons.compiler.CompileException" />-->
-	<extend-configuration-property name="gdx.reflect.include" value="org.codehaus.janino.Java" />
+<!--	<extend-configuration-property name="gdx.reflect.include" value="org.codehaus.janino.Java" />-->
 <!--	<extend-configuration-property name="gdx.reflect.include" value="com.klemstinegroup.sunshinelab" />-->
 
 <!--	<extend-configuration-property name="gdx.reflect.include" value="java.util.concurrent" />-->
