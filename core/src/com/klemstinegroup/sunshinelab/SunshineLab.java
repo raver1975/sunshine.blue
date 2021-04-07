@@ -2,8 +2,10 @@ package com.klemstinegroup.sunshinelab;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.igormaznitsa.jjjvm.impl.JJJVMClassImpl;
@@ -24,7 +26,8 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 
     Viewport viewport;
     public static Matrix4 mx4Batch = new Matrix4();
-    Vector2 touchdown = new Vector2();
+    Vector3 touchdown = new Vector3();
+    Vector3 touchdrag = new Vector3();
     JJJVMClassImpl jjjvmClass = null;
 
     @Override
@@ -185,7 +188,8 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        viewport.unproject(touchdown.set(screenX, screenY));
+        viewport.unproject(touchdown.set(screenX, screenY,0));
+
         System.out.println(touchdown);
         Statics.selectedObjects.clear();
         for (BaseObject bo : Statics.userObjects) {
@@ -193,7 +197,7 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
                 if (((Touchable) bo).isSelected(touchdown.cpy())) {
                     Statics.selectedObjects.add(bo);
                 }
-                ;
+
             }
         }
         return false;
@@ -206,6 +210,27 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        viewport.unproject(touchdrag.set(screenX, screenY,0));
+        for (BaseObject bo:Statics.selectedObjects){
+            if (bo instanceof ScreenObject){
+                switch (Statics.transformButton){
+                    case 0:
+                        ((ScreenObject)bo).position.add(touchdrag.cpy().sub(touchdown));
+                        break;
+                    case 1:
+                        ((ScreenObject)bo).rotation+= touchdrag.x-touchdown.x;
+                        break;
+                    case 2:
+                        ((ScreenObject)bo).scale+=(touchdrag.x-touchdown.x)/200f;
+                        break;
+                }
+
+            }
+        }
+        touchdown.set(touchdrag);
+
+
+
         return false;
     }
 

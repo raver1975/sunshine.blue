@@ -24,6 +24,8 @@ public class Statics {
     public static MemoryFileHandle gifEncoderFile;
 //    public static ImageOptions gifOptions;
     public static AnimatedGifEncoder gifEncoderA;
+    public static int transformButton
+            ;
 //    public static final boolean debug = true;
 
     static TextureRegion whitePixel;

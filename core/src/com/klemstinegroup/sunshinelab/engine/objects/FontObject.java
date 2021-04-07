@@ -146,7 +146,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
     }
 
     @Override
-    public boolean isSelected(Vector2 touch) {
+    public boolean isSelected(Vector3 touch) {
 //        m4=new Matrix4().idt()
 //                .translate(center.x + position.x, center.y + position.y, 0)
 //                .rotate(0, 0, 1, rotation)
@@ -174,7 +174,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
 //        polygon.translate(s);
 
         System.out.println(Arrays.toString(polygon.getTransformedVertices()));
-        return polygon.contains(touch);
+        return polygon.contains(touch.x,touch.y);
 
     }
 }

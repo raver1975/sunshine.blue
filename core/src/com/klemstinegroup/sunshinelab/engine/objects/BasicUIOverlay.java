@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -22,7 +23,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
     public final Stage stage;
 
     public BasicUIOverlay() {
-        Viewport viewport = new FitViewport(Gdx.graphics.getWidth() , Gdx.graphics.getHeight() );
+        Viewport viewport = new FitViewport(800f*Gdx.graphics.getWidth()/Gdx.graphics.getHeight()*Gdx.graphics.getDensity() , 800*Gdx.graphics.getDensity() );
         stage = new Stage(viewport);
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(FontObject.fontList[MathUtils.random(FontObject.fontList.length - 1)]);
@@ -35,7 +36,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         textButtonStyle.overFontColor = Color.WHITE;
         Skin skin=new Skin(Gdx.files.internal("skins/comic/skin/comic-ui.json"));
 //        Skin skin = new Skin(Gdx.files.internal("skins/default/skin/uiskin.json"));
-        Actor fontButton = new TextButton("Tt", skin);
+        Actor fontButton = new TextButton("Text", skin);
 //        fontButton.setColor(Color.WHITE);
 
         fontButton.addListener(new ClickListener() {
@@ -60,7 +61,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
 
         Actor imageButton = new TextButton("Image", skin);
-        imageButton.setPosition(0,Gdx.graphics.getHeight()-100);
+        imageButton.setPosition(0,50);
 //        fontButton.setColor(Color.WHITE);
 
         TextArea ta=new TextArea("",skin);
@@ -144,6 +145,52 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 //        stage.addActor(pasteButton);
         stage.addActor(imageButton);
 
+        ButtonGroup transformButtons=new ButtonGroup();
+                CheckBox moveButton = new CheckBox("Move",  skin);
+        moveButton.getStyle().fontColor=Color.RED;
+        moveButton.setName("move");
+        moveButton.setPosition(500,0);
+        CheckBox rotateButton = new CheckBox("Rotate", skin);
+        rotateButton.setPosition(500,30);
+        rotateButton.setName("rotate");
+        CheckBox scaleButton = new CheckBox("Scale", skin);
+        scaleButton.setPosition(500,60);
+        scaleButton.setName("scale");
+
+transformButtons.add(moveButton);
+transformButtons.add(rotateButton);
+transformButtons.add(scaleButton);
+moveButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+          Statics.transformButton=0;
+            }
+        });
+        rotateButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                Statics.transformButton=1;
+            }
+        });
+        scaleButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                Statics.transformButton=2;
+            }
+        });
+
+
+transformButtons.setUncheckLast(true);
+transformButtons.setChecked("move");
+transformButtons.setMaxCheckCount(1);
+transformButtons.setMinCheckCount(1);
+stage.addActor(moveButton);
+stage.addActor(scaleButton);
+stage.addActor(rotateButton);
+
     }
 
     @Override
@@ -194,14 +241,14 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 //        mx4Overlay.
 
 //        Statics.batch.setProjectionMatrix(mx4Overlay.idt());
-        for (int i = 0; i < 10; i++) {
-            Statics.shapedrawer.filledCircle(30 * i, 10, 10);
+        for (int i = 0; i < Statics.selectedObjects.size; i++) {
+            Statics.shapedrawer.filledCircle(170+30*i , 20, 10);
         }
         stage.draw();
     }
 
     @Override
-    public boolean isSelected(Vector2 touch) {
+    public boolean isSelected(Vector3 touch) {
         return false;
     }
 }

@@ -75,7 +75,7 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
         } else Pixmap.downloadFromUrl(url, new Pixmap.DownloadPixmapResponseListener() {
             @Override
             public void downloadComplete(Pixmap pixmap) {
-//                IPFSUtils.uploadPng(pixmap);
+                //IPFSUtils.uploadPng(pixmap);
                 texture = new Texture(pixmap);
                 setBound();
             }
@@ -86,7 +86,7 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
                 Pixmap.downloadFromUrl(url1, new Pixmap.DownloadPixmapResponseListener() {
                     @Override
                     public void downloadComplete(Pixmap pixmap) {
-                        //IPFSUtils.uploadPng(pixmap);
+                        IPFSUtils.uploadPng(pixmap);
                         texture = new Texture(pixmap);
                         setBound();
                     }
@@ -154,7 +154,7 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
 
 
     @Override
-    public boolean isSelected(Vector2 touch) {
+    public boolean isSelected(Vector3 touch) {
         polygon = new Polygon(new float[]{0, 0, bounds.x, 0, bounds.x, bounds.y, 0, bounds.y, 0, 0});
 //        polygon.translate(center.x,center.y);
         polygon.setOrigin(center.x, center.y);
@@ -164,7 +164,7 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
 //        polygon.translate(s);
 
         System.out.println(Arrays.toString(polygon.getTransformedVertices()));
-        return polygon.contains(touch);
+        return polygon.contains(touch.x,touch.y);
     }
 
     @Override
