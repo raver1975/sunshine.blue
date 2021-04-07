@@ -27,7 +27,6 @@
 package org.codehaus.janino;
 
 import org.codehaus.commons.compiler.*;
-import org.codehaus.commons.compiler.util.Disassembler;
 import org.codehaus.commons.compiler.util.Numbers;
 import org.codehaus.commons.compiler.util.SystemProperties;
 import org.codehaus.commons.compiler.util.iterator.Iterables;
@@ -56,8 +55,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
@@ -713,7 +710,7 @@ class UnitCompiler {
     private void
     addClassFile(ClassFile cf) {
 
-        if (UnitCompiler.disassembleClassFilesToStdout) Disassembler.disassembleToStdout(cf.toByteArray());
+       // if (UnitCompiler.disassembleClassFilesToStdout) Disassembler.disassembleToStdout(cf.toByteArray());
 
         assert this.generatedClassFiles != null;
         this.generatedClassFiles.add(cf);

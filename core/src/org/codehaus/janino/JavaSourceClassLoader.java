@@ -27,7 +27,6 @@ package org.codehaus.janino;
 
 import org.codehaus.commons.compiler.*;
 import org.codehaus.commons.compiler.lang.ClassLoaders;
-import org.codehaus.commons.compiler.util.Disassembler;
 import org.codehaus.commons.compiler.util.resource.DirectoryResourceFinder;
 import org.codehaus.commons.compiler.util.resource.PathResourceFinder;
 import org.codehaus.commons.compiler.util.resource.ResourceFinder;
@@ -190,7 +189,7 @@ class JavaSourceClassLoader extends AbstractJavaSourceClassLoader {
             }
         }
 
-        if (Boolean.getBoolean("disasm")) Disassembler.disassembleToStdout(bytecode);
+       // if (Boolean.getBoolean("disasm")) Disassembler.disassembleToStdout(bytecode);
 
         return this.defineBytecode(name, bytecode);
     }

@@ -31,6 +31,7 @@ import org.codehaus.commons.compiler.InternalCompilerException;
 import org.codehaus.commons.compiler.Location;
 import org.codehaus.commons.nullanalysis.Nullable;
 
+
 /**
  * Wraps a {@link Class} in an {@link IClass}.
  */
@@ -127,14 +128,16 @@ class ReflectionIClass extends IClass {
     @Override
     protected IClass[]
     getDeclaredIClasses2() {
-        return new IClass[0];
+        return this.classesToIClasses(this.clazz.getDeclaredClasses());
     }
 
     @Override
     @Nullable
     protected IClass
     getDeclaringIClass2() {
-        return null;
+
+        Class<?> declaringClass = this.clazz.getDeclaringClass();
+        return declaringClass == null ? null : this.classToIClass(declaringClass);
     }
 
     @Override
@@ -142,7 +145,7 @@ class ReflectionIClass extends IClass {
     protected IClass
     getOuterIClass2() throws CompileException {
 
-        if (ClassReflection.isStaticClass(clazz)) return null;
+//        if (Modifier.isStatic(this.clazz.getModifiers())) return null;
 
         return this.getDeclaringIClass();
     }
@@ -160,13 +163,13 @@ class ReflectionIClass extends IClass {
     @Nullable
     protected IClass
     getComponentType2() {
-        Class<?> componentType = ClassReflection.getComponentType(clazz);
+        Class<?> componentType = this.clazz.getComponentType();
         return componentType == null ? null : this.classToIClass(componentType);
     }
 
     @Override
     protected IClass[] getInterfaces2() {
-        return this.classesToIClasses(ClassReflection.getInterfaces(clazz));
+        return this.classesToIClasses(this.clazz.getInterfaces());
     }
 
     @Override
@@ -176,7 +179,7 @@ class ReflectionIClass extends IClass {
 
     @Override
     public Access getAccess() {
-        return Access.PUBLIC;
+        return ReflectionIClass.modifiers2Access(this.clazz);
     }
 
     @Override
@@ -186,22 +189,22 @@ class ReflectionIClass extends IClass {
 
     @Override
     public boolean isEnum() {
-        return ClassReflection.isEnum(clazz);
+        return this.clazz.isEnum();
     }
 
     @Override
     public boolean isInterface() {
-        return ClassReflection.isInterface(clazz);
+        return this.clazz.isInterface();
     }
 
     @Override
     public boolean isAbstract() {
-        return ClassReflection.isAbstract(clazz);
+        return false;
     }
 
     @Override
     public boolean isArray() {
-        return ClassReflection.isArray(clazz);
+        return this.clazz.isArray();
     }
 
     @Override
@@ -265,13 +268,13 @@ class ReflectionIClass extends IClass {
                 public Object
                 getElementValue(String name) throws CompileException {
                     try {
-                        Object v = ClassReflection.getMethod(a.getClass(),name).invoke(a);//a.getClass().getMethod(name).invoke(a);
+                        Object v = a.getClass().getMethod(name).invoke(a);
 
-                        if (!ClassReflection.isEnum(v.getClass())) return v;
+                        if (!Enum.class.isAssignableFrom(v.getClass())) return v;
 
                         Class<?> enumClass = v.getClass();
 
-                        String enumConstantName = (String) ClassReflection.getMethod(enumClass,"name").invoke(v);
+                        String enumConstantName = (String) enumClass.getMethod("name").invoke(v);
 
                         IClass enumIClass = ReflectionIClass.this.classToIClass(enumClass);
 
@@ -286,6 +289,11 @@ class ReflectionIClass extends IClass {
                             ), null);
                         }
                         return enumConstField;
+                    } catch (NoSuchMethodException e) {
+                        throw new CompileException(
+                                "Annotation \"" + annotationType.getName() + "\" has no element \"" + name + "\"",
+                                null
+                        );
                     } catch (Exception e) {
                         throw new AssertionError(e);
                     }
@@ -343,7 +351,7 @@ class ReflectionIClass extends IClass {
         @Override
         public Access
         getAccess() {
-            return Access.PUBLIC;
+            return ReflectionIClass.modifiers2Access(this.constructor);
         }
 
         @Override
@@ -356,7 +364,7 @@ class ReflectionIClass extends IClass {
         public boolean
         isVarargs() {
             // TRANSIENT is identical with VARARGS.
-            return false;
+            return true;
         }
 
         // Implement "IConstructor".
@@ -408,7 +416,7 @@ class ReflectionIClass extends IClass {
         @Override
         public IClass[]
         getThrownExceptions2() {
-            return new IClass[0];
+            return null;
         }
 
         final Constructor constructor;
@@ -476,7 +484,7 @@ class ReflectionIClass extends IClass {
         @Override
         public IClass[]
         getThrownExceptions2() {
-            return new IClass[0];
+            return null;
         }
 
         private final Method method;
@@ -547,7 +555,6 @@ class ReflectionIClass extends IClass {
         @Override
         public Object
         getConstantValue() throws CompileException {
-//            int mod = this.field.getModifiers();
             Class<?> clazz = this.field.getType();
             if (
                     this.field.isStatic()
@@ -636,4 +643,18 @@ class ReflectionIClass extends IClass {
                                         Access.DEFAULT
         );
     }
+
+    private static Access modifiers2Access(Constructor mod) {
+        return (
+                mod.isAccessible() ? Access.PUBLIC :Access.PRIVATE
+        );
+    }
+
+    private static Access modifiers2Access(Class mod) {
+        return (
+                                        Access.PUBLIC
+
+        );
+    }
+
 }
