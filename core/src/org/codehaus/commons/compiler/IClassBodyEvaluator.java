@@ -120,7 +120,7 @@ interface IClassBodyEvaluator extends ICookable {
      *   The parent class loader defaults to the current thread's context class loader.
      * </p>
      */
-    void setParentClassLoader(@Nullable ClassLoader parentClassLoader);
+//    void setParentClassLoader(@Nullable ClassLoader parentClassLoader);
 
     /**
      * Determines what kind of debugging information is included in the generates classes. The default is typically

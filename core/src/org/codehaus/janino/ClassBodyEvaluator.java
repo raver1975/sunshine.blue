@@ -25,6 +25,8 @@
 
 package org.codehaus.janino;
 
+import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.badlogic.gdx.utils.reflect.ReflectionException;
 import org.codehaus.commons.compiler.*;
 import org.codehaus.commons.nullanalysis.Nullable;
 import org.codehaus.janino.Java.AbstractCompilationUnit;
@@ -107,13 +109,13 @@ class ClassBodyEvaluator extends Cookable implements IClassBodyEvaluator {
      * </pre>
      *
      * @see #ClassBodyEvaluator()
-     * @see SimpleCompiler#setParentClassLoader(ClassLoader)
+//     * @see SimpleCompiler#setParentClassLoader(ClassLoader)
      * @see Cookable#cook(Reader)
      */
     public
     ClassBodyEvaluator(Scanner scanner, @Nullable ClassLoader parentClassLoader)
     throws CompileException, IOException {
-        this.setParentClassLoader(parentClassLoader);
+//        this.setParentClassLoader(parentClassLoader);
         this.cook(scanner);
     }
 
@@ -130,7 +132,7 @@ class ClassBodyEvaluator extends Cookable implements IClassBodyEvaluator {
      * @see #ClassBodyEvaluator()
      * @see #setExtendedClass(Class)
      * @see #setImplementedInterfaces(Class[])
-     * @see SimpleCompiler#setParentClassLoader(ClassLoader)
+//     * @see SimpleCompiler#setParentClassLoader(ClassLoader)
      * @see Cookable#cook(Reader)
      */
     public
@@ -142,7 +144,7 @@ class ClassBodyEvaluator extends Cookable implements IClassBodyEvaluator {
     ) throws CompileException, IOException {
         this.setExtendedClass(extendedType);
         this.setImplementedInterfaces(implementedTypes);
-        this.setParentClassLoader(parentClassLoader);
+//        this.setParentClassLoader(parentClassLoader);
         this.cook(scanner);
     }
 
@@ -161,7 +163,7 @@ class ClassBodyEvaluator extends Cookable implements IClassBodyEvaluator {
      * @see #setClassName(String)
      * @see #setExtendedClass(Class)
      * @see #setImplementedInterfaces(Class[])
-     * @see SimpleCompiler#setParentClassLoader(ClassLoader)
+//     * @see SimpleCompiler#setParentClassLoader(ClassLoader)
      * @see Cookable#cook(Reader)
      */
     public
@@ -175,7 +177,7 @@ class ClassBodyEvaluator extends Cookable implements IClassBodyEvaluator {
         this.setClassName(className);
         this.setExtendedClass(extendedType);
         this.setImplementedInterfaces(implementedTypes);
-        this.setParentClassLoader(parentClassLoader);
+//        this.setParentClassLoader(parentClassLoader);
         this.cook(scanner);
     }
 
@@ -206,8 +208,8 @@ class ClassBodyEvaluator extends Cookable implements IClassBodyEvaluator {
 
     // Configuration setters and getters that delegate to the SimpleCompiler
 
-    @Override public void
-    setParentClassLoader(@Nullable ClassLoader parentClassLoader) { this.sc.setParentClassLoader(parentClassLoader); }
+//    @Override public void
+//    setParentClassLoader(@Nullable ClassLoader parentClassLoader) { this.sc.setParentClassLoader(parentClassLoader); }
 
     @Override public void
     setDebuggingInformation(boolean debugSource, boolean debugLines, boolean debugVars) {
@@ -288,8 +290,8 @@ class ClassBodyEvaluator extends Cookable implements IClassBodyEvaluator {
         // Find the generated class by name.
         Class<?> c;
         try {
-            c = this.sc.getClassLoader().loadClass(this.className);
-        } catch (ClassNotFoundException ex) {
+            c = ClassReflection.forName(this.className);
+        } catch (ReflectionException ex) {
             throw new InternalCompilerException((
                 "SNO: Generated compilation unit does not declare class '"
                 + this.className
@@ -507,7 +509,7 @@ class ClassBodyEvaluator extends Cookable implements IClassBodyEvaluator {
         cbe.setClassName(className);
         cbe.setExtendedClass(extendedClass);
         cbe.setImplementedInterfaces(implementedInterfaces);
-        cbe.setParentClassLoader(parentClassLoader);
+//        cbe.setParentClassLoader(parentClassLoader);
         cbe.cook(scanner);
         Class<?> c = cbe.getClazz();
         try {

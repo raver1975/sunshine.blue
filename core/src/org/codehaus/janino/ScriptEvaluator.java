@@ -109,7 +109,7 @@ class ScriptEvaluator extends MultiCookable implements IScriptEvaluator {
     private Class<?> defaultReturnType = IScriptEvaluator.DEFAULT_RETURN_TYPE;
 
     @Override public void
-    setParentClassLoader(@Nullable ClassLoader parentClassLoader) { this.cbe.setParentClassLoader(parentClassLoader); }
+    setParentClassLoader(@Nullable ClassLoader parentClassLoader) {  }
 
     @Override public void
     setDebuggingInformation(boolean debugSource, boolean debugLines, boolean debugVars) {

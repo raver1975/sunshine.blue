@@ -36,9 +36,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.lang.reflect.Method;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,9 +48,8 @@ import java.util.logging.Logger;
 public
 class SimpleCompiler extends Cookable implements ISimpleCompiler {
 
-    private static final Logger LOGGER = Logger.getLogger(SimpleCompiler.class.getName());
 
-    private ClassLoader parentClassLoader = Thread.currentThread().getContextClassLoader();
+//    private ClassLoader parentClassLoader = null;//Thread.currentThread().getContextClassLoader();
 
     // Set while "cook()"ing.
     @Nullable private ClassLoaderIClassLoader classLoaderIClassLoader;
@@ -62,7 +58,7 @@ class SimpleCompiler extends Cookable implements ISimpleCompiler {
     @Nullable private ErrorHandler   compileErrorHandler;
     @Nullable private WarningHandler warningHandler;
 
-    private boolean debugSource   = Boolean.getBoolean(Scanner.SYSTEM_PROPERTY_SOURCE_DEBUGGING_ENABLE);
+    private boolean debugSource   = false;
     private boolean debugLines    = this.debugSource;
     private boolean debugVars     = this.debugSource;
     private int     sourceVersion = -1;
@@ -74,43 +70,6 @@ class SimpleCompiler extends Cookable implements ISimpleCompiler {
      * {@code Null} before cooking, non-{@code null} after cooking.
      */
     @Nullable private ClassFile[] classFiles;
-
-    public static void // SUPPRESS CHECKSTYLE JavadocMethod
-    main(String[] args) throws Exception {
-        if (args.length >= 1 && "-help".equals(args[0])) {
-            System.out.println("Usage:");
-            System.out.println("    org.codehaus.janino.SimpleCompiler <source-file> <class-name> { <argument> }");
-            System.out.println("Reads a compilation unit from the given <source-file> and invokes method");
-            System.out.println("\"public static void main(String[])\" of class <class-name>, passing the");
-            System.out.println("given <argument>s.");
-            System.exit(1);
-        }
-
-        if (args.length < 2) {
-            System.err.println("Source file and/or class name missing; try \"-help\".");
-            System.exit(1);
-        }
-
-        // Get source file.
-        String sourceFileName = args[0];
-
-        // Get class name.
-        String className = args[1];
-
-        // Get arguments.
-        String[] arguments = new String[args.length - 2];
-        System.arraycopy(args, 2, arguments, 0, arguments.length);
-
-        // Compile the source file.
-        ClassLoader cl = new SimpleCompiler(sourceFileName, new FileInputStream(sourceFileName)).getClassLoader();
-
-        // Load the class.
-        Class<?> c = cl.loadClass(className);
-
-        // Invoke the "public static main(String[])" method.
-        Method m = c.getMethod("main", String[].class);
-        m.invoke(null, (Object) arguments);
-    }
 
     /**
      * Equivalent to
@@ -166,26 +125,22 @@ class SimpleCompiler extends Cookable implements ISimpleCompiler {
      * </pre>
      *
      * @see #SimpleCompiler()
-     * @see #setParentClassLoader(ClassLoader)
+//     * @see #setParentClassLoader(ClassLoader)
      * @see Cookable#cook(Reader)
      */
     public
-    SimpleCompiler(Scanner scanner, @Nullable ClassLoader parentClassLoader)
+    SimpleCompiler(Scanner scanner)
     throws IOException, CompileException {
-        this.setParentClassLoader(parentClassLoader);
+//        this.setParentClassLoader(parentClassLoader);
         this.cook(scanner);
     }
 
     public SimpleCompiler() {}
 
-    @Override public void
-    setParentClassLoader(@Nullable ClassLoader parentClassLoader) {
-        this.parentClassLoader = (
-            parentClassLoader != null
-            ? parentClassLoader
-            : Thread.currentThread().getContextClassLoader()
-        );
-    }
+//    @Override public void
+//    setParentClassLoader(@Nullable ClassLoader parentClassLoader) {
+//        this.parentClassLoader = null;
+//    }
 
     @Override public void
     setDebuggingInformation(boolean debugSource, boolean debugLines, boolean debugVars) {
@@ -196,7 +151,7 @@ class SimpleCompiler extends Cookable implements ISimpleCompiler {
 
     /**
      * Scans, parses and compiles a given compilation unit from the given {@link Reader}. After completion, {@link
-     * #getClassLoader()} returns a {@link ClassLoader} that allows for access to the compiled classes.
+//     * #getClassLoader()} returns a {@link ClassLoader} that allows for access to the compiled classes.
      */
     @Override public final void
     cook(@Nullable String fileName, Reader r) throws CompileException, IOException {
@@ -205,7 +160,7 @@ class SimpleCompiler extends Cookable implements ISimpleCompiler {
 
     /**
      * Scans, parses and compiles a given compilation unit from the given scanner. After completion, {@link
-     * #getClassLoader()} returns a {@link ClassLoader} that allows for access to the compiled classes.
+//     * #getClassLoader()} returns a {@link ClassLoader} that allows for access to the compiled classes.
      */
     public void
     cook(Scanner scanner) throws CompileException, IOException {
@@ -223,11 +178,11 @@ class SimpleCompiler extends Cookable implements ISimpleCompiler {
     public void
     cook(Java.AbstractCompilationUnit abstractCompilationUnit) throws CompileException {
 
-        SimpleCompiler.LOGGER.entering(null, "cook", abstractCompilationUnit);
+//        SimpleCompiler.LOGGER.entering(null, "cook", abstractCompilationUnit);
 
         this.assertUncooked();
 
-        IClassLoader icl = (this.classLoaderIClassLoader = new ClassLoaderIClassLoader(this.parentClassLoader));
+        IClassLoader icl = (this.classLoaderIClassLoader = new ClassLoaderIClassLoader());
         try {
 
             // Compile compilation unit to class files.
@@ -276,30 +231,31 @@ class SimpleCompiler extends Cookable implements ISimpleCompiler {
         return result;
     }
 
-    @Override public ClassLoader
-    getClassLoader() {
-        if (this.getClassLoaderCache != null) return this.getClassLoaderCache;
-        return (this.getClassLoaderCache = this.getClassLoader2());
-    }
-    @Nullable private ClassLoader getClassLoaderCache;
+//    @Override public ClassLoader
+//    getClassLoader() {
+//        if (this.getClassLoaderCache != null) return this.getClassLoaderCache;
+//        return (this.getClassLoaderCache = this.getClassLoader2());
+//    }
+//    @Nullable private ClassLoader getClassLoaderCache;
 
-    private ClassLoader
-    getClassLoader2() {
-
-        final Map<String, byte[]> bytecode = this.getBytecodes();
-
-        // Create a ClassLoader that loads the generated classes.
-        return (ClassLoader) AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
-
-            @Override public ClassLoader
-            run() {
-                return new ByteArrayClassLoader(
-                    bytecode,                             // classes
-                    SimpleCompiler.this.parentClassLoader // parent
-                );
-            }
-        });
-    }
+//    private ClassLoader
+//    getClassLoader2() {
+//
+//        final Map<String, byte[]> bytecode = this.getBytecodes();
+//
+////        // Create a ClassLoader that loads the generated classes.
+////        return (ClassLoader) AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+////
+////            @Override public ClassLoader
+////            run() {
+////                return new ByteArrayClassLoader(
+////                    bytecode,                             // classes
+////                    SimpleCompiler.this.parentClassLoader // parent
+////                );
+////            }
+////        });
+//        return null;
+//    }
 
     /**
      * Two {@link SimpleCompiler}s are regarded equal iff
@@ -320,8 +276,8 @@ class SimpleCompiler extends Cookable implements ISimpleCompiler {
         return this.assertCooked().equals(that.assertCooked());
     }
 
-    @Override public int
-    hashCode() { return this.parentClassLoader.hashCode(); }
+//    @Override public int
+//    hashCode() { return this.hashCode(); }
 
     @Override public void
     setCompileErrorHandler(@Nullable ErrorHandler compileErrorHandler) {
@@ -462,10 +418,10 @@ class SimpleCompiler extends Cookable implements ISimpleCompiler {
      * @return                        The {@link ClassLoader} into which the compiled classes were defined
      * @throws CompileException
      */
-    protected final ClassLoader
+    protected final void
     compileToClassLoader(Java.AbstractCompilationUnit abstractCompilationUnit) throws CompileException {
         this.cook(abstractCompilationUnit);
-        return this.getClassLoader();
+//        return this.getClassLoader();
     }
 
     /**
