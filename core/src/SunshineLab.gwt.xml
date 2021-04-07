@@ -7,20 +7,21 @@
 	<source path="com/madgag/gif/fmsware" />
 	<source path="ar/com/hjg/pngj" />
 	<source path="net/sf/jazzlib" />
+	<source path="org/codehaus" />
 	<extend-configuration-property name="gdx.reflect.include" value="java.io" />
 	<extend-configuration-property name="gdx.reflect.include" value="java.lang" />
-	<extend-configuration-property name="gdx.reflect.include" value="java.lang.annotation" />
+<!--	<extend-configuration-property name="gdx.reflect.include" value="java.lang.annotation" />-->
 	<extend-configuration-property name="gdx.reflect.include" value="java.reflect" />
 	<extend-configuration-property name="gdx.reflect.include" value="java.math" />
-	<extend-configuration-property name="gdx.reflect.include" value="java.nio.charset" />
-	<extend-configuration-property name="gdx.reflect.include" value="java.security" />
-	<extend-configuration-property name="gdx.reflect.include" value="java.sql" />
+<!--	<extend-configuration-property name="gdx.reflect.include" value="java.nio.charset" />-->
+<!--	<extend-configuration-property name="gdx.reflect.include" value="java.security" />-->
+<!--	<extend-configuration-property name="gdx.reflect.include" value="java.sql" />-->
 	<extend-configuration-property name="gdx.reflect.include" value="java.text" />
 	<extend-configuration-property name="gdx.reflect.include" value="java.util" />
-	<extend-configuration-property name="gdx.reflect.include" value="java.util.concurrent" />
-	<extend-configuration-property name="gdx.reflect.include" value="java.util.concurrent.atomic" />
-	<extend-configuration-property name="gdx.reflect.include" value="java.util.function" />
-	<extend-configuration-property name="gdx.reflect.include" value="java.util.logging" />
+<!--	<extend-configuration-property name="gdx.reflect.include" value="java.util.concurrent" />-->
+<!--	<extend-configuration-property name="gdx.reflect.include" value="java.util.concurrent.atomic" />-->
+<!--	<extend-configuration-property name="gdx.reflect.include" value="java.util.function" />-->
+<!--	<extend-configuration-property name="gdx.reflect.include" value="java.util.logging" />-->
 	<extend-configuration-property name="gdx.reflect.include" value="java.util.stream" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.badlogic.gdx.Gdx" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.klemstinegroup.sunshinelab.client.HtmlLauncher" />
