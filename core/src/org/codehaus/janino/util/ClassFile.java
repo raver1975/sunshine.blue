@@ -81,7 +81,7 @@ class ClassFile implements Annotatable {
 
         // Compute the .class file major and minor version.
         {
-            String  jcv = System.getProperty("java.class.version");
+            String  jcv = "52.0";
             Matcher m   = Pattern.compile("(\\d+)\\.(\\d+)").matcher(jcv);
             if (!m.matches()) throw new AssertionError("Unrecognized JVM class file version \"" + jcv + "\"");
             this.majorVersion = Short.parseShort(m.group(1));

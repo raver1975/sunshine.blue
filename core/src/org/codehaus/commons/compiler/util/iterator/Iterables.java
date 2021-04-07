@@ -25,6 +25,8 @@
 
 package org.codehaus.commons.compiler.util.iterator;
 
+import com.badlogic.gdx.utils.reflect.ArrayReflection;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
 import org.codehaus.commons.compiler.util.Predicate;
 import org.codehaus.commons.nullanalysis.Nullable;
 
@@ -72,7 +74,7 @@ class Iterables {
             new Predicate<Object>() {
 
                 @Override public boolean
-                evaluate(@Nullable Object o) { return o != null && qualifyingClass.isAssignableFrom(o.getClass()); }
+                evaluate(@Nullable Object o) { return o != null && ClassReflection.isAssignableFrom(qualifyingClass,o.getClass()); }
             }
         );
 
@@ -190,7 +192,7 @@ class Iterables {
         List<T> l = new ArrayList<T>();
         while (delegate.hasNext()) l.add(delegate.next());
 
-        @SuppressWarnings("unchecked") T[] array = (T[]) Array.newInstance(componentType, l.size());
+        @SuppressWarnings("unchecked") T[] array = (T[]) ArrayReflection.newInstance(componentType, l.size());
         return l.toArray(array);
     }
 }
