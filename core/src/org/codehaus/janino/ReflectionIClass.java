@@ -127,7 +127,7 @@ class ReflectionIClass extends IClass {
     @Override
     protected IClass[]
     getDeclaredIClasses2() {
-        return new IClass[0];
+        return this.classesToIClasses(ClassReflection.getInterfaces(clazz));
     }
 
     @Override

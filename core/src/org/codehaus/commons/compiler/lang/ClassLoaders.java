@@ -83,13 +83,13 @@ class ClassLoaders {
                 Resource r = finder.findResource(resourceName);
                 if (r == null) return null;
 
-                if (r instanceof LocatableResource) {
-                    try {
-                        return ((LocatableResource) r).getLocation();
-                    } catch (IOException ioe) {
-                        return null;
-                    }
-                }
+//                if (r instanceof LocatableResource) {
+//                    try {
+//                        return ((LocatableResource) r).getLocation();
+//                    } catch (IOException ioe) {
+//                        return null;
+//                    }
+//                }
 
                 return null;
             }

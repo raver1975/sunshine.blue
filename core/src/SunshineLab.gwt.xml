@@ -7,17 +7,25 @@
 	<source path="com/madgag/gif/fmsware" />
 	<source path="ar/com/hjg/pngj" />
 	<source path="net/sf/jazzlib" />
-	<source path="org/codehaus" />
+	<source path="org/codehaus/commons" />
+	<source path="org/codehaus/commons/compiler/" />
+	<source path="org/codehaus/janino" />
 	<extend-configuration-property name="gdx.reflect.include" value="java.io" />
 	<extend-configuration-property name="gdx.reflect.include" value="java.lang" />
 <!--	<extend-configuration-property name="gdx.reflect.include" value="java.lang.annotation" />-->
-	<extend-configuration-property name="gdx.reflect.include" value="java.reflect" />
-	<extend-configuration-property name="gdx.reflect.include" value="java.math" />
-<!--	<extend-configuration-property name="gdx.reflect.include" value="java.nio.charset" />-->
+<!--	<extend-configuration-property name="gdx.reflect.include" value="java.reflect" />-->
+<!--	<extend-configuration-property name="gdx.reflect.include" value="java.math" />-->
+	<extend-configuration-property name="gdx.reflect.include" value="java.nio.charset" />
 <!--	<extend-configuration-property name="gdx.reflect.include" value="java.security" />-->
 <!--	<extend-configuration-property name="gdx.reflect.include" value="java.sql" />-->
-	<extend-configuration-property name="gdx.reflect.include" value="java.text" />
-	<extend-configuration-property name="gdx.reflect.include" value="java.util" />
+<!--	<extend-configuration-property name="gdx.reflect.include" value="java.text" />-->
+<!--	<extend-configuration-property name="gdx.reflect.include" value="java.util" />-->
+	<extend-configuration-property name="gdx.reflect.include" value="java.util.Iterator" />
+	<extend-configuration-property name="gdx.reflect.include" value="java.util.Arrays" />
+<!--	<extend-configuration-property name="gdx.reflect.include" value="org.codehaus.commons.compiler.CompileException" />-->
+	<extend-configuration-property name="gdx.reflect.include" value="org.codehaus.janino.Java" />
+<!--	<extend-configuration-property name="gdx.reflect.include" value="com.klemstinegroup.sunshinelab" />-->
+
 <!--	<extend-configuration-property name="gdx.reflect.include" value="java.util.concurrent" />-->
 <!--	<extend-configuration-property name="gdx.reflect.include" value="java.util.concurrent.atomic" />-->
 <!--	<extend-configuration-property name="gdx.reflect.include" value="java.util.function" />-->
@@ -26,5 +34,6 @@
 	<extend-configuration-property name="gdx.reflect.include" value="com.badlogic.gdx.Gdx" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.klemstinegroup.sunshinelab.client.HtmlLauncher" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.klemstinegroup.sunshinelab.engine" />
+	<extend-configuration-property name="gdx.reflect.include" value="com.klemstinegroup.sunshinelab.engine.Statics" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.badlogic.gdx.Application" />
 </module>

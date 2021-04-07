@@ -25,9 +25,9 @@
 
 package org.codehaus.janino;
 
+import com.klemstinegroup.sunshinelab.engine.util.FilterReader;
 import org.codehaus.commons.nullanalysis.Nullable;
 
-import java.io.FilterReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;

@@ -39,8 +39,8 @@ class StackMap {
     private final VerificationTypeInfo[] locals, operands;
 
     StackMap(VerificationTypeInfo[] locals, VerificationTypeInfo[] operands) {
-        this.locals    = (VerificationTypeInfo[]) locals.clone();
-        this.operands  = (VerificationTypeInfo[]) operands.clone();
+        this.locals    = (VerificationTypeInfo[]) locals;
+        this.operands  = (VerificationTypeInfo[]) operands;
     }
 
     // -----------------------
@@ -67,7 +67,7 @@ class StackMap {
     peekLocal() { return this.locals[this.locals.length - 1]; }
 
     VerificationTypeInfo[]
-    locals() { return (VerificationTypeInfo[]) this.locals.clone(); }
+    locals() { return (VerificationTypeInfo[]) this.locals; }
 
     // -----------------------
 
@@ -96,7 +96,7 @@ class StackMap {
     }
 
     VerificationTypeInfo[]
-    operands() { return (VerificationTypeInfo[]) this.operands.clone(); }
+    operands() { return (VerificationTypeInfo[]) this.operands; }
 
     // -----------------------
 

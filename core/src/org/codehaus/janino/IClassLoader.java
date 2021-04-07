@@ -148,7 +148,7 @@ class IClassLoader {
             this.TYPE_java_lang_RuntimeException     = this.requireType(Descriptor.JAVA_LANG_RUNTIMEEXCEPTION);
             this.TYPE_java_lang_Short                = this.requireType(Descriptor.JAVA_LANG_SHORT);
             this.TYPE_java_lang_String               = this.requireType(Descriptor.JAVA_LANG_STRING);
-            this.TYPE_java_lang_StringBuilder        = this.requireType(Descriptor.JAVA_LANG_STRINGBUILDER);
+//            this.TYPE_java_lang_StringBuilder        = this.requireType(Descriptor.JAVA_LANG_STRINGBUILDER);
             this.TYPE_java_lang_System               = this.requireType(Descriptor.JAVA_LANG_SYSTEM);
             this.TYPE_java_lang_Throwable            = this.requireType(Descriptor.JAVA_LANG_THROWABLE);
             this.TYPE_java_lang_Void                 = this.requireType(Descriptor.JAVA_LANG_VOID);
@@ -168,24 +168,24 @@ class IClassLoader {
             this.METH_java_lang_String__valueOf__char                   = IClassLoader.requireMethod(this.TYPE_java_lang_String,        "valueOf",  IClass.CHAR);
             this.METH_java_lang_String__valueOf__boolean                = IClassLoader.requireMethod(this.TYPE_java_lang_String,        "valueOf",  IClass.BOOLEAN);
             this.METH_java_lang_String__valueOf__java_lang_Object       = IClassLoader.requireMethod(this.TYPE_java_lang_String,        "valueOf",  this.TYPE_java_lang_Object);
-            this.METH_java_lang_StringBuilder__append__int              = IClassLoader.requireMethod(this.TYPE_java_lang_StringBuilder, "append",   IClass.INT);
-            this.METH_java_lang_StringBuilder__append__long             = IClassLoader.requireMethod(this.TYPE_java_lang_StringBuilder, "append",   IClass.LONG);
-            this.METH_java_lang_StringBuilder__append__float            = IClassLoader.requireMethod(this.TYPE_java_lang_StringBuilder, "append",   IClass.FLOAT);
-            this.METH_java_lang_StringBuilder__append__double           = IClassLoader.requireMethod(this.TYPE_java_lang_StringBuilder, "append",   IClass.DOUBLE);
-            this.METH_java_lang_StringBuilder__append__char             = IClassLoader.requireMethod(this.TYPE_java_lang_StringBuilder, "append",   IClass.CHAR);
-            this.METH_java_lang_StringBuilder__append__boolean          = IClassLoader.requireMethod(this.TYPE_java_lang_StringBuilder, "append",   IClass.BOOLEAN);
-            this.METH_java_lang_StringBuilder__append__java_lang_Object = IClassLoader.requireMethod(this.TYPE_java_lang_StringBuilder, "append",   this.TYPE_java_lang_Object);
-            this.METH_java_lang_StringBuilder__append__java_lang_String = IClassLoader.requireMethod(this.TYPE_java_lang_StringBuilder, "append",   this.TYPE_java_lang_String);
-            this.METH_java_lang_StringBuilder__toString                 = IClassLoader.requireMethod(this.TYPE_java_lang_StringBuilder, "toString");
+//            this.METH_java_lang_StringBuilder__append__int              = IClassLoader.requireMethod(this.TYPE_java_lang_StringBuilder, "append",   IClass.INT);
+//            this.METH_java_lang_StringBuilder__append__long             = IClassLoader.requireMethod(this.TYPE_java_lang_StringBuilder, "append",   IClass.LONG);
+//            this.METH_java_lang_StringBuilder__append__float            = IClassLoader.requireMethod(this.TYPE_java_lang_StringBuilder, "append",   IClass.FLOAT);
+//            this.METH_java_lang_StringBuilder__append__double           = IClassLoader.requireMethod(this.TYPE_java_lang_StringBuilder, "append",   IClass.DOUBLE);
+//            this.METH_java_lang_StringBuilder__append__char             = IClassLoader.requireMethod(this.TYPE_java_lang_StringBuilder, "append",   IClass.CHAR);
+//            this.METH_java_lang_StringBuilder__append__boolean          = IClassLoader.requireMethod(this.TYPE_java_lang_StringBuilder, "append",   IClass.BOOLEAN);
+//            this.METH_java_lang_StringBuilder__append__java_lang_Object = IClassLoader.requireMethod(this.TYPE_java_lang_StringBuilder, "append",   this.TYPE_java_lang_Object);
+//            this.METH_java_lang_StringBuilder__append__java_lang_String = IClassLoader.requireMethod(this.TYPE_java_lang_StringBuilder, "append",   this.TYPE_java_lang_String);
+//            this.METH_java_lang_StringBuilder__toString                 = IClassLoader.requireMethod(this.TYPE_java_lang_StringBuilder, "toString");
             this.METH_java_lang_Throwable__addSuppressed                = IClassLoader.getMethod(this.TYPE_java_lang_Throwable, "addSuppressed", this.TYPE_java_lang_Throwable);
             this.METH_java_util_Iterator__hasNext                       = IClassLoader.requireMethod(this.TYPE_java_util_Iterator,      "hasNext");
             this.METH_java_util_Iterator__next                          = IClassLoader.requireMethod(this.TYPE_java_util_Iterator,      "next");
 
             // SUPPRESS CHECKSTYLE LineLength:1
-            this.CTOR_java_lang_StringBuilder__java_lang_String = IClassLoader.requireConstructor(this.TYPE_java_lang_StringBuilder, this.TYPE_java_lang_String);
+//            this.CTOR_java_lang_StringBuilder__java_lang_String = IClassLoader.requireConstructor(this.TYPE_java_lang_StringBuilder, this.TYPE_java_lang_String);
 
         } catch (Exception e) {
-            throw new InternalCompilerException("Cannot load simple types", e);
+            throw new InternalCompilerException("Cannot load simple types"+e.getMessage(), e);
         }
     }
 

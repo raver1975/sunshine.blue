@@ -31,7 +31,7 @@ import org.codehaus.commons.nullanalysis.Nullable;
  * An {@link Exception} that is associated with an optional {@link Location} in a source file.
  */
 public
-class LocatedException extends Exception {
+class LocatedException extends RuntimeException {
 
     @Nullable private final Location location;
 

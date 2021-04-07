@@ -25,13 +25,20 @@
 
 package org.codehaus.janino;
 
+import com.klemstinegroup.sunshinelab.engine.util.FilterReader;
 import com.klemstinegroup.sunshinelab.engine.util.MemoryFileHandle;
+import com.klemstinegroup.sunshinelab.engine.util.StringUtils;
 import org.codehaus.commons.compiler.CompileException;
 import org.codehaus.commons.compiler.Location;
-import org.codehaus.commons.compiler.io.Readers;
 import org.codehaus.commons.nullanalysis.Nullable;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -73,7 +80,7 @@ class Scanner {
     Scanner(String fileName) throws IOException {
         this(
             fileName,                     // fileName
-            new FileInputStream(fileName) // is
+            new MemoryFileHandle().read() // is
         );
     }
 
@@ -84,7 +91,7 @@ class Scanner {
     Scanner(String fileName, String encoding) throws IOException {
         this(
             fileName,                      // fileName
-            new FileInputStream(fileName), // is
+            new MemoryFileHandle().read(), // is
             encoding                       // encoding
         );
     }
@@ -93,10 +100,10 @@ class Scanner {
      * @deprecated This method is deprecated because it leaves the input file open
      */
     @Deprecated public
-    Scanner(File file) throws IOException {
+    Scanner(MemoryFileHandle mfh) throws IOException {
         this(
-            file.getAbsolutePath(),    // fileName
-            new FileInputStream(file), // is
+            "",    // fileName
+            mfh.read(), // is
             null                       // encoding
         );
     }
@@ -105,10 +112,10 @@ class Scanner {
      * @deprecated This method is deprecated because it leaves the input file open
      */
     @Deprecated public
-    Scanner(File file, @Nullable String encoding) throws IOException {
+    Scanner(MemoryFileHandle mfh, @Nullable String encoding) throws IOException {
         this(
-            file.getAbsolutePath(),    // fileName
-            new FileInputStream(file), // is
+            "",    // fileName
+            mfh.read(), // is
             encoding                   // encoding
         );
     }
@@ -388,9 +395,9 @@ class Scanner {
         }
 
         // Scan identifier.
-        if (Character.isJavaIdentifierStart((char) this.peek())) {
+        if (StringUtils.isJavaIdentifierStart((char) this.peek())) {
             this.read();
-            while (Character.isJavaIdentifierPart((char) this.peek())) this.read();
+            while (StringUtils.isJavaIdentifierPart((char) this.peek())) this.read();
             String s = this.sb.toString();
             if ("true".equals(s))  return TokenType.BOOLEAN_LITERAL;
             if ("false".equals(s)) return TokenType.BOOLEAN_LITERAL;
@@ -403,8 +410,8 @@ class Scanner {
 
         // Scan numeric literal.
         if (
-            Character.isDigit((char) this.peek())
-            || (this.peek() == '.' && Character.isDigit(this.peekButOne())) // .999
+            isDigit((char) this.peek())
+            || (this.peek() == '.' && isDigit(this.peekButOne())) // .999
         ) return this.scanNumericLiteral();
 
         // Scan string literal.
@@ -440,6 +447,10 @@ class Scanner {
             "Invalid character input \"" + (char) this.peek() + "\" (character code " + this.peek() + ")",
             this.location()
         );
+    }
+
+    private boolean isDigit(int peekButOne) {
+        return peekButOne == '0' || peekButOne == '1' || peekButOne == '2' || peekButOne == '3' || peekButOne == '4' || peekButOne == '5' || peekButOne == '6' || peekButOne == '7' || peekButOne == '8' || peekButOne == '9';
     }
 
     private TokenType

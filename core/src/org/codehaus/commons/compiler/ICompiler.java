@@ -25,6 +25,7 @@
 
 package org.codehaus.commons.compiler;
 
+import com.badlogic.gdx.files.FileHandle;
 import org.codehaus.commons.compiler.util.resource.ListableResourceFinder;
 import org.codehaus.commons.compiler.util.resource.Resource;
 import org.codehaus.commons.compiler.util.resource.ResourceCreator;

@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.klemstinegroup.sunshinelab.engine.objects.BaseObject;
 import com.klemstinegroup.sunshinelab.engine.util.MemoryFileHandle;
 import com.madgag.gif.fmsware.AnimatedGifEncoder;
-import com.squareup.gifencoder.ImageOptions;
+//import com.squareup.gifencoder.ImageOptions;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public class Statics {
@@ -22,7 +22,7 @@ public class Statics {
     public static String test="test1234";
 //    public static GifEncoder gifEncoder;
     public static MemoryFileHandle gifEncoderFile;
-    public static ImageOptions gifOptions;
+//    public static ImageOptions gifOptions;
     public static AnimatedGifEncoder gifEncoderA;
 //    public static final boolean debug = true;
 

@@ -75,7 +75,7 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
         } else Pixmap.downloadFromUrl(url, new Pixmap.DownloadPixmapResponseListener() {
             @Override
             public void downloadComplete(Pixmap pixmap) {
-                IPFSUtils.uploadPng(pixmap);
+//                IPFSUtils.uploadPng(pixmap);
                 texture = new Texture(pixmap);
                 setBound();
             }
@@ -86,7 +86,7 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
                 Pixmap.downloadFromUrl(url1, new Pixmap.DownloadPixmapResponseListener() {
                     @Override
                     public void downloadComplete(Pixmap pixmap) {
-                        IPFSUtils.uploadPng(pixmap);
+                        //IPFSUtils.uploadPng(pixmap);
                         texture = new Texture(pixmap);
                         setBound();
                     }
