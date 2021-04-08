@@ -36,6 +36,7 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 //        img = new Texture("badlogic.jpg");
 
         Statics.userObjects.add(new RectTextureObject("https://i.redd.it/0h1nbwj4bto61.jpg"));
+//        Statics.userObjects.add(new RectTextureObject("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/477px-PNG_Test.png"));
         Statics.userObjects.add(new RectTextureObject("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/477px-PNG_Test.png"));
         ((ScreenObject) Statics.userObjects.get(1)).position.set(-100, -100, 0);
 
@@ -43,12 +44,13 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
         ((ScreenObject) Statics.userObjects.get(1)).scale = .4f;
         viewport = new ScreenViewport();
 
-        InputMultiplexer im = new InputMultiplexer();
+
 
         BasicUIOverlay ov = new BasicUIOverlay();
-        Gdx.input.setInputProcessor(im);
-        im.addProcessor(this);
-        im.addProcessor(ov.stage);
+        Gdx.input.setInputProcessor(Statics.im);
+        Statics.im.addProcessor(this);
+        Statics.im.addProcessor(ov.stage);
+        Statics.im.addProcessor(ov);
         Statics.overlayObjects.add( ov);
         mx4Batch = Statics.batch.getTransformMatrix().cpy();
 
@@ -200,6 +202,7 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 
             }
         }
+
         return false;
     }
 

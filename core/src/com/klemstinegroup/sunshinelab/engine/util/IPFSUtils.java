@@ -1,6 +1,5 @@
 package com.klemstinegroup.sunshinelab.engine.util;
 
-import ar.com.hjg.pngj.IImageLine;
 import ar.com.hjg.pngj.ImageInfo;
 import ar.com.hjg.pngj.PngWriter;
 import com.badlogic.gdx.Gdx;
@@ -8,7 +7,7 @@ import com.badlogic.gdx.Net;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.net.HttpRequestBuilder;
 import com.badlogic.gdx.net.HttpStatus;
 import com.badlogic.gdx.utils.*;
@@ -64,20 +63,20 @@ public class IPFSUtils {
         });
     }
 
-    public static void writePng(Pixmap pixmap, FileHandle mfh) {
-        writePng(pixmap,mfh,null);
+    public static void writePng(Pixmap pixmap, Vector3 bounds,FileHandle mfh) {
+        writePng(pixmap,bounds,mfh,null);
     }
-    public static void writePng(Pixmap pixmap, FileHandle mfh,IPFSResponseListener listener) {
+    public static void writePng(Pixmap pixmap, Vector3 bounds, FileHandle mfh,IPFSResponseListener listener) {
         Gdx.app.postRunnable(new Runnable() {
             @Override
             public void run() {
 //                MemoryFileHandle mfh = new MemoryFileHandle();
-                ImageInfo imi = new ImageInfo(pixmap.getHeight(), pixmap.getWidth(), 8, true);
+                ImageInfo imi = new ImageInfo((int)bounds.x, (int)bounds.y, 8, true);
                 PngWriter pngw = new PngWriter(mfh.write(false), imi);
-                int[] temp = new int[pixmap.getHeight() * 4];
+                int[] temp = new int[((int)bounds.x) * 4];
                 Color col = new Color();
-                for (int i = 0; i < pixmap.getWidth(); i++) {
-                    for (int j = 0; j < pixmap.getHeight(); j++) {
+                for (int i = 0; i < (int)bounds.y; i++) {
+                    for (int j = 0; j < (int)bounds.x; j++) {
                         int c = pixmap.getPixel(j, i);
                         col.set(c);
                         temp[j * 4 + 0] = (int) (col.r * 255);
@@ -97,13 +96,13 @@ public class IPFSUtils {
         });
     }
 
-    public static void uploadPng(Pixmap pixmap, IPFSResponseListener listener) {
+    public static void uploadPng(Pixmap pixmap,Vector3 bounds, IPFSResponseListener listener) {
         MemoryFileHandle mfh = new MemoryFileHandle();
-        writePng(pixmap, mfh,listener);
+        writePng(pixmap, bounds,mfh,listener);
     }
 
-    public static void uploadPng(Pixmap pixmap) {
-        uploadPng(pixmap, new IPFSResponseListener() {
+    public static void uploadPng(Pixmap pixmap, Vector3 bounds) {
+        uploadPng(pixmap,bounds, new IPFSResponseListener() {
             @Override
             public void qid(String qid) {
                 Gdx.app.log("qid",qid);

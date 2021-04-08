@@ -1,5 +1,6 @@
 package com.klemstinegroup.sunshinelab.engine;
 
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -42,5 +43,5 @@ public class Statics {
     public static final Array<BaseObject> userObjects = new Array<BaseObject>();
     public static final Array<BaseObject> selectedObjects = new Array<BaseObject>();
     public static final Array<BaseObject> overlayObjects = new Array<BaseObject>();
-
+    public static InputMultiplexer im = new InputMultiplexer();
 }

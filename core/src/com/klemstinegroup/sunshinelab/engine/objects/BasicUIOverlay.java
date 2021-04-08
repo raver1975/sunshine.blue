@@ -5,9 +5,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -21,6 +21,7 @@ import com.klemstinegroup.sunshinelab.engine.Statics;
 public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
 
     public final Stage stage;
+    private final Group transformGroup;
 
     public BasicUIOverlay() {
         Viewport viewport = new FitViewport(800f*Gdx.graphics.getWidth()/Gdx.graphics.getHeight()*Gdx.graphics.getDensity() , 800*Gdx.graphics.getDensity() );
@@ -187,9 +188,14 @@ transformButtons.setUncheckLast(true);
 transformButtons.setChecked("move");
 transformButtons.setMaxCheckCount(1);
 transformButtons.setMinCheckCount(1);
-stage.addActor(moveButton);
-stage.addActor(scaleButton);
-stage.addActor(rotateButton);
+        transformGroup = new Group();
+        transformGroup.addActor(moveButton);
+        transformGroup.addActor(scaleButton);
+        transformGroup.addActor(rotateButton);
+        transformGroup.setVisible(false);
+stage.addActor(transformGroup);
+//stage.addActor(scaleButton);
+//stage.addActor(rotateButton);
 
     }
 
@@ -210,12 +216,24 @@ stage.addActor(rotateButton);
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+
+        if (Statics.selectedObjects.size>0){
+            transformGroup.setVisible(true);
+        }
+        else{
+            transformGroup.setVisible(false);
+        }
         return false;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
+        if (Statics.selectedObjects.size>0){
+            transformGroup.setVisible(true);
+        }
+        else{
+            transformGroup.setVisible(false);
+        }return false;
     }
 
     @Override

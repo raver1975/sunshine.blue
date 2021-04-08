@@ -18,7 +18,6 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
     private com.badlogic.gdx.graphics.Texture texture;
     private Polygon polygon;
 
-
     public RectTextureObject(String url) {
 //
 //        url = "https://api.codetabs.com/v1/proxy?quest=" + url;
@@ -75,9 +74,9 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
         } else Pixmap.downloadFromUrl(url, new Pixmap.DownloadPixmapResponseListener() {
             @Override
             public void downloadComplete(Pixmap pixmap) {
-                //IPFSUtils.uploadPng(pixmap);
                 texture = new Texture(pixmap);
                 setBound();
+                IPFSUtils.uploadPng(pixmap,bounds);
             }
 
             @Override
@@ -86,9 +85,9 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
                 Pixmap.downloadFromUrl(url1, new Pixmap.DownloadPixmapResponseListener() {
                     @Override
                     public void downloadComplete(Pixmap pixmap) {
-                        IPFSUtils.uploadPng(pixmap);
                         texture = new Texture(pixmap);
                         setBound();
+                        IPFSUtils.uploadPng(pixmap, bounds);
                     }
 
                     @Override
@@ -108,9 +107,9 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
 //    }
 
     public RectTextureObject(Pixmap pixmap) {
-        IPFSUtils.uploadPng(pixmap);
         this.texture=new Texture(pixmap);
         setBound();
+        IPFSUtils.uploadPng(pixmap, bounds);
     }
 
     private void setBound() {
