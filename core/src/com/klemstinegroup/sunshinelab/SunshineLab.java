@@ -2,44 +2,39 @@ package com.klemstinegroup.sunshinelab;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.igormaznitsa.jjjvm.impl.JJJVMClassImpl;
 import com.igormaznitsa.jjjvm.impl.jse.JSEProviderImpl;
-import com.igormaznitsa.jjjvm.model.JJJVMClass;
 import com.igormaznitsa.jjjvm.model.JJJVMProvider;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.klemstinegroup.sunshinelab.engine.objects.*;
 
 import java.io.ByteArrayInputStream;
-import java.util.Arrays;
 
 import static com.badlogic.gdx.Application.LOG_INFO;
 import static com.klemstinegroup.sunshinelab.engine.Statics.viewport;
 
-public class SunshineLab extends ApplicationAdapter implements InputProcessor {
+public class SunshineLab extends ApplicationAdapter {
 
     //    Camera camera;
 
 
     public static Matrix4 mx4Batch = new Matrix4();
-    Vector3 touchdown = new Vector3();
-    Vector3 touchdrag = new Vector3();
+
     JJJVMClassImpl jjjvmClass = null;
 
     @Override
     public void create() {
+        Gdx.input.setInputProcessor(Statics.im);
+        Statics.setOverlay(Statics.BASIC_UI_OVERLAY);
         Gdx.app.setLogLevel(LOG_INFO);
 //        img = new Texture("badlogic.jpg");
 
         Statics.userObjects.add(new RectTextureObject("https://i.redd.it/0h1nbwj4bto61.jpg"));
 //        Statics.userObjects.add(new RectTextureObject("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/477px-PNG_Test.png"));
         Statics.userObjects.add(new RectTextureObject("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/477px-PNG_Test.png"));
-        ((ScreenObject) Statics.userObjects.get(1)).position.set(-100, -100, 0);
+        ((ScreenObject) Statics.userObjects.get(1)).position.set(-100, -100);
 
         ((ScreenObject) Statics.userObjects.get(0)).scale = .1f;
         ((ScreenObject) Statics.userObjects.get(1)).scale = .4f;
@@ -47,12 +42,9 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 
 
 
-        BasicUIOverlay ov = new BasicUIOverlay();
-        Gdx.input.setInputProcessor(Statics.im);
-        Statics.im.addProcessor(this);
-        Statics.im.addProcessor(ov.stage);
-        Statics.im.addProcessor(ov);
-        Statics.overlayObjects.add( ov);
+
+//        Statics.im.addProcessor(this);
+
         mx4Batch = Statics.batch.getTransformMatrix().cpy();
 
 
@@ -80,8 +72,6 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
         }
 
 
-
-
         //--------------------------------------------------------------------------------------------------
         viewport.apply();
 //        gifEncoderFile = new MemoryFileHandle();
@@ -107,46 +97,26 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
             }
             Statics.batch.setTransformMatrix(mx4Batch);
         }
-        for (BaseObject bo : Statics.overlayObjects) {
-            if (bo instanceof Drawable) {
-                ((Drawable) bo).draw(Statics.batch);
-            }
-            Statics.batch.setTransformMatrix(mx4Batch);
+        if (Statics.overlay!=null){
+            ((Drawable) Statics.overlay).draw(Statics.batch);
         }
+        Statics.batch.setTransformMatrix(mx4Batch);
 
-
-////        int pix[][]=FrameBufferUtils.drawObjectsInt(viewport,Statics.objects,200,200);
-////        System.out.println(cntr);
-//        if (cntr < 170 && cntr > 60) {
-//
-////                Statics.gifEncoder.addImage(FrameBufferUtils.drawObjectsInt(viewport, Statics.objects, 400, 400), Statics.gifOptions);
-//            Statics.gifEncoderA.addFrame(FrameBufferUtils.drawObjectsPix(viewport, Statics.objects, 400, 400));
-//
-//        } else if (cntr == 170) {
-////                Statics.gifEncoder.finishEncoding();
-//            Statics.gifEncoderA.finish();
-//            IPFSResponseListener irl = new IPFSResponseListener() {
-//                @Override
-//                public void qid(String qid) {
-//                    IPFSUtils.openIPFSViewer(qid);
-//                }
-//            };
-//            IPFSUtils.uploadFile(gifEncoderFile.readBytes(),"image/gif", irl);
-////            Gdx.net.openURI(data);
-////                System.exit(0);
-//
-//        }
-//        cntr++;
         Statics.batch.end();
 
-        //------------------------------------------------------------
-        try {
-            jjjvmClass.findMethod("main", "([Ljava/lang/String;)V").invoke(null, null);
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        }
-        //------------------------------------------------------------
+    //------------------------------------------------------------
+        try
+
+    {
+        jjjvmClass.findMethod("main", "([Ljava/lang/String;)V").invoke(null, null);
+    } catch(
+    Throwable throwable)
+
+    {
+        throwable.printStackTrace();
     }
+    //------------------------------------------------------------
+}
 
 
     @Override
@@ -159,7 +129,7 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
         viewport.update(width, height);
     }
 
-    @Override
+    /*@Override
     public boolean keyDown(int keycode) {
         for (BaseObject bo : Statics.userObjects) {
             if (bo instanceof Touchable) {
@@ -189,30 +159,13 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
         return false;
     }
 
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        viewport.unproject(touchdown.set(screenX, screenY,0));
-
-        System.out.println(touchdown);
-        Statics.selectedObjects.clear();
-        for (BaseObject bo : Statics.userObjects) {
-            if (bo instanceof Touchable) {
-                ((Touchable)bo).touchDown(screenX,screenY,pointer,button);
-                if (((Touchable) bo).isSelected(touchdown.cpy())) {
-                    Statics.selectedObjects.add(bo);
-                }
-
-            }
-        }
-
-        return false;
-    }
+//
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         for (BaseObject bo : Statics.userObjects) {
             if (bo instanceof Touchable) {
-            ((Touchable)bo).touchUp(screenX,screenY,pointer,button);
+                ((Touchable) bo).touchUp(screenX, screenY, pointer, button);
             }
         }
         return false;
@@ -220,30 +173,29 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        viewport.unproject(touchdrag.set(screenX, screenY,0));
+        viewport.unproject(touchdrag.set(screenX, screenY, 0));
         for (BaseObject bo : Statics.userObjects) {
             if (bo instanceof Touchable) {
-                ((Touchable)bo).touchDragged(screenX,screenY,pointer);
+                ((Touchable) bo).touchDragged(screenX, screenY, pointer);
             }
         }
-        for (BaseObject bo:Statics.selectedObjects){
-            if (bo instanceof ScreenObject){
-                switch (Statics.transformButton){
+        for (BaseObject bo : Statics.selectedObjects) {
+            if (bo instanceof ScreenObject) {
+                switch (Statics.transformButton) {
                     case 0:
-                        ((ScreenObject)bo).position.add(touchdrag.cpy().sub(touchdown));
+                        ((ScreenObject) bo).position.add(touchdrag.cpy().sub(touchdown));
                         break;
                     case 1:
-                        ((ScreenObject)bo).rotation+= touchdrag.x-touchdown.x;
+                        ((ScreenObject) bo).rotation += touchdrag.x - touchdown.x;
                         break;
                     case 2:
-                        ((ScreenObject)bo).scale+=(touchdrag.x-touchdown.x)/200f;
+                        ((ScreenObject) bo).scale += (touchdrag.x - touchdown.x) / 200f;
                         break;
                 }
 
             }
         }
         touchdown.set(touchdrag);
-
 
 
         return false;
@@ -257,5 +209,5 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
     @Override
     public boolean scrolled(float amountX, float amountY) {
         return false;
-    }
+    }*/
 }

@@ -42,13 +42,13 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
         font = generator.generateFont(parameter);
         generator.dispose();
         setBounds();
-        center.set(bounds.x / 2f, bounds.y / 2f, 0);
+        center.set(bounds.x / 2f, bounds.y / 2f);
     }
 
     private void setBounds() {
         nn = new GlyphLayout();
         nn.setText(font, text);
-        bounds.set(nn.width, nn.height, 0);
+        bounds.set(nn.width, nn.height);
 
     }
 
@@ -146,35 +146,12 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
     }
 
     @Override
-    public boolean isSelected(Vector3 touch) {
-//        m4=new Matrix4().idt()
-//                .translate(center.x + position.x, center.y + position.y, 0)
-//                .rotate(0, 0, 1, rotation)
-//                .scale(scale, scale, 1)
-////                .translate(-position.x, -position.y, 0)
-//                .translate(-center.x, -center.y, 0);
-
-       /* Polygon polygon = new Polygon(new float[]{position.x, position.y, position.x+bounds.x, position.y, position.x+bounds.x, position.y+bounds.y, position.x,position.y+bounds.y,position.x,position.y});
-//        polygon.translate(position.x, position.y);
-        polygon.rotate(rotation);
-        polygon.setScale(scale, scale);
-//        System.out.println(Arrays.toString(polygon.getTransformedVertices()));
-        return polygon.contains(touch);
-//        touch.sub(position.x,position.y).add(center.x,center.y).rotateDeg(rotation).scl(scale);
-//        System.out.println("rotated touch:" + touch);
-//        center.set(touch,0);
-//        return true;*/
-
+    public boolean isSelected(Vector2 touch) {
         polygon = new Polygon(new float[]{0, 0, bounds.x, 0, bounds.x, bounds.y, 0,  bounds.y, 0, 0});
-//        polygon.translate(center.x,center.y);
         polygon.setOrigin(center.x,center.y);
         polygon.setScale(scale,scale);
         polygon.rotate(rotation);
         polygon.translate(position.x,position.y);
-//        polygon.translate(s);
-
-        System.out.println(Arrays.toString(polygon.getTransformedVertices()));
-        return polygon.contains(touch.x,touch.y);
-
+        return polygon.contains(touch);
     }
 }

@@ -36,7 +36,6 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-
         Statics.viewport.unproject(touch.set(screenX, screenY));
         touch.sub(position.x,position.y);
         touch.rotateDeg(-rotation);
@@ -108,13 +107,13 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
     }
 
     @Override
-    public boolean isSelected(Vector3 touch) {
+    public boolean isSelected(Vector2 touch) {
 
 //        polygon.translate(s);
         setbounds();
 //        System.out.println(Arrays.toString(polygon.getTransformedVertices()));
         if (polygon != null) {
-            return polygon.contains(touch.x, touch.y);
+            return polygon.contains(touch);
         }
         return false;
     }
@@ -132,7 +131,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
 //        polygon.translate(center.x,center.y);
             polygon.setOrigin(center.x, center.y);
             polygon.setScale(scale, scale);
-            bounds.set(polygon.getBoundingRectangle().width, polygon.getBoundingRectangle().height, 0);
+            bounds.set(polygon.getBoundingRectangle().width, polygon.getBoundingRectangle().height);
             polygon.rotate(rotation);
             polygon.translate(position.x, position.y);
         }

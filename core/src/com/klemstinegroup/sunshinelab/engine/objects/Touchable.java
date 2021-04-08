@@ -8,5 +8,7 @@ import com.badlogic.gdx.math.Vector3;
 public interface Touchable extends InputProcessor {
 
 
-    boolean isSelected(Vector3 touch);
+    boolean isSelected(Vector2 touch);
+
+
 }

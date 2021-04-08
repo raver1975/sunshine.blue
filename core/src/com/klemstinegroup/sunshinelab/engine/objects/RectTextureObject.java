@@ -113,9 +113,9 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
     }
 
     private void setBound() {
-        bounds.set(new Vector3(texture.getWidth(), texture.getHeight(), 0));
-        center.set(new Vector3(texture.getWidth() / 2f, texture.getHeight() / 2f, 0));
-        position.add(-center.x, -center.y, 0);
+        bounds.set(new Vector2(texture.getWidth(), texture.getHeight()));
+        center.set(new Vector2(texture.getWidth() / 2f, texture.getHeight() / 2f));
+        position.add(-center.x, -center.y);
     }
 
 
@@ -153,17 +153,13 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
 
 
     @Override
-    public boolean isSelected(Vector3 touch) {
+    public boolean isSelected(Vector2 touch) {
         polygon = new Polygon(new float[]{0, 0, bounds.x, 0, bounds.x, bounds.y, 0, bounds.y, 0, 0});
-//        polygon.translate(center.x,center.y);
         polygon.setOrigin(center.x, center.y);
         polygon.setScale(scale, scale);
         polygon.rotate(rotation);
         polygon.translate(position.x, position.y);
-//        polygon.translate(s);
-
-        System.out.println(Arrays.toString(polygon.getTransformedVertices()));
-        return polygon.contains(touch.x,touch.y);
+        return polygon.contains(touch);
     }
 
     @Override
