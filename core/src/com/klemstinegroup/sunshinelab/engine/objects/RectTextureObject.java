@@ -15,7 +15,7 @@ import com.klemstinegroup.sunshinelab.engine.util.MemoryFileHandle;
 import java.util.Arrays;
 
 public class RectTextureObject extends ScreenObject implements Drawable, Touchable {
-    private com.badlogic.gdx.graphics.Texture texture;
+    public com.badlogic.gdx.graphics.Texture texture;
     private Polygon polygon;
 
     public RectTextureObject(String url) {
