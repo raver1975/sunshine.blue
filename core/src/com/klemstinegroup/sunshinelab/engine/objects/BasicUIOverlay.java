@@ -39,7 +39,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 //        Skin skin = new Skin(Gdx.files.internal("skins/default/skin/uiskin.json"));
         Actor fontButton = new TextButton("Text", skin);
 //        fontButton.setColor(Color.WHITE);
-
+        TextArea ta=new TextArea("",skin);
         fontButton.addListener(new ClickListener() {
 //            @Override
 //            public void changed(ChangeEvent event, Actor actor) {
@@ -54,6 +54,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 FontObject ff = new FontObject(FontObject.fontList[MathUtils.random(FontObject.fontList.length - 1)], 40);
                 Statics.userObjects.add(ff);
                 ff.position.set(-ff.center.x,-ff.center.y,0);
+                ta.setVisible(false);
 //        ((ScreenObject) Statics.objects.get(0)).position.set(-((ScreenObject) Statics.objects.get(0)).bounds.x/2, -((ScreenObject) Statics.objects.get(0)).bounds.y/2, 0);
             }
         });
@@ -65,7 +66,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         imageButton.setPosition(0,50);
 //        fontButton.setColor(Color.WHITE);
 
-        TextArea ta=new TextArea("",skin);
+
         //                    pasteButton.setVisible(false);
         TextFieldListener tfl = new TextFieldListener() {
             @Override
@@ -133,15 +134,38 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                Gdx.input.setOnscreenKeyboardVisible(true);
-                ta.setVisible(true);
-                stage.setKeyboardFocus(ta);
+                boolean vis=!ta.isVisible();
+                Gdx.input.setOnscreenKeyboardVisible(vis);
+                ta.setVisible(vis);
+                if (vis){
+                    stage.setKeyboardFocus(ta);
+                }
 //                pasteButton.setVisible(true);
             }
         });
 //        pasteButton.setVisible(false);
 //        pasteButton.setPosition(ta.getX()+ta.getWidth()+10,imageButton.getY());
 
+
+        Actor drawButton = new TextButton("Draw", skin);
+        drawButton.setPosition(0,100);
+        drawButton.addListener(new ClickListener() {
+//            @Override
+//            public void changed(ChangeEvent event, Actor actor) {
+//                Gdx.input.setOnscreenKeyboardVisible(true);
+//                Statics.objects.add(new FontObject(FontObject.fontList[MathUtils.random(FontObject.fontList.length - 1)], 40));
+//            }
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                Gdx.input.setOnscreenKeyboardVisible(false);
+                ta.setVisible(false);
+                Statics.userObjects.add(new DrawObject());
+//                pasteButton.setVisible(true);
+            }
+        });
+stage.addActor(drawButton);
         stage.addActor(ta);
 //        stage.addActor(pasteButton);
         stage.addActor(imageButton);

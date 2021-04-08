@@ -76,7 +76,7 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
             public void downloadComplete(Pixmap pixmap) {
                 texture = new Texture(pixmap);
                 setBound();
-                IPFSUtils.uploadPng(pixmap,bounds);
+//                IPFSUtils.uploadPng(pixmap,bounds);
             }
 
             @Override
@@ -87,7 +87,7 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
                     public void downloadComplete(Pixmap pixmap) {
                         texture = new Texture(pixmap);
                         setBound();
-                        IPFSUtils.uploadPng(pixmap, bounds);
+//                        IPFSUtils.uploadPng(pixmap, bounds);
                     }
 
                     @Override
@@ -109,7 +109,7 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
     public RectTextureObject(Pixmap pixmap) {
         this.texture=new Texture(pixmap);
         setBound();
-        IPFSUtils.uploadPng(pixmap, bounds);
+//        IPFSUtils.uploadPng(pixmap, bounds);
     }
 
     private void setBound() {

@@ -19,12 +19,13 @@ import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 
 import static com.badlogic.gdx.Application.LOG_INFO;
+import static com.klemstinegroup.sunshinelab.engine.Statics.viewport;
 
 public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 
     //    Camera camera;
 
-    Viewport viewport;
+
     public static Matrix4 mx4Batch = new Matrix4();
     Vector3 touchdown = new Vector3();
     Vector3 touchdrag = new Vector3();
@@ -196,6 +197,7 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
         Statics.selectedObjects.clear();
         for (BaseObject bo : Statics.userObjects) {
             if (bo instanceof Touchable) {
+                ((Touchable)bo).touchDown(screenX,screenY,pointer,button);
                 if (((Touchable) bo).isSelected(touchdown.cpy())) {
                     Statics.selectedObjects.add(bo);
                 }
@@ -208,12 +210,22 @@ public class SunshineLab extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        for (BaseObject bo : Statics.userObjects) {
+            if (bo instanceof Touchable) {
+            ((Touchable)bo).touchUp(screenX,screenY,pointer,button);
+            }
+        }
         return false;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         viewport.unproject(touchdrag.set(screenX, screenY,0));
+        for (BaseObject bo : Statics.userObjects) {
+            if (bo instanceof Touchable) {
+                ((Touchable)bo).touchDragged(screenX,screenY,pointer);
+            }
+        }
         for (BaseObject bo:Statics.selectedObjects){
             if (bo instanceof ScreenObject){
                 switch (Statics.transformButton){
