@@ -19,7 +19,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 
-import static com.klemstinegroup.sunshinelab.engine.Statics.overlay;
 import static com.klemstinegroup.sunshinelab.engine.Statics.viewport;
 
 public class TransformOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
@@ -53,7 +52,7 @@ public class TransformOverlay extends ScreenObject implements Overlay, Touchable
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                Statics.setOverlay(Statics.previousOverlay);
+                Statics.backOverlay();
             }
         });
         stage.addActor(exitButton);

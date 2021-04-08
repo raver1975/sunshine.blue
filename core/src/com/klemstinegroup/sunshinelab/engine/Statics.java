@@ -16,19 +16,20 @@ import com.madgag.gif.fmsware.AnimatedGifEncoder;
 //import com.squareup.gifencoder.ImageOptions;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
+import java.util.Stack;
+
 public class Statics {
     public static final String IPFSGateway = "https://ipfs.io/ipfs/";
     public static final String IPFSMediaViewer = "QmWWoB9DUFXz8v1ZVGXT8KjjZ7r7kbUQJPzPDxfpz36ei6";
     public static final boolean debug = false;
     public static Matrix4 mx4Batch = new Matrix4();
-    public static String test = "test1234";
     //    public static GifEncoder gifEncoder;
     public static MemoryFileHandle gifEncoderFile;
     //    public static ImageOptions gifOptions;
     public static AnimatedGifEncoder gifEncoderA;
     public static int transformButton;
     public static ScreenViewport viewport;
-    public static Overlay previousOverlay;
+    public static Stack<Overlay> overlays=new Stack<>();
 //    public static final boolean debug = true;
 
     static TextureRegion whitePixel;
@@ -46,26 +47,32 @@ public class Statics {
     public static final Array<BaseObject> userObjects = new Array<BaseObject>();
     public static final Array<BaseObject> selectedObjects = new Array<BaseObject>();
     public static InputMultiplexer im = new InputMultiplexer();
-    public static Overlay overlay;
     public static final BasicUIOverlay BASIC_UI_OVERLAY = new BasicUIOverlay();
     public static final TransformOverlay TRANSFORM_OVERLAY = new TransformOverlay();
     public static final DrawOverlay DRAW_OVERLAY = new DrawOverlay();
     public static final FontOverlay FONT_OVERLAY = new FontOverlay();
+    public static  Overlay overlay;
 
     public static void setOverlay(Overlay overlay) {
-        if (Statics.overlay != null) {
-            if (Statics.overlay instanceof Touchable) {
-                im.removeProcessor((Touchable) Statics.overlay);
+        Overlay topOverlay = Statics.overlay;
+        if (topOverlay != null) {
+            if (topOverlay instanceof Touchable) {
+                im.removeProcessor((Touchable) topOverlay);
             }
-            Statics.overlay.removeInput();
+            topOverlay.removeInput();
+            Statics.overlays.push(Statics.overlay);
         }
-        Statics.previousOverlay=Statics.overlay;
-        Statics.overlay = overlay;
         if (overlay!=null) {
             if (overlay instanceof Touchable) {
                 im.addProcessor((Touchable) overlay);
             }
             overlay.setInput();
+            Statics.overlay=overlay;
         }
+    }
+
+    public static void backOverlay() {
+        setOverlay(overlays.pop());
+        overlays.pop();
     }
 }

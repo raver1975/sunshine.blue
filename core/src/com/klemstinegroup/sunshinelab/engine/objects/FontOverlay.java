@@ -45,7 +45,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                Statics.setOverlay(Statics.previousOverlay);
+                Statics.backOverlay();
             }
         });
         stage.addActor(exitButton);

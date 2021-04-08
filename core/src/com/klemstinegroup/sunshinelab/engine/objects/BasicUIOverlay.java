@@ -166,17 +166,16 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
             }
         }
-
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         if (Statics.selectedObjects.size > 0) {
             Statics.setOverlay(Statics.TRANSFORM_OVERLAY);
         } else {
             Statics.setOverlay(Statics.BASIC_UI_OVERLAY);
         }
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         return false;
     }
 
