@@ -9,5 +9,6 @@ public class ScreenObject extends BaseObject {
     public Vector2 center = new Vector2();
     public float scale = 1f;
     public Vector2 bounds= new Vector2();
+    public Vector2 touchSpot=new Vector2();
 
 }

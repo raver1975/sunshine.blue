@@ -24,8 +24,10 @@ public class TransformOverlay extends ScreenObject implements Overlay, Touchable
 
     public final Stage stage;
     private final Group transformGroup;
+
     Vector2 touchdrag = new Vector2();
     Vector2 touchdown = new Vector2();
+    private Vector2 touchdragcpy=new Vector2();
 
     public TransformOverlay() {
         stage = new Stage(Statics.overlayViewport);
@@ -66,10 +68,14 @@ public class TransformOverlay extends ScreenObject implements Overlay, Touchable
         CheckBox scaleButton = new CheckBox("Scale", skin);
         scaleButton.setPosition(10, 60);
         scaleButton.setName("scale");
+        CheckBox centerButton = new CheckBox("Center", skin);
+        centerButton.setPosition(10, 90);
+        centerButton.setName("center");
 
         transformButtons.add(moveButton);
         transformButtons.add(rotateButton);
         transformButtons.add(scaleButton);
+        transformButtons.add(centerButton);
         moveButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -91,6 +97,14 @@ public class TransformOverlay extends ScreenObject implements Overlay, Touchable
                 Statics.transformButton = 2;
             }
         });
+        centerButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                Statics.transformButton = 3;
+            }
+        });
+
 
 
         transformButtons.setUncheckLast(true);
@@ -101,6 +115,7 @@ public class TransformOverlay extends ScreenObject implements Overlay, Touchable
         transformGroup.addActor(moveButton);
         transformGroup.addActor(scaleButton);
         transformGroup.addActor(rotateButton);
+        transformGroup.addActor(centerButton);
         transformGroup.setVisible(true);
         stage.addActor(transformGroup);
 //stage.addActor(scaleButton);
@@ -126,11 +141,41 @@ public class TransformOverlay extends ScreenObject implements Overlay, Touchable
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         Statics.viewport.unproject(touchdown.set(screenX, screenY));
+
         Statics.selectedObjects.clear();
         for (BaseObject bo : Statics.userObjects) {
             if (bo instanceof Touchable) {
                 if (((Touchable) bo).isSelected(touchdown.cpy())) {
                     Statics.selectedObjects.add(bo);
+                }
+
+            }
+        }
+
+
+        for (BaseObject bo : Statics.selectedObjects) {
+            if (bo instanceof ScreenObject) {
+                ScreenObject so=((ScreenObject) bo);
+                switch (Statics.transformButton) {
+                    case 0:
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        touchdragcpy.set(touchdown);
+
+                        touchdragcpy.sub(so.position.x+so.center.x,so.position.y+so.center.y);
+                        touchdragcpy.rotateDeg(-so.rotation);
+                        touchdragcpy.scl(1f/so.scale);
+
+                        System.out.println("oldcenter:"+((ScreenObject)bo).center);
+                        System.out.println("newcenter:"+touchdragcpy);
+                        Vector2 temp=touchdragcpy.add(so.center).cpy();
+//                        ((ScreenObject)bo).center.set(touchdragcpy);
+                        ((ScreenObject) bo).touchSpot.set(temp);
+                        break;
                 }
 
             }
@@ -147,19 +192,23 @@ public class TransformOverlay extends ScreenObject implements Overlay, Touchable
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+//        Statics.viewport.unproject(touchdrag.set(screenX, screenY));
         Statics.viewport.unproject(touchdrag.set(screenX, screenY));
 
         for (BaseObject bo : Statics.selectedObjects) {
             if (bo instanceof ScreenObject) {
+                ScreenObject so=((ScreenObject) bo);
                 switch (Statics.transformButton) {
                     case 0:
-                        ((ScreenObject) bo).position.add(touchdrag.cpy().sub(touchdown));
+                        so.position.add(touchdrag.cpy().sub(touchdown));
                         break;
                     case 1:
-                        ((ScreenObject) bo).rotation += touchdrag.x - touchdown.x;
+                        so.rotation += touchdrag.x - touchdown.x;
                         break;
                     case 2:
-                        ((ScreenObject) bo).scale += (touchdrag.x - touchdown.x) / 200f;
+                        so.scale += (touchdrag.x - touchdown.x) / 200f;
+                        break;
+                    case 3:
                         break;
                 }
 

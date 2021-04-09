@@ -100,17 +100,19 @@ public class SunshineLab extends ApplicationAdapter {
 
         Statics.batch.setProjectionMatrix(Statics.viewport.getCamera().combined);
         Statics.batch.begin();
-        if(cnt-->0){
-            Statics.gifEncoderA.addFrame(FrameBufferUtils.drawObjectsPix(Statics.viewport,Statics.userObjects,400,400));
-        }
-        if (cnt==0){
-            Statics.gifEncoderA.finish();
-            IPFSUtils.uploadFile(gifEncoderFile.readBytes(), "image/gif", new IPFSResponseListener() {
-                @Override
-                public void qid(String qid) {
-                    IPFSUtils.openIPFSViewer(qid);
-                }
-            });
+        if (Statics.gif) {
+            if (cnt-- > 0) {
+                Statics.gifEncoderA.addFrame(FrameBufferUtils.drawObjectsPix(Statics.viewport, Statics.userObjects, 400, 400));
+            }
+            if (cnt == 0) {
+                Statics.gifEncoderA.finish();
+                IPFSUtils.uploadFile(gifEncoderFile.readBytes(), "image/gif", new IPFSResponseListener() {
+                    @Override
+                    public void qid(String qid) {
+                        IPFSUtils.openIPFSViewer(qid);
+                    }
+                });
+            }
         }
         for (BaseObject bo : Statics.userObjects) {
             if (bo instanceof Drawable) {
@@ -125,7 +127,7 @@ public class SunshineLab extends ApplicationAdapter {
 
         Statics.batch.end();
 
-    //------------------------------------------------------------
+   /* //------------------------------------------------------------
         try
 
     {
@@ -136,7 +138,7 @@ public class SunshineLab extends ApplicationAdapter {
     {
         throwable.printStackTrace();
     }
-    //------------------------------------------------------------
+    //------------------------------------------------------------*/
 }
 
 

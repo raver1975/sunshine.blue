@@ -140,6 +140,9 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
             Statics.shapedrawer.setColor(Color.RED);
             Statics.shapedrawer.filledCircle(center.x, center.y, 5);
 
+            Statics.shapedrawer.setColor(Color.YELLOW);
+            Statics.shapedrawer.filledCircle(touchSpot.x, touchSpot.y, 15);
+
         }
         batch.end();
         batch.setTransformMatrix(SunshineLab.mx4Batch);
