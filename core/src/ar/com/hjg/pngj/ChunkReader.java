@@ -53,7 +53,7 @@ public abstract class ChunkReader implements IBytesConsumer {
 		/**
 		 * Does not store nor process - implies crcCheck=false (by default).
 		 */
-		SKIP;
+		SKIP
 	}
 
 	/**
@@ -72,7 +72,7 @@ public abstract class ChunkReader implements IBytesConsumer {
 		this.mode = mode;
 		chunkRaw = new ChunkRaw(clen, id, mode == ChunkReaderMode.BUFFER);
 		chunkRaw.setOffset(offsetInPng);
-		this.crcCheck = mode == ChunkReaderMode.SKIP ? false : true; // can be changed with setter
+		this.crcCheck = mode != ChunkReaderMode.SKIP; // can be changed with setter
 		// PngHelperInternal.debug("ChunkReader " + this.getClass() + " id="+id + " mode:"+mode);
 	}
 
@@ -236,11 +236,8 @@ public abstract class ChunkReader implements IBytesConsumer {
 			return false;
 		ChunkReader other = (ChunkReader) obj;
 		if (chunkRaw == null) {
-			if (other.chunkRaw != null)
-				return false;
-		} else if (!chunkRaw.equals(other.chunkRaw))
-			return false;
-		return true;
+			return other.chunkRaw == null;
+		} else return chunkRaw.equals(other.chunkRaw);
 	}
 
 	@Override

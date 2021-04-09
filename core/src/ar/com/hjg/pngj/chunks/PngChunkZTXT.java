@@ -51,7 +51,7 @@ public class PngChunkZTXT extends PngChunkTextVar {
 		if (nullsep < 0 || nullsep > c.data.length - 2)
 			throw new PngjException("bad zTXt chunk: no separator found");
 		key = ChunkHelper.toStringLatin1(c.data, 0, nullsep);
-		int compmet = (int) c.data[nullsep + 1];
+		int compmet = c.data[nullsep + 1];
 		if (compmet != 0)
 			throw new PngjException("bad zTXt chunk: unknown compression method");
 		byte[] uncomp = ChunkHelper.compressBytes(c.data, nullsep + 2, c.data.length - nullsep - 2, false); // uncompress

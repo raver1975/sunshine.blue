@@ -144,8 +144,8 @@ public abstract class ImageLineSetDefault<T extends IImageLine> implements IImag
 						return ifactory.createImageLine(iminfo);
 					}
 				};
-			};
-		};
+			}
+        };
 	}
 
 	/** utility function, returns default factory for {@link ImageLineInt} */

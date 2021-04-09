@@ -73,7 +73,7 @@ public class InflaterInputStream extends FilterInputStream
   /*
    * We just use this if we are decoding one byte at a time with the read() call
    */
-  private byte[] onebytebuffer = new byte[1];
+  private final byte[] onebytebuffer = new byte[1];
 
   /**
    * Create an InflaterInputStream with the default decompresseor

@@ -58,7 +58,7 @@ public class PngChunkTRNS extends PngChunkSingle {
 			int nentries = c.data.length;
 			paletteAlpha = new int[nentries];
 			for (int n = 0; n < nentries; n++) {
-				paletteAlpha[n] = (int) (c.data[n] & 0xff);
+				paletteAlpha[n] = c.data[n] & 0xff;
 			}
 		} else {
 			red = PngHelperInternal.readInt2fromBytes(c.data, 0);

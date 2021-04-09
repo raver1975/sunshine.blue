@@ -26,7 +26,7 @@ public class PngChunkSTER extends PngChunkSingle {
 	@Override
 	public ChunkRaw createRawChunk() {
 		ChunkRaw c = createEmptyChunk(1, true);
-		c.data[0] = (byte) mode;
+		c.data[0] = mode;
 		return c;
 	}
 

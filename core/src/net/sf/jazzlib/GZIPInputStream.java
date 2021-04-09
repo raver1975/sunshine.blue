@@ -39,7 +39,6 @@ package net.sf.jazzlib;
 
 import java.io.InputStream;
 import java.io.IOException;
-import java.io.EOFException;
 
 /**
  * This filter stream is used to decompress a "GZIP" format stream. 
@@ -215,7 +214,7 @@ public class GZIPInputStream
     /* 3. Check the flags */
     int flags = in.read();
     if (flags < 0)
-      throw new EOFException("Early EOF in GZIP header");
+      throw new IOException("Early EOF in GZIP header");
     headCRC.update(flags);
     
     /*    This flag byte is divided into individual bits as follows:
@@ -239,7 +238,7 @@ public class GZIPInputStream
     {
       int readByte = in.read();
       if (readByte < 0)
-	throw new EOFException("Early EOF in GZIP header");
+	throw new IOException("Early EOF in GZIP header");
       headCRC.update(readByte);
     }
     
@@ -251,17 +250,17 @@ public class GZIPInputStream
       {
         int readByte = in.read();
 	if (readByte < 0)
-	  throw new EOFException("Early EOF in GZIP header");
+	  throw new IOException("Early EOF in GZIP header");
 	headCRC.update(readByte);
       }
       if (in.read() < 0 || in.read() < 0)
-	throw new EOFException("Early EOF in GZIP header");
+	throw new IOException("Early EOF in GZIP header");
 	
       int len1, len2, extraLen;
       len1 = in.read();
       len2 = in.read();
       if ((len1 < 0) || (len2 < 0))
-	throw new EOFException("Early EOF in GZIP header");
+	throw new IOException("Early EOF in GZIP header");
       headCRC.update(len1);
       headCRC.update(len2);
 
@@ -270,7 +269,7 @@ public class GZIPInputStream
       {
 	int readByte = in.read();
 	if (readByte < 0)
-	  throw new EOFException("Early EOF in GZIP header");
+	  throw new IOException("Early EOF in GZIP header");
 	headCRC.update(readByte);
       }
     }
@@ -282,7 +281,7 @@ public class GZIPInputStream
       while ( (readByte = in.read()) > 0)
 	headCRC.update(readByte);
       if (readByte < 0)
-	throw new EOFException("Early EOF in GZIP file name");
+	throw new IOException("Early EOF in GZIP file name");
       headCRC.update(readByte);
     }
 
@@ -294,7 +293,7 @@ public class GZIPInputStream
         headCRC.update(readByte);
 
       if (readByte < 0)
-        throw new EOFException("Early EOF in GZIP comment");
+        throw new IOException("Early EOF in GZIP comment");
       headCRC.update(readByte);
     }
     
@@ -304,11 +303,11 @@ public class GZIPInputStream
       int tempByte;
       int crcval = in.read();
       if (crcval < 0)
-        throw new EOFException("Early EOF in GZIP header");
+        throw new IOException("Early EOF in GZIP header");
 	
       tempByte = in.read();
       if (tempByte < 0)
-        throw new EOFException("Early EOF in GZIP header");
+        throw new IOException("Early EOF in GZIP header");
 	
       crcval = (crcval << 8) | tempByte;
       if (crcval != ((int) headCRC.getValue() & 0xffff))
@@ -331,7 +330,7 @@ public class GZIPInputStream
     {
       int count = in.read(footer, 8-needed, needed);
       if (count <= 0)
-	throw new EOFException("Early EOF in GZIP footer");
+	throw new IOException("Early EOF in GZIP footer");
       needed -= count; //Jewel Jan 16
     }
 

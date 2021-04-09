@@ -173,7 +173,7 @@ public class ImageLineHelper {
 				buf[b++] = val;
 				buf[b++] = val;
 				buf[b++] = val;
-				buf[b++] = alphachannel ? line.scanline[c++] : ((int) (val & 0xFF) == ga) ? (byte) 0 : (byte) 255;
+				buf[b++] = alphachannel ? line.scanline[c++] : ((val & 0xFF) == ga) ? (byte) 0 : (byte) 255;
 			}
 		} else { // true color
 			if (alphachannel) // same format!

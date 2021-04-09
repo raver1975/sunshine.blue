@@ -47,7 +47,7 @@ public abstract class FilterReader extends Reader {
      *
      * @exception  IOException  If an I/O error occurs
      */
-    public int read(char cbuf[], int off, int len) throws IOException {
+    public int read(char[] cbuf, int off, int len) throws IOException {
         return in.read(cbuf, off, len);
     }
 

@@ -47,7 +47,7 @@ public class PngChunkPLTE extends PngChunkSingle {
 	public void parseFromRaw(ChunkRaw chunk) {
 		setNentries(chunk.len / 3);
 		for (int n = 0, i = 0; n < nentries; n++) {
-			setEntry(n, (int) (chunk.data[i++] & 0xff), (int) (chunk.data[i++] & 0xff), (int) (chunk.data[i++] & 0xff));
+			setEntry(n, chunk.data[i++] & 0xff, chunk.data[i++] & 0xff, chunk.data[i++] & 0xff);
 		}
 	}
 

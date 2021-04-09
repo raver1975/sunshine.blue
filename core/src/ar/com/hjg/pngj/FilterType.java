@@ -73,11 +73,11 @@ public enum FilterType {
 
 	public final int val;
 
-	private FilterType(int val) {
+	FilterType(int val) {
 		this.val = val;
 	}
 
-	private static HashMap<Integer, FilterType> byVal;
+	private static final HashMap<Integer, FilterType> byVal;
 
 	static {
 		byVal = new HashMap<Integer, FilterType>();

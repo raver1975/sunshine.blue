@@ -25,7 +25,7 @@ import ar.com.hjg.pngj.chunks.PngChunk;
  */
 public class PngReaderFilter extends FilterInputStream {
 
-	private ChunkSeqReaderPng chunkseq;
+	private final ChunkSeqReaderPng chunkseq;
 
 	public PngReaderFilter(InputStream arg0) {
 		super(arg0);

@@ -48,7 +48,7 @@ class DeflaterEngine implements DeflaterConstants {
    * Note that the array should really be unsigned short, so you need
    * to and the values with 0xffff.
    */
-  private short[] head;
+  private final short[] head;
 
   /**
    * prev[index & WMASK] points to the previous index that has the
@@ -57,7 +57,7 @@ class DeflaterEngine implements DeflaterConstants {
    * Note that the array should really be unsigned short, so you need
    * to and the values with 0xffff.
    */
-  private short[] prev;
+  private final short[] prev;
 
   private int matchStart, matchLen;
   private boolean prevAvailable;
@@ -80,7 +80,7 @@ class DeflaterEngine implements DeflaterConstants {
    * This array contains the part of the uncompressed stream that 
    * is of relevance.  The current character is indexed by strstart.
    */
-  private byte[] window;
+  private final byte[] window;
 
   private int strategy, max_chain, max_lazy, niceLength, goodLength;
 
@@ -99,11 +99,11 @@ class DeflaterEngine implements DeflaterConstants {
   /** The end offset of the input data. */
   private int inputEnd;
 
-  private DeflaterPending pending;
-  private DeflaterHuffman huffman;
+  private final DeflaterPending pending;
+  private final DeflaterHuffman huffman;
 
   /** The adler checksum */
-  private Adler32 adler;
+  private final Adler32 adler;
 
   /* DEFLATE ALGORITHM:
    *

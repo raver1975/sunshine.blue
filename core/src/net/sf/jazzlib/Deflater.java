@@ -144,7 +144,7 @@ public class Deflater
   private int level;
 
   /** should we include a header. */
-  private boolean noHeader;
+  private final boolean noHeader;
 
   /** The current state. */
   private int state;

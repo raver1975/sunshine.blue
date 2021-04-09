@@ -29,7 +29,7 @@ public interface IImageLineSet<T extends IImageLine> {
 	 * Throws exception if not available. The caller is supposed to know what
 	 * he/she is doing
 	 **/
-	public IImageLine getImageLine(int n);
+    IImageLine getImageLine(int n);
 
 	/**
 	 * Like {@link #getImageLine(int)} but uses the raw numbering inside the
@@ -39,7 +39,7 @@ public interface IImageLineSet<T extends IImageLine> {
 	 *            Should normally go from 0 to {@link #size()}
 	 * @return
 	 */
-	public IImageLine getImageLineRawNum(int n);
+    IImageLine getImageLineRawNum(int n);
 
 	/**
 	 * Returns true if the set contain row <tt>n</tt> (in the original
@@ -50,12 +50,12 @@ public interface IImageLineSet<T extends IImageLine> {
 	 * can be ok)
 	 * 
 	 **/
-	public boolean hasImageLine(int n);
+    boolean hasImageLine(int n);
 
 	/**
 	 * Internal size of allocated rows This is informational, it should rarely
 	 * be important for the caller.
 	 **/
-	public int size();
+    int size();
 
 }

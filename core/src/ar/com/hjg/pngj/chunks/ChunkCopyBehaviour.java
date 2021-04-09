@@ -69,8 +69,7 @@ public class ChunkCopyBehaviour {
 					if (chunk.id.equals(ChunkHelper.PLTE)) {
 						if (imgInfo.indexed && maskMatch(copyFromMask, ChunkCopyBehaviour.COPY_PALETTE))
 							return true;
-						if (!imgInfo.greyscale && maskMatch(copyFromMask, ChunkCopyBehaviour.COPY_ALL))
-							return true;
+                        return !imgInfo.greyscale && maskMatch(copyFromMask, ChunkCopyBehaviour.COPY_ALL);
 					}
 				} else { // ancillary
 					boolean text = (chunk instanceof PngChunkTextVar);
@@ -90,8 +89,7 @@ public class ChunkCopyBehaviour {
 					if (maskMatch(copyFromMask, ChunkCopyBehaviour.COPY_ALMOSTALL) && !(ChunkHelper.isUnknown(chunk)
 							|| text || chunk.id.equals(ChunkHelper.hIST) || chunk.id.equals(ChunkHelper.tIME)))
 						return true;
-					if (maskMatch(copyFromMask, ChunkCopyBehaviour.COPY_UNKNOWN) && ChunkHelper.isUnknown(chunk))
-						return true;
+                    return maskMatch(copyFromMask, ChunkCopyBehaviour.COPY_UNKNOWN) && ChunkHelper.isUnknown(chunk);
 				}
 				return false;
 			}

@@ -63,7 +63,7 @@ public class CRC32 implements Checksum
   private int crc = 0;
 
   /** The fast CRC table. Computed once when the CRC32 class is loaded. */
-  private static int[] crc_table = make_crc_table();
+  private static final int[] crc_table = make_crc_table();
 
   /** Make the table for a fast CRC. */
   private static int[] make_crc_table ()

@@ -1592,7 +1592,7 @@ public abstract class JJJVMInterpreter implements JJJVMConstants {
           case 199: // IFNONNULL 
           {
             final Object obj = localMethodStack[--regSP];
-            final boolean result = instruction == 198 ? obj == null : obj != null;
+            final boolean result = (instruction == 198) == (obj == null);
             
             if (result) {
               regPC = lastPC + readShortValueFromArray(methodBytecodes, regPC);

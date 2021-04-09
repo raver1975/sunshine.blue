@@ -46,7 +46,7 @@ public abstract class PixelsWriter {
 	protected FilterType filterType;
 
 	// counts the filters used - just for stats
-	private int[] filtersUsed = new int[5];
+	private final int[] filtersUsed = new int[5];
 
 	// this is the raw underlying os (shared with the PngWriter)
 	private OutputStream os;
@@ -130,7 +130,7 @@ public abstract class PixelsWriter {
 			break;
 		case FILTER_SUB:
 			for (i = 1; i <= bytesPixel; i++)
-				_rowf[i] = (byte) _rowb[i];
+				_rowf[i] = _rowb[i];
 			for (j = 1, i = bytesPixel + 1; i <= bytesRow; i++, j++)
 				_rowf[i] = (byte) (_rowb[i] - _rowb[j]);
 			break;

@@ -14,11 +14,11 @@ import com.klemstinegroup.sunshinelab.engine.util.MemoryFileHandle;
 
 import java.util.Arrays;
 
-public class RectTextureObject extends ScreenObject implements Drawable, Touchable {
+public class ImageObject extends ScreenObject implements Drawable, Touchable {
     public com.badlogic.gdx.graphics.Texture texture;
     private Polygon polygon;
 
-    public RectTextureObject(String url) {
+    public ImageObject(String url) {
 //
 //        url = "https://api.codetabs.com/v1/proxy?quest=" + url;
         Gdx.app.log("url", url);
@@ -92,7 +92,7 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
 
                     @Override
                     public void downloadFailed(Throwable t) {
-                        Statics.userObjects.removeValue(RectTextureObject.this, true);
+                        Statics.userObjects.removeValue(ImageObject.this, true);
                     }
                 });
 
@@ -106,7 +106,7 @@ public class RectTextureObject extends ScreenObject implements Drawable, Touchab
 //        setBound();
 //    }
 
-    public RectTextureObject(Pixmap pixmap) {
+    public ImageObject(Pixmap pixmap) {
         this.texture=new Texture(pixmap);
         setBound();
 //        IPFSUtils.uploadPng(pixmap, bounds);

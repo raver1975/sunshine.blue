@@ -45,7 +45,7 @@ public class ChunkSeqReaderPng extends ChunkSeqReader {
 	// --- parameters to be set prior to reading ---
 	private boolean includeNonBufferedChunks = false;
 
-	private Set<String> chunksToSkip = new HashSet<String>();
+	private final Set<String> chunksToSkip = new HashSet<String>();
 	private long maxTotalBytesRead = 0;
 	private long skipChunkMaxSize = 0;
 	private long maxBytesMetadata = 0;

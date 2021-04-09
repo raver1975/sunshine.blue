@@ -137,14 +137,14 @@ public final class JJJVMClassImpl extends JJJVMInterpreter implements JJJVMClass
       this.innerClasses = detectedInnerClassess == null ? EMPTY_INNERCLASS_ARRAY : detectedInnerClassess;
 
       final JJJVMMethod clinitMethod = findMethod("<clinit>", "()V");
-      if (clinitMethod != null && (clinitMethod.getFlags() & ACC_NATIVE) == 0 && !this.classesInClinit.contains(this.getClassName())) {
+      if (clinitMethod != null && (clinitMethod.getFlags() & ACC_NATIVE) == 0 && !classesInClinit.contains(this.getClassName())) {
         try {
-          this.classesInClinit.add(this.getClassName());
+          classesInClinit.add(this.getClassName());
           clinitMethod.invoke(null, null);
         } catch (Throwable thr) {
           throw new Exception("Error during <clinit> [" + clinitMethod.getDeclaringClass().getName() + ']');
         } finally {
-          this.classesInClinit.remove(this.getClassName());
+          classesInClinit.remove(this.getClassName());
         }
       }
 

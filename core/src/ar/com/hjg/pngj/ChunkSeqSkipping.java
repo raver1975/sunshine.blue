@@ -15,7 +15,7 @@ import ar.com.hjg.pngj.chunks.ChunkRaw;
  */
 public class ChunkSeqSkipping extends ChunkSeqReader {
 
-	private List<ChunkRaw> chunks = new ArrayList<ChunkRaw>();
+	private final List<ChunkRaw> chunks = new ArrayList<ChunkRaw>();
 	private boolean skip = true;
 
 	/**

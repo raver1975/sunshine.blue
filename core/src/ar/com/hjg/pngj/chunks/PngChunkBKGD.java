@@ -50,7 +50,7 @@ public class PngChunkBKGD extends PngChunkSingle {
 		if (imgInfo.greyscale) {
 			gray = PngHelperInternal.readInt2fromBytes(c.data, 0);
 		} else if (imgInfo.indexed) {
-			paletteIndex = (int) (c.data[0] & 0xff);
+			paletteIndex = c.data[0] & 0xff;
 		} else {
 			red = PngHelperInternal.readInt2fromBytes(c.data, 0);
 			green = PngHelperInternal.readInt2fromBytes(c.data, 2);

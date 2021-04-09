@@ -10,15 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 
-import static com.klemstinegroup.sunshinelab.engine.Statics.viewport;
 
 public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
 
@@ -26,8 +20,8 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
     Vector2 touchdown = new Vector2();
 
     public BasicUIOverlay() {
-        Viewport viewport = new FitViewport(800f * Gdx.graphics.getWidth() / Gdx.graphics.getHeight() * Gdx.graphics.getDensity(), 800 * Gdx.graphics.getDensity());
-        stage = new Stage(viewport);
+
+        stage = new Stage(Statics.overlayViewport);
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(FontObject.fontList[MathUtils.random(FontObject.fontList.length - 1)]);
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -41,7 +35,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 //        Skin skin = new Skin(Gdx.files.internal("skins/default/skin/uiskin.json"));
         Actor fontButton = new TextButton("Text", skin);
 //        fontButton.setColor(Color.WHITE);
-        TextArea ta = new TextArea("", skin);
+
         fontButton.addListener(new ClickListener() {
 //            @Override
 //            public void changed(ChangeEvent event, Actor actor) {
@@ -58,7 +52,6 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 Statics.FONT_OVERLAY.setTouchable(ff);
                 Statics.setOverlay(Statics.FONT_OVERLAY);
                 ff.position.set(-ff.center.x, -ff.center.y);
-                ta.setVisible(false);
 //        ((ScreenObject) Statics.objects.get(0)).position.set(-((ScreenObject) Statics.objects.get(0)).bounds.x/2, -((ScreenObject) Statics.objects.get(0)).bounds.y/2, 0);
             }
         });
@@ -71,50 +64,14 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
 
         //                    pasteButton.setVisible(false);
-        TextFieldListener tfl = new TextFieldListener() {
-            @Override
-            public void keyTyped(TextField textField, char c) {
-                if (c == 13) {
-                    ta.setVisible(false);
-                    ta.setVisible(false);
-//                    pasteButton.setVisible(false);
-                    Gdx.input.setOnscreenKeyboardVisible(false);
-                    Gdx.app.log("ta", ta.getText());
-                    RectTextureObject bg = new RectTextureObject(ta.getText().replaceAll("\n", ""));
-                    if (bg != null) {
-                        Statics.userObjects.add(bg);
-                    }
-                    ta.setText("");
-                }
-            }
-        };
-        ta.addListener(new ActorGestureListener() {
-            @Override
-            public boolean longPress(Actor actor, float x, float y) {
-                ta.setText(Gdx.app.getClipboard().getContents());
-                tfl.keyTyped(ta, (char) 13);
-                return true;// super.longPress(actor, x, y);
-            }
 
-        });
-//        Actor pasteButton=new TextButton("paste",skin);
-        ta.setTextFieldListener(tfl);
-
-        ta.setPosition(imageButton.getX() + imageButton.getWidth() + 10, imageButton.getY());
-        ta.setWidth(Gdx.graphics.getWidth() / 2);
-        ta.setVisible(false);
 
 
         imageButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                boolean vis = !ta.isVisible();
-                Gdx.input.setOnscreenKeyboardVisible(vis);
-                ta.setVisible(vis);
-                if (vis) {
-                    stage.setKeyboardFocus(ta);
-                }
+                Statics.setOverlay(Statics.IMAGE_OVERLAY);
             }
         });
 
@@ -126,7 +83,6 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 Gdx.input.setOnscreenKeyboardVisible(false);
-                ta.setVisible(false);
                 DrawObject doi = new DrawObject();
                 Statics.userObjects.add(doi);
                 Statics.DRAW_OVERLAY.setTouchable(doi);
@@ -135,7 +91,6 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
             }
         });
         stage.addActor(drawButton);
-        stage.addActor(ta);
         stage.addActor(imageButton);
     }
 
@@ -156,7 +111,13 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        viewport.unproject(touchdown.set(screenX, screenY));
+
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        Statics.viewport.unproject(touchdown.set(screenX, screenY));
         Statics.selectedObjects.clear();
         for (BaseObject bo : Statics.userObjects) {
             if (bo instanceof Touchable) {
@@ -171,11 +132,6 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         } else {
             Statics.setOverlay(Statics.BASIC_UI_OVERLAY);
         }
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         return false;
     }
 

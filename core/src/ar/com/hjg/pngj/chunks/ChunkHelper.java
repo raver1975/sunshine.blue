@@ -58,7 +58,7 @@ public class ChunkHelper {
 	 * static auxiliary buffer. any method that uses this should synchronize against
 	 * this
 	 */
-	private static byte[] tmpbuffer = new byte[4096];
+	private static final byte[] tmpbuffer = new byte[4096];
 
 	/**
 	 * Converts to bytes using Latin1 (ISO-8859-1)

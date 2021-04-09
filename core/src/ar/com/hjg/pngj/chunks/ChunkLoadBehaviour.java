@@ -23,5 +23,5 @@ public enum ChunkLoadBehaviour {
 	 * Notice that other restrictions might apply, see
 	 * PngReader.skipChunkMaxSize PngReader.skipChunkIds
 	 */
-	LOAD_CHUNK_ALWAYS;
+	LOAD_CHUNK_ALWAYS
 }

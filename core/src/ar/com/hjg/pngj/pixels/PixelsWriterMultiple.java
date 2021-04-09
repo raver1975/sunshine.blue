@@ -127,8 +127,7 @@ public class PixelsWriterMultiple extends PixelsWriter {
 			if (lastRowInNextBand >= imgInfo.rows) // hack:make this band bigger, so we don't have a small last band
 				lastRowInThisBand = imgInfo.rows - 1;
 			rowsPerBandCurrent = 1 + lastRowInThisBand - firstRowInThisBand;
-			tryAdaptive = rowsPerBandCurrent <= 3 || (rowsPerBandCurrent < 10 && imgInfo.bytesPerRow < 64) ? false
-					: true;
+			tryAdaptive = rowsPerBandCurrent > 3 && (rowsPerBandCurrent >= 10 || imgInfo.bytesPerRow >= 64);
 			// rebuild bank
 			rebuildFiltersBank();
 		}

@@ -95,18 +95,18 @@ public final class JJJVMClassFieldImpl implements JJJVMField {
 
     // name
     final int nameIndex = inStream.readUnsignedShort();
-    this.name = (String) declaringClass.getConstantPool().getItemAt(nameIndex).asString();
+    this.name = declaringClass.getConstantPool().getItemAt(nameIndex).asString();
 
     // type
     final int typeIndex = inStream.readUnsignedShort();
-    this.signature = (String) declaringClass.getConstantPool().getItemAt(typeIndex).asString();
+    this.signature = declaringClass.getConstantPool().getItemAt(typeIndex).asString();
     this.fieldUID = (nameIndex << 16) | typeIndex;
 
     // attributes
     int attributesCounter = inStream.readUnsignedShort();
 
     while (--attributesCounter >= 0) {
-      final String attrName = (String) declaringClass.getConstantPool().getItemAt(inStream.readUnsignedShort()).asString();
+      final String attrName = declaringClass.getConstantPool().getItemAt(inStream.readUnsignedShort()).asString();
       if (ATRNAME_CONSTANTVALUE.equals(attrName)) {
         final int attributeSize = inStream.readInt();
         if (attributeSize != 2) {

@@ -16,14 +16,14 @@ import java.util.logging.Logger;
 public class IdatSet extends DeflatedChunksSet {
 	private static final Logger LOGGER = Logger.getLogger(IdatSet.class.getName());
 
-	protected byte rowUnfiltered[];
-	protected byte rowUnfilteredPrev[];
+	protected byte[] rowUnfiltered;
+	protected byte[] rowUnfilteredPrev;
 	protected final ImageInfo imgInfo; // in the case of APNG this is the frame image
 	protected final Deinterlacer deinterlacer;
 
 	final RowInfo rowinfo; // info for the last processed row, for debug
 
-	protected int filterUseStat[] = new int[5]; // for stats
+	protected int[] filterUseStat = new int[5]; // for stats
 
 	/**
 	 * @param id
@@ -114,7 +114,7 @@ public class IdatSet extends DeflatedChunksSet {
 
 	private void unfilterRowNone(final int nbytes) {
 		for (int i = 1; i <= nbytes; i++) {
-			rowUnfiltered[i] = (byte) (row[i]);
+			rowUnfiltered[i] = row[i];
 		}
 	}
 
@@ -131,7 +131,7 @@ public class IdatSet extends DeflatedChunksSet {
 	private void unfilterRowSub(final int nbytes) {
 		int i, j;
 		for (i = 1; i <= imgInfo.bytesPixel; i++) {
-			rowUnfiltered[i] = (byte) (row[i]);
+			rowUnfiltered[i] = row[i];
 		}
 		for (j = 1, i = imgInfo.bytesPixel + 1; i <= nbytes; i++, j++) {
 			rowUnfiltered[i] = (byte) (row[i] + rowUnfiltered[j]);

@@ -95,5 +95,5 @@ public class CheckedOutputStream extends FilterOutputStream
   }
 
   /** The checksum object. */
-  private Checksum sum;
+  private final Checksum sum;
 }

@@ -52,7 +52,7 @@ class OutputWindow
   private final int WINDOW_SIZE = 1 << 15;
   private final int WINDOW_MASK = WINDOW_SIZE - 1;
 
-  private byte[] window = new byte[WINDOW_SIZE]; //The window is 2^15 bytes
+  private final byte[] window = new byte[WINDOW_SIZE]; //The window is 2^15 bytes
   private int window_end  = 0;
   private int window_filled = 0;
 

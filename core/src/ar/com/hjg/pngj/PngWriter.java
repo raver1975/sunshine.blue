@@ -44,7 +44,7 @@ public class PngWriter implements Closeable {
 	 */
 	protected int currentChunkGroup = -1;
 
-	private int passes = 1; // Some writes might require two passes (NOT USED STILL)
+	private final int passes = 1; // Some writes might require two passes (NOT USED STILL)
 	private int currentpass = 0; // numbered from 1
 
 	private boolean shouldCloseStream = true;
@@ -310,7 +310,7 @@ public class PngWriter implements Closeable {
 			try {
 				os.close();
 			} catch (Exception e) {
-				LOGGER.warning("Error closing writer " + e.toString());
+				LOGGER.warning("Error closing writer " + e);
 			}
 	}
 

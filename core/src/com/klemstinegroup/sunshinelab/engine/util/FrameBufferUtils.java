@@ -83,7 +83,7 @@ public class FrameBufferUtils {
         int[][] pixels = new int[height][width];
         for (int x = 0; x <width; x++) {
             for (int y = 0; y < height; y++) {
-                pixels[y][x] = pixmap.getPixel(x, (int) (height - y - 1))>>8;
+                pixels[y][x] = pixmap.getPixel(x, height - y - 1)>>8;
             }
         }
         pixmap.dispose();
@@ -101,7 +101,7 @@ public class FrameBufferUtils {
         int[][] pixels = new int[height][width];
         for (int x = 0; x <width; x++) {
             for (int y = 0; y < height; y++) {
-                pixels[y][x] = pixmap.getPixel(x, (int) (height - y - 1))>>8;
+                pixels[y][x] = pixmap.getPixel(x, height - y - 1)>>8;
             }
         }
         return flipPixmap(pixmap);

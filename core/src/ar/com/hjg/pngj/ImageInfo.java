@@ -207,7 +207,7 @@ public class ImageInfo {
 	 * ommited)
 	 **/
 	public String toStringBrief() {
-		return String.valueOf(cols) + "x" + rows + (bitDepth != 8 ? ("d" + bitDepth) : "") + (alpha ? "a" : "")
+		return cols + "x" + rows + (bitDepth != 8 ? ("d" + bitDepth) : "") + (alpha ? "a" : "")
 				+ (indexed ? "p" : "") + (greyscale ? "g" : "");
 	}
 
@@ -263,8 +263,6 @@ public class ImageInfo {
 			return false;
 		if (indexed != other.indexed)
 			return false;
-		if (rows != other.rows)
-			return false;
-		return true;
+		return rows == other.rows;
 	}
 }

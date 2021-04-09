@@ -19,7 +19,7 @@ public class ChunksListForWrite extends ChunksList {
 	private final List<PngChunk> queuedChunks = new ArrayList<PngChunk>();
 
 	// redundant, just for eficciency
-	private HashMap<String, Integer> alreadyWrittenKeys = new HashMap<String, Integer>();
+	private final HashMap<String, Integer> alreadyWrittenKeys = new HashMap<String, Integer>();
 
 	public ChunksListForWrite(ImageInfo imfinfo) {
 		super(imfinfo);
@@ -132,9 +132,7 @@ public class ChunksListForWrite extends ChunksList {
 			preferred = c.getChunkGroup();
 		if (currentGroup == preferred)
 			return true;
-		if (currentGroup > preferred && currentGroup <= maxChunkGroup)
-			return true;
-		return false;
+		return currentGroup > preferred && currentGroup <= maxChunkGroup;
 	}
 
 	public int writeChunks(OutputStream os, int currentGroup) {

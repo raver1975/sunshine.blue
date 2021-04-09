@@ -19,7 +19,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 
-import static com.klemstinegroup.sunshinelab.engine.Statics.viewport;
 
 public class TransformOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
 
@@ -29,8 +28,7 @@ public class TransformOverlay extends ScreenObject implements Overlay, Touchable
     Vector2 touchdown = new Vector2();
 
     public TransformOverlay() {
-        Viewport viewport = new FitViewport(800f * Gdx.graphics.getWidth() / Gdx.graphics.getHeight() * Gdx.graphics.getDensity(), 800 * Gdx.graphics.getDensity());
-        stage = new Stage(viewport);
+        stage = new Stage(Statics.overlayViewport);
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(FontObject.fontList[MathUtils.random(FontObject.fontList.length - 1)]);
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -47,7 +45,7 @@ public class TransformOverlay extends ScreenObject implements Overlay, Touchable
         exitButton.setChecked(true);
         exitButton.setDisabled(true);
         exitButton.getStyle().fontColor = Color.RED;
-        exitButton.setPosition(viewport.getScreenWidth()-40, viewport.getScreenHeight()-40);
+        exitButton.setPosition(Statics.overlayViewport.getWorldWidth()-40, Statics.overlayViewport.getWorldHeight()-40);
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -127,7 +125,7 @@ public class TransformOverlay extends ScreenObject implements Overlay, Touchable
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        viewport.unproject(touchdown.set(screenX, screenY));
+        Statics.viewport.unproject(touchdown.set(screenX, screenY));
         Statics.selectedObjects.clear();
         for (BaseObject bo : Statics.userObjects) {
             if (bo instanceof Touchable) {
@@ -149,7 +147,7 @@ public class TransformOverlay extends ScreenObject implements Overlay, Touchable
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        viewport.unproject(touchdrag.set(screenX, screenY));
+        Statics.viewport.unproject(touchdrag.set(screenX, screenY));
 
         for (BaseObject bo : Statics.selectedObjects) {
             if (bo instanceof ScreenObject) {

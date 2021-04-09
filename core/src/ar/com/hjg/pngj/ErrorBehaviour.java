@@ -7,7 +7,7 @@ public enum ErrorBehaviour {
 	SUPER_LENIENT(5); // we try hard to read, even garbage, without throwing exceptions
 	final int c;
 
-	private ErrorBehaviour(int c) {
+	ErrorBehaviour(int c) {
 		this.c = c;
 	}
 

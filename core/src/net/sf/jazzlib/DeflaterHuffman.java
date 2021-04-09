@@ -147,7 +147,7 @@ class DeflaterHuffman
 	}
     }
 
-    private void buildLength(int childs[])
+    private void buildLength(int[] childs)
     {
       this.length = new byte [freqs.length];
       int numNodes = childs.length / 2;
@@ -158,7 +158,7 @@ class DeflaterHuffman
 	bl_counts[i] = 0;
 
       /* First calculate optimal bit lengths */
-      int lengths[] = new int[numNodes];
+      int[] lengths = new int[numNodes];
       lengths[numNodes-1] = 0;
       for (int i = numNodes - 1; i >= 0; i--)
 	{
@@ -497,17 +497,19 @@ class DeflaterHuffman
 
 
   DeflaterPending pending;
-  private Tree literalTree, distTree, blTree;
+  private final Tree literalTree;
+	private final Tree distTree;
+	private final Tree blTree;
 
-  private short d_buf[];
-  private byte l_buf[];
+  private final short[] d_buf;
+  private final byte[] l_buf;
   private int last_lit;
   private int extra_bits;
 
-  private static short staticLCodes[];
-  private static byte  staticLLength[];
-  private static short staticDCodes[];
-  private static byte  staticDLength[];
+  private static final short[] staticLCodes;
+  private static final byte[] staticLLength;
+  private static final short[] staticDCodes;
+  private static final byte[] staticDLength;
 
   /**
    * Reverse the bits of a 16 bit value.

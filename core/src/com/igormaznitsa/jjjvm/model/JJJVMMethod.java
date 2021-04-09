@@ -98,11 +98,11 @@ public interface JJJVMMethod extends JJJVMConstants {
   /**
    * @return line numbers table (if exists) to translate byte-code position to source-code line
    */
-  public int[][] getLineNumberTable();
+  int[][] getLineNumberTable();
 
   /**
    * Flag shows that it is clinit() method.
    * @return true if it is static void <linit(), false otherwise.
    */
-  public boolean isClinit();
+  boolean isClinit();
 }

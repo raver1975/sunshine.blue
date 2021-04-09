@@ -28,7 +28,7 @@ public final class PngHelperInternal {
 	 */
 	public static Charset charsetUTF8 = StandardCharsets.UTF_8;
 
-	private static ThreadLocal<Boolean> DEBUG = new ThreadLocal<Boolean>() {
+	private static final ThreadLocal<Boolean> DEBUG = new ThreadLocal<Boolean>() {
 		protected Boolean initialValue() {
 			return Boolean.FALSE;
 		}
@@ -207,15 +207,15 @@ public final class PngHelperInternal {
 
 	// / filters
 	public static int filterRowNone(int r) {
-		return (int) (r & 0xFF);
+		return r & 0xFF;
 	}
 
 	public static int filterRowSub(int r, int left) {
-		return ((int) (r - left) & 0xFF);
+		return ((r - left) & 0xFF);
 	}
 
 	public static int filterRowUp(int r, int up) {
-		return ((int) (r - up) & 0xFF);
+		return ((r - up) & 0xFF);
 	}
 
 	public static int filterRowAverage(int r, int left, int up) {

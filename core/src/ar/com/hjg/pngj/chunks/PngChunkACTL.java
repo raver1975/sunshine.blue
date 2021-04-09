@@ -27,8 +27,8 @@ public class PngChunkACTL extends PngChunkSingle {
 	@Override
 	public ChunkRaw createRawChunk() {
 		ChunkRaw c = createEmptyChunk(8, true);
-		PngHelperInternal.writeInt4tobytes((int) numFrames, c.data, 0);
-		PngHelperInternal.writeInt4tobytes((int) numPlays, c.data, 4);
+		PngHelperInternal.writeInt4tobytes(numFrames, c.data, 0);
+		PngHelperInternal.writeInt4tobytes(numPlays, c.data, 4);
 		return c;
 	}
 

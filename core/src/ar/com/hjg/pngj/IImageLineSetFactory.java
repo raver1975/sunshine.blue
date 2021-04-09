@@ -27,5 +27,5 @@ public interface IImageLineSetFactory<T extends IImageLine> {
 	 * @param step
 	 *            : row step (normally 1)
 	 */
-	public IImageLineSet<T> create(ImageInfo imgInfo, boolean singleCursor, int nlines, int noffset, int step);
+    IImageLineSet<T> create(ImageInfo imgInfo, boolean singleCursor, int nlines, int noffset, int step);
 }

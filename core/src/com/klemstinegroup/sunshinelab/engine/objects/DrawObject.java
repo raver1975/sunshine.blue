@@ -14,7 +14,7 @@ import java.util.Arrays;
 
 public class DrawObject extends ScreenObject implements Drawable, Touchable {
     Array<Array<Vector2>> path = new Array<Array<Vector2>>();
-    private Vector2 touch = new Vector2();
+    private final Vector2 touch = new Vector2();
     private Polygon polygon;
 
     Array<Vector2> currentPath = new Array<>();

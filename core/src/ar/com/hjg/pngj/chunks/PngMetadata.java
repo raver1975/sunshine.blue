@@ -20,11 +20,7 @@ public class PngMetadata {
 
 	public PngMetadata(ChunksList chunks) {
 		this.chunkList = chunks;
-		if (chunks instanceof ChunksListForWrite) {
-			this.readonly = false;
-		} else {
-			this.readonly = true;
-		}
+		this.readonly = !(chunks instanceof ChunksListForWrite);
 	}
 
 	/**

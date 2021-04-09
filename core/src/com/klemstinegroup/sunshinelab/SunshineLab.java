@@ -3,17 +3,22 @@ package com.klemstinegroup.sunshinelab;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.igormaznitsa.jjjvm.impl.JJJVMClassImpl;
 import com.igormaznitsa.jjjvm.impl.jse.JSEProviderImpl;
 import com.igormaznitsa.jjjvm.model.JJJVMProvider;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.klemstinegroup.sunshinelab.engine.objects.*;
+import com.klemstinegroup.sunshinelab.engine.util.FrameBufferUtils;
+import com.klemstinegroup.sunshinelab.engine.util.IPFSResponseListener;
+import com.klemstinegroup.sunshinelab.engine.util.IPFSUtils;
+import com.klemstinegroup.sunshinelab.engine.util.MemoryFileHandle;
+import com.madgag.gif.fmsware.AnimatedGifEncoder;
 
 import java.io.ByteArrayInputStream;
 
 import static com.badlogic.gdx.Application.LOG_INFO;
-import static com.klemstinegroup.sunshinelab.engine.Statics.viewport;
 
 public class SunshineLab extends ApplicationAdapter {
 
@@ -23,6 +28,7 @@ public class SunshineLab extends ApplicationAdapter {
     public static Matrix4 mx4Batch = new Matrix4();
 
     JJJVMClassImpl jjjvmClass = null;
+    private MemoryFileHandle gifEncoderFile;
 
     @Override
     public void create() {
@@ -31,14 +37,15 @@ public class SunshineLab extends ApplicationAdapter {
         Gdx.app.setLogLevel(LOG_INFO);
 //        img = new Texture("badlogic.jpg");
 
-        Statics.userObjects.add(new RectTextureObject("https://i.redd.it/0h1nbwj4bto61.jpg"));
+        Statics.userObjects.add(new ImageObject("https://i.redd.it/0h1nbwj4bto61.jpg"));
 //        Statics.userObjects.add(new RectTextureObject("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/477px-PNG_Test.png"));
-        Statics.userObjects.add(new RectTextureObject("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/477px-PNG_Test.png"));
+        Statics.userObjects.add(new ImageObject("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/477px-PNG_Test.png"));
         ((ScreenObject) Statics.userObjects.get(1)).position.set(-100, -100);
 
         ((ScreenObject) Statics.userObjects.get(0)).scale = .1f;
         ((ScreenObject) Statics.userObjects.get(1)).scale = .4f;
-        viewport = new ScreenViewport();
+        Statics.viewport = new ScreenViewport();
+//        Statics.overlayViewport = new FitViewport((800f *Gdx.graphics.getWidth() / Gdx.graphics.getHeight() )/ Gdx.graphics.getDensity(), 800 / Gdx.graphics.getDensity());
 
 
 
@@ -73,24 +80,38 @@ public class SunshineLab extends ApplicationAdapter {
 
 
         //--------------------------------------------------------------------------------------------------
-        viewport.apply();
-//        gifEncoderFile = new MemoryFileHandle();
+        Statics.viewport.apply();
+        gifEncoderFile = new MemoryFileHandle();
 //        Statics.gifOptions = new ImageOptions();
-//        Statics.gifEncoderA = new AnimatedGifEncoder();
-//        Statics.gifEncoderA.setDelay(10);
-//        gifEncoderA.setSize(400, 400);
-//        Statics.gifEncoderA.start(gifEncoderFile);
+        Statics.gifEncoderA = new AnimatedGifEncoder();
+        Statics.gifEncoderA.setDelay(10);
+        Statics.gifEncoderA.start(gifEncoderFile);
     }
 
 
+    int cnt=100;
     @Override
     public void render() {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        viewport.apply();
+        Statics.viewport.apply();
 
-        Statics.batch.setProjectionMatrix(viewport.getCamera().combined);
+
+
+        Statics.batch.setProjectionMatrix(Statics.viewport.getCamera().combined);
         Statics.batch.begin();
+        if(cnt-->0){
+            Statics.gifEncoderA.addFrame(FrameBufferUtils.drawObjectsPix(Statics.viewport,Statics.userObjects,400,400));
+        }
+        if (cnt==0){
+            Statics.gifEncoderA.finish();
+            IPFSUtils.uploadFile(gifEncoderFile.readBytes(), "image/gif", new IPFSResponseListener() {
+                @Override
+                public void qid(String qid) {
+                    IPFSUtils.openIPFSViewer(qid);
+                }
+            });
+        }
         for (BaseObject bo : Statics.userObjects) {
             if (bo instanceof Drawable) {
                 ((Drawable) bo).draw(Statics.batch);
@@ -126,7 +147,7 @@ public class SunshineLab extends ApplicationAdapter {
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height);
+        Statics.viewport.update(width, height);
     }
 
     /*@Override

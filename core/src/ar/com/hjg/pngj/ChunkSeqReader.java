@@ -23,7 +23,7 @@ public abstract class ChunkSeqReader implements IBytesConsumer, Closeable {
     private final byte[] expectedSignature;
     private final int signatureLength;
 
-    private byte[] buf0 = new byte[8]; // for signature or chunk starts
+    private final byte[] buf0 = new byte[8]; // for signature or chunk starts
     private int buf0len = 0;
 
     protected boolean signatureDone = false;

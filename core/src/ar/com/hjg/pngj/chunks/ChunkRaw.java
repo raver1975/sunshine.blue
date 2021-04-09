@@ -173,9 +173,7 @@ public class ChunkRaw {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (offset != other.offset)
-			return false;
-		return true;
+		return offset == other.offset;
 	}
 
 }

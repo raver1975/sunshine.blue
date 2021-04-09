@@ -69,7 +69,7 @@ public class PngChunkITXT extends PngChunkTextVar {
 			throw new PngjException("Bad formed PngChunkITXT chunk");
 		key = ChunkHelper.toStringLatin1(c.data, 0, nullsIdx[0]);
 		int i = nullsIdx[0] + 1;
-		compressed = c.data[i] == 0 ? false : true;
+		compressed = c.data[i] != 0;
 		i++;
 		if (compressed && c.data[i] != 0)
 			throw new PngjException("Bad formed PngChunkITXT chunk - bad compression method ");

@@ -58,9 +58,7 @@ public class ChunksList {
 						return false;
 					if (c instanceof PngChunkTextVar && !((PngChunkTextVar) c).getKey().equals(innerid))
 						return false;
-					if (c instanceof PngChunkSPLT && !((PngChunkSPLT) c).getPalName().equals(innerid))
-						return false;
-					return true;
+					return !(c instanceof PngChunkSPLT) || ((PngChunkSPLT) c).getPalName().equals(innerid);
 				}
 			});
 	}

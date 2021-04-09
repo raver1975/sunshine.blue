@@ -16,9 +16,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.*;
 import com.klemstinegroup.sunshinelab.SunshineLab;
 import com.klemstinegroup.sunshinelab.engine.Statics;
-import com.klemstinegroup.sunshinelab.engine.objects.BaseObject;
-import com.klemstinegroup.sunshinelab.engine.objects.BasicUIOverlay;
-import com.klemstinegroup.sunshinelab.engine.objects.RectTextureObject;
+import com.klemstinegroup.sunshinelab.engine.objects.*;
 
 public class HtmlLauncher extends GwtApplication {
     private static HtmlLauncher instance;
@@ -190,24 +188,12 @@ public class HtmlLauncher extends GwtApplication {
 //        if (!oldText.equals(text)) {
         getClipboard().setContents(text);
         Gdx.app.log("cliboard paste", text);
-        for (BaseObject bo : Statics.userObjects) {
-            if (bo instanceof BasicUIOverlay) {
-                Actor focusedActor = ((BasicUIOverlay) bo).stage.getKeyboardFocus();
+                Actor focusedActor = Statics.IMAGE_OVERLAY.stage.getKeyboardFocus();
                 if (focusedActor != null && focusedActor instanceof TextArea) {
-//                    String textFieldText = ((TextArea) focusedActor).getText();
-//                    textFieldText = textFieldText.substring(0, textFieldText.lastIndexOf(oldText));
-                    ((TextArea) focusedActor).setText(text);
                     TextArea ta = ((TextArea) focusedActor);
-//                        ta.appendText(text);
-
-//                    pasteButton.setVisible(false);
-                    Gdx.input.setOnscreenKeyboardVisible(false);
-//                        Gdx.app.log("ta",ta.getText());
+                    ta.setText(text);
                     if (text.startsWith("data")) {
-
-//                            ImageElement ie=createImage();
                         final Image img = new Image(text);
-//                            ie.setSrc(text);
                         final RootPanel root = RootPanel.get("embed-image");
                         root.add(img);
                         img.setVisible(false);
@@ -219,19 +205,14 @@ public class HtmlLauncher extends GwtApplication {
                                     if (img.getWidth() > 0 || img.getHeight() > 0) {
                                         break;
                                     }
-
                                 }
-                                Statics.userObjects.add(new RectTextureObject(new Pixmap(ImageElement.as(img.getElement()))));
+                                Statics.userObjects.add(new ImageObject(new Pixmap(ImageElement.as(img.getElement()))));
                             }
                         });
-//                            img.setVisible(false);
-//                            root.remove(img);
-                    } else Statics.userObjects.add(new RectTextureObject(text.replaceAll("\n", "")));
-                    ta.setVisible(false);
+                    } else Statics.userObjects.add(new ImageObject(text.replaceAll("\n", "")));
                     ta.setText("");
+                    Statics.backOverlay();
 //                        ta.setText("");
-                }
-            }
 //            }
                         /*Actor focusedActor = ((BasicScreen)((Game)getApplicationListener()).getScreen()).getStage().getKeyboardFocus();
                         if (focusedActor != null && focusedActor instanceof TextField) {

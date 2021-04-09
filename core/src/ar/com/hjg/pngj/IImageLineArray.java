@@ -7,18 +7,18 @@ package ar.com.hjg.pngj;
  * not rely much on this.
  */
 public interface IImageLineArray {
-	public ImageInfo getImageInfo();
+	ImageInfo getImageInfo();
 
-	public FilterType getFilterType();
+	FilterType getFilterType();
 
 	/**
 	 * length of array (should correspond to samples)
 	 */
-	public int getSize();
+    int getSize();
 
 	/**
 	 * Get i-th element of array (for 0 to size-1). The meaning of this is type
 	 * dependent. For ImageLineInt and ImageLineByte is the sample value.
 	 */
-	public int getElem(int i);
+    int getElem(int i);
 }

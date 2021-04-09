@@ -13,10 +13,10 @@ public class FiltersPerformance {
 	private final ImageInfo iminfo;
 	private double memoryA = 0.7; // empirical (not very critical: 0.72)
 	private int lastrow = -1;
-	private double[] absum = new double[5];// depending on the strategy not all values might be computed for all
-	private double[] entropy = new double[5];
-	private double[] cost = new double[5];
-	private int[] histog = new int[256]; // temporary, not normalized
+	private final double[] absum = new double[5];// depending on the strategy not all values might be computed for all
+	private final double[] entropy = new double[5];
+	private final double[] cost = new double[5];
+	private final int[] histog = new int[256]; // temporary, not normalized
 	private int lastprefered = -1;
 	private boolean initdone = false;
 	private double preferenceForNone = 1.0; // higher gives more preference to NONE
@@ -26,7 +26,7 @@ public class FiltersPerformance {
 	// lower is better!
 	public static final double[] FILTER_WEIGHTS_DEFAULT = { 0.73, 1.03, 0.97, 1.11, 1.22 };
 
-	private double[] filter_weights = new double[] { -1, -1, -1, -1, -1 };
+	private final double[] filter_weights = new double[] { -1, -1, -1, -1, -1 };
 
 	private final static double LOG2NI = -1.0 / Math.log(2.0);
 

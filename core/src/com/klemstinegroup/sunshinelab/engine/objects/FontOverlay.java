@@ -22,8 +22,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
     Touchable touchable;
 
     public FontOverlay() {
-        Viewport viewport = new FitViewport(800f * Gdx.graphics.getWidth() / Gdx.graphics.getHeight() * Gdx.graphics.getDensity(), 800 * Gdx.graphics.getDensity());
-        stage = new Stage(viewport);
+        stage = new Stage(Statics.overlayViewport);
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(FontObject.fontList[MathUtils.random(FontObject.fontList.length - 1)]);
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -37,10 +36,13 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
 //        Skin skin = new Skin(Gdx.files.internal("skins/default/skin/uiskin.json"));
 
         CheckBox exitButton = new CheckBox("", skin);
+
+
+
         exitButton.setChecked(true);
         exitButton.setDisabled(true);
         exitButton.getStyle().fontColor = Color.RED;
-        exitButton.setPosition(viewport.getScreenWidth() - 40, viewport.getScreenHeight() - 40);
+        exitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 40, Statics.overlayViewport.getWorldHeight() - 40);
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

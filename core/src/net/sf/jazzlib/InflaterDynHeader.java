@@ -46,8 +46,8 @@ class InflaterDynHeader
   private static final int LENS   = 4;
   private static final int REPS   = 5;
 
-  private static final int repMin[]  = { 3, 3, 11 };
-  private static final int repBits[] = { 2, 3,  7 };
+  private static final int[] repMin = { 3, 3, 11 };
+  private static final int[] repBits = { 2, 3,  7 };
 
   
   private byte[] blLens;
