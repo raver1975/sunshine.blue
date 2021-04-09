@@ -7,6 +7,7 @@ import com.badlogic.gdx.Net;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.net.HttpRequestBuilder;
 import com.badlogic.gdx.net.HttpStatus;
@@ -14,6 +15,39 @@ import com.badlogic.gdx.utils.*;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 
 public class IPFSUtils {
+
+    public static void pinFile(String cid){
+        String url="https://api.pinata.cloud/pinning/pinByHash";
+        String authorization="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI5NjMyZTdmMC1lODRiLTRjNzYtYTU2Yy0xZGE2YjgwNGI0YzAiLCJlbWFpbCI6InBhdWxrbGVtc3RpbmVAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBpbl9wb2xpY3kiOnsicmVnaW9ucyI6W3siaWQiOiJOWUMxIiwiZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjF9XSwidmVyc2lvbiI6MX0sIm1mYV9lbmFibGVkIjpmYWxzZX0sImF1dGhlbnRpY2F0aW9uVHlwZSI6InNjb3BlZEtleSIsInNjb3BlZEtleUtleSI6ImI5MTJhMjE1MTJlMDYzNmZhZjRkIiwic2NvcGVkS2V5U2VjcmV0IjoiNWYwZGYwODIwOTQzM2NiY2ZmNjU0MDg4MzMxMDI3OWZlYjYxYWU0ODk4NzAyMWQ5ZTVhODNiMTU1MWQ5NTQxZiIsImlhdCI6MTYxNzk3NTEyNX0.1Mpg1X9X8XTxoLuiEdvcNW3Z7iMEkkhsSJn7hyexXvM";
+
+        HttpRequestBuilder builder = new HttpRequestBuilder();
+        Net.HttpRequest request = builder.newRequest().method(Net.HttpMethods.POST).url(url).timeout(1000000).build();
+        request.setHeader("Authorization","Bearer "+authorization);
+        String sss="{\"hashToPin\": \""+cid+"\"}";
+        request.setHeader("Content-Type", "application/json");
+        request.setHeader("Content-Length", sss.length()+"");
+        request.setContent(sss);
+        Gdx.app.log("hashtopin",sss);
+        Net.HttpResponseListener listener = new Net.HttpResponseListener() {
+            @Override
+            public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                String res = httpResponse.getResultAsString();
+                Gdx.app.log("post",request.getContent());
+                Gdx.app.log("pin",res);
+            }
+
+            @Override
+            public void failed(Throwable t) {
+                Gdx.app.log("response", t.toString());
+            }
+
+            @Override
+            public void cancelled() {
+
+            }
+        };
+        Gdx.net.sendHttpRequest(request, listener);
+    }
 
     public static void uploadFile(byte[] data, String mime, IPFSResponseListener listen) {
         Gdx.app.postRunnable(new Runnable() {
@@ -44,6 +78,7 @@ public class IPFSUtils {
                             String hash = jons.getString("Hash");
                             if (hash != null && listen != null) {
                                 listen.qid(hash);
+                                pinFile(hash);
                             }
                         }
                     }
@@ -63,10 +98,10 @@ public class IPFSUtils {
         });
     }
 
-    public static void writePng(Pixmap pixmap, Vector3 bounds,FileHandle mfh) {
+    public static void writePng(Pixmap pixmap, Vector2 bounds,FileHandle mfh) {
         writePng(pixmap,bounds,mfh,null);
     }
-    public static void writePng(Pixmap pixmap, Vector3 bounds, FileHandle mfh,IPFSResponseListener listener) {
+    public static void writePng(Pixmap pixmap, Vector2 bounds, FileHandle mfh,IPFSResponseListener listener) {
         Gdx.app.postRunnable(new Runnable() {
             @Override
             public void run() {
@@ -96,12 +131,12 @@ public class IPFSUtils {
         });
     }
 
-    public static void uploadPng(Pixmap pixmap,Vector3 bounds, IPFSResponseListener listener) {
+    public static void uploadPng(Pixmap pixmap,Vector2 bounds, IPFSResponseListener listener) {
         MemoryFileHandle mfh = new MemoryFileHandle();
         writePng(pixmap, bounds,mfh,listener);
     }
 
-    public static void uploadPng(Pixmap pixmap, Vector3 bounds) {
+    public static void uploadPng(Pixmap pixmap, Vector2 bounds) {
         uploadPng(pixmap,bounds, new IPFSResponseListener() {
             @Override
             public void qid(String qid) {
