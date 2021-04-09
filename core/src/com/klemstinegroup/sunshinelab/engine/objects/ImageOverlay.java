@@ -23,7 +23,7 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
     public ImageOverlay() {
         stage = new Stage(Statics.overlayViewport);
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(FontObject.fontList[MathUtils.random(FontObject.fontList.length - 1)]);
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Statics.fontList[MathUtils.random(Statics.fontList.length - 1)]);
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 20;
 //        int a = MathUtils.randomBoolean() ? 0 : 1;

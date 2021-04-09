@@ -23,7 +23,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
         stage = new Stage(Statics.overlayViewport);
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(FontObject.fontList[MathUtils.random(FontObject.fontList.length - 1)]);
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Statics.fontList[MathUtils.random(Statics.fontList.length - 1)]);
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 20;
 //        int a = MathUtils.randomBoolean() ? 0 : 1;
@@ -47,7 +47,8 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
                 Gdx.input.setOnscreenKeyboardVisible(true);
-                FontObject ff = new FontObject(FontObject.fontList[MathUtils.random(FontObject.fontList.length - 1)], 40);
+                FontObject ff = new FontObject();
+
                 Statics.userObjects.add(ff);
                 Statics.FONT_OVERLAY.setTouchable(ff);
                 Statics.setOverlay(Statics.FONT_OVERLAY);

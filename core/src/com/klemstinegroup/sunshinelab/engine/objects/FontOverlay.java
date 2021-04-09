@@ -7,13 +7,13 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 
 public class FontOverlay extends ScreenObject implements Overlay, Touchable, Drawable{
@@ -24,9 +24,9 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
     public FontOverlay() {
         stage = new Stage(Statics.overlayViewport);
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(FontObject.fontList[MathUtils.random(FontObject.fontList.length - 1)]);
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Statics.fontList[MathUtils.random(Statics.fontList.length - 1)]);
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 20;
+        parameter.size = 50;
 //        int a = MathUtils.randomBoolean() ? 0 : 1;
 //        int b = MathUtils.randomBoolean() ? 0 : 1;
         parameter.color = Color.CYAN;
@@ -51,10 +51,20 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
             }
         });
         List list=new List(skin);
+        list.addListener(new ChangeListener() {
+
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if(touchable!=null) {
+                    ((FontObject) touchable).setFont(((List) actor).getSelectedIndex());
+                    ((FontObject) touchable).generate();
+                }
+            }
+        });
         ScrollPane scrollPane=new ScrollPane(list,skin);
         Array<String> fontList=new Array<>();
-        for (FileHandle fh:FontObject.fontList){
-            fontList.add(fh.name());
+        for (FileHandle fh: Statics.fontList){
+            fontList.add(fh.nameWithoutExtension());
         }
         fontList.sort();
         list.setItems(fontList);

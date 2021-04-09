@@ -2,6 +2,7 @@ package com.klemstinegroup.sunshinelab.engine;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -26,6 +27,7 @@ public class Statics {
     public static final String IPFSGateway = "https://ipfs.io/ipfs/";
     public static final String IPFSMediaViewer = "QmWWoB9DUFXz8v1ZVGXT8KjjZ7r7kbUQJPzPDxfpz36ei6";
     public static final boolean debug = false;
+    static final public FileHandle[] fontList = Gdx.files.internal("fonts").list();
     public static Matrix4 mx4Batch = new Matrix4();
     //    public static GifEncoder gifEncoder;
     public static MemoryFileHandle gifEncoderFile;
@@ -54,10 +56,10 @@ public class Statics {
     public static final Array<BaseObject> selectedObjects = new Array<BaseObject>();
     public static InputMultiplexer im = new InputMultiplexer();
     public static FitViewport overlayViewport = new FitViewport((600f *Gdx.graphics.getWidth() / Gdx.graphics.getHeight() ), 600);
+    public static final FontOverlay FONT_OVERLAY = new FontOverlay();
     public static final BasicUIOverlay BASIC_UI_OVERLAY = new BasicUIOverlay();
     public static final TransformOverlay TRANSFORM_OVERLAY = new TransformOverlay();
     public static final DrawOverlay DRAW_OVERLAY = new DrawOverlay();
-    public static final FontOverlay FONT_OVERLAY = new FontOverlay();
     public static ImageOverlay IMAGE_OVERLAY =new ImageOverlay();
     public static  Overlay overlay;
 
