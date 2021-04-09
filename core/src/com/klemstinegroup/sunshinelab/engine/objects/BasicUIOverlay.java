@@ -178,4 +178,9 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
     public void removeInput() {
         Statics.im.removeProcessor(stage);
     }
+
+    @Override
+    public void act() {
+        stage.act();
+    }
 }

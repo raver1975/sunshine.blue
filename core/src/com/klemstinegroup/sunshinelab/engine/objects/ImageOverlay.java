@@ -151,4 +151,9 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
         Statics.im.removeProcessor(stage);
         if (touchable != null) Statics.im.removeProcessor(touchable);
     }
+
+    @Override
+    public void act() {
+        stage.act();
+    }
 }

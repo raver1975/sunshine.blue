@@ -101,21 +101,21 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
 	default: {
 		font: font
-		fontColorSelected: black
-		fontColorUnselected: black
+		fontColorSelected: white
+		fontColorUnselected: white
 		selection: cyan
 	}
 	select-box: {
 		font: font
-		fontColorSelected: black
-		fontColorUnselected: black
+		fontColorSelected: white
+		fontColorUnselected: white
 		selection: cyan
 		background: select-box-list
 	}
 	select-box-big: {
 		font: button
-		fontColorSelected: black
-		fontColorUnselected: black
+		fontColorSelected: white
+		fontColorUnselected: white
 		selection: cyan
 		background: select-box-big-list
 	}

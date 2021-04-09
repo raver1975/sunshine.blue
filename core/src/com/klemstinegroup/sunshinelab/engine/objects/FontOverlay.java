@@ -1,6 +1,7 @@
 package com.klemstinegroup.sunshinelab.engine.objects;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -8,15 +9,14 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 
-public class FontOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
+public class FontOverlay extends ScreenObject implements Overlay, Touchable, Drawable{
 
     public final Stage stage;
     Touchable touchable;
@@ -50,7 +50,22 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
                 Statics.backOverlay();
             }
         });
+        List list=new List(skin);
+        ScrollPane scrollPane=new ScrollPane(list,skin);
+        Array<String> fontList=new Array<>();
+        for (FileHandle fh:FontObject.fontList){
+            fontList.add(fh.name());
+        }
+        fontList.sort();
+        list.setItems(fontList);
+        list.layout();
+        scrollPane.setSize(200,Statics.overlayViewport.getWorldHeight());
+        scrollPane.setPosition(0,0);
+        scrollPane.setFlickScroll(true);
+        scrollPane.setScrollingDisabled(true,false);
+scrollPane.layout();
         stage.addActor(exitButton);
+        stage.addActor(scrollPane);
     }
 
     public void setTouchable(Touchable touchable) {
@@ -117,5 +132,10 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
     public void removeInput() {
         Statics.im.removeProcessor(stage);
         if (touchable!=null)Statics.im.removeProcessor(touchable);
+    }
+
+    @Override
+    public void act() {
+        stage.act();
     }
 }

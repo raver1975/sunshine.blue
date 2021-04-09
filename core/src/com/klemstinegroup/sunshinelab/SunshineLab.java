@@ -121,6 +121,7 @@ public class SunshineLab extends ApplicationAdapter {
             Statics.batch.setTransformMatrix(mx4Batch);
         }
         if (Statics.overlay!=null){
+            ((Overlay)Statics.overlay).act();
             ((Drawable) Statics.overlay).draw(Statics.batch);
         }
         Statics.batch.setTransformMatrix(mx4Batch);
