@@ -17,14 +17,14 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
 
     private final FileHandle[] fontList;
     BitmapFont font;
-    String text = "";
-    String fontName="";
+    String text="";
+    String fontName;
     Color color=Color.WHITE;
     int size=50;
     FreeTypeFontGenerator.FreeTypeFontParameter parameter;
     private int caretFlash = 0;
     private GlyphLayout nn;
-    private Polygon polygon;
+    public Polygon polygon;
 
     public void setFont(int index){
         fontName= fontList[index].nameWithoutExtension();
@@ -39,7 +39,10 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
     }
 
     void generate() {
-        FileHandle ff= fontList[MathUtils.random(fontList.length-1)];
+        FileHandle ff = fontList[MathUtils.random(fontList.length - 1)];
+        if (fontName==null) {
+            fontName=ff.nameWithoutExtension();
+        }
         for (FileHandle fh: fontList){
             if (fh.nameWithoutExtension().equals(fontName)){ff=fh;}
         }
@@ -55,7 +58,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
         center.set(bounds.x / 2f, bounds.y / 2f);
     }
 
-    private void setBounds() {
+    public void setBounds() {
         nn = new GlyphLayout();
         nn.setText(font, text);
         bounds.set(nn.width, nn.height);

@@ -46,6 +46,7 @@ public class SunshineLab extends ApplicationAdapter {
     @Override
     public void create() {
         VisUI.load();
+//        VisUI.load(VisUI.SkinScale.X2);
         Gdx.input.setInputProcessor(Statics.im);
         Statics.setOverlay(Statics.BASIC_UI_OVERLAY);
         Gdx.app.setLogLevel(LOG_INFO);

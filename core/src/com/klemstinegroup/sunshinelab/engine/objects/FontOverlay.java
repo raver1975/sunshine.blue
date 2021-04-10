@@ -14,14 +14,20 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.igormaznitsa.jjjvm.impl.JJJVMClassFieldImpl;
 import com.klemstinegroup.sunshinelab.engine.Statics;
+import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.widget.VisScrollPane;
 import com.kotcrab.vis.ui.widget.color.ColorPicker;
 import com.kotcrab.vis.ui.widget.color.ColorPickerAdapter;
+import com.kotcrab.vis.ui.widget.spinner.IntSpinnerModel;
+import com.kotcrab.vis.ui.widget.spinner.Spinner;
 
-public class FontOverlay extends ScreenObject implements Overlay, Touchable, Drawable{
+public class FontOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
 
     public final Stage stage;
     FontObject fontObject;
+    private Vector2 touchdown=new Vector2();
 
     public FontOverlay() {
         FileHandle[] fontList = Gdx.files.internal("fonts").list();
@@ -55,22 +61,22 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
 
             @Override
             public void canceled(Color oldColor) {
-                if (fontObject!=null)fontObject.setColor(oldColor);
+                if (fontObject != null) fontObject.setColor(oldColor);
             }
 
             @Override
             public void changed(Color newColor) {
-                if (fontObject!=null)fontObject.setColor(newColor);
+                if (fontObject != null) fontObject.setColor(newColor);
             }
 
             @Override
             public void reset(Color previousColor, Color newColor) {
-                if (fontObject!=null)    fontObject.setColor(newColor);
+                if (fontObject != null) fontObject.setColor(newColor);
             }
 
             @Override
-            public void finished (Color newColor) {
-                if (fontObject!=null)fontObject.setColor(newColor);
+            public void finished(Color newColor) {
+                if (fontObject != null) fontObject.setColor(newColor);
             }
         });
         picker.setVisible(true);
@@ -83,48 +89,71 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
 //        picker.setResizable(true);
 
 //...
-TextButton showPickerButton=new TextButton("color",skin);
+        TextButton showPickerButton = new TextButton("color", skin);
         showPickerButton.addListener(new ChangeListener() {
             @Override
-            public void changed (ChangeEvent event, Actor actor) {
+            public void changed(ChangeEvent event, Actor actor) {
                 //displaying picker with fade in animation
-                if (stage.getActors().contains(picker,true)){
+                if (stage.getActors().contains(picker, true)) {
                     picker.remove();
-                }
-                else{
+                } else {
                     stage.addActor(picker.fadeIn());
                 }
             }
         });
-        showPickerButton.setPosition(Statics.overlayViewport.getWorldWidth() - 200,10);
+        showPickerButton.setPosition(Statics.overlayViewport.getWorldWidth() - 150, 10);
         stage.addActor(showPickerButton);
 //        stage.addActor(colorPicker);
 
 
-        List list=new List(skin);
+        List list = new List(skin);
         list.addListener(new ChangeListener() {
 
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if(fontObject !=null) {
+                if (fontObject != null) {
                     ((FontObject) fontObject).setFont(((List) actor).getSelectedIndex());
                     ((FontObject) fontObject).generate();
                 }
             }
         });
-        ScrollPane scrollPane=new ScrollPane(list,skin);
-        Array<String> fontListStr=new Array<>();
-        for (FileHandle fh: fontList){
+        VisScrollPane scrollPane = new VisScrollPane(list);
+        Array<String> fontListStr = new Array<>();
+        for (FileHandle fh : fontList) {
             fontListStr.add(fh.nameWithoutExtension());
         }
         fontListStr.sort();
         list.setItems(fontListStr);
         list.layout();
-        scrollPane.setSize(200,Statics.overlayViewport.getWorldHeight());
-        scrollPane.setPosition(0,0);
+        scrollPane.setSize(200, Statics.overlayViewport.getWorldHeight());
+        scrollPane.setPosition(0, 0);
         scrollPane.setFlickScroll(true);
-        scrollPane.setScrollingDisabled(true,false);
-scrollPane.layout();
+        scrollPane.setScrollingDisabled(true, false);
+        scrollPane.layout();
+        /*final IntSpinnerModel intModel = new IntSpinnerModel(60, 1, 1000, 1);
+        Spinner sizeSpinner = new Spinner("", intModel);
+        sizeSpinner.setPosition(Statics.overlayViewport.getWorldWidth() - 100, 100);
+        sizeSpinner.setRound(true);
+        sizeSpinner.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                fontObject.size = intModel.getValue();
+                fontObject.generate();
+            }
+        });
+        stage.addActor(sizeSpinner);*/
+        Slider slider = new Slider(1, 200, 1, true, VisUI.getSkin());
+        slider.setPosition(Statics.overlayViewport.getWorldWidth() - 50,80);
+        slider.setSize(20,Statics.overlayViewport.getWorldHeight()-150);
+        slider.setValue(50);
+
+        slider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                fontObject.setSize((int)slider.getValue());
+            }
+        });
+        stage.addActor(slider);
         stage.addActor(exitButton);
         stage.addActor(scrollPane);
     }
@@ -150,6 +179,13 @@ scrollPane.layout();
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        Statics.viewport.unproject(touchdown.set(screenX, screenY));
+        if (fontObject.isSelected(touchdown)) {
+            Statics.setOverlay(Statics.TRANSFORM_OVERLAY);
+            Statics.TRANSFORM_OVERLAY.touchDown(screenX, screenY, pointer, button);
+            Statics.selectedObjects.clear();
+            Statics.selectedObjects.add(fontObject);
+        };
         return false;
     }
 
@@ -176,7 +212,7 @@ scrollPane.layout();
     @Override
     public void draw(Batch batch) {
         stage.draw();
-        if (fontObject!=null){
+        if (fontObject != null) {
             fontObject.draw(batch);
         }
     }
@@ -189,13 +225,13 @@ scrollPane.layout();
     @Override
     public void setInput() {
         Statics.im.addProcessor(stage);
-        if (fontObject !=null)Statics.im.addProcessor(fontObject);
+        if (fontObject != null) Statics.im.addProcessor(fontObject);
     }
 
     @Override
     public void removeInput() {
         Statics.im.removeProcessor(stage);
-        if (fontObject !=null)Statics.im.removeProcessor(fontObject);
+        if (fontObject != null) Statics.im.removeProcessor(fontObject);
     }
 
     @Override

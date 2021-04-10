@@ -18,13 +18,18 @@ public class NativeIPFSgwt implements NativeIPFSInterface {
       var byteCharacters = atob(base64);
       var byteNumbers = new Array(byteCharacters.length);
       for (var i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
       }
       var byteArray = new Uint8Array(byteNumbers);
-      $wnd.node.add(byteArray).then(function(fileAdded){
-        console.log('Added file:', fileAdded.path);
-        self.@com.klemstinegroup.sunshinelab.client.NativeIPFSgwt::finish(Ljava/lang/String;)(fileAdded.path);
+      if(!$wnd.node){
+          console.log("Node not running!");
+      }
+      else{
+          $wnd.node.add(byteArray).then(function(fileAdded){
+          console.log('Added file:', fileAdded.path);
+          self.@com.klemstinegroup.sunshinelab.client.NativeIPFSgwt::finish(Ljava/lang/String;)(fileAdded.path);
       });
+      }
     }-*/;
 
     public void finish(String cid){
