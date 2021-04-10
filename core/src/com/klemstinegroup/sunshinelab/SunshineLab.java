@@ -2,12 +2,8 @@ package com.klemstinegroup.sunshinelab;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.github.tommyettinger.anim8.AnimatedPNG;
 import com.github.tommyettinger.anim8.IncrementalAnimatedPNG;
 import com.igormaznitsa.jjjvm.impl.JJJVMClassImpl;
 import com.igormaznitsa.jjjvm.impl.jse.JSEProviderImpl;
@@ -113,8 +109,9 @@ public class SunshineLab extends ApplicationAdapter {
 
     @Override
     public void render() {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);
         Statics.viewport.apply();
 
 
@@ -126,13 +123,30 @@ public class SunshineLab extends ApplicationAdapter {
                 apng.write(FrameBufferUtils.drawObjectsPix(Statics.viewport, Statics.userObjects, 400, 400));
             }
             if (cnt == 0) {
+                nativeIPFS.downloadFile("QmZtmD2qt6fJot32nabSP3CUjicnypEBz7bHVDhPQt9aAy", new IPFSFileListener() {
+                    @Override
+                    public void downloaded(byte[] file) {
+                        Gdx.app.log("text",new String(file));
+                    }
+
+                    @Override
+                    public void downloadFailed(Throwable t) {
+                        Gdx.app.log("textError",t.getMessage());
+                    }
+                });
+
 //                Statics.gifEncoderA.finish();
                 apng.end();
                 //                IPFSUtils.uploadFile(mfh.readBytes(), "image/apng", new IPFSResponseListener() {
-                SunshineLab.nativeIPFS.uploadFile(mfh.readBytes(), "image/apng", new IPFSResponseListener() {
+                SunshineLab.nativeIPFS.uploadFile(mfh.readBytes(), "image/apng", new IPFSCIDListener() {
                     @Override
                     public void cid(String cid) {
                         IPFSUtils.openIPFSViewer(cid);
+                    }
+
+                    @Override
+                    public void uploadFailed(Throwable t) {
+
                     }
                 });
             }

@@ -158,8 +158,8 @@ public class IncrementalAnimatedPNG implements Disposable {
             buffer.writeInt(0);
             buffer.writeShort(1);
             buffer.writeShort(fps);
-            buffer.writeByte(0);
-            buffer.writeByte(0);
+            buffer.writeByte(1);
+            buffer.writeByte(1);
             buffer.endChunk(dataOutput);
 
             if (cntt++ == 0) {

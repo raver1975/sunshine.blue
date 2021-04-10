@@ -1,5 +1,6 @@
 package com.klemstinegroup.sunshinelab.engine.util;
 
-public interface IPFSResponseListener {
+public interface IPFSCIDListener {
     void cid(String cid);
+    void uploadFailed(Throwable t);
 }

@@ -50,7 +50,7 @@ public class IPFSUtils {
         Gdx.net.sendHttpRequest(request, listener);
     }
 
-    public static void uploadFile(byte[] data, String mime, IPFSResponseListener listen) {
+    public static void uploadFile(byte[] data, String mime, IPFSCIDListener listen) {
         Gdx.app.postRunnable(new Runnable() {
             @Override
             public void run() {
@@ -90,7 +90,7 @@ public class IPFSUtils {
 
                     @Override
                     public void failed(Throwable t) {
-                        Gdx.app.log("response", t.toString());
+                        listen.uploadFailed(t);
                     }
 
                     @Override
@@ -106,7 +106,7 @@ public class IPFSUtils {
     public static void writePng(Pixmap pixmap, Vector2 bounds,FileHandle mfh) {
         writePng(pixmap,bounds,mfh,null);
     }
-    public static void writePng(Pixmap pixmap, Vector2 bounds, FileHandle mfh,IPFSResponseListener listener) {
+    public static void writePng(Pixmap pixmap, Vector2 bounds, FileHandle mfh, IPFSCIDListener listener) {
         Gdx.app.postRunnable(new Runnable() {
             @Override
             public void run() {
@@ -136,17 +136,22 @@ public class IPFSUtils {
         });
     }
 
-    public static void uploadPng(Pixmap pixmap,Vector2 bounds, IPFSResponseListener listener) {
+    public static void uploadPng(Pixmap pixmap,Vector2 bounds, IPFSCIDListener listener) {
         MemoryFileHandle mfh = new MemoryFileHandle();
         writePng(pixmap, bounds,mfh,listener);
     }
 
     public static void uploadPng(Pixmap pixmap, Vector2 bounds) {
-        uploadPng(pixmap,bounds, new IPFSResponseListener() {
+        uploadPng(pixmap,bounds, new IPFSCIDListener() {
             @Override
             public void cid(String cid) {
                 Gdx.app.log("cid",cid);
                 openIPFSViewer(cid);
+            }
+
+            @Override
+            public void uploadFailed(Throwable t) {
+
             }
         });
     }
@@ -155,4 +160,36 @@ public class IPFSUtils {
 //        Gdx.net.openURI(Statics.IPFSGateway + Statics.IPFSMediaViewer + "?url=" + cid);
         Gdx.net.openURI(Statics.IPFSGateway + cid);
     }
+
+    public static void downloadFromIPFS(String url, final IPFSFileListener responseListener) {
+        Net.HttpRequest request = new Net.HttpRequest(Net.HttpMethods.GET);
+        request.setUrl(Statics.IPFSGateway+url);
+        Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {
+            @Override
+            public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                final byte[] result = httpResponse.getResult();
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            responseListener.downloaded(result);
+                        } catch (Throwable t) {
+                            failed(t);
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void failed(Throwable t) {
+                responseListener.downloadFailed(t);
+            }
+
+            @Override
+            public void cancelled() {
+                // no way to cancel, will never get called
+            }
+        });
+    }
+
 }
