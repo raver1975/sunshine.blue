@@ -14,8 +14,6 @@ public class NativeIPFSgwt implements NativeIPFSInterface {
     }
 
     native void uploadToIPFS(String base64,String content)/*-{
-
-
       var self = this;
       var byteCharacters = atob(base64);
       var byteNumbers = new Array(byteCharacters.length);
@@ -27,7 +25,6 @@ public class NativeIPFSgwt implements NativeIPFSInterface {
         console.log('Added file:', fileAdded.path);
         self.@com.klemstinegroup.sunshinelab.client.NativeIPFSgwt::finish(Ljava/lang/String;)(fileAdded.path);
       });
-
     }-*/;
 
     public void finish(String cid){
