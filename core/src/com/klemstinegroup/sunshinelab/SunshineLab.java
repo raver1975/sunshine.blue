@@ -14,10 +14,7 @@ import com.igormaznitsa.jjjvm.impl.jse.JSEProviderImpl;
 import com.igormaznitsa.jjjvm.model.JJJVMProvider;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.klemstinegroup.sunshinelab.engine.objects.*;
-import com.klemstinegroup.sunshinelab.engine.util.FrameBufferUtils;
-import com.klemstinegroup.sunshinelab.engine.util.IPFSResponseListener;
-import com.klemstinegroup.sunshinelab.engine.util.IPFSUtils;
-import com.klemstinegroup.sunshinelab.engine.util.MemoryFileHandle;
+import com.klemstinegroup.sunshinelab.engine.util.*;
 import com.kotcrab.vis.ui.VisUI;
 
 import java.io.ByteArrayInputStream;
@@ -26,7 +23,18 @@ import static com.badlogic.gdx.Application.LOG_INFO;
 
 public class SunshineLab extends ApplicationAdapter {
 
+    public static  NativeIPFSInterface nativeIPFS;
+
     //    Camera camera;
+    public SunshineLab(){
+        super();
+        this.nativeIPFS=new NativeIPFS();
+    }
+
+    public SunshineLab(NativeIPFSInterface nativeIPFS){
+        super();
+        this.nativeIPFS=nativeIPFS;
+    }
 
 
     public static Matrix4 mx4Batch = new Matrix4();
@@ -100,7 +108,7 @@ public class SunshineLab extends ApplicationAdapter {
     }
 
 
-    int cnt = 200;
+    int cnt = 100;
 
     @Override
     public void render() {
@@ -112,17 +120,18 @@ public class SunshineLab extends ApplicationAdapter {
         Statics.batch.setProjectionMatrix(Statics.viewport.getCamera().combined);
         Statics.batch.begin();
         if (Statics.gif) {
-            if (cnt-- > 0 ) {
+            if (cnt-- > 0 && cnt<10 ) {
 //                Statics.gifEncoderA.addFrame(FrameBufferUtils.drawObjectsPix(Statics.viewport, Statics.userObjects, 400, 400));
                 apng.write(FrameBufferUtils.drawObjectsPix(Statics.viewport, Statics.userObjects, 400, 400));
             }
             if (cnt == 0) {
 //                Statics.gifEncoderA.finish();
                 apng.end();
-                IPFSUtils.uploadFile(mfh.readBytes(), "image/apng", new IPFSResponseListener() {
+                //                IPFSUtils.uploadFile(mfh.readBytes(), "image/apng", new IPFSResponseListener() {
+                SunshineLab.nativeIPFS.uploadFile(mfh.readBytes(), "image/apng", new IPFSResponseListener() {
                     @Override
-                    public void qid(String qid) {
-                        IPFSUtils.openIPFSViewer(qid);
+                    public void cid(String cid) {
+                        IPFSUtils.openIPFSViewer(cid);
                     }
                 });
             }

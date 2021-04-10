@@ -25,17 +25,7 @@ public class TransformOverlay extends ScreenObject implements Overlay, Touchable
 
     public TransformOverlay() {
         stage = new Stage(Statics.overlayViewport);
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Statics.fontList[MathUtils.random(Statics.fontList.length - 1)]);
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 20;
-//        int a = MathUtils.randomBoolean() ? 0 : 1;
-//        int b = MathUtils.randomBoolean() ? 0 : 1;
-        parameter.color = Color.CYAN;
-        textButtonStyle.font = generator.generateFont(parameter);
-        textButtonStyle.overFontColor = Color.WHITE;
         Skin skin = new Skin(Gdx.files.internal("skins/comic/skin/comic-ui.json"));
-//        Skin skin = new Skin(Gdx.files.internal("skins/default/skin/uiskin.json"));
 
         CheckBox exitButton = new CheckBox("",skin);
         exitButton.setChecked(true);

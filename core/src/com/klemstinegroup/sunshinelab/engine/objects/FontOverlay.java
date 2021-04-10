@@ -24,10 +24,10 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
     FontObject fontObject;
 
     public FontOverlay() {
-
+        FileHandle[] fontList = Gdx.files.internal("fonts").list();
         stage = new Stage(Statics.overlayViewport);
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Statics.fontList[MathUtils.random(Statics.fontList.length - 1)]);
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(fontList[MathUtils.random(fontList.length - 1)]);
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 50;
 //        int a = MathUtils.randomBoolean() ? 0 : 1;
@@ -113,12 +113,12 @@ TextButton showPickerButton=new TextButton("color",skin);
             }
         });
         ScrollPane scrollPane=new ScrollPane(list,skin);
-        Array<String> fontList=new Array<>();
-        for (FileHandle fh: Statics.fontList){
-            fontList.add(fh.nameWithoutExtension());
+        Array<String> fontListStr=new Array<>();
+        for (FileHandle fh: fontList){
+            fontListStr.add(fh.nameWithoutExtension());
         }
-        fontList.sort();
-        list.setItems(fontList);
+        fontListStr.sort();
+        list.setItems(fontListStr);
         list.layout();
         scrollPane.setSize(200,Statics.overlayViewport.getWorldHeight());
         scrollPane.setPosition(0,0);

@@ -1,5 +1,6 @@
 package com.klemstinegroup.sunshinelab.engine.objects;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -14,6 +15,7 @@ import com.klemstinegroup.sunshinelab.engine.Statics;
 
 public class FontObject extends ScreenObject implements Drawable, Touchable {
 
+    private final FileHandle[] fontList;
     BitmapFont font;
     String text = "";
     String fontName="";
@@ -25,19 +27,20 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
     private Polygon polygon;
 
     public void setFont(int index){
-        fontName= Statics.fontList[index].nameWithoutExtension();
+        fontName= fontList[index].nameWithoutExtension();
     }
     public void setSize(int size){
         this.size=size;
         generate();
     }
     public FontObject() {
+        fontList = Gdx.files.internal("fonts").list();
         generate();
     }
 
     void generate() {
-        FileHandle ff= Statics.fontList[0];
-        for (FileHandle fh: Statics.fontList){
+        FileHandle ff= fontList[MathUtils.random(fontList.length-1)];
+        for (FileHandle fh: fontList){
             if (fh.nameWithoutExtension().equals(fontName)){ff=fh;}
         }
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(ff);

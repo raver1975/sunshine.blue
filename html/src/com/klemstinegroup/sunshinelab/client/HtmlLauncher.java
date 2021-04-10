@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.*;
 import com.klemstinegroup.sunshinelab.SunshineLab;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.klemstinegroup.sunshinelab.engine.objects.*;
+import com.klemstinegroup.sunshinelab.engine.util.NativeIPFS;
 
 public class HtmlLauncher extends GwtApplication {
     private static HtmlLauncher instance;
@@ -78,7 +79,7 @@ public class HtmlLauncher extends GwtApplication {
 
     @Override
     public ApplicationListener createApplicationListener() {
-        return new SunshineLab();
+        return new SunshineLab(new NativeIPFSgwt());
     }
 
     @Override

@@ -8,11 +8,12 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.net.HttpRequestBuilder;
 import com.badlogic.gdx.net.HttpStatus;
 import com.badlogic.gdx.utils.*;
 import com.klemstinegroup.sunshinelab.engine.Statics;
+
+import java.io.ByteArrayInputStream;
 
 public class IPFSUtils {
 
@@ -63,11 +64,15 @@ public class IPFSUtils {
                 request.setHeader("Content-Type", "multipart/form-data; boundary=" + boundary);
                 String out1 = "--" + boundary +
                         CRLF + "Content-Disposition: form-data; name=\"file\"" +
-                        CRLF + "Content-Type: text/plain" +
+                        CRLF + "Content-Type: "+mime +
                         CRLF + CRLF;
                 String out2 = CRLF + "--" + boundary + "--" + CRLF;
-                String datauri = "data:" + mime + ";base64," + new String(Base64Coder.encode(data));
-                request.setContent(out1 + datauri + out2);
+                ByteArray batemp=new ByteArray();
+                batemp.addAll(out1.getBytes());
+                batemp.addAll(data);
+                batemp.addAll(out2.getBytes());
+//                String datauri = "data:" + mime + ";base64," + new String(Base64Coder.encode(data));
+                request.setContent(new ByteArrayInputStream(batemp.toArray()),batemp.size);
                 Net.HttpResponseListener listener = new Net.HttpResponseListener() {
                     @Override
                     public void handleHttpResponse(Net.HttpResponse httpResponse) {
@@ -77,7 +82,7 @@ public class IPFSUtils {
                             JsonValue jons = jsonReader.parse(res);
                             String hash = jons.getString("Hash");
                             if (hash != null && listen != null) {
-                                listen.qid(hash);
+                                listen.cid(hash);
                                 pinFile(hash);
                             }
                         }
@@ -139,14 +144,15 @@ public class IPFSUtils {
     public static void uploadPng(Pixmap pixmap, Vector2 bounds) {
         uploadPng(pixmap,bounds, new IPFSResponseListener() {
             @Override
-            public void qid(String qid) {
-                Gdx.app.log("qid",qid);
-                openIPFSViewer(qid);
+            public void cid(String cid) {
+                Gdx.app.log("cid",cid);
+                openIPFSViewer(cid);
             }
         });
     }
 
-    public static void openIPFSViewer(String qid) {
-        Gdx.net.openURI(Statics.IPFSGateway + Statics.IPFSMediaViewer + "?url=" + qid);
+    public static void openIPFSViewer(String cid) {
+//        Gdx.net.openURI(Statics.IPFSGateway + Statics.IPFSMediaViewer + "?url=" + cid);
+        Gdx.net.openURI(Statics.IPFSGateway + cid);
     }
 }

@@ -21,10 +21,10 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
     Vector2 touchdown = new Vector2();
 
     public BasicUIOverlay() {
-
+        FileHandle[] fontList = Gdx.files.internal("fonts").list();
         stage = new Stage(Statics.overlayViewport);
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        FileHandle fh=Statics.fontList[MathUtils.random(Statics.fontList.length - 1)];
+        FileHandle fh=fontList[MathUtils.random(fontList.length - 1)];
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(fh);
         System.out.println(fh.path());
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();

@@ -15,6 +15,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.klemstinegroup.sunshinelab.engine.objects.*;
+import com.klemstinegroup.sunshinelab.engine.util.NativeIPFS;
+import com.klemstinegroup.sunshinelab.engine.util.NativeIPFSInterface;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import java.util.Stack;
@@ -23,7 +25,6 @@ public class Statics {
     public static final String IPFSGateway = "https://ipfs.io/ipfs/";
     public static final String IPFSMediaViewer = "QmWWoB9DUFXz8v1ZVGXT8KjjZ7r7kbUQJPzPDxfpz36ei6";
     public static final boolean debug = false;
-    static final public FileHandle[] fontList = Gdx.files.internal("fonts").list();
     public static Matrix4 mx4Batch = new Matrix4();
     //    public static GifEncoder gifEncoder;
 //    public static MemoryFileHandle gifEncoderFile;
