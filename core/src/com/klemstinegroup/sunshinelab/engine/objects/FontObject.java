@@ -17,6 +17,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
     BitmapFont font;
     String text = "";
     String fontName="";
+    Color color=Color.WHITE;
     int size=50;
     FreeTypeFontGenerator.FreeTypeFontParameter parameter;
     private int caretFlash = 0;
@@ -42,9 +43,9 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(ff);
         parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = size;
-        int a = MathUtils.randomBoolean() ? 0 : 1;
-        int b = MathUtils.randomBoolean() ? 0 : 1;
-        parameter.color = new Color(a, b, 1 - (a + b) / 2f, 1f);
+//        int a = MathUtils.randomBoolean() ? 0 : 1;
+//        int b = MathUtils.randomBoolean() ? 0 : 1;
+        parameter.color = color;
         font = generator.generateFont(parameter);
         generator.dispose();
         setBounds();
@@ -73,6 +74,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
 //                .translate(-position.x, -position.y, 0)
                         .translate(-center.x, -center.y, 0)
         );
+
         font.draw(batch, text, 0, +bounds.y, Float.MAX_VALUE, Align.left, true);
 
         boolean b = (caretFlash++ % 50 <= 15);
@@ -159,5 +161,10 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
         polygon.rotate(rotation);
         polygon.translate(position.x,position.y);
         return polygon.contains(touch);
+    }
+
+    public void setColor(Color newColor) {
+        this.color=newColor;
+        font.setColor(this.color);
     }
 }

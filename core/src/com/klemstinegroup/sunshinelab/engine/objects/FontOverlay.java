@@ -15,13 +15,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.klemstinegroup.sunshinelab.engine.Statics;
+import com.kotcrab.vis.ui.widget.color.ColorPicker;
+import com.kotcrab.vis.ui.widget.color.ColorPickerAdapter;
 
 public class FontOverlay extends ScreenObject implements Overlay, Touchable, Drawable{
 
     public final Stage stage;
-    Touchable touchable;
+    FontObject fontObject;
 
     public FontOverlay() {
+
         stage = new Stage(Statics.overlayViewport);
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Statics.fontList[MathUtils.random(Statics.fontList.length - 1)]);
@@ -29,16 +32,12 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         parameter.size = 50;
 //        int a = MathUtils.randomBoolean() ? 0 : 1;
 //        int b = MathUtils.randomBoolean() ? 0 : 1;
-        parameter.color = Color.CYAN;
         textButtonStyle.font = generator.generateFont(parameter);
         textButtonStyle.overFontColor = Color.WHITE;
         Skin skin = new Skin(Gdx.files.internal("skins/comic/skin/comic-ui.json"));
 //        Skin skin = new Skin(Gdx.files.internal("skins/default/skin/uiskin.json"));
 
         CheckBox exitButton = new CheckBox("", skin);
-
-
-
         exitButton.setChecked(true);
         exitButton.setDisabled(true);
         exitButton.getStyle().fontColor = Color.RED;
@@ -50,14 +49,66 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
                 Statics.backOverlay();
             }
         });
+
+        //picker creation
+        ColorPicker picker = new ColorPicker(new ColorPickerAdapter() {
+
+            @Override
+            public void canceled(Color oldColor) {
+                if (fontObject!=null)fontObject.setColor(oldColor);
+            }
+
+            @Override
+            public void changed(Color newColor) {
+                if (fontObject!=null)fontObject.setColor(newColor);
+            }
+
+            @Override
+            public void reset(Color previousColor, Color newColor) {
+                if (fontObject!=null)    fontObject.setColor(newColor);
+            }
+
+            @Override
+            public void finished (Color newColor) {
+                if (fontObject!=null)fontObject.setColor(newColor);
+            }
+        });
+        picker.setVisible(true);
+        picker.setAllowAlphaEdit(true);
+        picker.setCloseAfterPickingFinished(true);
+        picker.setShowHexFields(true);
+        picker.setModal(false);
+        picker.setCenterOnAdd(true);
+        picker.setColor(Color.WHITE);
+//        picker.setResizable(true);
+
+//...
+TextButton showPickerButton=new TextButton("color",skin);
+        showPickerButton.addListener(new ChangeListener() {
+            @Override
+            public void changed (ChangeEvent event, Actor actor) {
+                //displaying picker with fade in animation
+                if (stage.getActors().contains(picker,true)){
+                    picker.remove();
+                }
+                else{
+                    stage.addActor(picker.fadeIn());
+                }
+            }
+        });
+        showPickerButton.setPosition(Statics.overlayViewport.getWorldWidth() - 200,10);
+        stage.addActor(showPickerButton);
+//        stage.addActor(colorPicker);
+
+
         List list=new List(skin);
         list.addListener(new ChangeListener() {
 
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if(touchable!=null) {
-                    ((FontObject) touchable).setFont(((List) actor).getSelectedIndex());
-                    ((FontObject) touchable).generate();
+                if(fontObject !=null) {
+                    ((FontObject) fontObject).setFont(((List) actor).getSelectedIndex());
+                    ((FontObject) fontObject).generate();
                 }
             }
         });
@@ -78,8 +129,8 @@ scrollPane.layout();
         stage.addActor(scrollPane);
     }
 
-    public void setTouchable(Touchable touchable) {
-        this.touchable = touchable;
+    public void setFontObject(FontObject fontObject) {
+        this.fontObject = fontObject;
     }
 
     @Override
@@ -125,6 +176,9 @@ scrollPane.layout();
     @Override
     public void draw(Batch batch) {
         stage.draw();
+        if (fontObject!=null){
+            fontObject.draw(batch);
+        }
     }
 
     @Override
@@ -135,13 +189,13 @@ scrollPane.layout();
     @Override
     public void setInput() {
         Statics.im.addProcessor(stage);
-        if (touchable!=null)Statics.im.addProcessor(touchable);
+        if (fontObject !=null)Statics.im.addProcessor(fontObject);
     }
 
     @Override
     public void removeInput() {
         Statics.im.removeProcessor(stage);
-        if (touchable!=null)Statics.im.removeProcessor(touchable);
+        if (fontObject !=null)Statics.im.removeProcessor(fontObject);
     }
 
     @Override

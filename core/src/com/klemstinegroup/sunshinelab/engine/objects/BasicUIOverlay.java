@@ -1,6 +1,7 @@
 package com.klemstinegroup.sunshinelab.engine.objects;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -23,7 +24,9 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
         stage = new Stage(Statics.overlayViewport);
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Statics.fontList[MathUtils.random(Statics.fontList.length - 1)]);
+        FileHandle fh=Statics.fontList[MathUtils.random(Statics.fontList.length - 1)];
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(fh);
+        System.out.println(fh.path());
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 20;
 //        int a = MathUtils.randomBoolean() ? 0 : 1;
@@ -50,7 +53,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 FontObject ff = new FontObject();
 
                 Statics.userObjects.add(ff);
-                Statics.FONT_OVERLAY.setTouchable(ff);
+                Statics.FONT_OVERLAY.setFontObject(ff);
                 Statics.setOverlay(Statics.FONT_OVERLAY);
                 ff.position.set(-ff.center.x, -ff.center.y);
 //        ((ScreenObject) Statics.objects.get(0)).position.set(-((ScreenObject) Statics.objects.get(0)).bounds.x/2, -((ScreenObject) Statics.objects.get(0)).bounds.y/2, 0);

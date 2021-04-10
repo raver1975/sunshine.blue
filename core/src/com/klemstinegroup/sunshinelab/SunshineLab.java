@@ -2,9 +2,13 @@ package com.klemstinegroup.sunshinelab;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.github.tommyettinger.anim8.AnimatedPNG;
+import com.github.tommyettinger.anim8.IncrementalAnimatedPNG;
 import com.igormaznitsa.jjjvm.impl.JJJVMClassImpl;
 import com.igormaznitsa.jjjvm.impl.jse.JSEProviderImpl;
 import com.igormaznitsa.jjjvm.model.JJJVMProvider;
@@ -14,7 +18,7 @@ import com.klemstinegroup.sunshinelab.engine.util.FrameBufferUtils;
 import com.klemstinegroup.sunshinelab.engine.util.IPFSResponseListener;
 import com.klemstinegroup.sunshinelab.engine.util.IPFSUtils;
 import com.klemstinegroup.sunshinelab.engine.util.MemoryFileHandle;
-import com.madgag.gif.fmsware.AnimatedGifEncoder;
+import com.kotcrab.vis.ui.VisUI;
 
 import java.io.ByteArrayInputStream;
 
@@ -28,10 +32,12 @@ public class SunshineLab extends ApplicationAdapter {
     public static Matrix4 mx4Batch = new Matrix4();
 
     JJJVMClassImpl jjjvmClass = null;
-    private MemoryFileHandle gifEncoderFile;
+    private IncrementalAnimatedPNG apng;
+    private MemoryFileHandle mfh;
 
     @Override
     public void create() {
+        VisUI.load();
         Gdx.input.setInputProcessor(Statics.im);
         Statics.setOverlay(Statics.BASIC_UI_OVERLAY);
         Gdx.app.setLogLevel(LOG_INFO);
@@ -46,8 +52,6 @@ public class SunshineLab extends ApplicationAdapter {
         ((ScreenObject) Statics.userObjects.get(1)).scale = .4f;
         Statics.viewport = new ScreenViewport();
 //        Statics.overlayViewport = new FitViewport((800f *Gdx.graphics.getWidth() / Gdx.graphics.getHeight() )/ Gdx.graphics.getDensity(), 800 / Gdx.graphics.getDensity());
-
-
 
 
 //        Statics.im.addProcessor(this);
@@ -81,15 +85,23 @@ public class SunshineLab extends ApplicationAdapter {
 
         //--------------------------------------------------------------------------------------------------
         Statics.viewport.apply();
-        gifEncoderFile = new MemoryFileHandle();
 //        Statics.gifOptions = new ImageOptions();
-        Statics.gifEncoderA = new AnimatedGifEncoder();
-        Statics.gifEncoderA.setDelay(10);
-        Statics.gifEncoderA.start(gifEncoderFile);
+
+//        Statics.gifEncoderA = new AnimatedGifEncoder();
+//        Statics.gifEncoderA.setDelay(10);
+//        Statics.gifEncoderA.start(gifEncoderFile);
+//        Statics.apng=new AnimatedPNG();
+        apng = new IncrementalAnimatedPNG();
+        apng.setFlipY(true);
+        mfh = new MemoryFileHandle();
+        apng.start(mfh,(short)10,400,400);
+
+
     }
 
 
-    int cnt=100;
+    int cnt = 200;
+
     @Override
     public void render() {
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -97,16 +109,17 @@ public class SunshineLab extends ApplicationAdapter {
         Statics.viewport.apply();
 
 
-
         Statics.batch.setProjectionMatrix(Statics.viewport.getCamera().combined);
         Statics.batch.begin();
         if (Statics.gif) {
-            if (cnt-- > 0) {
-                Statics.gifEncoderA.addFrame(FrameBufferUtils.drawObjectsPix(Statics.viewport, Statics.userObjects, 400, 400));
+            if (cnt-- > 0 ) {
+//                Statics.gifEncoderA.addFrame(FrameBufferUtils.drawObjectsPix(Statics.viewport, Statics.userObjects, 400, 400));
+                apng.write(FrameBufferUtils.drawObjectsPix(Statics.viewport, Statics.userObjects, 400, 400));
             }
             if (cnt == 0) {
-                Statics.gifEncoderA.finish();
-                IPFSUtils.uploadFile(gifEncoderFile.readBytes(), "image/gif", new IPFSResponseListener() {
+//                Statics.gifEncoderA.finish();
+                apng.end();
+                IPFSUtils.uploadFile(mfh.readBytes(), "image/apng", new IPFSResponseListener() {
                     @Override
                     public void qid(String qid) {
                         IPFSUtils.openIPFSViewer(qid);
@@ -120,15 +133,15 @@ public class SunshineLab extends ApplicationAdapter {
             }
             Statics.batch.setTransformMatrix(mx4Batch);
         }
-        if (Statics.overlay!=null){
-            ((Overlay)Statics.overlay).act();
+        if (Statics.overlay != null) {
+            ((Overlay) Statics.overlay).act();
             ((Drawable) Statics.overlay).draw(Statics.batch);
         }
         Statics.batch.setTransformMatrix(mx4Batch);
 
         Statics.batch.end();
 
-   /* //------------------------------------------------------------
+    //------------------------------------------------------------
         try
 
     {
@@ -139,8 +152,8 @@ public class SunshineLab extends ApplicationAdapter {
     {
         throwable.printStackTrace();
     }
-    //------------------------------------------------------------*/
-}
+    //------------------------------------------------------------
+    }
 
 
     @Override

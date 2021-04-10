@@ -98,12 +98,12 @@ public class FrameBufferUtils {
         Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, width, height);
         fb.end();
         fb.dispose();
-        int[][] pixels = new int[height][width];
-        for (int x = 0; x <width; x++) {
-            for (int y = 0; y < height; y++) {
-                pixels[y][x] = pixmap.getPixel(x, height - y - 1)>>8;
-            }
-        }
-        return flipPixmap(pixmap);
+//        int[][] pixels = new int[height][width];
+//        for (int x = 0; x <width; x++) {
+//            for (int y = 0; y < height; y++) {
+//                pixels[y][x] = pixmap.getPixel(x, height - y - 1)>>8;
+//            }
+//        }
+        return pixmap;
     }
 }

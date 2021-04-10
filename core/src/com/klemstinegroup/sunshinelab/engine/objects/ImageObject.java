@@ -76,7 +76,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
             public void downloadComplete(Pixmap pixmap) {
                 texture = new Texture(pixmap);
                 setBound();
-                IPFSUtils.uploadPng(pixmap,bounds);
+//                IPFSUtils.uploadPng(pixmap,bounds);
             }
 
             @Override
@@ -87,7 +87,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                     public void downloadComplete(Pixmap pixmap) {
                         texture = new Texture(pixmap);
                         setBound();
-                        IPFSUtils.uploadPng(pixmap, bounds);
+//                        IPFSUtils.uploadPng(pixmap, bounds);
                     }
 
                     @Override

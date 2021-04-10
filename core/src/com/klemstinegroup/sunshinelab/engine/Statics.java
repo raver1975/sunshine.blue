@@ -2,6 +2,7 @@ package com.klemstinegroup.sunshinelab.engine;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -11,14 +12,9 @@ import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.klemstinegroup.sunshinelab.engine.objects.*;
-import com.klemstinegroup.sunshinelab.engine.util.MemoryFileHandle;
-import com.madgag.gif.fmsware.AnimatedGifEncoder;
-//import com.squareup.gifencoder.ImageOptions;
-import com.sun.prism.image.ViewPort;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import java.util.Stack;
@@ -30,13 +26,14 @@ public class Statics {
     static final public FileHandle[] fontList = Gdx.files.internal("fonts").list();
     public static Matrix4 mx4Batch = new Matrix4();
     //    public static GifEncoder gifEncoder;
-    public static MemoryFileHandle gifEncoderFile;
+//    public static MemoryFileHandle gifEncoderFile;
 //        public static ImageOptions gifOptions;
-    public static AnimatedGifEncoder gifEncoderA;
+//    public static AnimatedGifEncoder gifEncoderA;
     public static int transformButton;
     public static ScreenViewport viewport;
     public static Stack<Overlay> overlays=new Stack<>();
-    public static boolean gif=false;
+    public static boolean gif=true;
+//    public static AnimatedPNG apng;
     ;
 //    public static final boolean debug = true;
 
