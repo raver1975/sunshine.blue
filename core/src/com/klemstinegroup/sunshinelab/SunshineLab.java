@@ -13,6 +13,7 @@ import com.klemstinegroup.sunshinelab.engine.objects.*;
 import com.klemstinegroup.sunshinelab.engine.util.*;
 import com.kotcrab.vis.ui.VisUI;
 
+import java.awt.*;
 import java.io.ByteArrayInputStream;
 
 import static com.badlogic.gdx.Application.LOG_INFO;
@@ -48,13 +49,15 @@ public class SunshineLab extends ApplicationAdapter {
         Gdx.app.setLogLevel(LOG_INFO);
 //        img = new Texture("badlogic.jpg");
 
-        Statics.userObjects.add(new ImageObject("https://i.redd.it/0h1nbwj4bto61.jpg"));
-//        Statics.userObjects.add(new RectTextureObject("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/477px-PNG_Test.png"));
+//        Statics.userObjects.add(new ImageObject("https://i.redd.it/0h1nbwj4bto61.jpg"));
         Statics.userObjects.add(new ImageObject("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/477px-PNG_Test.png"));
-        ((ScreenObject) Statics.userObjects.get(1)).position.set(-100, -100);
-
-        ((ScreenObject) Statics.userObjects.get(0)).scale = .1f;
+        Statics.userObjects.add(new ImageObject("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/477px-PNG_Test.png"));
+        ((ScreenObject) Statics.userObjects.get(1)).position.set(-200, -200);
+        ((ScreenObject) Statics.userObjects.get(0)).center.set(100, 100);
+//        ((ScreenObject) Statics.userObjects.get(0)).scale = .1f;
+        ((ScreenObject) Statics.userObjects.get(0)).scale = .4f;
         ((ScreenObject) Statics.userObjects.get(1)).scale = .4f;
+        ((ScreenObject) Statics.userObjects.get(0)).rotation = 45;
         Statics.viewport = new ScreenViewport();
 //        Statics.overlayViewport = new FitViewport((800f *Gdx.graphics.getWidth() / Gdx.graphics.getHeight() )/ Gdx.graphics.getDensity(), 800 / Gdx.graphics.getDensity());
 
@@ -164,7 +167,7 @@ public class SunshineLab extends ApplicationAdapter {
         Statics.batch.setTransformMatrix(mx4Batch);
 
         Statics.batch.end();
-
+        ((ScreenObject)Statics.userObjects.get(0)).center.x+=.1;
     //------------------------------------------------------------
         try
 

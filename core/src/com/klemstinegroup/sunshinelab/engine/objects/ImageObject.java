@@ -114,7 +114,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 
     private void setBound() {
         bounds.set(new Vector2(texture.getWidth(), texture.getHeight()));
-        center.set(new Vector2(texture.getWidth() / 2f, texture.getHeight() / 2f));
+//        center.set(new Vector2(texture.getWidth() / 2f, texture.getHeight() / 2f));
         position.add(-center.x, -center.y);
     }
 
@@ -122,35 +122,48 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
     @Override
     public void draw(Batch batch) {
         batch.setTransformMatrix(new Matrix4().idt()
-                        .translate(center.x + position.x, center.y + position.y, 0)
+                        .translate(position.x,  position.y, 0)
                         .rotate(0, 0, 1, rotation)
                         .scale(scale, scale, 1)
 //                .translate(-x, -y, 0)
-                        .translate(-center.x, -center.y, 0)
+//                        .translate(-center.x, -center.y, 0)
         );
         if (texture != null) {
-            batch.draw(texture, 0, 0);
+            batch.draw(texture, -center.x,-center.y);
 
         }
 
         if (Statics.debug || Statics.selectedObjects.contains(this, true)) {
 //            batch.setColor(Color.RED);
-            Statics.shapedrawer.setColor(Color.RED);
-            Statics.shapedrawer.rectangle(new Rectangle(0, 0, bounds.x, bounds.y));
-            Statics.shapedrawer.setColor(Color.RED);
-            Statics.shapedrawer.filledCircle(center.x, center.y, 5);
 
+            Statics.shapedrawer.setColor(Color.RED);
+            Statics.shapedrawer.filledCircle(0, 0, 15);
             Statics.shapedrawer.setColor(Color.YELLOW);
             Statics.shapedrawer.filledCircle(touchSpot.x, touchSpot.y, 15);
+/*batch.end();
+            batch.setTransformMatrix(new Matrix4().idt()
+                            .translate(position.x+touchSpot.x,  position.y+touchSpot.y, 0)
+                            .rotate(0, 0, 1, rotation)
+                            .scale(scale, scale, 1)
+//                .translate(-x, -y, 0)
+//                        .translate(-center.x, -center.y, 0)
+            );
+batch.begin();*/
+
+
+//            Statics.shapedrawer.setColor(Color.GREEN);
+//            Statics.shapedrawer.filledCircle(position.x+center.x,position.y+center.y, 15);
 
         }
         batch.end();
         batch.setTransformMatrix(SunshineLab.mx4Batch);
         batch.begin();
+
         if (polygon != null) {
             Statics.shapedrawer.setColor(Color.WHITE);
             Statics.shapedrawer.polygon(polygon);
         }
+
 
     }
 
@@ -158,10 +171,11 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
     @Override
     public boolean isSelected(Vector2 touch) {
         polygon = new Polygon(new float[]{0, 0, bounds.x, 0, bounds.x, bounds.y, 0, bounds.y, 0, 0});
-        polygon.setOrigin(center.x, center.y);
+        polygon.setOrigin(center.x,center.y);
         polygon.setScale(scale, scale);
         polygon.rotate(rotation);
-        polygon.translate(position.x, position.y);
+        polygon.translate(position.x-center.x, position.y-center.y);
+//        polygon.translate(-center.x*scale,-center.y*scale);
         return polygon.contains(touch);
     }
 

@@ -33,7 +33,7 @@ public class Statics {
     public static int transformButton;
     public static ScreenViewport viewport;
     public static Stack<Overlay> overlays=new Stack<>();
-    public static boolean gif=true;
+    public static boolean gif=false;
 //    public static AnimatedPNG apng;
     ;
 //    public static final boolean debug = true;

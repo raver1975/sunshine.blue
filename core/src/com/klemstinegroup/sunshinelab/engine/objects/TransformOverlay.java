@@ -14,24 +14,24 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 
 
-public class TransformOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
+public class TransformOverlay extends BaseObject implements Overlay, Touchable, Drawable {
 
     public final Stage stage;
     private final Group transformGroup;
 
     Vector2 touchdrag = new Vector2();
     Vector2 touchdown = new Vector2();
-    private Vector2 touchdragcpy=new Vector2();
+    private Vector2 touchdragcpy = new Vector2();
 
     public TransformOverlay() {
         stage = new Stage(Statics.overlayViewport);
         Skin skin = new Skin(Gdx.files.internal("skins/comic/skin/comic-ui.json"));
 
-        CheckBox exitButton = new CheckBox("",skin);
+        CheckBox exitButton = new CheckBox("", skin);
         exitButton.setChecked(true);
         exitButton.setDisabled(true);
         exitButton.getStyle().fontColor = Color.RED;
-        exitButton.setPosition(Statics.overlayViewport.getWorldWidth()-40, Statics.overlayViewport.getWorldHeight()-40);
+        exitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 40, Statics.overlayViewport.getWorldHeight() - 40);
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -90,7 +90,6 @@ public class TransformOverlay extends ScreenObject implements Overlay, Touchable
         });
 
 
-
         transformButtons.setUncheckLast(true);
         transformButtons.setChecked("move");
         transformButtons.setMaxCheckCount(1);
@@ -125,6 +124,7 @@ public class TransformOverlay extends ScreenObject implements Overlay, Touchable
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         Statics.viewport.unproject(touchdown.set(screenX, screenY));
+        System.out.println("touched:" + touchdown);
 
 //        Statics.selectedObjects.clear();
 //        for (BaseObject bo : Statics.userObjects) {
@@ -139,7 +139,7 @@ public class TransformOverlay extends ScreenObject implements Overlay, Touchable
 
         for (BaseObject bo : Statics.selectedObjects) {
             if (bo instanceof ScreenObject) {
-                ScreenObject so=((ScreenObject) bo);
+                ScreenObject so = ((ScreenObject) bo);
                 switch (Statics.transformButton) {
                     case 0:
                         break;
@@ -150,15 +150,23 @@ public class TransformOverlay extends ScreenObject implements Overlay, Touchable
                     case 3:
                         touchdragcpy.set(touchdown);
 
-                        touchdragcpy.sub(so.position.x+so.center.x,so.position.y+so.center.y);
+                        touchdragcpy.sub(so.position.x , so.position.y);
+                        so.position.add(touchdragcpy);
+                        touchdragcpy.scl(1f / so.scale);
                         touchdragcpy.rotateDeg(-so.rotation);
-                        touchdragcpy.scl(1f/so.scale);
+                        so.touchSpot.set(touchdragcpy.cpy());
+                        so.center.add(touchdragcpy);
+//                        so.center.sub(touchdragcpy);
+//                        so.position.set(touchdown.cpy());
+//                        touchdragcpy.scl(so.scale);
+//                        touchdragcpy.rotateDeg(so.rotation);
+//                        so.position.sub(touchdragcpy);
+//                        touchdragcpy.sub(so.center);
+                        System.out.println("oldcenter:" + so.center);
 
-                        System.out.println("oldcenter:"+((ScreenObject)bo).center);
-                        System.out.println("newcenter:"+touchdragcpy);
-                        Vector2 temp=touchdragcpy.add(so.center).cpy();
-//                        ((ScreenObject)bo).center.set(touchdragcpy);
-                        ((ScreenObject) bo).touchSpot.set(temp);
+
+                        System.out.println("newcenter:" + touchdragcpy);
+//                        ((ScreenObject)bo).recenter(touchdragcpy);
                         break;
                 }
 
@@ -181,7 +189,7 @@ public class TransformOverlay extends ScreenObject implements Overlay, Touchable
 
         for (BaseObject bo : Statics.selectedObjects) {
             if (bo instanceof ScreenObject) {
-                ScreenObject so=((ScreenObject) bo);
+                ScreenObject so = ((ScreenObject) bo);
                 switch (Statics.transformButton) {
                     case 0:
                         so.position.add(touchdrag.cpy().sub(touchdown));
@@ -239,7 +247,7 @@ public class TransformOverlay extends ScreenObject implements Overlay, Touchable
 
     @Override
     public void removeInput() {
-Statics.im.removeProcessor(stage);
+        Statics.im.removeProcessor(stage);
     }
 
     @Override
