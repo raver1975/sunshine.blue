@@ -125,8 +125,6 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 
         Statics.viewport.unproject(touchdown.set(screenX, screenY));
-        System.out.println("touched:" + touchdown);
-
 //        Statics.selectedObjects.clear();
 //        for (BaseObject bo : Statics.userObjects) {
 //            if (bo instanceof Touchable) {
@@ -149,24 +147,13 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                     case 2:
                         break;
                     case 3:
-                        touchdragcpy.set(touchdown);
-
-                        touchdragcpy.sub(so.position.x , so.position.y);
-                        so.position.add(touchdragcpy);
-                        touchdragcpy.scl(1f / so.scale);
-                        touchdragcpy.rotateDeg(-so.rotation);
-                        so.touchSpot.set(touchdragcpy.cpy());
-                        so.center.add(touchdragcpy);
+                        so.recenter(touchdown);
 //                        so.center.sub(touchdragcpy);
 //                        so.position.set(touchdown.cpy());
 //                        touchdragcpy.scl(so.scale);
 //                        touchdragcpy.rotateDeg(so.rotation);
 //                        so.position.sub(touchdragcpy);
 //                        touchdragcpy.sub(so.center);
-                        System.out.println("oldcenter:" + so.center);
-
-
-                        System.out.println("newcenter:" + touchdragcpy);
 //                        ((ScreenObject)bo).recenter(touchdragcpy);
                         break;
                 }

@@ -74,24 +74,30 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
     @Override
     public void draw(Batch batch) {
         batch.setTransformMatrix(new Matrix4().idt()
-                        .translate(center.x + position.x, center.y + position.y, 0)
+                        .translate( position.x, position.y, 0)
                         .rotate(0, 0, 1, rotation)
                         .scale(scale, scale, 1)
 //                .translate(-position.x, -position.y, 0)
-                        .translate(-center.x, -center.y, 0)
+//                        .translate(-center.x, -center.y, 0)
         );
 
-        font.draw(batch, text, 0, +bounds.y, Float.MAX_VALUE, Align.left, true);
+        font.draw(batch, text, 0-center.x, +bounds.y-center.y, Float.MAX_VALUE, Align.left, true);
 
-        boolean b = (caretFlash++ % 50 <= 15);
-        Statics.shapedrawer.setColor(parameter.color);
-        if (b) {
-            Statics.shapedrawer.filledRectangle(nn.runs.size > 0 ? nn.runs.get(nn.runs.size - 1).width : 0 + font.getSpaceXadvance() / 2f, 0, 5, font.getCapHeight());
+        if (Statics.overlay==Statics.FONT_OVERLAY && this ==Statics.FONT_OVERLAY.fontObject) {
+            boolean b = (caretFlash++ % 50 <= 15);
+            Statics.shapedrawer.setColor(parameter.color);
+            if (b) {
+                float off = nn.runs.size > 0 ? nn.runs.get(nn.runs.size - 1).width - center.x : 0 + font.getSpaceXadvance() / 2f - center.x;
+                if (text.length() > 0 && text.charAt(text.length() - 1) == '\n') {
+                    off = font.getSpaceXadvance() / 2f - center.x;
+                }
+                Statics.shapedrawer.filledRectangle(off, -center.y, 5, font.getCapHeight());
+            }
         }
 
         if (Statics.debug || Statics.selectedObjects.contains(this, true)) {
-            Statics.shapedrawer.rectangle(new Rectangle(0, 0, bounds.x, bounds.y));
-            Statics.shapedrawer.filledCircle(center.x, center.y, 5);
+            Statics.shapedrawer.rectangle(new Rectangle(-center.x, -center.y, bounds.x, bounds.y));
+            Statics.shapedrawer.filledCircle(0, 0, 15);
         }
         batch.end();
         batch.setTransformMatrix(SunshineLab.mx4Batch);
@@ -114,8 +120,6 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
 
     @Override
     public boolean keyTyped(char character) {
-        System.out.println((int) character);
-
         if (character == 13) {
             text = text + '\n';
         } else if (character == '\b') {
@@ -165,7 +169,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
         polygon.setOrigin(center.x,center.y);
         polygon.setScale(scale,scale);
         polygon.rotate(rotation);
-        polygon.translate(position.x,position.y);
+        polygon.translate(position.x-center.x,position.y-center.y);
         return polygon.contains(touch);
     }
 

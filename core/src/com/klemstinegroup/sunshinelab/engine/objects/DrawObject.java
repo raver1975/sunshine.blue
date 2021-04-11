@@ -49,7 +49,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         Statics.viewport.unproject(touch.set(screenX, screenY));
-        touch.sub(position.x,position.y);
+        touch.sub(position.x-center.x,position.y-center.y);
         touch.rotateDeg(-rotation);
         touch.scl(1f/scale);
         currentPath.add(touch.cpy());
@@ -61,7 +61,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         Statics.viewport.unproject(touch.set(screenX, screenY));
-        touch.sub(position.x,position.y);
+        touch.sub(position.x-center.x,position.y-center.y);
         touch.rotateDeg(-rotation);
         touch.scl(1f/scale);
         currentPath.add(touch.cpy());
@@ -82,11 +82,11 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
     @Override
     public void draw(Batch batch) {
         batch.setTransformMatrix(new Matrix4().idt()
-                        .translate(center.x + position.x, center.y + position.y, 0)
+                        .translate( position.x,  position.y, 0)
                         .rotate(0, 0, 1, rotation)
                         .scale(scale, scale, 1)
 //                .translate(-position.x, -position.y, 0)
-                        .translate(-center.x, -center.y, 0)
+//                        .translate(-center.x, -center.y, 0)
         );
 //        Statics.shapedrawer.setTextureRegion(new TextureRegion(((RectTextureObject)Statics.userObjects.get(0)).texture));
         Statics.shapedrawer.setColor(Color.WHITE);
@@ -97,10 +97,12 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
                 }
             }
         }
-        Statics.shapedrawer.setColor(Color.GREEN);
+        Statics.shapedrawer.setColor(Color.RED);
+        Statics.shapedrawer.filledCircle(0, 0, 15);
         batch.end();
         batch.setTransformMatrix(SunshineLab.mx4Batch);
         batch.begin();
+        setbounds();
         if (polygon != null) {
             Statics.shapedrawer.polygon(polygon);
         }
@@ -128,12 +130,25 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
         ConvexHull ch = new ConvexHull();
         if (verts.size>=6) {
             polygon = new Polygon(ch.computePolygon(verts, false).toArray());
-//        polygon.translate(center.x,center.y);
-            polygon.setOrigin(center.x, center.y);
+//        polygon.translate(-center.x,-center.y);
+            polygon.setOrigin(0,0);
             polygon.setScale(scale, scale);
             bounds.set(polygon.getBoundingRectangle().width, polygon.getBoundingRectangle().height);
+//            center.set(bounds.x/2f,bounds.y/2f);
             polygon.rotate(rotation);
             polygon.translate(position.x, position.y);
         }
+    }
+
+    @Override
+    public void recenter(Vector2 touchdown) {
+        Vector2 touchdragcpy = touchdown.cpy();
+        super.recenter(touchdragcpy);
+        for (Array<Vector2> subpath:path){
+            for (Vector2 vec:subpath){
+                vec.sub(touchdragcpy);
+            }
+        }
+
     }
 }

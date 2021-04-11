@@ -138,8 +138,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 
             Statics.shapedrawer.setColor(Color.RED);
             Statics.shapedrawer.filledCircle(0, 0, 15);
-            Statics.shapedrawer.setColor(Color.YELLOW);
-            Statics.shapedrawer.filledCircle(touchSpot.x, touchSpot.y, 15);
+
 /*batch.end();
             batch.setTransformMatrix(new Matrix4().idt()
                             .translate(position.x+touchSpot.x,  position.y+touchSpot.y, 0)

@@ -26,7 +26,6 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
         Skin skin = new Skin(Gdx.files.internal("skins/comic/skin/comic-ui.json"));
 
         CheckBox exitButton = new CheckBox("", skin);
-        exitButton.setSize(150, 150);
 
         exitButton.setChecked(true);
         exitButton.setDisabled(true);

@@ -283,7 +283,7 @@ public class IncrementalAnimatedPNG implements Disposable {
 
             dataOutput.close();
             for (int i = 0; i < mgg.ba.size; i++) {
-                System.out.println(i + ":\t" + mfh.ba.get(i) + "\t" + mgg.ba.get(i));
+//                System.out.println(i + ":\t" + mfh.ba.get(i) + "\t" + mgg.ba.get(i));
                 mfh.ba.set(i, mgg.ba.get(i));
             }
         } catch (IOException e) {
