@@ -71,10 +71,10 @@ public class Statics {
             Statics.overlays.push(Statics.overlay);
         }
         if (overlay!=null) {
+            overlay.setInput();
             if (overlay instanceof Touchable) {
                 im.addProcessor((Touchable) overlay);
             }
-            overlay.setInput();
             Statics.overlay=overlay;
         }
     }

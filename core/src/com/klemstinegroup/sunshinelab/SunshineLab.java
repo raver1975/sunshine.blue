@@ -167,7 +167,7 @@ public class SunshineLab extends ApplicationAdapter {
         Statics.batch.setTransformMatrix(mx4Batch);
 
         Statics.batch.end();
-        ((ScreenObject)Statics.userObjects.get(0)).center.x+=.1;
+
     //------------------------------------------------------------
         try
 
