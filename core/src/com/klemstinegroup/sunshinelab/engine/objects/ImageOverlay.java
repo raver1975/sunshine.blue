@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.klemstinegroup.sunshinelab.engine.Statics;
+import com.kotcrab.vis.ui.widget.VisImageButton;
 
 public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
 
@@ -25,11 +26,8 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
         stage = new Stage(Statics.overlayViewport);
         Skin skin = new Skin(Gdx.files.internal("skins/comic/skin/comic-ui.json"));
 
-        CheckBox exitButton = new CheckBox("", skin);
-
-        exitButton.setChecked(true);
-        exitButton.setDisabled(true);
-        exitButton.getStyle().fontColor = Color.RED;
+        VisImageButton exitButton = new VisImageButton("close-window");
+        exitButton.getImageCell().size(40);
         exitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 40, Statics.overlayViewport.getWorldHeight() - 40);
         exitButton.addListener(new ClickListener() {
             @Override

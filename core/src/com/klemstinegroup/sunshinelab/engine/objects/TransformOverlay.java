@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -12,9 +13,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.klemstinegroup.sunshinelab.engine.Statics;
+import com.kotcrab.vis.ui.widget.VisImageButton;
 
 
-public class TransformOverlay extends BaseObject implements Overlay, Touchable, Drawable {
+public class TransformOverlay extends BaseObject implements Overlay, Touchable, Drawable, Gestureable {
 
     public final Stage stage;
     private final Group transformGroup;
@@ -27,10 +29,9 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
         stage = new Stage(Statics.overlayViewport);
         Skin skin = new Skin(Gdx.files.internal("skins/comic/skin/comic-ui.json"));
 
-        CheckBox exitButton = new CheckBox("", skin);
-        exitButton.setChecked(true);
-        exitButton.setDisabled(true);
-        exitButton.getStyle().fontColor = Color.RED;
+//        CheckBox exitButton = new CheckBox("", skin);
+        VisImageButton exitButton = new VisImageButton("close-window");
+        exitButton.getImageCell().size(40);
         exitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 40, Statics.overlayViewport.getWorldHeight() - 40);
         exitButton.addListener(new ClickListener() {
             @Override
@@ -241,5 +242,51 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
     @Override
     public void act() {
         stage.act();
+    }
+
+    @Override
+    public boolean touchDown(float x, float y, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean tap(float x, float y, int count, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean longPress(float x, float y) {
+        System.out.println("long press");
+        return false;
+    }
+
+    @Override
+    public boolean fling(float velocityX, float velocityY, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean pan(float x, float y, float deltaX, float deltaY) {
+        return false;
+    }
+
+    @Override
+    public boolean panStop(float x, float y, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean zoom(float initialDistance, float distance) {
+        return false;
+    }
+
+    @Override
+    public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
+        return false;
+    }
+
+    @Override
+    public void pinchStop() {
+
     }
 }

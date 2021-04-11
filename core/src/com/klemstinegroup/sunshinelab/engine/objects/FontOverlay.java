@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.Array;
 import com.igormaznitsa.jjjvm.impl.JJJVMClassFieldImpl;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisScrollPane;
 import com.kotcrab.vis.ui.widget.color.ColorPicker;
 import com.kotcrab.vis.ui.widget.color.ColorPickerAdapter;
@@ -43,10 +44,8 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         Skin skin = new Skin(Gdx.files.internal("skins/comic/skin/comic-ui.json"));
 //        Skin skin = new Skin(Gdx.files.internal("skins/default/skin/uiskin.json"));
 
-        CheckBox exitButton = new CheckBox("", skin);
-        exitButton.setChecked(true);
-        exitButton.setDisabled(true);
-        exitButton.getStyle().fontColor = Color.RED;
+        VisImageButton exitButton = new VisImageButton("close-window");
+        exitButton.getImageCell().size(40);
         exitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 40, Statics.overlayViewport.getWorldHeight() - 40);
         exitButton.addListener(new ClickListener() {
             @Override

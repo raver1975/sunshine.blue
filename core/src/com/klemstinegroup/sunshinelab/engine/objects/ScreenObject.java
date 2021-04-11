@@ -18,4 +18,5 @@ public class ScreenObject extends BaseObject {
         touchdragcpy.rotateDeg(-rotation);
         center.add(touchdragcpy);
     }
+
 }

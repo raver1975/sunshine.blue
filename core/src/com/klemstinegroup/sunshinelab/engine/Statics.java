@@ -2,6 +2,7 @@ package com.klemstinegroup.sunshinelab.engine;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -10,8 +11,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.klemstinegroup.sunshinelab.engine.objects.*;
@@ -32,8 +35,8 @@ public class Statics {
 //    public static AnimatedGifEncoder gifEncoderA;
     public static int transformButton;
     public static ScreenViewport viewport;
-    public static Stack<Overlay> overlays=new Stack<>();
-    public static boolean gif=false;
+    public static Stack<Overlay> overlays = new Stack<>();
+    public static boolean gif = false;
 //    public static AnimatedPNG apng;
     ;
 //    public static final boolean debug = true;
@@ -53,13 +56,14 @@ public class Statics {
     public static final Array<BaseObject> userObjects = new Array<BaseObject>();
     public static final Array<BaseObject> selectedObjects = new Array<BaseObject>();
     public static InputMultiplexer im = new InputMultiplexer();
-    public static FitViewport overlayViewport = new FitViewport((600f *Gdx.graphics.getWidth() / Gdx.graphics.getHeight() ), 600);
+    public static FitViewport overlayViewport = new FitViewport((600f * Gdx.graphics.getWidth() / Gdx.graphics.getHeight()), 600);
     public static final FontOverlay FONT_OVERLAY = new FontOverlay();
     public static final BasicUIOverlay BASIC_UI_OVERLAY = new BasicUIOverlay();
     public static final TransformOverlay TRANSFORM_OVERLAY = new TransformOverlay();
     public static final DrawOverlay DRAW_OVERLAY = new DrawOverlay();
-    public static ImageOverlay IMAGE_OVERLAY =new ImageOverlay();
-    public static  Overlay overlay;
+    public static ImageOverlay IMAGE_OVERLAY = new ImageOverlay();
+    public static Overlay overlay;
+    public static ArrayMap<Gestureable, GestureDetector> gestureDetectors = new ArrayMap<>();
 
     public static void setOverlay(Overlay overlay) {
         Overlay topOverlay = Statics.overlay;
@@ -67,15 +71,27 @@ public class Statics {
             if (topOverlay instanceof Touchable) {
                 im.removeProcessor((Touchable) topOverlay);
             }
+            if (topOverlay instanceof Gestureable) {
+                if (gestureDetectors.containsKey((Gestureable) topOverlay)) {
+                    im.removeProcessor(gestureDetectors.get((Gestureable) topOverlay));
+                    gestureDetectors.removeKey((Gestureable) topOverlay);
+                }
+            }
+
             topOverlay.removeInput();
             Statics.overlays.push(Statics.overlay);
         }
-        if (overlay!=null) {
+        if (overlay != null) {
             overlay.setInput();
             if (overlay instanceof Touchable) {
                 im.addProcessor((Touchable) overlay);
             }
-            Statics.overlay=overlay;
+            if (overlay instanceof Gestureable) {
+                GestureDetector gd = new GestureDetector(((Gestureable) overlay));
+                im.addProcessor(gd);
+                gestureDetectors.put((Gestureable) overlay, gd);
+            }
+            Statics.overlay = overlay;
         }
     }
 
