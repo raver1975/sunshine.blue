@@ -55,7 +55,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 Statics.userObjects.add(ff);
                 Statics.FONT_OVERLAY.setFontObject(ff);
                 Statics.setOverlay(Statics.FONT_OVERLAY);
-                ff.position.set(-ff.center.x, -ff.center.y);
+                ff.sd.position.set(-ff.sd.center.x, -ff.sd.center.y);
 //        ((ScreenObject) Statics.objects.get(0)).position.set(-((ScreenObject) Statics.objects.get(0)).bounds.x/2, -((ScreenObject) Statics.objects.get(0)).bounds.y/2, 0);
             }
         });

@@ -113,23 +113,23 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
     }
 
     private void setBound() {
-        bounds.set(new Vector2(texture.getWidth(), texture.getHeight()));
+        sd.bounds.set(new Vector2(texture.getWidth(), texture.getHeight()));
 //        center.set(new Vector2(texture.getWidth() / 2f, texture.getHeight() / 2f));
-        position.add(-center.x, -center.y);
+        sd.position.add(-sd.center.x, -sd.center.y);
     }
 
 
     @Override
     public void draw(Batch batch) {
         batch.setTransformMatrix(new Matrix4().idt()
-                        .translate(position.x,  position.y, 0)
-                        .rotate(0, 0, 1, rotation)
-                        .scale(scale, scale, 1)
+                        .translate(sd.position.x,  sd.position.y, 0)
+                        .rotate(0, 0, 1, sd.rotation)
+                        .scale(sd.scale, sd.scale, 1)
 //                .translate(-x, -y, 0)
 //                        .translate(-center.x, -center.y, 0)
         );
         if (texture != null) {
-            batch.draw(texture, -center.x,-center.y);
+            batch.draw(texture, -sd.center.x,-sd.center.y);
 
         }
 
@@ -169,11 +169,11 @@ batch.begin();*/
 
     @Override
     public boolean isSelected(Vector2 touch) {
-        polygon = new Polygon(new float[]{0, 0, bounds.x, 0, bounds.x, bounds.y, 0, bounds.y, 0, 0});
-        polygon.setOrigin(center.x,center.y);
-        polygon.setScale(scale, scale);
-        polygon.rotate(rotation);
-        polygon.translate(position.x-center.x, position.y-center.y);
+        polygon = new Polygon(new float[]{0, 0, sd.bounds.x, 0, sd.bounds.x, sd.bounds.y, 0, sd.bounds.y, 0, 0});
+        polygon.setOrigin(sd.center.x,sd.center.y);
+        polygon.setScale(sd.scale, sd.scale);
+        polygon.rotate(sd.rotation);
+        polygon.translate(sd.position.x-sd.center.x, sd.position.y-sd.center.y);
 //        polygon.translate(-center.x*scale,-center.y*scale);
         return polygon.contains(touch);
     }

@@ -15,6 +15,8 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ArrayMap;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.klemstinegroup.sunshinelab.engine.objects.*;
@@ -25,6 +27,7 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 import java.util.Stack;
 
 public class Statics {
+
     public static final String IPFSGateway = "https://ipfs.io/ipfs/";
     public static final String IPFSMediaViewer = "QmWWoB9DUFXz8v1ZVGXT8KjjZ7r7kbUQJPzPDxfpz36ei6";
     public static final boolean debug = false;

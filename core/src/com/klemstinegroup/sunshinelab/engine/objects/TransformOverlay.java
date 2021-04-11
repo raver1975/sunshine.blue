@@ -181,13 +181,13 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                 ScreenObject so = ((ScreenObject) bo);
                 switch (Statics.transformButton) {
                     case 0:
-                        so.position.add(touchdrag.cpy().sub(touchdown));
+                        so.sd.position.add(touchdrag.cpy().sub(touchdown));
                         break;
                     case 1:
-                        so.rotation += touchdrag.x - touchdown.x;
+                        so.sd.rotation += touchdrag.x - touchdown.x;
                         break;
                     case 2:
-                        so.scale += (touchdrag.x - touchdown.x) / 200f;
+                        so.sd.scale += (touchdrag.x - touchdown.x) / 200f;
                         break;
                     case 3:
                         break;
