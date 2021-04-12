@@ -3,6 +3,8 @@ package com.klemstinegroup.sunshinelab;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.JsonWriter;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.tommyettinger.anim8.IncrementalAnimatedPNG;
 import com.igormaznitsa.jjjvm.impl.JJJVMClassImpl;
@@ -13,7 +15,6 @@ import com.klemstinegroup.sunshinelab.engine.objects.*;
 import com.klemstinegroup.sunshinelab.engine.util.*;
 import com.kotcrab.vis.ui.VisUI;
 
-import java.awt.*;
 import java.io.ByteArrayInputStream;
 
 import static com.badlogic.gdx.Application.LOG_INFO;
@@ -64,9 +65,12 @@ public class SunshineLab extends ApplicationAdapter {
         fd.text="tesT";
         FontObject fo=new FontObject(fd,sd);
         Statics.userObjects.add(fo);
-        FontObject focpo=SerializeUtil.copy(fo);
-        focpo.sd.position.add(20,20);
-        Statics.userObjects.add(focpo);
+        for (int i=0;i<10;i++) {
+            FontObject focpo = SerializeUtil.copy((SerialInterface) Statics.userObjects.get(Statics.userObjects.size-1));
+            focpo.sd.position.add(20, 20);
+            focpo.sd.rotation+=10;
+            Statics.userObjects.add(focpo);
+        }
 //        Statics.overlayViewport = new FitViewport((800f *Gdx.graphics.getWidth() / Gdx.graphics.getHeight() )/ Gdx.graphics.getDensity(), 800 / Gdx.graphics.getDensity());
 
 
@@ -116,7 +120,7 @@ public class SunshineLab extends ApplicationAdapter {
     }
 
 
-    int cnt = 100;
+    int cnt = 200;
 
     @Override
     public void render() {
@@ -132,6 +136,28 @@ public class SunshineLab extends ApplicationAdapter {
             if (cnt-- > 0 && cnt<10 ) {
 //                Statics.gifEncoderA.addFrame(FrameBufferUtils.drawObjectsPix(Statics.viewport, Statics.userObjects, 400, 400));
                 apng.write(FrameBufferUtils.drawObjectsPix(Statics.viewport, Statics.userObjects, 400, 400));
+
+                if (cnt==4) {
+                    int gg = Statics.userObjects.size;
+                    for (int draw = 0; draw < gg; draw++) {
+                        if (Statics.userObjects.get(draw) instanceof SerialInterface) {
+                            SerialInterface io = SerializeUtil.copy((SerialInterface) Statics.userObjects.get(draw));
+                            Statics.userObjects.add((BaseObject) io);
+                            ((ScreenObject) Statics.userObjects.get(gg+draw )).sd.position.sub(10, 10);
+                            ((ScreenObject) Statics.userObjects.get(gg+draw )).sd.rotation += 45;
+                        }
+                    }
+                }
+
+                if (cnt==2){
+                    System.out.println("--------------------------------------------0--");
+                    JsonValue val=SerializeUtil.serializeScene();
+                    System.out.println("--------------------------------------------1--");
+                    System.out.println(val.toJson(JsonWriter.OutputType.javascript));
+                    System.out.println("--------------------------------------------2--");
+                    SerializeUtil.deserializeScene(val);
+                }
+
             }
             if (cnt == 0) {
                 nativeIPFS.downloadFile("QmZtmD2qt6fJot32nabSP3CUjicnypEBz7bHVDhPQt9aAy", new IPFSFileListener() {

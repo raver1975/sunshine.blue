@@ -2,22 +2,28 @@ package com.klemstinegroup.sunshinelab.engine.objects;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
-import com.igormaznitsa.jjjvm.impl.JJJVMClassFieldImpl;
+import com.badlogic.gdx.utils.JsonValue;
 import com.klemstinegroup.sunshinelab.SunshineLab;
 import com.klemstinegroup.sunshinelab.engine.Statics;
+import com.klemstinegroup.sunshinelab.engine.util.SerializeUtil;
 
-import java.util.Arrays;
-
-public class DrawObject extends ScreenObject implements Drawable, Touchable {
-    Array<Array<Vector2>> path = new Array<Array<Vector2>>();
+public class DrawObject extends ScreenObject implements Drawable, Touchable,SerialInterface {
+    DrawData dd=new DrawData();
     private final Vector2 touch = new Vector2();
     private Polygon polygon;
 
     Array<Vector2> currentPath = new Array<>();
+
+    public DrawObject(DrawData dd) {
+        this.dd=dd;
+    }
+
+    public DrawObject() {
+
+    }
 
     @Override
     public boolean keyDown(int keycode) {
@@ -41,7 +47,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
         touch.rotateDeg(-sd.rotation);
         touch.scl(1f/sd.scale);
         currentPath = new Array<>();
-        path.add(currentPath);
+        dd.path.add(currentPath);
         currentPath.add(touch.cpy());
         return false;
     }
@@ -90,8 +96,8 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
         );
 //        Statics.shapedrawer.setTextureRegion(new TextureRegion(((RectTextureObject)Statics.userObjects.get(0)).texture));
         Statics.shapedrawer.setColor(Color.WHITE);
-        if (path.size > 0) {
-            for (Array<Vector2> partialPath : path) {
+        if (dd.path.size > 0) {
+            for (Array<Vector2> partialPath : dd.path) {
                 if (partialPath.size > 1) {
                     Statics.shapedrawer.path(partialPath, 10, true);
                 }
@@ -122,7 +128,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
 
     private void setbounds() {
         FloatArray verts = new FloatArray();
-        for (Array<Vector2> pa : path) {
+        for (Array<Vector2> pa : dd.path) {
             for (Vector2 p : pa) {
                 verts.add(p.x, p.y);
             }
@@ -144,11 +150,34 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
     public void recenter(Vector2 touchdown) {
         Vector2 touchdragcpy = touchdown.cpy();
         super.recenter(touchdragcpy);
-        for (Array<Vector2> subpath:path){
+        for (Array<Vector2> subpath:dd.path){
             for (Vector2 vec:subpath){
                 vec.sub(touchdragcpy);
             }
         }
 
+    }
+
+    @Override
+    public JsonValue serialize() {
+        JsonValue val=new JsonValue(JsonValue.ValueType.object);
+        JsonValue array=new JsonValue(JsonValue.ValueType.array);
+        val.addChild("array",array);
+        for (Array<Vector2> ar:dd.path){
+            array.addChild(SerializeUtil.serialize(ar));
+        }
+        val.addChild("class",new JsonValue(DrawObject.class.getName()));
+        return val;
+    }
+
+    public static SerialInterface deserialize(JsonValue json) {
+        JsonValue array=json.get("array");
+        DrawData dd=new DrawData();
+        for (int i=0;i<array.size;i++){
+            JsonValue subarray=array.get(i);
+            Array<Vector2> vecAr=SerializeUtil.deserialize(subarray,Array.class);
+            dd.path.add(vecAr);
+        }
+        return new DrawObject(dd);
     }
 }

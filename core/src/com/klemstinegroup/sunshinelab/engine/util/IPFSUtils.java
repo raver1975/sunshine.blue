@@ -17,24 +17,24 @@ import java.io.ByteArrayInputStream;
 
 public class IPFSUtils {
 
-    public static void pinFile(String cid){
-        String url="https://api.pinata.cloud/pinning/pinByHash";
-        String authorization="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI5NjMyZTdmMC1lODRiLTRjNzYtYTU2Yy0xZGE2YjgwNGI0YzAiLCJlbWFpbCI6InBhdWxrbGVtc3RpbmVAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBpbl9wb2xpY3kiOnsicmVnaW9ucyI6W3siaWQiOiJOWUMxIiwiZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjF9XSwidmVyc2lvbiI6MX0sIm1mYV9lbmFibGVkIjpmYWxzZX0sImF1dGhlbnRpY2F0aW9uVHlwZSI6InNjb3BlZEtleSIsInNjb3BlZEtleUtleSI6ImI5MTJhMjE1MTJlMDYzNmZhZjRkIiwic2NvcGVkS2V5U2VjcmV0IjoiNWYwZGYwODIwOTQzM2NiY2ZmNjU0MDg4MzMxMDI3OWZlYjYxYWU0ODk4NzAyMWQ5ZTVhODNiMTU1MWQ5NTQxZiIsImlhdCI6MTYxNzk3NTEyNX0.1Mpg1X9X8XTxoLuiEdvcNW3Z7iMEkkhsSJn7hyexXvM";
+    public static void pinFile(String cid) {
+        String url = "https://api.pinata.cloud/pinning/pinByHash";
+        String authorization = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI5NjMyZTdmMC1lODRiLTRjNzYtYTU2Yy0xZGE2YjgwNGI0YzAiLCJlbWFpbCI6InBhdWxrbGVtc3RpbmVAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBpbl9wb2xpY3kiOnsicmVnaW9ucyI6W3siaWQiOiJOWUMxIiwiZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjF9XSwidmVyc2lvbiI6MX0sIm1mYV9lbmFibGVkIjpmYWxzZX0sImF1dGhlbnRpY2F0aW9uVHlwZSI6InNjb3BlZEtleSIsInNjb3BlZEtleUtleSI6ImI5MTJhMjE1MTJlMDYzNmZhZjRkIiwic2NvcGVkS2V5U2VjcmV0IjoiNWYwZGYwODIwOTQzM2NiY2ZmNjU0MDg4MzMxMDI3OWZlYjYxYWU0ODk4NzAyMWQ5ZTVhODNiMTU1MWQ5NTQxZiIsImlhdCI6MTYxNzk3NTEyNX0.1Mpg1X9X8XTxoLuiEdvcNW3Z7iMEkkhsSJn7hyexXvM";
 
         HttpRequestBuilder builder = new HttpRequestBuilder();
         Net.HttpRequest request = builder.newRequest().method(Net.HttpMethods.POST).url(url).timeout(1000000).build();
-        request.setHeader("Authorization","Bearer "+authorization);
-        String sss="{\"hashToPin\": \""+cid+"\"}";
+        request.setHeader("Authorization", "Bearer " + authorization);
+        String sss = "{\"hashToPin\": \"" + cid + "\"}";
         request.setHeader("Content-Type", "application/json");
-        request.setHeader("Content-Length", sss.length()+"");
+        request.setHeader("Content-Length", sss.length() + "");
         request.setContent(sss);
-        Gdx.app.log("hashtopin",sss);
+        Gdx.app.log("hashtopin", sss);
         Net.HttpResponseListener listener = new Net.HttpResponseListener() {
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
                 String res = httpResponse.getResultAsString();
-                Gdx.app.log("post",request.getContent());
-                Gdx.app.log("pin",res);
+                Gdx.app.log("post", request.getContent());
+                Gdx.app.log("pin", res);
             }
 
             @Override
@@ -64,15 +64,15 @@ public class IPFSUtils {
                 request.setHeader("Content-Type", "multipart/form-data; boundary=" + boundary);
                 String out1 = "--" + boundary +
                         CRLF + "Content-Disposition: form-data; name=\"file\"" +
-                        CRLF + "Content-Type: "+mime +
+                        CRLF + "Content-Type: " + mime +
                         CRLF + CRLF;
                 String out2 = CRLF + "--" + boundary + "--" + CRLF;
-                ByteArray batemp=new ByteArray();
+                ByteArray batemp = new ByteArray();
                 batemp.addAll(out1.getBytes());
                 batemp.addAll(data);
                 batemp.addAll(out2.getBytes());
 //                String datauri = "data:" + mime + ";base64," + new String(Base64Coder.encode(data));
-                request.setContent(new ByteArrayInputStream(batemp.toArray()),batemp.size);
+                request.setContent(new ByteArrayInputStream(batemp.toArray()), batemp.size);
                 Net.HttpResponseListener listener = new Net.HttpResponseListener() {
                     @Override
                     public void handleHttpResponse(Net.HttpResponse httpResponse) {
@@ -103,58 +103,29 @@ public class IPFSUtils {
         });
     }
 
-    public static void writePng(Pixmap pixmap, Vector2 bounds,FileHandle mfh) {
-        writePng(pixmap,bounds,mfh,null);
-    }
-    public static void writePng(Pixmap pixmap, Vector2 bounds, FileHandle mfh, IPFSCIDListener listener) {
-        Gdx.app.postRunnable(new Runnable() {
-            @Override
-            public void run() {
+    public static void writePng(Pixmap pixmap, FileHandle mfh, IPFSCIDListener listener) {
 //                MemoryFileHandle mfh = new MemoryFileHandle();
-                ImageInfo imi = new ImageInfo((int)bounds.x, (int)bounds.y, 8, true);
-                PngWriter pngw = new PngWriter(mfh.write(false), imi);
-                int[] temp = new int[((int)bounds.x) * 4];
-                Color col = new Color();
-                for (int i = 0; i < (int)bounds.y; i++) {
-                    for (int j = 0; j < (int)bounds.x; j++) {
-                        int c = pixmap.getPixel(j, i);
-                        col.set(c);
-                        temp[j * 4 + 0] = (int) (col.r * 255);
-                        temp[j * 4 + 1] = (int) (col.g * 255);
-                        temp[j * 4 + 2] = (int) (col.b * 255);
-                        temp[j * 4 + 3] = (int) (col.a * 255);
-                    }
-                    pngw.writeRowInt(temp);
-                }
-                pngw.end();
-                if (listener!=null){
-                    uploadFile(mfh.readBytes(), "image/png", listener);
-                }
+        ImageInfo imi = new ImageInfo(pixmap.getWidth(), pixmap.getHeight(), 8, true);
+        PngWriter pngw = new PngWriter(mfh.write(false), imi);
+        int[] temp = new int[pixmap.getWidth() * 4];
+        Color col = new Color();
+        for (int i = 0; i < pixmap.getHeight(); i++) {
+            for (int j = 0; j < pixmap.getWidth(); j++) {
+                int c = pixmap.getPixel(j, i);
+                col.set(c);
+                temp[j * 4 + 0] = (int) (col.r * 255);
+                temp[j * 4 + 1] = (int) (col.g * 255);
+                temp[j * 4 + 2] = (int) (col.b * 255);
+                temp[j * 4 + 3] = (int) (col.a * 255);
             }
-//        });
-
-        });
+            pngw.writeRowInt(temp);
+        }
+        pngw.end();
+        if (listener != null) {
+            uploadFile(mfh.readBytes(), "image/png", listener);
+        }
     }
 
-    public static void uploadPng(Pixmap pixmap,Vector2 bounds, IPFSCIDListener listener) {
-        MemoryFileHandle mfh = new MemoryFileHandle();
-        writePng(pixmap, bounds,mfh,listener);
-    }
-
-    public static void uploadPng(Pixmap pixmap, Vector2 bounds) {
-        uploadPng(pixmap,bounds, new IPFSCIDListener() {
-            @Override
-            public void cid(String cid) {
-                Gdx.app.log("cid",cid);
-                openIPFSViewer(cid);
-            }
-
-            @Override
-            public void uploadFailed(Throwable t) {
-
-            }
-        });
-    }
 
     public static void openIPFSViewer(String cid) {
 //        Gdx.net.openURI(Statics.IPFSGateway + Statics.IPFSMediaViewer + "?url=" + cid);
@@ -163,7 +134,7 @@ public class IPFSUtils {
 
     public static void downloadFromIPFS(String url, final IPFSFileListener responseListener) {
         Net.HttpRequest request = new Net.HttpRequest(Net.HttpMethods.GET);
-        request.setUrl(Statics.IPFSGateway+url);
+        request.setUrl(Statics.IPFSGateway + url);
         Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {

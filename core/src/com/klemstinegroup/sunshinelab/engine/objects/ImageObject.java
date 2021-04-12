@@ -7,16 +7,18 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.Base64Coder;
+import com.badlogic.gdx.utils.JsonValue;
 import com.klemstinegroup.sunshinelab.SunshineLab;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.klemstinegroup.sunshinelab.engine.util.IPFSUtils;
 import com.klemstinegroup.sunshinelab.engine.util.MemoryFileHandle;
+import com.klemstinegroup.sunshinelab.engine.util.SerializeUtil;
 
-import java.util.Arrays;
-
-public class ImageObject extends ScreenObject implements Drawable, Touchable {
-    public com.badlogic.gdx.graphics.Texture texture;
+public class ImageObject extends ScreenObject implements Drawable, Touchable,SerialInterface {
+    public Texture texture;
+    public Pixmap pixmap;
     private Polygon polygon;
+
 
     public ImageObject(String url) {
 //
@@ -24,56 +26,12 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
         Gdx.app.log("url", url);
         if (url.startsWith("data")) {
             final byte[] b = Base64Coder.decode(url.split(",")[1]);
-            this.texture=new Texture(new Pixmap(new MemoryFileHandle(b)));
-
-//            Pixmap.downloadFromUrl(url,new Pixmap.DownloadPixmapResponseListener(){
-//                @Override
-//                public void downloadComplete(Pixmap pixmap) {
-//                    texture = new Texture(pixmap);
-//                    setBound();
-//                }
-//
-//                @Override
-//                public void downloadFailed(Throwable t) {
-//Statics.objects.removeValue(RectTextureObject.this,true);
-//                }
-//            });
-//           Pixmap pixmap=new Pixmap(new FileHandle(){
-//               @Override
-//               public byte[] readBytes() {
-//                   return b;
-//               }
-//           });
-//           if (pixmap!=null){
-//               texture=new Texture(pixmap);
-//               setBound();
-//           }
-//            Pixmap.DownloadPixmapResponseListener responseListener = new Pixmap.DownloadPixmapResponseListener() {
-//                @Override
-//                public void downloadComplete(Pixmap pixmap) {
-//                    texture = new Texture(pixmap);
-//                    setBound();
-//                }
-//
-//                @Override
-//                public void downloadFailed(Throwable t) {
-//
-//                }
-//            };
-//            Gdx.app.postRunnable(new Runnable() {
-//                @Override
-//                public void run() {
-//                    try {
-//                        Pixmap pixmap = new Pixmap(b, 0,b.length);
-//                        responseListener.downloadComplete(pixmap);
-//                    } catch (Throwable t) {
-//                        Statics.objects.removeValue(RectTextureObject.this, true);
-//                    }
-//                }
-//            });
+            pixmap=new Pixmap(new MemoryFileHandle(b));
+            this.texture=new Texture(pixmap);
         } else Pixmap.downloadFromUrl(url, new Pixmap.DownloadPixmapResponseListener() {
             @Override
             public void downloadComplete(Pixmap pixmap) {
+                ImageObject.this.pixmap=pixmap;
                 texture = new Texture(pixmap);
                 setBound();
 //                IPFSUtils.uploadPng(pixmap,bounds);
@@ -85,6 +43,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                 Pixmap.downloadFromUrl(url1, new Pixmap.DownloadPixmapResponseListener() {
                     @Override
                     public void downloadComplete(Pixmap pixmap) {
+                        ImageObject.this.pixmap=pixmap;
                         texture = new Texture(pixmap);
                         setBound();
 //                        IPFSUtils.uploadPng(pixmap, bounds);
@@ -100,21 +59,19 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
         });
     }
 
-
-//    public RectTextureObject(Texture texture) {
-//        this.texture = texture;
-//        setBound();
-//    }
-
     public ImageObject(Pixmap pixmap) {
+        this.pixmap=pixmap;
         this.texture=new Texture(pixmap);
         setBound();
-//        IPFSUtils.uploadPng(pixmap, bounds);
+    }
+
+    public ImageObject(Pixmap pixmap, ScreenData sd1) {
+        this(pixmap);
+        this.sd=sd1;
     }
 
     private void setBound() {
         sd.bounds.set(new Vector2(texture.getWidth(), texture.getHeight()));
-//        center.set(new Vector2(texture.getWidth() / 2f, texture.getHeight() / 2f));
         sd.position.add(-sd.center.x, -sd.center.y);
     }
 
@@ -138,21 +95,6 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 
             Statics.shapedrawer.setColor(Color.RED);
             Statics.shapedrawer.filledCircle(0, 0, 15);
-
-/*batch.end();
-            batch.setTransformMatrix(new Matrix4().idt()
-                            .translate(position.x+touchSpot.x,  position.y+touchSpot.y, 0)
-                            .rotate(0, 0, 1, rotation)
-                            .scale(scale, scale, 1)
-//                .translate(-x, -y, 0)
-//                        .translate(-center.x, -center.y, 0)
-            );
-batch.begin();*/
-
-
-//            Statics.shapedrawer.setColor(Color.GREEN);
-//            Statics.shapedrawer.filledCircle(position.x+center.x,position.y+center.y, 15);
-
         }
         batch.end();
         batch.setTransformMatrix(SunshineLab.mx4Batch);
@@ -162,7 +104,6 @@ batch.begin();*/
             Statics.shapedrawer.setColor(Color.WHITE);
             Statics.shapedrawer.polygon(polygon);
         }
-
 
     }
 
@@ -216,5 +157,25 @@ batch.begin();*/
     @Override
     public boolean scrolled(float amountX, float amountY) {
         return false;
+    }
+
+    @Override
+    public JsonValue serialize() {
+        JsonValue val=new JsonValue(JsonValue.ValueType.object);
+        val.addChild("screenData", SerializeUtil.serialize(sd));
+        MemoryFileHandle mfh=new MemoryFileHandle();
+        IPFSUtils.writePng(pixmap, mfh, null);
+        String data="data:image/png;base64,"+new String(Base64Coder.encode(mfh.ba.toArray()));
+        val.addChild("pixmapData",new JsonValue(data));
+        val.addChild("class",new JsonValue(ImageObject.class.getName()));
+        return val;
+    }
+
+    public static SerialInterface deserialize(JsonValue json) {
+        ScreenData sd1=SerializeUtil.deserialize(json.get("screenData"),ScreenData.class);
+        String data=json.getString("pixmapData");
+        final byte[] b = Base64Coder.decode(data.split(",")[1]);
+        Pixmap pixmap=new Pixmap(new MemoryFileHandle(b));
+        return new ImageObject(pixmap,sd1);
     }
 }

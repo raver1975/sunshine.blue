@@ -10,8 +10,6 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.klemstinegroup.sunshinelab.SunshineLab;
 import com.klemstinegroup.sunshinelab.engine.Statics;
@@ -30,7 +28,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable, Ser
     public Polygon polygon;
 
     public FontObject(FontData fd, ScreenData sd) {
-        this();
+        fontList = Gdx.files.internal("fonts").list();
         this.fd=fd;
         this.sd=sd;
         generate();
@@ -192,11 +190,12 @@ public class FontObject extends ScreenObject implements Drawable, Touchable, Ser
         JsonValue val=new JsonValue(JsonValue.ValueType.object);
         val.addChild("screenData", SerializeUtil.serialize(sd));
         val.addChild("fontData",SerializeUtil.serialize(fd));
+        val.addChild("class",new JsonValue(FontObject.class.getName()));
         return val;
     }
 
-    @Override
-    public SerialInterface deserialize(JsonValue json) {
+
+    public static SerialInterface deserialize(JsonValue json) {
         FontData fd1=SerializeUtil.deserialize(json.get("fontData"),FontData.class);
         ScreenData sd1=SerializeUtil.deserialize(json.get("screenData"),ScreenData.class);
         return new FontObject(fd1,sd1);
