@@ -193,8 +193,8 @@ public class HtmlLauncher extends GwtApplication {
                 if (focusedActor != null && focusedActor instanceof TextArea) {
                     TextArea ta = ((TextArea) focusedActor);
                     ta.setText(text);
-                    if (text.startsWith("Q")){}
-                    else if (text.startsWith("data")) {
+                    if (text.startsWith("Q")){text=Statics.IPFSGateway+text;}
+                    if (text.startsWith("data")) {
                         final Image img = new Image(text);
                         final RootPanel root = RootPanel.get("embed-image");
                         root.add(img);
