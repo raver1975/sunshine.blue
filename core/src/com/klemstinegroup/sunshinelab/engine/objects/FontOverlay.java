@@ -35,11 +35,11 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
 //        int b = MathUtils.randomBoolean() ? 0 : 1;
         textButtonStyle.font = generator.generateFont(parameter);
         textButtonStyle.overFontColor = Color.WHITE;
-        Skin skin = new Skin(Gdx.files.internal("skins/comic/skin/comic-ui.json"));
+        Skin skin = new Skin(Gdx.files.internal("skins/orange/skin/uiskin.json"));
 //        Skin skin = new Skin(Gdx.files.internal("skins/default/skin/uiskin.json"));
 
         TextButton exitButton = new TextButton("X",skin);
-        exitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 40, Statics.overlayViewport.getWorldHeight() - 40);
+        exitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 55, Statics.overlayViewport.getWorldHeight() - 55);
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -109,7 +109,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
                 }
             }
         });
-        ScrollPane scrollPane = new ScrollPane(list);
+        ScrollPane scrollPane = new ScrollPane(list,skin);
         Array<String> fontListStr = new Array<>();
         for (FileHandle fh : fontList) {
             fontListStr.add(fh.nameWithoutExtension());
@@ -117,10 +117,15 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         fontListStr.sort();
         list.setItems(fontListStr);
         list.layout();
+
         scrollPane.setSize(200, Statics.overlayViewport.getWorldHeight());
         scrollPane.setPosition(0, 0);
         scrollPane.setFlickScroll(true);
         scrollPane.setScrollingDisabled(true, false);
+        boolean enable_x = false;
+        boolean enable_y = true;
+        scrollPane.setForceScroll(enable_x,enable_y);
+
         scrollPane.layout();
         /*final IntSpinnerModel intModel = new IntSpinnerModel(60, 1, 1000, 1);
         Spinner sizeSpinner = new Spinner("", intModel);

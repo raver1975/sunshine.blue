@@ -20,17 +20,17 @@ import static com.badlogic.gdx.Application.LOG_INFO;
 
 public class SunshineLab extends ApplicationAdapter {
 
-    public static  NativeIPFSInterface nativeIPFS;
+    public static NativeIPFSInterface nativeIPFS;
 
     //    Camera camera;
-    public SunshineLab(){
+    public SunshineLab() {
         super();
-        this.nativeIPFS=new NativeIPFS();
+        this.nativeIPFS = new NativeIPFS();
     }
 
-    public SunshineLab(NativeIPFSInterface nativeIPFS){
+    public SunshineLab(NativeIPFSInterface nativeIPFS) {
         super();
-        this.nativeIPFS=nativeIPFS;
+        this.nativeIPFS = nativeIPFS;
     }
 
 
@@ -42,11 +42,18 @@ public class SunshineLab extends ApplicationAdapter {
 
     @Override
     public void create() {
+        Preferences prefs = Gdx.app.getPreferences("current");
+        String name=prefs.getString("name");
+        if (name!=null){
+            System.out.println("loading:"+name);
+            SerializeUtil.load(name);
+        }
+
 //        VisUI.load(VisUI.SkinScale.X2);
         Gdx.input.setInputProcessor(Statics.im);
         Statics.setOverlay(Statics.BASIC_UI_OVERLAY);
         Gdx.app.setLogLevel(LOG_INFO);
-//        img = new Texture("badlogic.jpg");
+/*//        img = new Texture("badlogic.jpg");
 
 //        Statics.userObjects.add(new ImageObject("https://i.redd.it/0h1nbwj4bto61.jpg"));
 //        Statics.userObjects.add(new ImageObject("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/477px-PNG_Test.png"));
@@ -59,23 +66,23 @@ public class SunshineLab extends ApplicationAdapter {
         ((ScreenObject) Statics.userObjects.get(0)).sd.scale = .4f;
         ((ScreenObject) Statics.userObjects.get(1)).sd.scale = .4f;
         ((ScreenObject) Statics.userObjects.get(0)).sd.rotation = 45;
-        Statics.viewport = new ScreenViewport();
-        ScreenData sd=new ScreenData();
-        FontData fd=new FontData();
-        fd.text="tesT";
-        FontObject fo=new FontObject(fd,sd);
+
+        ScreenData sd = new ScreenData();
+        FontData fd = new FontData();
+        fd.text = "tesT";
+        FontObject fo = new FontObject(fd, sd);
         Statics.userObjects.add(fo);
-        for (int i=0;i<10;i++) {
-            FontObject focpo = (FontObject) SerializeUtil.copy((FontObject)Statics.userObjects.get(Statics.userObjects.size-1));
+        for (int i = 0; i < 10; i++) {
+            FontObject focpo = (FontObject) SerializeUtil.copy((FontObject) Statics.userObjects.get(Statics.userObjects.size - 1));
             focpo.sd.position.add(20, 20);
-            focpo.sd.rotation+=10;
+            focpo.sd.rotation += 10;
             Statics.userObjects.add(focpo);
         }
 //        Statics.overlayViewport = new FitViewport((800f *Gdx.graphics.getWidth() / Gdx.graphics.getHeight() )/ Gdx.graphics.getDensity(), 800 / Gdx.graphics.getDensity());
 
 
-//        Statics.im.addProcessor(this);
-
+//        Statics.im.addProcessor(this);*/
+        Statics.viewport = new ScreenViewport();
         mx4Batch = Statics.batch.getTransformMatrix().cpy();
 
 
@@ -114,13 +121,13 @@ public class SunshineLab extends ApplicationAdapter {
         apng = new IncrementalAnimatedPNG();
         apng.setFlipY(true);
         mfh = new MemoryFileHandle();
-        apng.start(mfh,(short)10,400,400);
+        apng.start(mfh, (short) 10, 400, 400);
 
 
     }
 
 
-    int cnt = -1;
+    int cnt = 1000;
 
     @Override
     public void render() {
@@ -133,17 +140,17 @@ public class SunshineLab extends ApplicationAdapter {
         Statics.batch.setProjectionMatrix(Statics.viewport.getCamera().combined);
         Statics.batch.begin();
         if (Statics.gif) {
-            if (cnt-- > 0 && cnt<10 ) {
+            if (cnt-- > 0 && cnt < 10) {
 //                Statics.gifEncoderA.addFrame(FrameBufferUtils.drawObjectsPix(Statics.viewport, Statics.userObjects, 400, 400));
                 apng.write(FrameBufferUtils.drawObjectsPix(Statics.viewport, Statics.userObjects, 400, 400));
-Gdx.app.log("count",cnt+"");
-                if (cnt==4) {
+                Gdx.app.log("count", cnt + "");
+                if (cnt == 4) {
                     int gg = Statics.userObjects.size;
                     for (int draw = 0; draw < gg; draw++) {
-                        if (Statics.userObjects.get(draw) != null ) {
-                            Gdx.app.log("class",Statics.userObjects.get(draw).getClass().getName());
-                            BaseObject o=(BaseObject) SerializeUtil.copy(Statics.userObjects.get(draw));
-                            Gdx.app.log("o class",o.getClass().getName());
+                        if (Statics.userObjects.get(draw) != null) {
+                            Gdx.app.log("class", Statics.userObjects.get(draw).getClass().getName());
+                            BaseObject o = (BaseObject) SerializeUtil.copy(Statics.userObjects.get(draw));
+                            Gdx.app.log("o class", o.getClass().getName());
                             Statics.userObjects.add(o);
 //                            ((ScreenObject) Statics.userObjects.get(gg+draw )).sd.position.sub(10, 10);
 //                            ((ScreenObject) Statics.userObjects.get(gg+draw )).sd.rotation += 45;
@@ -151,26 +158,24 @@ Gdx.app.log("count",cnt+"");
                     }
                 }
 
-                if (cnt==2){
-                    System.out.println("--------------------------------------------0--");
-                    JsonValue val=SerializeUtil.serializeScene();
-                    System.out.println("--------------------------------------------1--");
-                    System.out.println(val.toJson(JsonWriter.OutputType.javascript));
-                    System.out.println("--------------------------------------------2--");
-                    SerializeUtil.deserializeScene(val);
-                }
 
+            }
+            if (cnt == 200) {
+                SerializeUtil.save("test");
+            }
+            if (cnt == 100) {
+                SerializeUtil.load("test");
             }
             if (cnt == 0) {
                 nativeIPFS.downloadFile("QmZtmD2qt6fJot32nabSP3CUjicnypEBz7bHVDhPQt9aAy", new IPFSFileListener() {
                     @Override
                     public void downloaded(byte[] file) {
-                        Gdx.app.log("text",new String(file));
+                        Gdx.app.log("text", new String(file));
                     }
 
                     @Override
                     public void downloadFailed(Throwable t) {
-                        Gdx.app.log("textError",t.getMessage());
+                        Gdx.app.log("textError", t.getMessage());
                     }
                 });
 
@@ -204,18 +209,14 @@ Gdx.app.log("count",cnt+"");
 
         Statics.batch.end();
 
-    //------------------------------------------------------------
-        try
-
-    {
-        jjjvmClass.findMethod("main", "([Ljava/lang/String;)V").invoke(null, null);
-    } catch(
-    Throwable throwable)
-
-    {
-        throwable.printStackTrace();
-    }
-    //------------------------------------------------------------
+        //------------------------------------------------------------
+        try {
+            jjjvmClass.findMethod("main", "([Ljava/lang/String;)V").invoke(null, null);
+        } catch (
+                Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        //------------------------------------------------------------
     }
 
 

@@ -34,7 +34,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         parameter.color = Color.CYAN;
         textButtonStyle.font = generator.generateFont(parameter);
         textButtonStyle.overFontColor = Color.WHITE;
-        Skin skin = new Skin(Gdx.files.internal("skins/comic/skin/comic-ui.json"));
+        Skin skin = new Skin(Gdx.files.internal("skins/orange/skin/uiskin.json"));
 //        Skin skin = new Skin(Gdx.files.internal("skins/default/skin/uiskin.json"));
         Actor fontButton = new TextButton("Text", skin);
 //        fontButton.setColor(Color.WHITE);
@@ -63,7 +63,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
 
         Actor imageButton = new TextButton("Image", skin);
-        imageButton.setPosition(0, 50);
+        imageButton.setPosition(100, 0);
 //        fontButton.setColor(Color.WHITE);
 
 
@@ -80,7 +80,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         });
 
         Actor drawButton = new TextButton("Draw", skin);
-        drawButton.setPosition(0, 100);
+        drawButton.setPosition(200, 0);
         drawButton.addListener(new ClickListener() {
 
             @Override

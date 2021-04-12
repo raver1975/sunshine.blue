@@ -23,10 +23,10 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
 
     public ImageOverlay() {
         stage = new Stage(Statics.overlayViewport);
-        Skin skin = new Skin(Gdx.files.internal("skins/comic/skin/comic-ui.json"));
+        Skin skin = new Skin(Gdx.files.internal("skins/orange/skin/uiskin.json"));
 
         TextButton exitButton = new TextButton("X",skin);
-        exitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 40, Statics.overlayViewport.getWorldHeight() - 40);
+        exitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 55, Statics.overlayViewport.getWorldHeight() - 55);
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -65,7 +65,7 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
         ta.setTextFieldListener(tfl);
 
         ta.setPosition(10, 10);
-        ta.setWidth(Statics.overlayViewport.getWorldWidth());
+        ta.setWidth(Statics.overlayViewport.getWorldWidth()-20);
         stage.addActor(ta);
         stage.setKeyboardFocus(ta);
 
