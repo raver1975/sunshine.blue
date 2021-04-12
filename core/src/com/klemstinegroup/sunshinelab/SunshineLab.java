@@ -15,6 +15,7 @@ import com.klemstinegroup.sunshinelab.engine.objects.*;
 import com.klemstinegroup.sunshinelab.engine.util.*;
 
 import java.io.ByteArrayInputStream;
+import java.util.Map;
 
 import static com.badlogic.gdx.Application.LOG_INFO;
 
@@ -42,10 +43,13 @@ public class SunshineLab extends ApplicationAdapter {
 
     @Override
     public void create() {
-        Preferences prefs = Gdx.app.getPreferences("current");
-        String name=prefs.getString("name");
+        Preferences prefs = Gdx.app.getPreferences("scenes");
+        for (Map.Entry e:prefs.get().entrySet()){
+            Gdx.app.log(e.getKey().toString(),e.getValue().toString());
+        }
+        String name=prefs.getString("current");
         if (name!=null){
-            System.out.println("loading:"+name);
+            Gdx.app.log("loading:",name);
             SerializeUtil.load(name);
         }
 
@@ -127,7 +131,7 @@ public class SunshineLab extends ApplicationAdapter {
     }
 
 
-    int cnt = 1000;
+    int cnt = 3000;
 
     @Override
     public void render() {
@@ -160,7 +164,7 @@ public class SunshineLab extends ApplicationAdapter {
 
 
             }
-            if (cnt == 200) {
+            if (cnt == 1000) {
                 SerializeUtil.save("test");
             }
             if (cnt == 100) {

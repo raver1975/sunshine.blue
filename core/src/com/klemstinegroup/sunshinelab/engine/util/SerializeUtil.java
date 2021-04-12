@@ -39,7 +39,7 @@ public class SerializeUtil {
     }
 
     public static void load(String name) {
-        Preferences prefs = Gdx.app.getPreferences("Scenes");
+        Preferences prefs = Gdx.app.getPreferences("scenes");
         String cid = prefs.getString(name);
         if (cid != null) {
             SunshineLab.nativeIPFS.downloadFile(cid, new IPFSFileListener() {
@@ -63,13 +63,16 @@ public class SerializeUtil {
         SunshineLab.nativeIPFS.uploadFile(val.toJson(JsonWriter.OutputType.javascript).getBytes(StandardCharsets.UTF_8), "application/json", new IPFSCIDListener() {
             @Override
             public void cid(String cid) {
-                Preferences prefs = Gdx.app.getPreferences("Scenes");
-                prefs.putString(name, cid);
-                prefs.flush();
-                Preferences prefs1 = Gdx.app.getPreferences("current");
-                prefs1.putString("cid", cid);
-                prefs1.putString("name", name);
-                prefs1.flush();
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        Preferences prefs = Gdx.app.getPreferences("scenes");
+                        prefs.putString(name, cid);
+                        prefs.putString("current", name);
+                        prefs.flush();
+                    }
+                });
+
             }
 
             @Override
