@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.net.HttpRequestBuilder;
 import com.badlogic.gdx.net.HttpStatus;
 import com.badlogic.gdx.utils.*;
+import com.klemstinegroup.sunshinelab.SunshineLab;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 
 import java.io.ByteArrayInputStream;
@@ -105,6 +106,7 @@ public class IPFSUtils {
 
     public static void writePng(Pixmap pixmap, FileHandle mfh, IPFSCIDListener listener) {
 //                MemoryFileHandle mfh = new MemoryFileHandle();
+        if (mfh==null)mfh=new MemoryFileHandle();
         ImageInfo imi = new ImageInfo(pixmap.getWidth(), pixmap.getHeight(), 8, true);
         PngWriter pngw = new PngWriter(mfh.write(false), imi);
         int[] temp = new int[pixmap.getWidth() * 4];
@@ -159,6 +161,22 @@ public class IPFSUtils {
             @Override
             public void cancelled() {
                 // no way to cancel, will never get called
+            }
+        });
+    }
+
+    public static void uploadPngtoIPFS(Pixmap pixmap,IPFSCIDListener listener){
+        MemoryFileHandle mfh=new MemoryFileHandle();
+        IPFSUtils.writePng(pixmap,mfh,null);
+        SunshineLab.nativeIPFS.uploadFile(mfh.readBytes(), "image/png", new IPFSCIDListener() {
+            @Override
+            public void cid(String cid) {
+                listener.cid(cid);
+            }
+
+            @Override
+            public void uploadFailed(Throwable t) {
+
             }
         });
     }

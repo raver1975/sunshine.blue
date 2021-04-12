@@ -15,7 +15,7 @@ import com.klemstinegroup.sunshinelab.SunshineLab;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.klemstinegroup.sunshinelab.engine.util.SerializeUtil;
 
-public class FontObject extends ScreenObject implements Drawable, Touchable, SerialInterface {
+public class FontObject extends ScreenObject implements Drawable, Touchable {
 
     public FontData fd=new FontData();
 
@@ -195,7 +195,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable, Ser
     }
 
 
-    public static SerialInterface deserialize(JsonValue json) {
+    public static FontObject deserialize(JsonValue json) {
         FontData fd1=SerializeUtil.deserialize(json.get("fontData"),FontData.class);
         ScreenData sd1=SerializeUtil.deserialize(json.get("screenData"),ScreenData.class);
         return new FontObject(fd1,sd1);

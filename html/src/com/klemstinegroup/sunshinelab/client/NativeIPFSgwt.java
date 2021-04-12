@@ -6,6 +6,9 @@ import com.klemstinegroup.sunshinelab.engine.util.IPFSFileListener;
 import com.klemstinegroup.sunshinelab.engine.util.IPFSUtils;
 import com.klemstinegroup.sunshinelab.engine.util.NativeIPFSInterface;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+
 public class NativeIPFSgwt implements NativeIPFSInterface {
     IPFSCIDListener uploadListener;
     IPFSFileListener downloadListener;
@@ -23,28 +26,74 @@ public class NativeIPFSgwt implements NativeIPFSInterface {
     }
 
     native void downloadFromIPFS(String cid)/*-{
-      var self=this;
-      if(!$wnd.node){
+    var self=this;
+
+var encoder = new TextEncoder("ascii");
+var decoder = new TextDecoder("ascii");
+var base64Table = encoder.encode('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=');
+function toBase64(dataArr){
+    var padding = dataArr.byteLength % 3;
+    var len = dataArr.byteLength - padding;
+    padding = padding > 0 ? (3 - padding) : 0;
+    var outputLen = ((len/3) * 4) + (padding > 0 ? 4 : 0);
+    var output = new Uint8Array(outputLen);
+    var outputCtr = 0;
+    for(var i=0; i<len; i+=3){
+        var buffer = ((dataArr[i] & 0xFF) << 16) | ((dataArr[i+1] & 0xFF) << 8) | (dataArr[i+2] & 0xFF);
+        output[outputCtr++] = base64Table[buffer >> 18];
+        output[outputCtr++] = base64Table[(buffer >> 12) & 0x3F];
+        output[outputCtr++] = base64Table[(buffer >> 6) & 0x3F];
+        output[outputCtr++] = base64Table[buffer & 0x3F];
+    }
+    if (padding == 1) {
+        var buffer = ((dataArr[len] & 0xFF) << 8) | (dataArr[len+1] & 0xFF);
+        output[outputCtr++] = base64Table[buffer >> 10];
+        output[outputCtr++] = base64Table[(buffer >> 4) & 0x3F];
+        output[outputCtr++] = base64Table[(buffer << 2) & 0x3F];
+        output[outputCtr++] = base64Table[64];
+    } else if (padding == 2) {
+        var buffer = dataArr[len] & 0xFF;
+        output[outputCtr++] = base64Table[buffer >> 2];
+        output[outputCtr++] = base64Table[(buffer << 4) & 0x3F];
+        output[outputCtr++] = base64Table[64];
+        output[outputCtr++] = base64Table[64];
+    }
+
+    var ret = decoder.decode(output);
+    output = null;
+    dataArr = null;
+    return ret;
+}
+
+    function run(cid){
+      if(!($wnd.node&& $wnd.node.isOnline())){
           console.log("Node not running!");
+          //setTimeout(run,5000,cid);
       }
       else{
           $wnd.node.cat(cid).next().then(function(chunk){
-            var b64encoded = btoa(chunk.value);
-            self.@com.klemstinegroup.sunshinelab.client.NativeIPFSgwt::finishDownload(Ljava/lang/String;)(b64encoded);
+            var base64encoded=toBase64(chunk.value);
+            console.log(base64encoded);
+            console.log(chunk);
+            self.@com.klemstinegroup.sunshinelab.client.NativeIPFSgwt::finishDownload(Ljava/lang/String;)(base64encoded);
           });
       }
+      };
+      run(cid);
     }-*/;
 
     native void uploadToIPFS(String base64, String content)/*-{
       var self = this;
+      function run(base64,content){
       var byteCharacters = atob(base64);
       var byteNumbers = new Array(byteCharacters.length);
       for (var i = 0; i < byteCharacters.length; i++) {
           byteNumbers[i] = byteCharacters.charCodeAt(i);
       }
       var byteArray = new Uint8Array(byteNumbers);
-      if(!$wnd.node){
+      if(!($wnd.node && $wnd.node.isOnline()) ){
           console.log("Node not running!");
+          //setTimeout(run,5000,base64,content);
       }
       else{
           $wnd.node.add(byteArray).then(function(fileAdded){
@@ -52,6 +101,8 @@ public class NativeIPFSgwt implements NativeIPFSInterface {
           self.@com.klemstinegroup.sunshinelab.client.NativeIPFSgwt::finishUpload(Ljava/lang/String;)(fileAdded.path);
       });
       }
+      };
+      run(base64,content);
     }-*/;
 
     public void finishUpload(String cid) {
@@ -60,7 +111,7 @@ public class NativeIPFSgwt implements NativeIPFSInterface {
     }
 
     public void finishDownload(String base64) {
-        byte[] b = Base64Coder.decode(base64);
+       byte[] b=Base64Coder.decode(base64);
         downloadListener.downloaded(b);
     }
 }

@@ -17,13 +17,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import com.igormaznitsa.jjjvm.impl.JJJVMClassFieldImpl;
 import com.klemstinegroup.sunshinelab.engine.Statics;
-import com.kotcrab.vis.ui.VisUI;
-import com.kotcrab.vis.ui.widget.VisImageButton;
-import com.kotcrab.vis.ui.widget.VisScrollPane;
-import com.kotcrab.vis.ui.widget.color.ColorPicker;
-import com.kotcrab.vis.ui.widget.color.ColorPickerAdapter;
-import com.kotcrab.vis.ui.widget.spinner.IntSpinnerModel;
-import com.kotcrab.vis.ui.widget.spinner.Spinner;
 
 public class FontOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
 
@@ -45,8 +38,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         Skin skin = new Skin(Gdx.files.internal("skins/comic/skin/comic-ui.json"));
 //        Skin skin = new Skin(Gdx.files.internal("skins/default/skin/uiskin.json"));
 
-        VisImageButton exitButton = new VisImageButton("close-window");
-        exitButton.getImageCell().size(40);
+        TextButton exitButton = new TextButton("X",skin);
         exitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 40, Statics.overlayViewport.getWorldHeight() - 40);
         exitButton.addListener(new ClickListener() {
             @Override
@@ -56,7 +48,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
             }
         });
 
-        //picker creation
+        /*//picker creation
         ColorPicker picker = new ColorPicker(new ColorPickerAdapter() {
 
             @Override
@@ -104,7 +96,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         showPickerButton.setPosition(Statics.overlayViewport.getWorldWidth() - 150, 10);
         stage.addActor(showPickerButton);
 //        stage.addActor(colorPicker);
-
+*/
 
         List list = new List(skin);
         list.addListener(new ChangeListener() {
@@ -117,7 +109,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
                 }
             }
         });
-        VisScrollPane scrollPane = new VisScrollPane(list);
+        ScrollPane scrollPane = new ScrollPane(list);
         Array<String> fontListStr = new Array<>();
         for (FileHandle fh : fontList) {
             fontListStr.add(fh.nameWithoutExtension());
@@ -142,7 +134,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
             }
         });
         stage.addActor(sizeSpinner);*/
-        Slider slider = new Slider(1, 200, 1, true, VisUI.getSkin());
+        Slider slider = new Slider(1, 200, 1, true, skin);
         slider.setPosition(Statics.overlayViewport.getWorldWidth() - 50,80);
         slider.setSize(20,Statics.overlayViewport.getWorldHeight()-150);
         slider.setValue(50);

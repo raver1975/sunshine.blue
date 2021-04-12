@@ -1,14 +1,13 @@
 package com.klemstinegroup.sunshinelab.engine.util;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.badlogic.gdx.utils.reflect.Method;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.klemstinegroup.sunshinelab.engine.objects.BaseObject;
-import com.klemstinegroup.sunshinelab.engine.objects.ScreenObject;
 import com.klemstinegroup.sunshinelab.engine.objects.SerialInterface;
-
-import java.lang.reflect.InvocationTargetException;
 
 public class SerializeUtil {
     public static Json json = new Json();
@@ -24,14 +23,9 @@ public class SerializeUtil {
         JsonValue array=val.get("userObjects");
         for (int i=0;i<array.size;i++){
                 JsonValue jv=array.get(i);
+            Gdx.app.log("scene",jv.toJson(JsonWriter.OutputType.minimal));
             try {
-                arrabo.add((BaseObject) ClassReflection.forName(jv.getString("class")).getMethod("deserialize",JsonValue.class).invoke(null,jv));
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
+                arrabo.add((BaseObject) ClassReflection.getMethod(ClassReflection.forName(jv.getString("class")),"deserialize",JsonValue.class).invoke(null,jv));
             } catch (ReflectionException e) {
                 e.printStackTrace();
             }
@@ -41,15 +35,17 @@ public class SerializeUtil {
     }
 
     public static JsonValue serializeScene() {
+        Gdx.app.log("scene","serializing");
         JsonValue val = new JsonValue(JsonValue.ValueType.object);
         JsonValue array = new JsonValue(JsonValue.ValueType.array);
         val.addChild("userObjects", array);
         for (BaseObject bo : Statics.userObjects) {
             if (bo instanceof SerialInterface) {
-                System.out.println("adding:"+bo.getClass());
+                Gdx.app.log("scene","adding:"+bo.getClass());
                 array.addChild(((SerialInterface) bo).serialize());
             }
         }
+        Gdx.app.log("scene","serialized");
         return val;
     }
 
@@ -57,12 +53,15 @@ public class SerializeUtil {
         return json.fromJson(t, val.toJson(JsonWriter.OutputType.json));
     }
 
-    public static <T> T copy(SerialInterface si) {
+    public static <T extends BaseObject> BaseObject copy(T si) {
+        Gdx.app.log("copy class",si.getClass().getName());
         JsonValue temp = si.serialize();
-        System.out.println(temp.toJson(JsonWriter.OutputType.json));
+//        Gdx.app.log("json",temp.toJson(JsonWriter.OutputType.json));
         try {
-            return (T) ClassReflection.forName(si.getClass().getName()).getMethod("deserialize",JsonValue.class).invoke(null,temp);
-        } catch (ReflectionException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            Method method = ClassReflection.getMethod(ClassReflection.forName(si.getClass().getName()), "deserialize", JsonValue.class);
+            Gdx.app.log("method",method.getName());
+            return (T)method.invoke(null,temp);
+        } catch (ReflectionException e) {
             e.printStackTrace();
         }
         return null;

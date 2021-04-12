@@ -10,7 +10,7 @@ import com.klemstinegroup.sunshinelab.SunshineLab;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.klemstinegroup.sunshinelab.engine.util.SerializeUtil;
 
-public class DrawObject extends ScreenObject implements Drawable, Touchable,SerialInterface {
+public class DrawObject extends ScreenObject implements Drawable, Touchable {
     DrawData dd=new DrawData();
     private final Vector2 touch = new Vector2();
     private Polygon polygon;
@@ -170,7 +170,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable,Seri
         return val;
     }
 
-    public static SerialInterface deserialize(JsonValue json) {
+    public static DrawObject deserialize(JsonValue json) {
         JsonValue array=json.get("array");
         DrawData dd=new DrawData();
         for (int i=0;i<array.size;i++){

@@ -13,7 +13,6 @@ import com.igormaznitsa.jjjvm.model.JJJVMProvider;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.klemstinegroup.sunshinelab.engine.objects.*;
 import com.klemstinegroup.sunshinelab.engine.util.*;
-import com.kotcrab.vis.ui.VisUI;
 
 import java.io.ByteArrayInputStream;
 
@@ -43,7 +42,6 @@ public class SunshineLab extends ApplicationAdapter {
 
     @Override
     public void create() {
-        VisUI.load();
 //        VisUI.load(VisUI.SkinScale.X2);
         Gdx.input.setInputProcessor(Statics.im);
         Statics.setOverlay(Statics.BASIC_UI_OVERLAY);
@@ -51,8 +49,10 @@ public class SunshineLab extends ApplicationAdapter {
 //        img = new Texture("badlogic.jpg");
 
 //        Statics.userObjects.add(new ImageObject("https://i.redd.it/0h1nbwj4bto61.jpg"));
-        Statics.userObjects.add(new ImageObject("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/477px-PNG_Test.png"));
-        Statics.userObjects.add(new ImageObject("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/477px-PNG_Test.png"));
+//        Statics.userObjects.add(new ImageObject("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/477px-PNG_Test.png"));
+//        Statics.userObjects.add(new ImageObject("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/477px-PNG_Test.png"));
+        Statics.userObjects.add(new ImageObject("QmZkvRWdSeksERDHhWSja9W7tja6wYQbk5KEfSxTbH87Va"));
+        Statics.userObjects.add(new ImageObject("QmZkvRWdSeksERDHhWSja9W7tja6wYQbk5KEfSxTbH87Va"));
         ((ScreenObject) Statics.userObjects.get(1)).sd.position.set(-200, -200);
         ((ScreenObject) Statics.userObjects.get(0)).sd.center.set(100, 100);
 //        ((ScreenObject) Statics.userObjects.get(0)).scale = .1f;
@@ -66,7 +66,7 @@ public class SunshineLab extends ApplicationAdapter {
         FontObject fo=new FontObject(fd,sd);
         Statics.userObjects.add(fo);
         for (int i=0;i<10;i++) {
-            FontObject focpo = SerializeUtil.copy((SerialInterface) Statics.userObjects.get(Statics.userObjects.size-1));
+            FontObject focpo = (FontObject) SerializeUtil.copy((FontObject)Statics.userObjects.get(Statics.userObjects.size-1));
             focpo.sd.position.add(20, 20);
             focpo.sd.rotation+=10;
             Statics.userObjects.add(focpo);
@@ -120,7 +120,7 @@ public class SunshineLab extends ApplicationAdapter {
     }
 
 
-    int cnt = 200;
+    int cnt = -1;
 
     @Override
     public void render() {
@@ -136,15 +136,17 @@ public class SunshineLab extends ApplicationAdapter {
             if (cnt-- > 0 && cnt<10 ) {
 //                Statics.gifEncoderA.addFrame(FrameBufferUtils.drawObjectsPix(Statics.viewport, Statics.userObjects, 400, 400));
                 apng.write(FrameBufferUtils.drawObjectsPix(Statics.viewport, Statics.userObjects, 400, 400));
-
+Gdx.app.log("count",cnt+"");
                 if (cnt==4) {
                     int gg = Statics.userObjects.size;
                     for (int draw = 0; draw < gg; draw++) {
-                        if (Statics.userObjects.get(draw) instanceof SerialInterface) {
-                            SerialInterface io = SerializeUtil.copy((SerialInterface) Statics.userObjects.get(draw));
-                            Statics.userObjects.add((BaseObject) io);
-                            ((ScreenObject) Statics.userObjects.get(gg+draw )).sd.position.sub(10, 10);
-                            ((ScreenObject) Statics.userObjects.get(gg+draw )).sd.rotation += 45;
+                        if (Statics.userObjects.get(draw) != null ) {
+                            Gdx.app.log("class",Statics.userObjects.get(draw).getClass().getName());
+                            BaseObject o=(BaseObject) SerializeUtil.copy(Statics.userObjects.get(draw));
+                            Gdx.app.log("o class",o.getClass().getName());
+                            Statics.userObjects.add(o);
+//                            ((ScreenObject) Statics.userObjects.get(gg+draw )).sd.position.sub(10, 10);
+//                            ((ScreenObject) Statics.userObjects.get(gg+draw )).sd.rotation += 45;
                         }
                     }
                 }
