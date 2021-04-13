@@ -44,10 +44,10 @@ public class SunshineLab extends ApplicationAdapter {
     @Override
     public void create() {
         Preferences prefs = Gdx.app.getPreferences("scenes");
-        for (Map.Entry e:prefs.get().entrySet()){
-            Gdx.app.log(e.getKey().toString(),e.getValue().toString());
-        }
         String name=prefs.getString("current");
+        if (name==null){
+            name=prefs.getString("currents");
+        }
         if (name!=null){
             Gdx.app.log("loading:",name);
             SerializeUtil.load(name);

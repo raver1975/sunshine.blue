@@ -41,6 +41,7 @@ public class SerializeUtil {
     public static void load(String name) {
         Preferences prefs = Gdx.app.getPreferences("scenes");
         String cid = prefs.getString(name);
+        if (cid==null){cid=prefs.getString(name+"s");}
         if (cid != null) {
             SunshineLab.nativeIPFS.downloadFile(cid, new IPFSFileListener() {
                 @Override
