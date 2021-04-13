@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<body>
-<img id="image"/>
+<body bgcolor="#dc143c">
+<img id="image" src="https://ipfs.io/ipfs/QmQJHHFZpmJV2JL3BqxPvqBtEmYnonb74m4u4GGi3PPo5F"/>
 </body>
 <script>
 
@@ -28,7 +28,7 @@
     fetch(url)
         .then(function (response) {
             response.text().then(function (text) {
-                storedText = text;
+                storedText = "data:image/apng;base64,"+atob(text);
                 done();
             });
         });
