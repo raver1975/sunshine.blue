@@ -8,6 +8,8 @@ import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.JsonValue;
 import com.klemstinegroup.sunshinelab.SunshineLab;
 import com.klemstinegroup.sunshinelab.engine.Statics;
+import com.klemstinegroup.sunshinelab.engine.overlays.Drawable;
+import com.klemstinegroup.sunshinelab.engine.overlays.Touchable;
 import com.klemstinegroup.sunshinelab.engine.util.SerializeUtil;
 
 public class DrawObject extends ScreenObject implements Drawable, Touchable {

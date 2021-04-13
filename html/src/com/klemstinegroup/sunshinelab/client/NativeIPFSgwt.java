@@ -68,7 +68,7 @@ function toBase64(dataArr){
     function run(cid){
       if(!($wnd.node&& $wnd.node.isOnline())){
           console.log("Node not running!");
-          //setTimeout(run,5000,cid);
+          setTimeout(run,1000,cid);
       }
       else{
           $wnd.node.cat(cid).next().then(function(chunk){
@@ -93,7 +93,7 @@ function toBase64(dataArr){
       var byteArray = new Uint8Array(byteNumbers);
       if(!($wnd.node && $wnd.node.isOnline()) ){
           console.log("Node not running!");
-          //setTimeout(run,5000,base64,content);
+          setTimeout(run,1000,base64,content);
       }
       else{
           $wnd.node.add(byteArray).then(function(fileAdded){

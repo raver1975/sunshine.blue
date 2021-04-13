@@ -3,96 +3,40 @@ package com.klemstinegroup.sunshinelab.engine.objects;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.utils.Base64Coder;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonValue;
+import com.github.tommyettinger.anim8.GifDecoder;
 import com.klemstinegroup.sunshinelab.SunshineLab;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.klemstinegroup.sunshinelab.engine.overlays.Drawable;
 import com.klemstinegroup.sunshinelab.engine.overlays.Touchable;
-import com.klemstinegroup.sunshinelab.engine.util.*;
+import com.klemstinegroup.sunshinelab.engine.util.MemoryFileHandle;
+import com.klemstinegroup.sunshinelab.engine.util.SerializeUtil;
 
-public class ImageObject extends ScreenObject implements Drawable, Touchable {
-    public Texture texture;
+public class AnimatedImageObject extends ScreenObject implements Drawable, Touchable {
+    public Animation<TextureRegion> textures;
     public Pixmap pixmap;
     private Polygon polygon;
     private String cid;
+    private float stateTime;
 
 
-    public ImageObject(String url) {
-//
-//        url = "https://api.codetabs.com/v1/proxy?quest=" + url;
-        Gdx.app.log("url", url);
-        if (url!=null&&url.startsWith("Q")){url=Statics.IPFSGateway+url;}
-        if (url==null){}
-         else if (url.startsWith("data")) {
-            final byte[] b = Base64Coder.decode(url.split(",")[1]);
-            pixmap=new Pixmap(new MemoryFileHandle(b));
-           uploadPNG(pixmap);
-            this.texture=new Texture(pixmap);
-        } else {
-            String finalUrl = url;
-            Pixmap.downloadFromUrl(url, new Pixmap.DownloadPixmapResponseListener() {
-                @Override
-                public void downloadComplete(Pixmap pixmap) {
-                    ImageObject.this.pixmap=pixmap;
-                    uploadPNG(pixmap);
-                    texture = new Texture(pixmap);
-                    setBound();
-    //                IPFSUtils.uploadPng(pixmap,bounds);
-
-                }
-
-                @Override
-                public void downloadFailed(Throwable t) {
-                    String url1 = "https://api.codetabs.com/v1/proxy?quest=" + finalUrl;
-                    Pixmap.downloadFromUrl(url1, new Pixmap.DownloadPixmapResponseListener() {
-                        @Override
-                        public void downloadComplete(Pixmap pixmap) {
-                            ImageObject.this.pixmap=pixmap;
-                            uploadPNG(pixmap);
-                            texture = new Texture(pixmap);
-                            setBound();
-    //                        IPFSUtils.uploadPng(pixmap, bounds);
-                        }
-
-                        @Override
-                        public void downloadFailed(Throwable t) {
-                            Statics.userObjects.removeValue(ImageObject.this, true);
-                        }
-                    });
-
-                }
-            });
+    public AnimatedImageObject(byte[] data,boolean gifOrApng) {
+        if (gifOrApng){
+            GifDecoder gifDecoder = new GifDecoder();
+            gifDecoder.read(new MemoryFileHandle(data).read());
+            textures =gifDecoder.getAnimation(Animation.PlayMode.LOOP);
+            setBound();
         }
     }
 
-    private void uploadPNG(Pixmap pixmap){
-        IPFSUtils.uploadPngtoIPFS(pixmap, new IPFSCIDListener() {
-            @Override
-            public void cid(String cid1) {
-                Gdx.app.log("Setting cid",cid1);
-                cid=cid1;
-            }
-
-            @Override
-            public void uploadFailed(Throwable t) {
-
-            }
-        });
-    }
-
-    public ImageObject(Pixmap pixmap) {
-        this.pixmap=pixmap;
-        uploadPNG(pixmap);
-        this.texture=new Texture(pixmap);
-        setBound();
-    }
-
     private void setBound() {
-        sd.bounds.set(new Vector2(texture.getWidth(), texture.getHeight()));
+        sd.bounds.set(new Vector2(textures.getKeyFrame(0).getRegionWidth(), textures.getKeyFrame(0).getRegionHeight()));
         sd.position.add(-sd.center.x, -sd.center.y);
     }
 
@@ -106,8 +50,9 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 //                .translate(-x, -y, 0)
 //                        .translate(-center.x, -center.y, 0)
         );
-        if (texture != null) {
-            batch.draw(texture, -sd.center.x,-sd.center.y);
+        if (textures != null) {
+            stateTime += Gdx.graphics.getDeltaTime();
+            batch.draw( textures.getKeyFrame(stateTime,true), -sd.center.x,-sd.center.y);
 
         }
 
@@ -188,16 +133,16 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 //        IPFSUtils.writePng(pixmap, mfh, null);
 //        String data="data:image/png;base64,"+new String(Base64Coder.encode(mfh.ba.toArray()));
         val.addChild("pngCID",new JsonValue(cid));
-        val.addChild("class",new JsonValue(ImageObject.class.getName()));
+        val.addChild("class",new JsonValue(AnimatedImageObject.class.getName()));
         return val;
     }
 
-    public static ImageObject deserialize(JsonValue json) {
+   /* public static AnimatedImageObject deserialize(JsonValue json) {
 //        Gdx.app.log("deserialize",json.toJson(JsonWriter.OutputType.minimal));
         ScreenData sd1=SerializeUtil.deserialize(json.get("screenData"),ScreenData.class);
         String cid=json.getString("pngCID");
-        ImageObject io=new ImageObject(cid);
+        AnimatedImageObject io=new AnimatedImageObject(cid);
         io.sd=sd1;
         return io;
-    }
+    }*/
 }

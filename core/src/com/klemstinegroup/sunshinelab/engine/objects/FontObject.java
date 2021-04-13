@@ -13,6 +13,8 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.JsonValue;
 import com.klemstinegroup.sunshinelab.SunshineLab;
 import com.klemstinegroup.sunshinelab.engine.Statics;
+import com.klemstinegroup.sunshinelab.engine.overlays.Drawable;
+import com.klemstinegroup.sunshinelab.engine.overlays.Touchable;
 import com.klemstinegroup.sunshinelab.engine.util.SerializeUtil;
 
 public class FontObject extends ScreenObject implements Drawable, Touchable {

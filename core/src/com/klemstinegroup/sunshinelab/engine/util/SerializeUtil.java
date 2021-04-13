@@ -1,7 +1,6 @@
 package com.klemstinegroup.sunshinelab.engine.util;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.Method;
@@ -9,7 +8,7 @@ import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.klemstinegroup.sunshinelab.SunshineLab;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.klemstinegroup.sunshinelab.engine.objects.BaseObject;
-import com.klemstinegroup.sunshinelab.engine.objects.SerialInterface;
+import com.klemstinegroup.sunshinelab.engine.overlays.SerialInterface;
 
 import java.nio.charset.StandardCharsets;
 

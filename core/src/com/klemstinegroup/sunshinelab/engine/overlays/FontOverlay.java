@@ -1,4 +1,4 @@
-package com.klemstinegroup.sunshinelab.engine.objects;
+package com.klemstinegroup.sunshinelab.engine.overlays;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -14,14 +14,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.JsonValue;
-import com.igormaznitsa.jjjvm.impl.JJJVMClassFieldImpl;
 import com.klemstinegroup.sunshinelab.engine.Statics;
+import com.klemstinegroup.sunshinelab.engine.objects.FontObject;
+import com.klemstinegroup.sunshinelab.engine.objects.ScreenObject;
 
 public class FontOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
 
     public final Stage stage;
-    FontObject fontObject;
+    public FontObject fontObject;
     private Vector2 touchdown=new Vector2();
 
     public FontOverlay() {

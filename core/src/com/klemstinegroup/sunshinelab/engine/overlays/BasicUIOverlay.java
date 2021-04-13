@@ -1,4 +1,4 @@
-package com.klemstinegroup.sunshinelab.engine.objects;
+package com.klemstinegroup.sunshinelab.engine.overlays;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -13,6 +13,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.klemstinegroup.sunshinelab.engine.Statics;
+import com.klemstinegroup.sunshinelab.engine.objects.BaseObject;
+import com.klemstinegroup.sunshinelab.engine.objects.DrawObject;
+import com.klemstinegroup.sunshinelab.engine.objects.FontObject;
+import com.klemstinegroup.sunshinelab.engine.objects.ScreenObject;
 
 
 public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, Drawable {

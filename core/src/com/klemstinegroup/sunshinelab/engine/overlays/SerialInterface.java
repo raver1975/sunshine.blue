@@ -1,4 +1,4 @@
-package com.klemstinegroup.sunshinelab.engine.objects;
+package com.klemstinegroup.sunshinelab.engine.overlays;
 
 import com.badlogic.gdx.utils.JsonValue;
 

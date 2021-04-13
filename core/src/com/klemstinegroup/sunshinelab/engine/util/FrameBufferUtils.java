@@ -6,8 +6,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.klemstinegroup.sunshinelab.engine.objects.BaseObject;
-import com.klemstinegroup.sunshinelab.engine.objects.Drawable;
-import com.klemstinegroup.sunshinelab.engine.objects.Overlay;
+import com.klemstinegroup.sunshinelab.engine.overlays.Drawable;
 
 public class FrameBufferUtils {
     static public Pixmap drawObjects(Viewport viewport, Array<BaseObject> objects) {

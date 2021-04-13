@@ -3,8 +3,6 @@ package com.klemstinegroup.sunshinelab;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.JsonWriter;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.tommyettinger.anim8.IncrementalAnimatedPNG;
 import com.igormaznitsa.jjjvm.impl.JJJVMClassImpl;
@@ -12,10 +10,11 @@ import com.igormaznitsa.jjjvm.impl.jse.JSEProviderImpl;
 import com.igormaznitsa.jjjvm.model.JJJVMProvider;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.klemstinegroup.sunshinelab.engine.objects.*;
+import com.klemstinegroup.sunshinelab.engine.overlays.Drawable;
+import com.klemstinegroup.sunshinelab.engine.overlays.Overlay;
 import com.klemstinegroup.sunshinelab.engine.util.*;
 
 import java.io.ByteArrayInputStream;
-import java.util.Map;
 
 import static com.badlogic.gdx.Application.LOG_INFO;
 
@@ -62,6 +61,7 @@ public class SunshineLab extends ApplicationAdapter {
         ((ScreenObject) Statics.userObjects.get(1)).sd.scale = .4f;
         ((ScreenObject) Statics.userObjects.get(0)).sd.rotation = 45;
 
+
         ScreenData sd = new ScreenData();
         FontData fd = new FontData();
         fd.text = "tesT";
@@ -77,6 +77,20 @@ public class SunshineLab extends ApplicationAdapter {
 
 
 //        Statics.im.addProcessor(this);*/
+
+        SunshineLab.nativeIPFS.downloadFile("QmQ2r6iMNpky5f1m4cnm3Yqw8VSvjuKpTcK1X7dBR1LkJF/cat.gif", new IPFSFileListener() {
+            @Override
+            public void downloaded(byte[] file) {
+                Statics.userObjects.add(new AnimatedImageObject(file,true));
+            }
+
+            @Override
+            public void downloadFailed(Throwable t) {
+
+            }
+        });
+
+
         Statics.viewport = new ScreenViewport();
         mx4Batch = Statics.batch.getTransformMatrix().cpy();
 

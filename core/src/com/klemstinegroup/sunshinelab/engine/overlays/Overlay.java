@@ -1,4 +1,4 @@
-package com.klemstinegroup.sunshinelab.engine.objects;
+package com.klemstinegroup.sunshinelab.engine.overlays;
 
 public interface Overlay {
     void setInput();

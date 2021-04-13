@@ -2,10 +2,7 @@ package com.klemstinegroup.sunshinelab.engine;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -16,13 +13,10 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ArrayMap;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.klemstinegroup.sunshinelab.engine.objects.*;
-import com.klemstinegroup.sunshinelab.engine.util.NativeIPFS;
-import com.klemstinegroup.sunshinelab.engine.util.NativeIPFSInterface;
+import com.klemstinegroup.sunshinelab.engine.overlays.*;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import java.util.Stack;
@@ -40,7 +34,7 @@ public class Statics {
     public static int transformButton;
     public static ScreenViewport viewport;
     public static Stack<Overlay> overlays = new Stack<>();
-    public static boolean gif = true;
+    public static boolean gif = false;
 //    public static AnimatedPNG apng;
     ;
 //    public static final boolean debug = true;
