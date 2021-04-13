@@ -38,10 +38,7 @@ public class SerializeUtil {
         Statics.userObjects.addAll(arrabo);
     }
 
-    public static void load(String name) {
-        Preferences prefs = Gdx.app.getPreferences("scenes");
-        String cid = prefs.getString(name);
-        if (cid==null){cid=prefs.getString(name+"s");}
+    public static void load(String cid) {
         if (cid != null) {
             SunshineLab.nativeIPFS.downloadFile(cid, new IPFSFileListener() {
                 @Override
@@ -67,10 +64,9 @@ public class SerializeUtil {
                 Gdx.app.postRunnable(new Runnable() {
                     @Override
                     public void run() {
-                        Preferences prefs = Gdx.app.getPreferences("scenes");
-                        prefs.putString(name, cid);
-                        prefs.putString("current", name);
-                        prefs.flush();
+                        Statics.prefs.putString(name, cid);
+                        Statics.prefs.putString("current", cid);
+                        Statics.prefs.flush();
                     }
                 });
 

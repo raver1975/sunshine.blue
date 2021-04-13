@@ -43,15 +43,6 @@ public class SunshineLab extends ApplicationAdapter {
 
     @Override
     public void create() {
-        Preferences prefs = Gdx.app.getPreferences("scenes");
-        String name=prefs.getString("current");
-        if (name==null){
-            name=prefs.getString("currents");
-        }
-        if (name!=null){
-            Gdx.app.log("loading:",name);
-            SerializeUtil.load(name);
-        }
 
 //        VisUI.load(VisUI.SkinScale.X2);
         Gdx.input.setInputProcessor(Statics.im);
@@ -163,6 +154,13 @@ public class SunshineLab extends ApplicationAdapter {
                 }
 
 
+            }
+            if (cnt == 2000) {
+                String name = Statics.prefs.getString("current");
+                if (name != null) {
+                    Gdx.app.log("loading:", name);
+                    SerializeUtil.load(name);
+                }
             }
             if (cnt == 1000) {
                 SerializeUtil.save("test");

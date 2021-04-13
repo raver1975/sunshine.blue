@@ -3,6 +3,7 @@ package com.klemstinegroup.sunshinelab.engine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -27,7 +28,7 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 import java.util.Stack;
 
 public class Statics {
-
+    public static Preferences prefs = Gdx.app.getPreferences("scenes");
     public static final String IPFSGateway = "https://ipfs.io/ipfs/";
     public static final String IPFSMediaViewer = "QmWWoB9DUFXz8v1ZVGXT8KjjZ7r7kbUQJPzPDxfpz36ei6";
     public static final boolean debug = false;
