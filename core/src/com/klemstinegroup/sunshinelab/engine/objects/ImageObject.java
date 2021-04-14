@@ -29,56 +29,58 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 
 
     public ImageObject(byte[] data) {
-        try {
+        for (int i = 0; i < 20; i++) {
+            Gdx.app.log("byte", i + "\t" + (data[i] & 0xff));
+        }
+        if ((data[0] & 0xff) == 71 && (data[1] & 0xff) == 73 && (data[2] & 0xff) == 70) {
+            Gdx.app.log("type", "gif!");
             GifDecoder gifDecoder = new GifDecoder();
             gifDecoder.read(new MemoryFileHandle(data).read());
             textures = gifDecoder.getAnimation(Animation.PlayMode.LOOP);
-            if (textures != null && textures.getKeyFrames().length > 0) {
-                Gdx.app.log("gif", textures.getKeyFrames().length + "");
+            Gdx.app.log("textures", textures.toString());
+//            Gdx.app.log("textures",textures.getKeyFrames().length+"");
+            if (textures != null && textures.getAnimationDuration() > 0) {
+//            Gdx.app.log("gif", textures.getKeyFrames().length + "");
                 setBound();
                 return;
             }
-        } catch (Exception e) {
         }
-        try {
-            PngReaderApng apng = new PngReaderApng(new MemoryFileHandle(data));
-            System.out.println("is a png?" + apng.isApng());
-//            PixmapPacker packer = new PixmapPacker(2048, 2048, Pixmap.Format.RGBA8888, 2, false);
-            Array<TextureRegion> arrayTexture = new Array<>();
-            for (int i = 0; i < apng.getApngNumFrames(); i++) {
-                apng.advanceToFrame(i);
-                System.out.println("frame:" + i + "\t" + apng.getImgInfo().cols + "\t" + apng.getImgInfo().rows);
-                Pixmap pixmap = new Pixmap(apng.getImgInfo().cols, apng.getImgInfo().rows, Pixmap.Format.RGBA8888);
-                for (int y = 0; y < pixmap.getHeight(); y++) {
-                    System.out.println("reading row " + i + "\t" + y);
+        if ((data[0] & 0xff) == 137 && (data[1] & 0xff) == 80 && (data[2] & 0xff) == 78 && (data[3] & 0xff) == 71) {
+            Gdx.app.log("type", "png!");
+            try {
+                PngReaderApng apng = new PngReaderApng(new MemoryFileHandle(data));
+                System.out.println("is a png?" + apng.isApng());
+                Array<TextureRegion> arrayTexture = new Array<>();
+                for (int i = 0; i < apng.getApngNumFrames(); i++) {
+                    apng.advanceToFrame(i);
+                    System.out.println("frame:" + i + "\t" + apng.getImgInfo().cols + "\t" + apng.getImgInfo().rows);
+                    Pixmap pixmap = new Pixmap(apng.getImgInfo().cols, apng.getImgInfo().rows, Pixmap.Format.RGBA8888);
+                    for (int y = 0; y < pixmap.getHeight(); y++) {
+                        System.out.println("reading row " + i + "\t" + y);
 
-                    ImageLineByte imageLine = apng.readRowByte();
-                    byte[] linedata = imageLine.getScanline();
-                    for (int j = 0; j < pixmap.getWidth(); j++) {
-                        pixmap.setColor(((linedata[4 * j] & 0xff) << 24) | ((linedata[4 * j + 1] & 0xff) << 16) | ((linedata[4 * j + 2] & 0xff) << 8) | linedata[4 * j + 3] & 0xff);
-                        pixmap.drawPixel(j, y);
+                        ImageLineByte imageLine = apng.readRowByte();
+                        byte[] linedata = imageLine.getScanline();
+                        for (int j = 0; j < pixmap.getWidth(); j++) {
+                            pixmap.setColor(((linedata[4 * j] & 0xff) << 24) | ((linedata[4 * j + 1] & 0xff) << 16) | ((linedata[4 * j + 2] & 0xff) << 8) | linedata[4 * j + 3] & 0xff);
+                            pixmap.drawPixel(j, y);
+                        }
                     }
-                }
-                System.out.println("packing");
-                arrayTexture.add(new TextureRegion(new Texture(pixmap)));
+                    arrayTexture.add(new TextureRegion(new Texture(pixmap)));
 //                packer.pack(pixmap);
-            }
-//            TextureAtlas ta=new TextureAtlas();
-//            packer.updateTextureAtlas(ta,Texture.TextureFilter.Linear, Texture.TextureFilter.Linear, false);
-            float num = apng.getFctl().getDelayNum();
-            float den = apng.getFctl().getDelayDen();
-            if (den == 0) {
-                den = 100;
-            }
-            ;
-            textures = new Animation<>(num / den, arrayTexture);
-//            System.out.println("keyframes:"+textures2.getKeyFrames().length);
-//            packer.dispose();
-            setBound();
-            return;
+                }
+                float num = apng.getFctl().getDelayNum();
+                float den = apng.getFctl().getDelayDen();
+                if (den == 0) {
+                    den = 100;
+                }
+                ;
+                textures = new Animation<>(num / den, arrayTexture);
+                setBound();
+                return;
 
-        } catch (Exception e) {
-            Gdx.app.log("load error", e.getMessage());
+            } catch (Exception e) {
+                Gdx.app.log("load error", e.getMessage());
+            }
         }
         Pixmap staticPixmap = null;
         try {
