@@ -61,7 +61,10 @@ public class AnimatedImageObject extends ScreenObject implements Drawable, Touch
             }
 //            TextureAtlas ta=new TextureAtlas();
 //            packer.updateTextureAtlas(ta,Texture.TextureFilter.Linear, Texture.TextureFilter.Linear, false);
-            textures = new Animation<>(1, arrayTexture);
+            float num=apng.getFctl().getDelayNum();
+            float den=apng.getFctl().getDelayDen();
+            if (den==0){den=100;};
+            textures = new Animation<>(num/den, arrayTexture);
 //            System.out.println("keyframes:"+textures2.getKeyFrames().length);
 //            packer.dispose();
             setBound();
