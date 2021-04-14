@@ -49,8 +49,7 @@ public class SunshineLab extends ApplicationAdapter {
         Gdx.app.setLogLevel(LOG_INFO);
 /*//        img = new Texture("badlogic.jpg");
 
-//        Statics.userObjects.add(new ImageObject("https://i.redd.it/0h1nbwj4bto61.jpg"));
-//        Statics.userObjects.add(new ImageObject("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/477px-PNG_Test.png"));
+
 //        Statics.userObjects.add(new ImageObject("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/477px-PNG_Test.png"));
         Statics.userObjects.add(new ImageObject("QmZkvRWdSeksERDHhWSja9W7tja6wYQbk5KEfSxTbH87Va"));
         Statics.userObjects.add(new ImageObject("QmZkvRWdSeksERDHhWSja9W7tja6wYQbk5KEfSxTbH87Va"));
@@ -78,17 +77,10 @@ public class SunshineLab extends ApplicationAdapter {
 
 //        Statics.im.addProcessor(this);*/
 
-        SunshineLab.nativeIPFS.downloadFile("QmQ2r6iMNpky5f1m4cnm3Yqw8VSvjuKpTcK1X7dBR1LkJF/cat.gif", new IPFSFileListener() {
-            @Override
-            public void downloaded(byte[] file) {
-                Statics.userObjects.add(new AnimatedImageObject(file,true));
-            }
+//        SunshineLab.nativeIPFS.downloadFile("QmQ2r6iMNpky5f1m4cnm3Yqw8VSvjuKpTcK1X7dBR1LkJF/cat.gif", new IPFSFileListener() {
+        Statics.userObjects.add(new ImageObject("https://i.redd.it/0h1nbwj4bto61.jpg"));
+        Statics.userObjects.add(new ImageObject("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/477px-PNG_Test.png"));
 
-            @Override
-            public void downloadFailed(Throwable t) {
-
-            }
-        });
 
 
         Statics.viewport = new ScreenViewport();
@@ -148,6 +140,21 @@ public class SunshineLab extends ApplicationAdapter {
 
         Statics.batch.setProjectionMatrix(Statics.viewport.getCamera().combined);
         Statics.batch.begin();
+
+        if (cnt--==2999){
+            SunshineLab.nativeIPFS.downloadFile("QmPfaw52jwB8WGPDMG8Xuo2vx94LRAHb3iB6L9RW9oruFj", new IPFSFileListener() {
+                @Override
+                public void downloaded(byte[] file) {
+                    Statics.userObjects.add(new AnimatedImageObject(file));
+                }
+
+                @Override
+                public void downloadFailed(Throwable t) {
+
+                }
+            });
+        }
+
         if (Statics.gif) {
             if (cnt-- > 0 && cnt < 10) {
 //                Statics.gifEncoderA.addFrame(FrameBufferUtils.drawObjectsPix(Statics.viewport, Statics.userObjects, 400, 400));

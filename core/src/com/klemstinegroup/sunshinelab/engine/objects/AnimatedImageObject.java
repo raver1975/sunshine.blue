@@ -1,14 +1,18 @@
 package com.klemstinegroup.sunshinelab.engine.objects;
 
+import ar.com.hjg.pngj.IImageLine;
+import ar.com.hjg.pngj.IImageLineSet;
+import ar.com.hjg.pngj.ImageLineByte;
+import ar.com.hjg.pngj.PngReaderApng;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import com.github.tommyettinger.anim8.GifDecoder;
 import com.klemstinegroup.sunshinelab.SunshineLab;
@@ -26,11 +30,40 @@ public class AnimatedImageObject extends ScreenObject implements Drawable, Touch
     private float stateTime;
 
 
-    public AnimatedImageObject(byte[] data,boolean gifOrApng) {
-        if (gifOrApng){
+    public AnimatedImageObject(byte[] data) {
+        PngReaderApng apng = new PngReaderApng(new MemoryFileHandle(data));
+        if (!apng.isApng()) {
             GifDecoder gifDecoder = new GifDecoder();
             gifDecoder.read(new MemoryFileHandle(data).read());
-            textures =gifDecoder.getAnimation(Animation.PlayMode.LOOP);
+            textures = gifDecoder.getAnimation(Animation.PlayMode.LOOP);
+            setBound();
+        } else {
+            System.out.println("is a png!");
+//            PixmapPacker packer = new PixmapPacker(2048, 2048, Pixmap.Format.RGBA8888, 2, false);
+            Array<TextureRegion> arrayTexture = new Array<>();
+            for (int i = 0; i < apng.getApngNumFrames(); i++) {
+                apng.advanceToFrame(i);
+                System.out.println("frame:" + i + "\t" + apng.getImgInfo().cols + "\t" + apng.getImgInfo().rows);
+                Pixmap pixmap = new Pixmap(apng.getImgInfo().cols, apng.getImgInfo().rows, Pixmap.Format.RGBA8888);
+                for (int y = 0; y < pixmap.getHeight(); y++) {
+                        System.out.println("reading row " + i + "\t" + y);
+
+                        ImageLineByte imageLine = apng.readRowByte();
+                        byte[] linedata=imageLine.getScanline();
+                        for (int j = 0; j < pixmap.getWidth(); j++) {
+                            pixmap.setColor(((linedata[4 * j]&0xff)<<24)|((linedata[4 * j+1]&0xff)<<16)|((linedata[4 * j+2]&0xff)<<8)|linedata[4 * j+3]&0xff);
+                            pixmap.drawPixel(j, y);
+                        }
+                }
+                System.out.println("packing");
+                arrayTexture.add(new TextureRegion(new Texture(pixmap)));
+//                packer.pack(pixmap);
+            }
+//            TextureAtlas ta=new TextureAtlas();
+//            packer.updateTextureAtlas(ta,Texture.TextureFilter.Linear, Texture.TextureFilter.Linear, false);
+            textures = new Animation<>(1, arrayTexture);
+//            System.out.println("keyframes:"+textures2.getKeyFrames().length);
+//            packer.dispose();
             setBound();
         }
     }
@@ -44,7 +77,7 @@ public class AnimatedImageObject extends ScreenObject implements Drawable, Touch
     @Override
     public void draw(Batch batch) {
         batch.setTransformMatrix(new Matrix4().idt()
-                        .translate(sd.position.x,  sd.position.y, 0)
+                        .translate(sd.position.x, sd.position.y, 0)
                         .rotate(0, 0, 1, sd.rotation)
                         .scale(sd.scale, sd.scale, 1)
 //                .translate(-x, -y, 0)
@@ -52,8 +85,7 @@ public class AnimatedImageObject extends ScreenObject implements Drawable, Touch
         );
         if (textures != null) {
             stateTime += Gdx.graphics.getDeltaTime();
-            batch.draw( textures.getKeyFrame(stateTime,true), -sd.center.x,-sd.center.y);
-
+            batch.draw(textures.getKeyFrame(stateTime, true), -sd.center.x, -sd.center.y);
         }
 
         if (Statics.debug || Statics.selectedObjects.contains(this, true)) {
@@ -77,10 +109,10 @@ public class AnimatedImageObject extends ScreenObject implements Drawable, Touch
     @Override
     public boolean isSelected(Vector2 touch) {
         polygon = new Polygon(new float[]{0, 0, sd.bounds.x, 0, sd.bounds.x, sd.bounds.y, 0, sd.bounds.y, 0, 0});
-        polygon.setOrigin(sd.center.x,sd.center.y);
+        polygon.setOrigin(sd.center.x, sd.center.y);
         polygon.setScale(sd.scale, sd.scale);
         polygon.rotate(sd.rotation);
-        polygon.translate(sd.position.x-sd.center.x, sd.position.y-sd.center.y);
+        polygon.translate(sd.position.x - sd.center.x, sd.position.y - sd.center.y);
 //        polygon.translate(-center.x*scale,-center.y*scale);
         return polygon.contains(touch);
     }
@@ -127,13 +159,13 @@ public class AnimatedImageObject extends ScreenObject implements Drawable, Touch
 
     @Override
     public JsonValue serialize() {
-        JsonValue val=new JsonValue(JsonValue.ValueType.object);
+        JsonValue val = new JsonValue(JsonValue.ValueType.object);
         val.addChild("screenData", SerializeUtil.serialize(sd));
 //        MemoryFileHandle mfh=new MemoryFileHandle();
 //        IPFSUtils.writePng(pixmap, mfh, null);
 //        String data="data:image/png;base64,"+new String(Base64Coder.encode(mfh.ba.toArray()));
-        val.addChild("pngCID",new JsonValue(cid));
-        val.addChild("class",new JsonValue(AnimatedImageObject.class.getName()));
+        val.addChild("pngCID", new JsonValue(cid));
+        val.addChild("class", new JsonValue(AnimatedImageObject.class.getName()));
         return val;
     }
 
