@@ -15,6 +15,7 @@ import com.klemstinegroup.sunshinelab.engine.overlays.Overlay;
 import com.klemstinegroup.sunshinelab.engine.util.*;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 
 import static com.badlogic.gdx.Application.LOG_INFO;
 
@@ -78,7 +79,7 @@ public class SunshineLab extends ApplicationAdapter {
 //        Statics.im.addProcessor(this);*/
 
 //        SunshineLab.nativeIPFS.downloadFile("QmQ2r6iMNpky5f1m4cnm3Yqw8VSvjuKpTcK1X7dBR1LkJF/cat.gif", new IPFSFileListener() {
-        Statics.userObjects.add(new ImageObject("https://i.redd.it/0h1nbwj4bto61.jpg"));
+//        Statics.userObjects.add(new ImageObject("https://i.redd.it/0h1nbwj4bto61.jpg"));
         Statics.userObjects.add(new ImageObject("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/477px-PNG_Test.png"));
 
 
@@ -145,7 +146,20 @@ public class SunshineLab extends ApplicationAdapter {
             SunshineLab.nativeIPFS.downloadFile("QmPfaw52jwB8WGPDMG8Xuo2vx94LRAHb3iB6L9RW9oruFj", new IPFSFileListener() {
                 @Override
                 public void downloaded(byte[] file) {
-                    Statics.userObjects.add(new AnimatedImageObject(file));
+                    Statics.userObjects.add(new ImageObject(file));
+                }
+
+                @Override
+                public void downloadFailed(Throwable t) {
+
+                }
+            });
+            SunshineLab.nativeIPFS.downloadFile("QmbSq4P8MaQqUBzoobcKbQ78MtQujrq9bAxi6MRDi11BWc", new IPFSFileListener() {
+                @Override
+                public void downloaded(byte[] file) {
+                    ImageObject bb = new ImageObject(file);
+                    Statics.userObjects.add(bb);
+                    bb.sd.position.sub(500,500);
                 }
 
                 @Override

@@ -8,6 +8,7 @@ package com.github.tommyettinger.anim8;
 import java.io.InputStream;
 import java.util.Vector;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
@@ -281,6 +282,7 @@ public class GifDecoder {
         try {
             is.close();
         } catch (Exception e) {
+            Gdx.app.log("error",e.toString());
         }
         return status;
     }
