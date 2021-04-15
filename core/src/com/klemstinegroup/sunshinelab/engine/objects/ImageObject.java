@@ -28,21 +28,21 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
     private float stateTime;
 
 
-    public ImageObject(byte[] data) {
-        for (int i=0;i<10;i++){
-            Gdx.app.log("data:",i+"\t"+data[i]);
-        }
+    public ImageObject(byte[] data, Pixmap pixmapIn) {
+        if (data==null|data.length==0){return;}
         if ((data[0] & 0xff) == 71 && (data[1] & 0xff) == 73 && (data[2] & 0xff) == 70) {
             Gdx.app.log("type", "gif!");
             GifDecoder gifDecoder = new GifDecoder();
             gifDecoder.read(new MemoryFileHandle(data).read());
             textures = gifDecoder.getAnimation(Animation.PlayMode.LOOP);
-            Gdx.app.log("textures", textures.toString());
-//            Gdx.app.log("textures",textures.getKeyFrames().length+"");
-            if (textures != null && textures.getAnimationDuration() > 0) {
-//            Gdx.app.log("gif", textures.getKeyFrames().length + "");
-                setBound();
-                return;
+            try {
+                if (textures != null && textures.getKeyFrames().length > 0) {
+                    setBound();
+                    return;
+                }
+            }
+            catch (Exception e){
+                Gdx.app.log("error",e.toString());
             }
         }
         if ((data[0] & 0xff) == 137 && (data[1] & 0xff) == 80 && (data[2] & 0xff) == 78 && (data[3] & 0xff) == 71) {
@@ -63,28 +63,36 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                     }
                     arrayTexture.add(new TextureRegion(new Texture(pixmap)));
                 }
-                float num = apng.getFctl().getDelayNum();
-                float den = apng.getFctl().getDelayDen();
+                float num=1;
+                float den=1;
+                if (apng.getFctl()!=null) {
+                    num = apng.getFctl().getDelayNum();
+                    den = apng.getFctl().getDelayDen();
+                }
                 if (den == 0) {
                     den = 100;
                 }
                 textures = new Animation<>(num / den, arrayTexture);
                 setBound();
                 return;
-
             } catch (Exception e) {
                 Gdx.app.log("load error", e.getMessage());
             }
         }
-        Pixmap staticPixmap = null;
-        try {
-            staticPixmap = new Pixmap(new MemoryFileHandle(data));
-        } catch (Exception e1) {
-            Gdx.app.log("error", "data is not a png or jpg");
-            Gdx.app.log("error", e1.toString());
-        }
-        if (staticPixmap != null) {
-            texture = new Texture(staticPixmap);
+        if (pixmapIn == null) {
+            Pixmap staticPixmap = null;
+            try {
+                staticPixmap = new Pixmap(new MemoryFileHandle(data));
+            } catch (Exception e1) {
+                Gdx.app.log("error", "data is not a png or jpg");
+                Gdx.app.log("error", e1.getMessage());
+            }
+            if (staticPixmap != null) {
+                texture = new Texture(staticPixmap);
+                setBound();
+            }
+        } else {
+            texture = new Texture(pixmapIn);
             setBound();
         }
 
@@ -103,6 +111,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
             Pixmap pixmap = new Pixmap(new MemoryFileHandle(b));
             uploadPNG(pixmap);
             this.texture = new Texture(pixmap);
+            setBound();
         } else {
             String finalUrl = url;
             Pixmap.downloadFromUrl(url, new Pixmap.DownloadPixmapResponseListener() {
@@ -138,6 +147,10 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
         }
     }
 
+    public ImageObject(byte[] data) {
+        this(data, null);
+    }
+
     private void uploadPNG(Pixmap pixmap) {
         IPFSUtils.uploadPngtoIPFS(pixmap, new IPFSCIDListener() {
             @Override
@@ -160,12 +173,13 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
     }
 
     private void setBound() {
-        if (texture != null) {
-            sd.bounds.set(new Vector2(texture.getWidth(), texture.getHeight()));
-        }
+
         if (textures != null) {
             TextureRegion frame = textures.getKeyFrame(0);
             sd.bounds.set(new Vector2(frame.getRegionWidth(), frame.getRegionHeight()));
+        }
+        if (texture != null) {
+            sd.bounds.set(new Vector2(texture.getWidth(), texture.getHeight()));
         }
         sd.position.add(-sd.center.x, -sd.center.y);
     }

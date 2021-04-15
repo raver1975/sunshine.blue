@@ -95,7 +95,6 @@ function toBase64(arrayBuffer) {
 
   return base64
 }
-
     fetch(url)
     .then(function(response){return response.arrayBuffer();})
     .then(function(buffer) {
@@ -104,14 +103,9 @@ function toBase64(arrayBuffer) {
         self.@com.klemstinegroup.sunshinelab.client.NativeNetworkGWT::finishDownload(Ljava/lang/String;I)(base64encoded,iii);
     })
     ['catch'](function(error){
-         fetch('https://api.codetabs.com/v1/proxy?quest='+url)
-    .then(function(response){return response.arrayBuffer();})
-    .then(function(buffer) {
-       console.log(buffer);
-      var base64encoded=toBase64(buffer);
-        self.@com.klemstinegroup.sunshinelab.client.NativeNetworkGWT::finishDownload(Ljava/lang/String;I)(base64encoded,iii);
-    })
-     });
+         console.log(error);
+    });
+
     }-*/;
 
     native void downloadFromIPFS(String cid, int iii)/*-{

@@ -9,9 +9,14 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.klemstinegroup.sunshinelab.SunshineLab;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.klemstinegroup.sunshinelab.engine.objects.ImageObject;
 import com.klemstinegroup.sunshinelab.engine.objects.ScreenObject;
+import com.klemstinegroup.sunshinelab.engine.util.IPFSFileListener;
+import sun.security.provider.Sun;
+
+import java.awt.event.KeyEvent;
 
 public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
 
@@ -23,7 +28,7 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
         stage = new Stage(Statics.overlayViewport);
         Skin skin = new Skin(Gdx.files.internal("skins/orange/skin/uiskin.json"));
 
-        TextButton exitButton = new TextButton("X",skin);
+        TextButton exitButton = new TextButton("X", skin);
         exitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 55, Statics.overlayViewport.getWorldHeight() - 55);
         exitButton.addListener(new ClickListener() {
             @Override
@@ -38,15 +43,72 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
         TextField.TextFieldListener tfl = new TextField.TextFieldListener() {
             @Override
             public void keyTyped(TextField textField, char c) {
-                if (c == 13) {
+                if (c == 13|| c== KeyEvent.VK_PASTE) {
 //                    pasteButton.setVisible(false);
                     Gdx.input.setOnscreenKeyboardVisible(false);
                     Gdx.app.log("ta", ta.getText());
-                    ImageObject bg = new ImageObject(ta.getText().replaceAll("\n", ""));
-                    if (bg != null) {
-                        Statics.userObjects.add(bg);
+                    String text = ta.getText().replaceAll("\n", "");
+                    if (text.startsWith("data:")) {
+                        Gdx.app.postRunnable(new Runnable() {
+                            @Override
+                            public void run() {
+                                ImageObject bg = new ImageObject(text);
+                                if (bg != null) {
+                                    Statics.userObjects.add(bg);
+                                }
+                                ta.setText("");
+                                Statics.backOverlay();
+                            }
+                        });
+
+                    } else if (text.startsWith("Q")) {
+                        SunshineLab.nativeNet.downloadIPFS(text, new IPFSFileListener() {
+                            @Override
+                            public void downloaded(byte[] file) {
+                                Gdx.app.postRunnable(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ImageObject bg = new ImageObject(file);
+                                        if (bg != null) {
+                                            Statics.userObjects.add(bg);
+                                        }
+                                        ta.setText("");
+                                        Statics.backOverlay();
+
+                                    }
+                                });
+
+                            }
+
+                            @Override
+                            public void downloadFailed(Throwable t) {
+
+                            }
+                        });
+                    } else {
+                        SunshineLab.nativeNet.downloadFile(text, new IPFSFileListener() {
+                            @Override
+                            public void downloaded(byte[] file) {
+                                Gdx.app.postRunnable(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ImageObject bg = new ImageObject(file);
+                                        if (bg != null) {
+                                            Statics.userObjects.add(bg);
+                                        }
+                                        ta.setText("");
+                                        Statics.backOverlay();
+                                    }
+                                });
+
+                            }
+
+                            @Override
+                            public void downloadFailed(Throwable t) {
+
+                            }
+                        });
                     }
-                    ta.setText("");
                 }
             }
         };
@@ -63,7 +125,7 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
         ta.setTextFieldListener(tfl);
 
         ta.setPosition(10, 10);
-        ta.setWidth(Statics.overlayViewport.getWorldWidth()-20);
+        ta.setWidth(Statics.overlayViewport.getWorldWidth() - 20);
         stage.addActor(ta);
         stage.setKeyboardFocus(ta);
 

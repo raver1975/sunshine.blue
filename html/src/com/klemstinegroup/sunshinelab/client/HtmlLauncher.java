@@ -13,10 +13,20 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.event.dom.client.ErrorEvent;
+import com.google.gwt.event.dom.client.ErrorHandler;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.klemstinegroup.sunshinelab.SunshineLab;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.klemstinegroup.sunshinelab.engine.objects.*;
+import com.klemstinegroup.sunshinelab.engine.util.IPFSFileListener;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 public class HtmlLauncher extends GwtApplication {
     private static HtmlLauncher instance;
@@ -188,31 +198,85 @@ public class HtmlLauncher extends GwtApplication {
 //        if (!oldText.equals(text)) {
         getClipboard().setContents(text);
         Gdx.app.log("cliboard paste", text);
-                Actor focusedActor = Statics.IMAGE_OVERLAY.stage.getKeyboardFocus();
-                if (focusedActor != null && focusedActor instanceof TextArea) {
-                    TextArea ta = ((TextArea) focusedActor);
-                    ta.setText(text);
-                    if (text.startsWith("Q")){text=Statics.IPFSGateway+text;}
-                    if (text.startsWith("data")) {
-                        final Image img = new Image(text);
+        Actor focusedActor = Statics.IMAGE_OVERLAY.stage.getKeyboardFocus();
+        if (focusedActor != null && focusedActor instanceof TextArea) {
+            TextArea ta = ((TextArea) focusedActor);
+            ta.setText(text);
+            if (text.startsWith("Q")) {
+                String finalText = text;
+                SunshineLab.nativeNet.downloadIPFS(text, new IPFSFileListener() {
+                    @Override
+                    public void downloaded(byte[] data) {
+                        final Image img = new Image(Statics.IPFSGateway+ finalText);
+                        ImageElement.as(img.getElement()).setAttribute("crossorigin","anonymous");
                         final RootPanel root = RootPanel.get("embed-image");
                         root.add(img);
                         img.setVisible(false);
-                        Gdx.app.postRunnable(new Runnable() {
+                        img.addLoadHandler(new LoadHandler() {
                             @Override
-                            public void run() {
-                                for (int i = 0; i < 100; i++) {
-                                    Gdx.app.log("dims:", img.getWidth() + "," + img.getHeight());
-                                    if (img.getWidth() > 0 || img.getHeight() > 0) {
-                                        break;
-                                    }
+                            public void onLoad(LoadEvent event) {
+                                if (((data[0] & 0xff) == 71 && (data[1] & 0xff) == 73 && (data[2] & 0xff) == 70) || ((data[0] & 0xff) == 137 && (data[1] & 0xff) == 80 && (data[2] & 0xff) == 78 && (data[3] & 0xff) == 71)) {
+                                    Statics.userObjects.add(new ImageObject(data, new Pixmap(ImageElement.as(img.getElement()))));
+                                } else {
+                                    Statics.userObjects.add(new ImageObject(new Pixmap(ImageElement.as(img.getElement()))));
                                 }
-                                Statics.userObjects.add(new ImageObject(new Pixmap(ImageElement.as(img.getElement()))));
                             }
                         });
-                    } else Statics.userObjects.add(new ImageObject(text.replaceAll("\n", "")));
-                    ta.setText("");
-                    Statics.backOverlay();
+                    }
+
+                    @Override
+                    public void downloadFailed(Throwable t) {
+
+                    }
+                });
+            }
+
+//                    if (text.startsWith("Q")){text=Statics.IPFSGateway+text;}
+            if (text.startsWith("data:")) {
+                final Image img = new Image(text);
+                final RootPanel root = RootPanel.get("embed-image");
+                root.add(img);
+                img.setVisible(false);
+                img.addLoadHandler(new LoadHandler() {
+                    @Override
+                    public void onLoad(LoadEvent event) {
+                        Statics.userObjects.add(new ImageObject(new Pixmap(ImageElement.as(img.getElement()))));
+                    }
+                });
+            } else {
+//                        Statics.userObjects.add(new ImageObject(text.replaceAll("\n", "")));
+                String finalText1 = "https://api.codetabs.com/v1/proxy?quest="+text;
+                SunshineLab.nativeNet.downloadFile(finalText1, new IPFSFileListener() {
+                    @Override
+                    public void downloaded(byte[] data) {
+                        final Image img = new Image(finalText1);
+                        ImageElement.as(img.getElement()).setAttribute("crossorigin","anonymous");
+                        final RootPanel root = RootPanel.get("embed-image");
+
+                        root.add(img);
+                        img.setVisible(false);
+                        img.addLoadHandler(new LoadHandler() {
+                            @Override
+                            public void onLoad(LoadEvent event) {
+                                    if (((data[0] & 0xff) == 71 && (data[1] & 0xff) == 73 && (data[2] & 0xff) == 70) || ((data[0] & 0xff) == 137 && (data[1] & 0xff) == 80 && (data[2] & 0xff) == 78 && (data[3] & 0xff) == 71)) {
+                                        Statics.userObjects.add(new ImageObject(data, new Pixmap(ImageElement.as(img.getElement()))));
+                                    }
+                                    else{
+                                        Statics.userObjects.add(new ImageObject(new Pixmap(ImageElement.as(img.getElement()))));
+                                    }
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void downloadFailed(Throwable t) {
+
+                    }
+                });
+            }
+            ta.setText("");
+            Statics.backOverlay();
 //                        ta.setText("");
 //            }
                         /*Actor focusedActor = ((BasicScreen)((Game)getApplicationListener()).getScreen()).getStage().getKeyboardFocus();
@@ -232,7 +296,9 @@ public class HtmlLauncher extends GwtApplication {
     }
 
     static native ImageElement createImage() /*-{
-		return new Image();
+		var image = new Image();
+		image.crossorigin="anonymous";
+		return image;
 	}-*/;
 
 }

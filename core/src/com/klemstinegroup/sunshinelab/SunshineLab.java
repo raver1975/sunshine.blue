@@ -167,9 +167,10 @@ public class SunshineLab extends ApplicationAdapter {
 //                }
 //            });
 //            SunshineLab.nativeNet.downloadFile("https://s0.2mdn.net/9340650/2719916979880523/Linux_Servers_Unmatched_Resiliency_2_300x250.png", new IPFSFileListener() {
-            SunshineLab.nativeNet.downloadFile("https://media.tenor.com/images/3c6f16ee7048e074dd823b9262538806/tenor.gif", new IPFSFileListener() {
+//            SunshineLab.nativeNet.downloadFile("https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/18cf621f-daff-4f65-8a94-a08911234091/d5msnyk-2dd09fd1-6d15-4602-b059-2ba3a5f899ba.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOiIsImlzcyI6InVybjphcHA6Iiwib2JqIjpbW3sicGF0aCI6IlwvZlwvMThjZjYyMWYtZGFmZi00ZjY1LThhOTQtYTA4OTExMjM0MDkxXC9kNW1zbnlrLTJkZDA5ZmQxLTZkMTUtNDYwMi1iMDU5LTJiYTNhNWY4OTliYS5wbmcifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6ZmlsZS5kb3dubG9hZCJdfQ.GXhVLfaMuEi6BlvpXbmu1BoV6yNjdxHHb9gi1s3dFJs", new IPFSFileListener() {
+//            SunshineLab.nativeNet.downloadFile("https://media.tenor.com/images/3c6f16ee7048e074dd823b9262538806/tenor.gif", new IPFSFileListener() {
 //            SunshineLab.nativeNet.downloadFile("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcReZeHB-40uL8fsio3gVfg8J6UkFO_S7YIzJy5q2C2NhvUW1J-zSylg6p6GdEBYOTFaWqc&usqp=CAU", new IPFSFileListener() {
-                @Override
+              /*  @Override
                 public void downloaded(byte[] file) {
                     Gdx.app.postRunnable(new Runnable() {
                         @Override
@@ -187,7 +188,8 @@ public class SunshineLab extends ApplicationAdapter {
                 public void downloadFailed(Throwable t) {
 
                 }
-            });
+            });*/
+
         }
 
         if (Statics.gif) {
