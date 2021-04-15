@@ -15,23 +15,22 @@ import com.klemstinegroup.sunshinelab.engine.overlays.Overlay;
 import com.klemstinegroup.sunshinelab.engine.util.*;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 
 import static com.badlogic.gdx.Application.LOG_INFO;
 
 public class SunshineLab extends ApplicationAdapter {
 
-    public static NativeIPFSInterface nativeIPFS;
+    public static NativeNetworkInterface nativeNet;
 
     //    Camera camera;
     public SunshineLab() {
         super();
-        this.nativeIPFS = new NativeIPFS();
+        this.nativeNet = new NativeNetwork();
     }
 
-    public SunshineLab(NativeIPFSInterface nativeIPFS) {
+    public SunshineLab(NativeNetworkInterface nativeIPFS) {
         super();
-        this.nativeIPFS = nativeIPFS;
+        this.nativeNet = nativeIPFS;
     }
 
 
@@ -142,24 +141,46 @@ public class SunshineLab extends ApplicationAdapter {
         Statics.batch.setProjectionMatrix(Statics.viewport.getCamera().combined);
         Statics.batch.begin();
 
-        if (cnt--==2999){
-            SunshineLab.nativeIPFS.downloadFile("QmPfaw52jwB8WGPDMG8Xuo2vx94LRAHb3iB6L9RW9oruFj", new IPFSFileListener() {
+        if (cnt--==2800){
+//            SunshineLab.nativeNet.downloadIPFS("QmPfaw52jwB8WGPDMG8Xuo2vx94LRAHb3iB6L9RW9oruFj", new IPFSFileListener() {
+//                @Override
+//                public void downloaded(byte[] file) {
+//                    Statics.userObjects.add(new ImageObject(file));
+//                }
+//
+//                @Override
+//                public void downloadFailed(Throwable t) {
+//
+//                }
+//            });
+//            SunshineLab.nativeNet.downloadIPFS("QmbSq4P8MaQqUBzoobcKbQ78MtQujrq9bAxi6MRDi11BWc", new IPFSFileListener() {
+//                @Override
+//                public void downloaded(byte[] file) {
+//                    ImageObject bb = new ImageObject(file);
+//                    Statics.userObjects.add(bb);
+//                    bb.sd.position.sub(500,500);
+//                }
+//
+//                @Override
+//                public void downloadFailed(Throwable t) {
+//
+//                }
+//            });
+//            SunshineLab.nativeNet.downloadFile("https://s0.2mdn.net/9340650/2719916979880523/Linux_Servers_Unmatched_Resiliency_2_300x250.png", new IPFSFileListener() {
+            SunshineLab.nativeNet.downloadFile("https://media.tenor.com/images/3c6f16ee7048e074dd823b9262538806/tenor.gif", new IPFSFileListener() {
+//            SunshineLab.nativeNet.downloadFile("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcReZeHB-40uL8fsio3gVfg8J6UkFO_S7YIzJy5q2C2NhvUW1J-zSylg6p6GdEBYOTFaWqc&usqp=CAU", new IPFSFileListener() {
                 @Override
                 public void downloaded(byte[] file) {
-                    Statics.userObjects.add(new ImageObject(file));
-                }
+                    Gdx.app.postRunnable(new Runnable() {
+                        @Override
+                        public void run() {
+                            Gdx.app.log("downloaded",file.length+"");
+                            ImageObject bb = new ImageObject(file);
+                            Statics.userObjects.add(bb);
+                            bb.sd.position.sub(0,0);
+                        }
+                    });
 
-                @Override
-                public void downloadFailed(Throwable t) {
-
-                }
-            });
-            SunshineLab.nativeIPFS.downloadFile("QmbSq4P8MaQqUBzoobcKbQ78MtQujrq9bAxi6MRDi11BWc", new IPFSFileListener() {
-                @Override
-                public void downloaded(byte[] file) {
-                    ImageObject bb = new ImageObject(file);
-                    Statics.userObjects.add(bb);
-                    bb.sd.position.sub(500,500);
                 }
 
                 @Override
@@ -204,7 +225,7 @@ public class SunshineLab extends ApplicationAdapter {
                 SerializeUtil.load("test");
             }
             if (cnt == 0) {
-                nativeIPFS.downloadFile("QmZtmD2qt6fJot32nabSP3CUjicnypEBz7bHVDhPQt9aAy", new IPFSFileListener() {
+                nativeNet.downloadIPFS("QmZtmD2qt6fJot32nabSP3CUjicnypEBz7bHVDhPQt9aAy", new IPFSFileListener() {
                     @Override
                     public void downloaded(byte[] file) {
                         Gdx.app.log("text", new String(file));
@@ -219,7 +240,7 @@ public class SunshineLab extends ApplicationAdapter {
 //                Statics.gifEncoderA.finish();
                 apng.end();
                 //                IPFSUtils.uploadFile(mfh.readBytes(), "image/apng", new IPFSResponseListener() {
-                SunshineLab.nativeIPFS.uploadFile(mfh.readBytes(), "image/apng", new IPFSCIDListener() {
+                SunshineLab.nativeNet.uploadIPFS(mfh.readBytes(), "image/apng", new IPFSCIDListener() {
                     @Override
                     public void cid(String cid) {
                         IPFSUtils.openIPFSViewer(cid);
@@ -246,14 +267,14 @@ public class SunshineLab extends ApplicationAdapter {
 
         Statics.batch.end();
 
-        //------------------------------------------------------------
+/*        //------------------------------------------------------------
         try {
             jjjvmClass.findMethod("main", "([Ljava/lang/String;)V").invoke(null, null);
         } catch (
                 Throwable throwable) {
             throwable.printStackTrace();
         }
-        //------------------------------------------------------------
+        //------------------------------------------------------------*/
     }
 
 

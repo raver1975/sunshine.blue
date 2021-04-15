@@ -29,8 +29,8 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 
 
     public ImageObject(byte[] data) {
-        for (int i = 0; i < 20; i++) {
-            Gdx.app.log("byte", i + "\t" + (data[i] & 0xff));
+        for (int i=0;i<10;i++){
+            Gdx.app.log("data:",i+"\t"+data[i]);
         }
         if ((data[0] & 0xff) == 71 && (data[1] & 0xff) == 73 && (data[2] & 0xff) == 70) {
             Gdx.app.log("type", "gif!");
@@ -49,15 +49,11 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
             Gdx.app.log("type", "png!");
             try {
                 PngReaderApng apng = new PngReaderApng(new MemoryFileHandle(data));
-                System.out.println("is a png?" + apng.isApng());
                 Array<TextureRegion> arrayTexture = new Array<>();
                 for (int i = 0; i < apng.getApngNumFrames(); i++) {
                     apng.advanceToFrame(i);
-                    System.out.println("frame:" + i + "\t" + apng.getImgInfo().cols + "\t" + apng.getImgInfo().rows);
                     Pixmap pixmap = new Pixmap(apng.getImgInfo().cols, apng.getImgInfo().rows, Pixmap.Format.RGBA8888);
                     for (int y = 0; y < pixmap.getHeight(); y++) {
-                        System.out.println("reading row " + i + "\t" + y);
-
                         ImageLineByte imageLine = apng.readRowByte();
                         byte[] linedata = imageLine.getScanline();
                         for (int j = 0; j < pixmap.getWidth(); j++) {
@@ -66,14 +62,12 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                         }
                     }
                     arrayTexture.add(new TextureRegion(new Texture(pixmap)));
-//                packer.pack(pixmap);
                 }
                 float num = apng.getFctl().getDelayNum();
                 float den = apng.getFctl().getDelayDen();
                 if (den == 0) {
                     den = 100;
                 }
-                ;
                 textures = new Animation<>(num / den, arrayTexture);
                 setBound();
                 return;
@@ -87,6 +81,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
             staticPixmap = new Pixmap(new MemoryFileHandle(data));
         } catch (Exception e1) {
             Gdx.app.log("error", "data is not a png or jpg");
+            Gdx.app.log("error", e1.toString());
         }
         if (staticPixmap != null) {
             texture = new Texture(staticPixmap);

@@ -7,7 +7,6 @@ import com.badlogic.gdx.Net;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.net.HttpRequestBuilder;
 import com.badlogic.gdx.net.HttpStatus;
 import com.badlogic.gdx.utils.*;
@@ -168,7 +167,7 @@ public class IPFSUtils {
     public static void uploadPngtoIPFS(Pixmap pixmap,IPFSCIDListener listener){
         MemoryFileHandle mfh=new MemoryFileHandle();
         IPFSUtils.writePng(pixmap,mfh,null);
-        SunshineLab.nativeIPFS.uploadFile(mfh.readBytes(), "image/png", new IPFSCIDListener() {
+        SunshineLab.nativeNet.uploadIPFS(mfh.readBytes(), "image/png", new IPFSCIDListener() {
             @Override
             public void cid(String cid) {
                 listener.cid(cid);

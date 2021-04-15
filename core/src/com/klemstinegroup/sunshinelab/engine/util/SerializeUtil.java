@@ -39,7 +39,7 @@ public class SerializeUtil {
 
     public static void load(String cid) {
         if (cid != null) {
-            SunshineLab.nativeIPFS.downloadFile(cid, new IPFSFileListener() {
+            SunshineLab.nativeNet.downloadIPFS(cid, new IPFSFileListener() {
                 @Override
                 public void downloaded(byte[] file) {
                     JsonReader reader = new JsonReader();
@@ -57,7 +57,7 @@ public class SerializeUtil {
 
     public static void save(String name) {
         JsonValue val = serializeScene();
-        SunshineLab.nativeIPFS.uploadFile(val.toJson(JsonWriter.OutputType.javascript).getBytes(StandardCharsets.UTF_8), "application/json", new IPFSCIDListener() {
+        SunshineLab.nativeNet.uploadIPFS(val.toJson(JsonWriter.OutputType.javascript).getBytes(StandardCharsets.UTF_8), "application/json", new IPFSCIDListener() {
             @Override
             public void cid(String cid) {
                 Gdx.app.postRunnable(new Runnable() {
