@@ -98,13 +98,12 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         picker.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Gdx.app.log("here","text");
                 if (fontObject != null) fontObject.setColor(picker.getSelectedColor());
             }
         });
 //        picker.setScale(.7f);
-        TextButton showPickerButton = new TextButton("color", skin);
-        showPickerButton.addListener(new ChangeListener() {
+        TextButton colorButton = new TextButton("color", skin);
+        colorButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 //displaying picker with fade in animation
@@ -115,8 +114,8 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
                 }
             }
         });
-        showPickerButton.setPosition(Statics.overlayViewport.getWorldWidth() - 55, 0);
-        stage.addActor(showPickerButton);
+        colorButton.setPosition(Statics.overlayViewport.getWorldWidth() - 55, 10);
+        stage.addActor(colorButton);
 
         List list = new List(skin);
         list.addListener(new ChangeListener() {
@@ -160,7 +159,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         });
         stage.addActor(sizeSpinner);*/
         Slider slider = new Slider(1, 200, 1, true, skin);
-        slider.setPosition(Statics.overlayViewport.getWorldWidth() - 50,80);
+        slider.setPosition(Statics.overlayViewport.getWorldWidth() - 40,80);
         slider.setSize(20,Statics.overlayViewport.getWorldHeight()-150);
         slider.setValue(50);
 

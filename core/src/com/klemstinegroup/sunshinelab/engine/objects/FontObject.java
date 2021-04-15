@@ -184,8 +184,10 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
     }
 
     public void setColor(Color newColor) {
-        fd.color=newColor;
-        font.setColor(fd.color);
+        if (newColor!=null) {
+            fd.color = newColor;
+            font.setColor(fd.color);
+        }
     }
     @Override
     public JsonValue serialize() {

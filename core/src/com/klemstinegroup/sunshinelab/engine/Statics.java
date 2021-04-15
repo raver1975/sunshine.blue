@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.klemstinegroup.sunshinelab.engine.objects.*;
 import com.klemstinegroup.sunshinelab.engine.overlays.*;
 import space.earlygrey.shapedrawer.ShapeDrawer;
@@ -54,7 +55,7 @@ public class Statics {
     public static final Array<BaseObject> userObjects = new Array<BaseObject>();
     public static final Array<BaseObject> selectedObjects = new Array<BaseObject>();
     public static InputMultiplexer im = new InputMultiplexer();
-    public static FitViewport overlayViewport = new FitViewport((600f * Gdx.graphics.getWidth() / Gdx.graphics.getHeight()), 600);
+    public static StretchViewport overlayViewport = new StretchViewport((550f * Gdx.graphics.getWidth() / Gdx.graphics.getHeight()), 550);
     public static final FontOverlay FONT_OVERLAY = new FontOverlay();
     public static final BasicUIOverlay BASIC_UI_OVERLAY = new BasicUIOverlay();
     public static final TransformOverlay TRANSFORM_OVERLAY = new TransformOverlay();
@@ -62,6 +63,8 @@ public class Statics {
     public static ImageOverlay IMAGE_OVERLAY = new ImageOverlay();
     public static Overlay overlay;
     public static ArrayMap<Gestureable, GestureDetector> gestureDetectors = new ArrayMap<>();
+
+    public Statics(){}
 
     public static void setOverlay(Overlay overlay) {
         Overlay topOverlay = Statics.overlay;

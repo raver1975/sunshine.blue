@@ -63,11 +63,12 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 //        ((ScreenObject) Statics.objects.get(0)).position.set(-((ScreenObject) Statics.objects.get(0)).bounds.x/2, -((ScreenObject) Statics.objects.get(0)).bounds.y/2, 0);
             }
         });
+        fontButton.setPosition(0,10);
         stage.addActor(fontButton);
 
 
         Actor imageButton = new TextButton("Image", skin);
-        imageButton.setPosition(100, 0);
+        imageButton.setPosition(100, 10);
 //        fontButton.setColor(Color.WHITE);
 
 
@@ -84,7 +85,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         });
 
         Actor drawButton = new TextButton("Draw", skin);
-        drawButton.setPosition(200, 0);
+        drawButton.setPosition(200, 10);
         drawButton.addListener(new ClickListener() {
 
             @Override

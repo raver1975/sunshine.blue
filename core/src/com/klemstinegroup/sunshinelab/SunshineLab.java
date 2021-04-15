@@ -3,6 +3,11 @@ package com.klemstinegroup.sunshinelab;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.badlogic.gdx.utils.reflect.Field;
+import com.badlogic.gdx.utils.reflect.ReflectionException;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.tommyettinger.anim8.IncrementalAnimatedPNG;
 import com.igormaznitsa.jjjvm.impl.JJJVMClassImpl;
@@ -287,7 +292,37 @@ public class SunshineLab extends ApplicationAdapter {
 
     @Override
     public void resize(int width, int height) {
+//        int WORLD_WIDTH=(550*width)/height;
+//        int WORLD_HEIGHT=550;
         Statics.viewport.update(width, height);
+        Statics.overlayViewport.update(width,height);
+//        Statics.overlayViewport.getCamera().viewportWidth = WORLD_WIDTH;
+//        Statics.overlayViewport.getCamera().viewportHeight = WORLD_HEIGHT;
+//        Statics.overlayViewport.getCamera().position.set(WORLD_WIDTH/2,WORLD_HEIGHT/2, 0);
+//        Statics.overlayViewport.getCamera().update();
+
+        /*Statics stat=new Statics();
+        Field[] fields = ClassReflection.getFields(Statics.class);
+        for (Field f:fields){
+            if (Overlay.class.isAssignableFrom(f.getType())){
+                if (f.getType().isInterface()){continue;}
+                try {
+                    Object o=f.get(stat);
+                    System.out.println(f.getType().getName());
+                    Field stageField=ClassReflection.getField(f.getType(),"stage");
+                    Stage st=(Stage) stageField.get(o);
+                    st.getViewport().update(width,height);
+//                    st.getCamera().viewportWidth = WORLD_WIDTH;
+//                    st.getCamera().viewportHeight = WORLD_HEIGHT;
+//                    st.getCamera().position.set(st.getCamera().viewportWidth / 2, st.getCamera().viewportHeight / 2, 0);
+                    st.getCamera().update();
+//                    st.setViewport(Statics.overlayViewport);
+//                    st.getViewport().apply(true);
+                } catch (ReflectionException e) {
+                    e.printStackTrace();
+                }
+            }
+        }*/
     }
 
     /*@Override
