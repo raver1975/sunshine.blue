@@ -156,7 +156,7 @@ project(":html") {
 //        api "com.kotcrab.vis:vis-ui:1.3.0:sources"
 //        api "de.golfgl.gdxgamesvcs:gdx-gamesvcs-core:1.0.2:sources"
 //        api "de.golfgl.gdxgamesvcs:gdx-gamesvcs-core-gamejolt:1.0.2:sources"
-        compile "com.kotcrab.vis:vis-ui:+:sources"
+//        compile "com.kotcrab.vis:vis-ui:+:sources"
         implementation "com.github.intrigus.gdx-freetype-gwt:gdx-freetype-gwt:1.9.11-SNAPSHOT"
         implementation "com.github.intrigus.gdx-freetype-gwt:gdx-freetype-gwt:1.9.11-SNAPSHOT:sources"
     }
@@ -185,7 +185,7 @@ project(":core") {
 //        api "com.github.czyzby:gdx-lml:1.9.1.9.6"
 //        api "com.github.czyzby:gdx-lml-vis:1.9.1.9.6"
 //        api "de.golfgl.gdxgamesvcs:gdx-gamesvcs-core:1.0.2"
-        implementation "com.kotcrab.vis:vis-ui:+"
+//        implementation "com.kotcrab.vis:vis-ui:+"
         implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
     }
 }

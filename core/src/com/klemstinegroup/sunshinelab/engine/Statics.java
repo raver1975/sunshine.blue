@@ -54,7 +54,7 @@ public class Statics {
     public static final Array<BaseObject> userObjects = new Array<BaseObject>();
     public static final Array<BaseObject> selectedObjects = new Array<BaseObject>();
     public static InputMultiplexer im = new InputMultiplexer();
-    public static FitViewport overlayViewport = new FitViewport((400f * Gdx.graphics.getWidth() / Gdx.graphics.getHeight()), 400);
+    public static FitViewport overlayViewport = new FitViewport((600f * Gdx.graphics.getWidth() / Gdx.graphics.getHeight()), 600);
     public static final FontOverlay FONT_OVERLAY = new FontOverlay();
     public static final BasicUIOverlay BASIC_UI_OVERLAY = new BasicUIOverlay();
     public static final TransformOverlay TRANSFORM_OVERLAY = new TransformOverlay();

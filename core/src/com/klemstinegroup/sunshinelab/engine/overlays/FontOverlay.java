@@ -4,16 +4,19 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.klemstinegroup.sunshinelab.colorpicker.DialogColorPicker;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.klemstinegroup.sunshinelab.engine.objects.FontObject;
 import com.klemstinegroup.sunshinelab.engine.objects.ScreenObject;
@@ -25,6 +28,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
     private Vector2 touchdown=new Vector2();
 
     public FontOverlay() {
+        new BitmapFont();
         FileHandle[] fontList = Gdx.files.internal("fonts").list();
         stage = new Stage(Statics.overlayViewport);
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
@@ -81,6 +85,24 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
 //        picker.setResizable(true);
 
 //...
+
+//        stage.addActor(colorPicker);
+*/
+        DialogColorPicker picker = new DialogColorPicker("dialog", new Skin(Gdx.files.internal("skin-composer-ui/skin-composer-ui.json")), new DialogColorPicker.ColorListener() {
+            @Override
+            public void selected(Color color) {
+                if (fontObject != null) fontObject.setColor(color);
+            }
+        }, Color.RED);
+
+        picker.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.log("here","text");
+                if (fontObject != null) fontObject.setColor(picker.getSelectedColor());
+            }
+        });
+//        picker.setScale(.7f);
         TextButton showPickerButton = new TextButton("color", skin);
         showPickerButton.addListener(new ChangeListener() {
             @Override
@@ -89,14 +111,12 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
                 if (stage.getActors().contains(picker, true)) {
                     picker.remove();
                 } else {
-                    stage.addActor(picker.fadeIn());
+                    picker.show(stage);
                 }
             }
         });
-        showPickerButton.setPosition(Statics.overlayViewport.getWorldWidth() - 150, 10);
+        showPickerButton.setPosition(Statics.overlayViewport.getWorldWidth() - 55, 0);
         stage.addActor(showPickerButton);
-//        stage.addActor(colorPicker);
-*/
 
         List list = new List(skin);
         list.addListener(new ChangeListener() {
