@@ -130,7 +130,8 @@ public class DialogColorPicker extends Dialog {
             tempVector = new Vector3();
         }
         float[] hsb = new float[3];
-        java.awt.Color.RGBtoHSB((int) (255.0f * r), (int) (255.0f * g), (int) (255.0f * b), hsb);
+        new Color(r,g,b,1).toHsv(hsb);
+//        java.awt.Color.RGBtoHSB((int) (255.0f * r), (int) (255.0f * g), (int) (255.0f * b), hsb);
         tempVector.x = hsb[0];
         if (MathUtils.isEqual(tempVector.x, 1.0f)) {
             tempVector.x = 0;

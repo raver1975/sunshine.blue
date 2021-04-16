@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.klemstinegroup.sunshinelab.colorpicker.DialogColorPicker;
+import com.klemstinegroup.sunshinelab.colorpicker.Spinner;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.klemstinegroup.sunshinelab.engine.objects.FontObject;
 import com.klemstinegroup.sunshinelab.engine.objects.ScreenObject;
@@ -88,7 +89,21 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
 
 //        stage.addActor(colorPicker);
 */
-        DialogColorPicker picker = new DialogColorPicker("dialog", new Skin(Gdx.files.internal("skin-composer-ui/skin-composer-ui.json")), new DialogColorPicker.ColorListener() {
+        Gdx.app.log("color-picker","here");
+//        "default": {
+//            "buttonMinusStyle": "spinner-minus-h",
+//                    "buttonPlusStyle": "spinner-plus-h",
+//                    "textFieldStyle": "spinner"
+//        }
+        Skin skin1=new Skin(Gdx.files.internal("skin-composer-ui/skin-composer-ui.json"));
+
+        Button.ButtonStyle buttonMinusStyle = skin1.get("spinner-minus-h", Button.ButtonStyle.class);
+        Button.ButtonStyle buttonPlusStyle = skin1.get("spinner-plus-h", Button.ButtonStyle.class);
+        TextField.TextFieldStyle textFieldStyle = skin1.get("spinner", TextField.TextFieldStyle.class);
+        Spinner.SpinnerStyle style=new Spinner.SpinnerStyle(buttonMinusStyle,buttonPlusStyle,textFieldStyle);
+
+        skin1.add("default",style);
+        DialogColorPicker picker = new DialogColorPicker("default", skin1, new DialogColorPicker.ColorListener() {
             @Override
             public void selected(Color color) {
                 if (fontObject != null) fontObject.setColor(color);

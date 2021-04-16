@@ -292,6 +292,7 @@ public class SunshineLab extends ApplicationAdapter {
 
     @Override
     public void resize(int width, int height) {
+        Gdx.app.log("resize",width+"\t"+height);
 //        int WORLD_WIDTH=(550*width)/height;
 //        int WORLD_HEIGHT=550;
         Statics.viewport.update(width, height);

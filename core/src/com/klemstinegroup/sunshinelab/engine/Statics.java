@@ -60,7 +60,7 @@ public class Statics {
     public static final BasicUIOverlay BASIC_UI_OVERLAY = new BasicUIOverlay();
     public static final TransformOverlay TRANSFORM_OVERLAY = new TransformOverlay();
     public static final DrawOverlay DRAW_OVERLAY = new DrawOverlay();
-    public static ImageOverlay IMAGE_OVERLAY = new ImageOverlay();
+    public static final ImageOverlay IMAGE_OVERLAY = new ImageOverlay();
     public static Overlay overlay;
     public static ArrayMap<Gestureable, GestureDetector> gestureDetectors = new ArrayMap<>();
 

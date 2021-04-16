@@ -1,6 +1,7 @@
 package com.klemstinegroup.sunshinelab.engine.overlays;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -14,9 +15,7 @@ import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.klemstinegroup.sunshinelab.engine.objects.ImageObject;
 import com.klemstinegroup.sunshinelab.engine.objects.ScreenObject;
 import com.klemstinegroup.sunshinelab.engine.util.IPFSFileListener;
-import sun.security.provider.Sun;
 
-import java.awt.event.KeyEvent;
 
 public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
 
@@ -43,7 +42,7 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
         TextField.TextFieldListener tfl = new TextField.TextFieldListener() {
             @Override
             public void keyTyped(TextField textField, char c) {
-                if (c == 13|| c== KeyEvent.VK_PASTE) {
+                if (c == 13) {
 //                    pasteButton.setVisible(false);
                     Gdx.input.setOnscreenKeyboardVisible(false);
                     Gdx.app.log("ta", ta.getText());
