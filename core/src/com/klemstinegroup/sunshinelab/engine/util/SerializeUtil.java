@@ -8,9 +8,11 @@ import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.klemstinegroup.sunshinelab.SunshineLab;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.klemstinegroup.sunshinelab.engine.objects.BaseObject;
+import com.klemstinegroup.sunshinelab.engine.objects.ScreenObject;
 import com.klemstinegroup.sunshinelab.engine.overlays.SerialInterface;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Comparator;
 
 public class SerializeUtil {
     public static Json json = new Json();
@@ -22,22 +24,22 @@ public class SerializeUtil {
 
 
     public static void deserializeScene(JsonValue val) {
-        Array<BaseObject> arrabo = new Array<>();
+        Gdx.app.log("scene", val.toJson(JsonWriter.OutputType.minimal));
+        Statics.userObjects.clear();
         JsonValue array = val.get("userObjects");
         for (int i = 0; i < array.size; i++) {
             JsonValue jv = array.get(i);
             Gdx.app.log("scene", jv.toJson(JsonWriter.OutputType.minimal));
             try {
-                arrabo.add((BaseObject) ClassReflection.getMethod(ClassReflection.forName(jv.getString("class")), "deserialize", JsonValue.class).invoke(null, jv));
+                ClassReflection.getMethod(ClassReflection.forName(jv.getString("class")), "deserialize", JsonValue.class).invoke(null, jv);
             } catch (ReflectionException e) {
                 e.printStackTrace();
             }
         }
-        Statics.userObjects.clear();
-        Statics.userObjects.addAll(arrabo);
     }
 
-    public static void load(String cid) {
+    public static void load(String name) {
+        String cid=Statics.prefs.getString(name);
         if (cid != null) {
             SunshineLab.nativeNet.downloadIPFS(cid, new IPFSFileListener() {
                 @Override
@@ -49,7 +51,7 @@ public class SerializeUtil {
 
                 @Override
                 public void downloadFailed(Throwable t) {
-
+                    Statics.exceptionLog("load fail",t);
                 }
             });
         }
@@ -57,7 +59,7 @@ public class SerializeUtil {
 
     public static void save(String name) {
         JsonValue val = serializeScene();
-        SunshineLab.nativeNet.uploadIPFS(val.toJson(JsonWriter.OutputType.javascript).getBytes(StandardCharsets.UTF_8), "application/json", new IPFSCIDListener() {
+        SunshineLab.nativeNet.uploadIPFS(val.toJson(JsonWriter.OutputType.javascript).getBytes(StandardCharsets.UTF_8), new IPFSCIDListener() {
             @Override
             public void cid(String cid) {
                 Gdx.app.postRunnable(new Runnable() {
@@ -84,11 +86,13 @@ public class SerializeUtil {
         JsonValue val = new JsonValue(JsonValue.ValueType.object);
         JsonValue array = new JsonValue(JsonValue.ValueType.array);
         val.addChild("userObjects", array);
+        int cnt=0;
         for (BaseObject bo : Statics.userObjects) {
-            if (bo instanceof SerialInterface) {
+                if (bo instanceof ScreenObject){
+                    ((ScreenObject)bo).sd.layer=cnt++;
+                }
                 Gdx.app.log("scene", "adding:" + bo.getClass());
                 array.addChild(((SerialInterface) bo).serialize());
-            }
         }
         Gdx.app.log("scene", "serialized");
         return val;
@@ -98,18 +102,17 @@ public class SerializeUtil {
         return json.fromJson(t, val.toJson(JsonWriter.OutputType.json));
     }
 
-    public static <T extends BaseObject> BaseObject copy(T si) {
+    public static <T extends BaseObject> void copy(T si) {
         Gdx.app.log("copy class", si.getClass().getName());
         JsonValue temp = si.serialize();
 //        Gdx.app.log("json",temp.toJson(JsonWriter.OutputType.json));
         try {
             Method method = ClassReflection.getMethod(ClassReflection.forName(si.getClass().getName()), "deserialize", JsonValue.class);
             Gdx.app.log("method", method.getName());
-            return (T) method.invoke(null, temp);
+            Statics.userObjects.add((T) method.invoke(null, temp));
         } catch (ReflectionException e) {
             e.printStackTrace();
         }
-        return null;
     }
 
 }

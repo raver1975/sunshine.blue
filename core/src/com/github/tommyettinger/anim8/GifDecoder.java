@@ -15,6 +15,9 @@ import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
+import com.klemstinegroup.sunshinelab.engine.Statics;
+
+import javax.xml.soap.Text;
 
 public class GifDecoder {
     /**
@@ -727,7 +730,7 @@ public class GifDecoder {
         }
         float frameDuration = (float)getDelay(0);
         frameDuration /= 1000; // convert milliseconds into seconds
-        Animation<TextureRegion> result = new Animation<TextureRegion>(frameDuration, texReg, playMode);
+        Animation<TextureRegion> result = new Animation<>(frameDuration, texReg, playMode);
 
         return result;
     }

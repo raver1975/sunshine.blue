@@ -11,8 +11,8 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Base64Coder;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.JsonWriter;
 import com.github.tommyettinger.anim8.GifDecoder;
 import com.klemstinegroup.sunshinelab.SunshineLab;
 import com.klemstinegroup.sunshinelab.engine.Statics;
@@ -28,73 +28,194 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
     private float stateTime;
 
 
-    public ImageObject(byte[] data, Pixmap pixmapIn) {
-        if (data==null|data.length==0){return;}
-        if ((data[0] & 0xff) == 71 && (data[1] & 0xff) == 73 && (data[2] & 0xff) == 70) {
-            Gdx.app.log("type", "gif!");
-            GifDecoder gifDecoder = new GifDecoder();
-            gifDecoder.read(new MemoryFileHandle(data).read());
-            textures = gifDecoder.getAnimation(Animation.PlayMode.LOOP);
-            try {
-                if (textures != null && textures.getKeyFrames().length > 0) {
-                    setBound();
+    public ImageObject(byte[] data, Pixmap pixmapIn, String cid) {
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                if (data == null | data.length == 0) {
                     return;
                 }
-            }
-            catch (Exception e){
-                Gdx.app.log("error",e.toString());
-            }
-        }
-        if ((data[0] & 0xff) == 137 && (data[1] & 0xff) == 80 && (data[2] & 0xff) == 78 && (data[3] & 0xff) == 71) {
-            Gdx.app.log("type", "png!");
-            try {
-                PngReaderApng apng = new PngReaderApng(new MemoryFileHandle(data));
-                Array<TextureRegion> arrayTexture = new Array<>();
-                for (int i = 0; i < apng.getApngNumFrames(); i++) {
-                    apng.advanceToFrame(i);
-                    Pixmap pixmap = new Pixmap(apng.getImgInfo().cols, apng.getImgInfo().rows, Pixmap.Format.RGBA8888);
-                    for (int y = 0; y < pixmap.getHeight(); y++) {
-                        ImageLineByte imageLine = apng.readRowByte();
-                        byte[] linedata = imageLine.getScanline();
-                        for (int j = 0; j < pixmap.getWidth(); j++) {
-                            pixmap.setColor(((linedata[4 * j] & 0xff) << 24) | ((linedata[4 * j + 1] & 0xff) << 16) | ((linedata[4 * j + 2] & 0xff) << 8) | linedata[4 * j + 3] & 0xff);
-                            pixmap.drawPixel(j, y);
+                if (cid == null || cid.isEmpty()) {
+                    SunshineLab.nativeNet.uploadIPFS(data, new IPFSCIDListener() {
+                        @Override
+                        public void cid(String cid) {
+                            ImageObject.this.cid = cid;
                         }
+
+
+                        @Override
+                        public void uploadFailed(Throwable t) {
+                            Statics.exceptionLog("uload", t);
+                        }
+                    });
+                }
+
+
+                if ((data[0] & 0xff) == 71 && (data[1] & 0xff) == 73 && (data[2] & 0xff) == 70) {
+                    Gdx.app.log("type", "gif!");
+                    GifDecoder gifDecoder = new GifDecoder();
+                    gifDecoder.read(new MemoryFileHandle(data).read());
+                    textures = gifDecoder.getAnimation(Animation.PlayMode.LOOP);
+                    try {
+                        if (textures != null) {
+                            setBound();
+                            return;
+                        }
+                    } catch (Exception e) {
+                        Statics.exceptionLog("error2", e);
                     }
-                    arrayTexture.add(new TextureRegion(new Texture(pixmap)));
                 }
-                float num=1;
-                float den=1;
-                if (apng.getFctl()!=null) {
-                    num = apng.getFctl().getDelayNum();
-                    den = apng.getFctl().getDelayDen();
+                if ((data[0] & 0xff) == 137 && (data[1] & 0xff) == 80 && (data[2] & 0xff) == 78 && (data[3] & 0xff) == 71) {
+                    Gdx.app.log("type", "png!");
+                    try {
+                        PngReaderApng apng = new PngReaderApng(new MemoryFileHandle(data));
+                        Array<TextureRegion> arrayTexture = new Array<>();
+                        for (int i = 0; i < apng.getApngNumFrames(); i++) {
+                            apng.advanceToFrame(i);
+                            Pixmap pixmap = new Pixmap(apng.getImgInfo().cols, apng.getImgInfo().rows, Pixmap.Format.RGBA8888);
+                            for (int y = 0; y < pixmap.getHeight(); y++) {
+                                ImageLineByte imageLine = apng.readRowByte();
+                                byte[] linedata = imageLine.getScanline();
+                                for (int j = 0; j < pixmap.getWidth(); j++) {
+                                    pixmap.setColor(((linedata[4 * j] & 0xff) << 24) | ((linedata[4 * j + 1] & 0xff) << 16) | ((linedata[4 * j + 2] & 0xff) << 8) | linedata[4 * j + 3] & 0xff);
+                                    pixmap.drawPixel(j, y);
+                                }
+                            }
+                            TextureRegion region = null;
+                            try {
+                                region = new TextureRegion(new Texture(pixmap));
+                                arrayTexture.add(region);
+                            } catch (Exception e) {
+                                Gdx.app.log("textureregeion", e.toString());
+                            }
+                        }
+                        float num = 1;
+                        float den = 1;
+                        if (apng.getFctl() != null) {
+                            num = apng.getFctl().getDelayNum();
+                            den = apng.getFctl().getDelayDen();
+                        }
+                        if (den == 0) {
+                            den = 100;
+                        }
+                        if (arrayTexture.size > 0) {
+                            textures = new Animation<>(num / den, arrayTexture);
+                            setBound();
+                            return;
+                        }
+                    } catch (Exception e) {
+                        Statics.exceptionLog("apng", e);
+                    }
                 }
-                if (den == 0) {
-                    den = 100;
+
+                if (pixmapIn == null) {
+                    Pixmap staticPixmap = null;
+                    try {
+                        staticPixmap = new Pixmap(new MemoryFileHandle(data));
+                    } catch (Exception e1) {
+                        Gdx.app.log("error", "data is not a png or jpg");
+                        Gdx.app.log("data", new String(data));
+                        Statics.exceptionLog("not", e1);
+                    }
+                    if (staticPixmap != null) {
+                        texture = new Texture(staticPixmap);
+                        setBound();
+                    }
+                } else {
+                    Gdx.app.log("image", "non-animated");
+                    texture = new Texture(pixmapIn);
+                    textures = null;
+                    setBound();
                 }
-                textures = new Animation<>(num / den, arrayTexture);
-                setBound();
-                return;
-            } catch (Exception e) {
-                Gdx.app.log("load error", e.getMessage());
             }
-        }
-        if (pixmapIn == null) {
-            Pixmap staticPixmap = null;
-            try {
-                staticPixmap = new Pixmap(new MemoryFileHandle(data));
-            } catch (Exception e1) {
-                Gdx.app.log("error", "data is not a png or jpg");
-                Gdx.app.log("error", e1.getMessage());
+        });
+
+    }
+
+    public static void load(String url) {
+        Gdx.app.log("url", url);
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                if (url == null || url.isEmpty()) {
+                    return;
+                }
+                if (url.startsWith("Q")) {
+                    SunshineLab.nativeNet.downloadIPFS(url, new IPFSFileListener() {
+                        @Override
+                        public void downloaded(byte[] file) {
+                            SunshineLab.nativeNet.downloadPixmap(Statics.IPFSGateway + url, new Pixmap.DownloadPixmapResponseListener() {
+                                @Override
+                                public void downloadComplete(Pixmap pixmap) {
+                                    Statics.userObjects.add(new ImageObject(file, pixmap, url));
+                                }
+
+                                @Override
+                                public void downloadFailed(Throwable t) {
+                                    Statics.userObjects.add(new ImageObject(file, null, url));
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void downloadFailed(Throwable t) {
+
+                        }
+                    });
+                } else {
+                    SunshineLab.nativeNet.downloadFile(url, new IPFSFileListener() {
+                        @Override
+                        public void downloaded(byte[] file) {
+                            SunshineLab.nativeNet.downloadPixmap(url, new Pixmap.DownloadPixmapResponseListener() {
+                                @Override
+                                public void downloadComplete(Pixmap pixmap) {
+                                    Statics.userObjects.add(new ImageObject(file, pixmap, null));
+                                }
+
+                                @Override
+                                public void downloadFailed(Throwable t) {
+                                    Statics.userObjects.add(new ImageObject(file, null, null));
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void downloadFailed(Throwable t) {
+
+                        }
+                    });
+
+                }
             }
-            if (staticPixmap != null) {
-                texture = new Texture(staticPixmap);
-                setBound();
+        });
+
+    }
+
+    private static void continueDownload(Pixmap pixmap, String url) {
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                Gdx.app.log("continue", url);
+                SunshineLab.nativeNet.downloadFile(url, new IPFSFileListener() {
+                    @Override
+                    public void downloaded(byte[] file) {
+                        Gdx.app.log("continue", "download success");
+                        Statics.userObjects.add(new ImageObject(file, pixmap, null));
+
+                    }
+
+                    @Override
+                    public void downloadFailed(Throwable t) {
+                        Gdx.app.log("continue", "download failed");
+                        Statics.exceptionLog("continued", (Exception) t);
+                        Statics.userObjects.add(new ImageObject(pixmap, null));
+                    }
+                });
             }
-        } else {
-            texture = new Texture(pixmapIn);
-            setBound();
-        }
+        });
+    }
+
+   /* public ImageObject() {
 
     }
 
@@ -102,60 +223,55 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 //
 //        url = "https://api.codetabs.com/v1/proxy?quest=" + url;
         Gdx.app.log("url", url);
-        if (url != null && url.startsWith("Q")) {
-            url = Statics.IPFSGateway + url;
+        if (url != null) {
+            if (url.startsWith("Q")) {
+                this.cid = url;
+                url = Statics.IPFSGateway + url;
+            }
+            if (url.startsWith("data")) {
+                final byte[] b = Base64Coder.decode(url.split(",")[1]);
+                Pixmap pixmap = new Pixmap(new MemoryFileHandle(b));
+                uploadPNG(pixmap);
+                this.texture = new Texture(pixmap);
+                setBound();
+            } else {
+                String finalUrl = url;
+                Pixmap.downloadFromUrl(url, new Pixmap.DownloadPixmapResponseListener() {
+                    @Override
+                    public void downloadComplete(Pixmap pixmap) {
+                        uploadPNG(pixmap);
+                        texture = new Texture(pixmap);
+                        setBound();
+                    }
+
+                    @Override
+                    public void downloadFailed(Throwable t) {
+                        String url1 = "https://api.codetabs.com/v1/proxy?quest=" + finalUrl;
+                        Pixmap.downloadFromUrl(url1, new Pixmap.DownloadPixmapResponseListener() {
+                            @Override
+                            public void downloadComplete(Pixmap pixmap) {
+                                uploadPNG(pixmap);
+                                texture = new Texture(pixmap);
+                                setBound();
+                                //                        IPFSUtils.uploadPng(pixmap, bounds);
+                            }
+
+                            @Override
+                            public void downloadFailed(Throwable t) {
+                                Statics.userObjects.removeValue(ImageObject.this, true);
+                            }
+                        });
+
+                    }
+                });
+            }
         }
-        if (url == null) {
-        } else if (url.startsWith("data")) {
-            final byte[] b = Base64Coder.decode(url.split(",")[1]);
-            Pixmap pixmap = new Pixmap(new MemoryFileHandle(b));
-            uploadPNG(pixmap);
-            this.texture = new Texture(pixmap);
-            setBound();
-        } else {
-            String finalUrl = url;
-            Pixmap.downloadFromUrl(url, new Pixmap.DownloadPixmapResponseListener() {
-                @Override
-                public void downloadComplete(Pixmap pixmap) {
-                    uploadPNG(pixmap);
-                    texture = new Texture(pixmap);
-                    setBound();
-                    //                IPFSUtils.uploadPng(pixmap,bounds);
-
-                }
-
-                @Override
-                public void downloadFailed(Throwable t) {
-                    String url1 = "https://api.codetabs.com/v1/proxy?quest=" + finalUrl;
-                    Pixmap.downloadFromUrl(url1, new Pixmap.DownloadPixmapResponseListener() {
-                        @Override
-                        public void downloadComplete(Pixmap pixmap) {
-                            uploadPNG(pixmap);
-                            texture = new Texture(pixmap);
-                            setBound();
-                            //                        IPFSUtils.uploadPng(pixmap, bounds);
-                        }
-
-                        @Override
-                        public void downloadFailed(Throwable t) {
-                            Statics.userObjects.removeValue(ImageObject.this, true);
-                        }
-                    });
-
-                }
-            });
-        }
-    }
-
-    public ImageObject(byte[] data) {
-        this(data, null);
-    }
+    }*/
 
     private void uploadPNG(Pixmap pixmap) {
         IPFSUtils.uploadPngtoIPFS(pixmap, new IPFSCIDListener() {
             @Override
             public void cid(String cid1) {
-                Gdx.app.log("Setting cid", cid1);
                 cid = cid1;
             }
 
@@ -166,22 +282,34 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
         });
     }
 
-    public ImageObject(Pixmap pixmap) {
-        uploadPNG(pixmap);
+    public ImageObject(Pixmap pixmap, String cid) {
+        if (cid != null && !cid.isEmpty()) {
+            this.cid = cid;
+        } else {
+            uploadPNG(pixmap);
+        }
         this.texture = new Texture(pixmap);
         setBound();
     }
 
     private void setBound() {
-
-        if (textures != null) {
-            TextureRegion frame = textures.getKeyFrame(0);
-            sd.bounds.set(new Vector2(frame.getRegionWidth(), frame.getRegionHeight()));
-        }
+//        sd.position.add(-sd.center.x, -sd.center.y);
         if (texture != null) {
             sd.bounds.set(new Vector2(texture.getWidth(), texture.getHeight()));
         }
-        sd.position.add(-sd.center.x, -sd.center.y);
+        try {
+            if (textures != null) {
+                TextureRegion frame = textures.getKeyFrame(0);
+                sd.bounds.set(new Vector2(frame.getRegionWidth(), frame.getRegionHeight()));
+                texture = null;
+            } else {
+                textures = null;
+            }
+        } catch (Exception e) {
+            textures = null;
+            Statics.exceptionLog("tex", e);
+        }
+
     }
 
 
@@ -191,7 +319,6 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                         .translate(sd.position.x, sd.position.y, 0)
                         .rotate(0, 0, 1, sd.rotation)
                         .scale(sd.scale, sd.scale, 1)
-//                .translate(-x, -y, 0)
 //                        .translate(-center.x, -center.y, 0)
         );
         if (textures != null) {
@@ -280,17 +407,28 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 //        MemoryFileHandle mfh=new MemoryFileHandle();
 //        IPFSUtils.writePng(pixmap, mfh, null);
 //        String data="data:image/png;base64,"+new String(Base64Coder.encode(mfh.ba.toArray()));
-        val.addChild("pngCID", new JsonValue(cid));
+        val.addChild("CID", new JsonValue(cid));
         val.addChild("class", new JsonValue(ImageObject.class.getName()));
         return val;
     }
 
-    public static ImageObject deserialize(JsonValue json) {
-//        Gdx.app.log("deserialize",json.toJson(JsonWriter.OutputType.minimal));
+    public static void deserialize(JsonValue json) {
+        Gdx.app.log("deserialize", json.toJson(JsonWriter.OutputType.minimal));
         ScreenData sd1 = SerializeUtil.deserialize(json.get("screenData"), ScreenData.class);
-        String cid = json.getString("pngCID");
-        ImageObject io = new ImageObject(cid);
-        io.sd = sd1;
-        return io;
+        String cid = json.getString("CID");
+        Gdx.app.log("cidd:", cid);
+        SunshineLab.nativeNet.downloadIPFS(cid, new IPFSFileListener() {
+            @Override
+            public void downloaded(byte[] file) {
+                ImageObject io = new ImageObject(file, null, cid);
+                io.sd = sd1;
+                Statics.userObjects.add(io);
+            }
+
+            @Override
+            public void downloadFailed(Throwable t) {
+                Statics.exceptionLog("deserialize", t);
+            }
+        });
     }
 }

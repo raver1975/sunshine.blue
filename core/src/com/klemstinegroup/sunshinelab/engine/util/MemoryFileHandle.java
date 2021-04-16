@@ -134,4 +134,9 @@ public class MemoryFileHandle extends FileHandle {
         if (!append)ba.clear();
         ba.addAll(bytes);
     }
+
+    @Override
+    public String toString() {
+        return "Memory file:"+ba.size;
+    }
 }

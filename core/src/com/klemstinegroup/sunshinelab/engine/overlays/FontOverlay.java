@@ -173,7 +173,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
             }
         });
         stage.addActor(sizeSpinner);*/
-        Slider slider = new Slider(1, 200, 1, true, skin);
+        Slider slider = new Slider(1, 500, 1, true, skin);
         slider.setPosition(Statics.overlayViewport.getWorldWidth() - 40,80);
         slider.setSize(20,Statics.overlayViewport.getWorldHeight()-150);
         slider.setValue(50);

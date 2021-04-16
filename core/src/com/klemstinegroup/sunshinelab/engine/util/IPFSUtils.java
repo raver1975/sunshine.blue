@@ -50,7 +50,7 @@ public class IPFSUtils {
         Gdx.net.sendHttpRequest(request, listener);
     }
 
-    public static void uploadFile(byte[] data, String mime, IPFSCIDListener listen) {
+    public static void uploadFile(byte[] data,IPFSCIDListener listen) {
         Gdx.app.postRunnable(new Runnable() {
             @Override
             public void run() {
@@ -64,7 +64,7 @@ public class IPFSUtils {
                 request.setHeader("Content-Type", "multipart/form-data; boundary=" + boundary);
                 String out1 = "--" + boundary +
                         CRLF + "Content-Disposition: form-data; name=\"file\"" +
-                        CRLF + "Content-Type: " + mime +
+                        CRLF + "Content-Type: " + "application/octet-stream" +
                         CRLF + CRLF;
                 String out2 = CRLF + "--" + boundary + "--" + CRLF;
                 ByteArray batemp = new ByteArray();
@@ -83,8 +83,8 @@ public class IPFSUtils {
                             String hash = jons.getString("Hash");
                             if (hash != null && listen != null) {
                                 listen.cid(hash);
-                                pinFile(hash);
                             }
+                            else{listen.uploadFailed(new Throwable("upload failed"));}
                         }
                     }
 
@@ -123,7 +123,7 @@ public class IPFSUtils {
         }
         pngw.end();
         if (listener != null) {
-            uploadFile(mfh.readBytes(), "image/png", listener);
+            uploadFile(mfh.readBytes(), listener);
         }
     }
 
@@ -167,7 +167,7 @@ public class IPFSUtils {
     public static void uploadPngtoIPFS(Pixmap pixmap,IPFSCIDListener listener){
         MemoryFileHandle mfh=new MemoryFileHandle();
         IPFSUtils.writePng(pixmap,mfh,null);
-        SunshineLab.nativeNet.uploadIPFS(mfh.readBytes(), "image/png", new IPFSCIDListener() {
+        SunshineLab.nativeNet.uploadIPFS(mfh.readBytes(), new IPFSCIDListener() {
             @Override
             public void cid(String cid) {
                 listener.cid(cid);

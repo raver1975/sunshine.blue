@@ -25,6 +25,7 @@ import java.util.Stack;
 public class Statics {
     public static Preferences prefs = Gdx.app.getPreferences("scenes");
     public static final String IPFSGateway = "https://ipfs.io/ipfs/";
+    public static final String CORSGateway="https://api.codetabs.com/v1/proxy?quest=";
     public static final String IPFSMediaViewer = "QmWWoB9DUFXz8v1ZVGXT8KjjZ7r7kbUQJPzPDxfpz36ei6";
     public static final boolean debug = false;
     public static Matrix4 mx4Batch = new Matrix4();
@@ -35,7 +36,7 @@ public class Statics {
     public static int transformButton;
     public static ScreenViewport viewport;
     public static Stack<Overlay> overlays = new Stack<>();
-    public static boolean gif = false;
+    public static boolean gif = true;
 //    public static AnimatedPNG apng;
     ;
 //    public static final boolean debug = true;
@@ -99,5 +100,17 @@ public class Statics {
     public static void backOverlay() {
         setOverlay(overlays.pop());
         overlays.pop();
+    }
+
+    public static void exceptionLog(String tag,Exception e) {
+        Gdx.app.log(tag,e.toString());
+        StackTraceElement[] st=e.getStackTrace();
+        for (StackTraceElement s:st){
+            Gdx.app.log(tag,s.toString());
+        }
+    }
+
+    public static void exceptionLog(String tag, Throwable t) {
+        exceptionLog(tag,(Exception)t);
     }
 }

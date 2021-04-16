@@ -20,6 +20,7 @@ import com.klemstinegroup.sunshinelab.engine.overlays.Overlay;
 import com.klemstinegroup.sunshinelab.engine.util.*;
 
 import java.io.ByteArrayInputStream;
+import java.util.Comparator;
 
 import static com.badlogic.gdx.Application.LOG_INFO;
 
@@ -84,7 +85,7 @@ public class SunshineLab extends ApplicationAdapter {
 
 //        SunshineLab.nativeIPFS.downloadFile("QmQ2r6iMNpky5f1m4cnm3Yqw8VSvjuKpTcK1X7dBR1LkJF/cat.gif", new IPFSFileListener() {
 //        Statics.userObjects.add(new ImageObject("https://i.redd.it/0h1nbwj4bto61.jpg"));
-        Statics.userObjects.add(new ImageObject("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/477px-PNG_Test.png"));
+
 
 
 
@@ -147,6 +148,7 @@ public class SunshineLab extends ApplicationAdapter {
         Statics.batch.begin();
 
         if (cnt--==2800){
+            ImageObject.load("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/477px-PNG_Test.png");
 //            SunshineLab.nativeNet.downloadIPFS("QmPfaw52jwB8WGPDMG8Xuo2vx94LRAHb3iB6L9RW9oruFj", new IPFSFileListener() {
 //                @Override
 //                public void downloaded(byte[] file) {
@@ -207,24 +209,20 @@ public class SunshineLab extends ApplicationAdapter {
                     for (int draw = 0; draw < gg; draw++) {
                         if (Statics.userObjects.get(draw) != null) {
                             Gdx.app.log("class", Statics.userObjects.get(draw).getClass().getName());
-                            BaseObject o = (BaseObject) SerializeUtil.copy(Statics.userObjects.get(draw));
-                            Gdx.app.log("o class", o.getClass().getName());
-                            Statics.userObjects.add(o);
-//                            ((ScreenObject) Statics.userObjects.get(gg+draw )).sd.position.sub(10, 10);
-//                            ((ScreenObject) Statics.userObjects.get(gg+draw )).sd.rotation += 45;
+                            SerializeUtil.copy(Statics.userObjects.get(draw));
                         }
                     }
                 }
 
 
             }
-            if (cnt == 2000) {
-                String name = Statics.prefs.getString("current");
-                if (name != null) {
-                    Gdx.app.log("loading:", name);
-                    SerializeUtil.load(name);
-                }
-            }
+//            if (cnt == 2000) {
+//                String name = Statics.prefs.getString("current");
+//                if (name != null) {
+//                    Gdx.app.log("loading:", name);
+//                    SerializeUtil.load(name);
+//                }
+//            }
             if (cnt == 1000) {
                 SerializeUtil.save("test");
             }
@@ -247,7 +245,7 @@ public class SunshineLab extends ApplicationAdapter {
 //                Statics.gifEncoderA.finish();
                 apng.end();
                 //                IPFSUtils.uploadFile(mfh.readBytes(), "image/apng", new IPFSResponseListener() {
-                SunshineLab.nativeNet.uploadIPFS(mfh.readBytes(), "image/apng", new IPFSCIDListener() {
+                SunshineLab.nativeNet.uploadIPFS(mfh.readBytes(),  new IPFSCIDListener() {
                     @Override
                     public void cid(String cid) {
                         IPFSUtils.openIPFSViewer(cid);
@@ -260,6 +258,15 @@ public class SunshineLab extends ApplicationAdapter {
                 });
             }
         }
+        Statics.userObjects.sort(new Comparator<BaseObject>() {
+            @Override
+            public int compare(BaseObject o1, BaseObject o2) {
+                if (o1 instanceof ScreenObject && o2 instanceof ScreenObject){
+                    return Integer.compare(((ScreenObject)o1).sd.layer,((ScreenObject)o2).sd.layer);
+                }
+                else return 0;
+            }
+        });
         for (BaseObject bo : Statics.userObjects) {
             if (bo instanceof Drawable) {
                 ((Drawable) bo).draw(Statics.batch);

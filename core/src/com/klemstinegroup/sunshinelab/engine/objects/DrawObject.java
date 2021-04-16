@@ -93,8 +93,6 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
                         .translate( sd.position.x,  sd.position.y, 0)
                         .rotate(0, 0, 1, sd.rotation)
                         .scale(sd.scale, sd.scale, 1)
-//                .translate(-position.x, -position.y, 0)
-//                        .translate(-center.x, -center.y, 0)
         );
 //        Statics.shapedrawer.setTextureRegion(new TextureRegion(((RectTextureObject)Statics.userObjects.get(0)).texture));
         Statics.shapedrawer.setColor(Color.WHITE);
@@ -172,7 +170,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
         return val;
     }
 
-    public static DrawObject deserialize(JsonValue json) {
+    public static void deserialize(JsonValue json) {
         JsonValue array=json.get("array");
         DrawData dd=new DrawData();
         for (int i=0;i<array.size;i++){
@@ -180,6 +178,6 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
             Array<Vector2> vecAr=SerializeUtil.deserialize(subarray,Array.class);
             dd.path.add(vecAr);
         }
-        return new DrawObject(dd);
+        Statics.userObjects.add(new DrawObject(dd));
     }
 }

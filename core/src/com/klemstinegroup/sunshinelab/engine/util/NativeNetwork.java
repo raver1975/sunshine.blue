@@ -2,11 +2,12 @@ package com.klemstinegroup.sunshinelab.engine.util;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
+import com.badlogic.gdx.graphics.Pixmap;
 
 public class NativeNetwork implements NativeNetworkInterface {
     @Override
-    public void uploadIPFS(byte[] data, String mime, IPFSCIDListener listener) {
-        IPFSUtils.uploadFile(data, mime, listener);
+    public void uploadIPFS(byte[] data, IPFSCIDListener listener) {
+        IPFSUtils.uploadFile(data, listener);
     }
 
     @Override
@@ -37,5 +38,10 @@ public class NativeNetwork implements NativeNetworkInterface {
 
             }
         });
+    }
+
+    @Override
+    public void downloadPixmap(String url, Pixmap.DownloadPixmapResponseListener listener) {
+        Pixmap.downloadFromUrl(url,listener);
     }
 }

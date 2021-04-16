@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Base64Coder;
 import com.klemstinegroup.sunshinelab.SunshineLab;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.klemstinegroup.sunshinelab.engine.objects.ImageObject;
@@ -43,7 +44,6 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
             @Override
             public void keyTyped(TextField textField, char c) {
                 if (c == 13) {
-//                    pasteButton.setVisible(false);
                     Gdx.input.setOnscreenKeyboardVisible(false);
                     Gdx.app.log("ta", ta.getText());
                     String text = ta.getText().replaceAll("\n", "");
@@ -51,7 +51,8 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
                         Gdx.app.postRunnable(new Runnable() {
                             @Override
                             public void run() {
-                                ImageObject bg = new ImageObject(text);
+                                final byte[] b = Base64Coder.decode(text.split(",")[1]);
+                                ImageObject bg = new ImageObject(b,null,null);
                                 if (bg != null) {
                                     Statics.userObjects.add(bg);
                                 }
@@ -67,7 +68,7 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
                                 Gdx.app.postRunnable(new Runnable() {
                                     @Override
                                     public void run() {
-                                        ImageObject bg = new ImageObject(file);
+                                        ImageObject bg = new ImageObject(file,null,text);
                                         if (bg != null) {
                                             Statics.userObjects.add(bg);
                                         }
@@ -91,7 +92,7 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
                                 Gdx.app.postRunnable(new Runnable() {
                                     @Override
                                     public void run() {
-                                        ImageObject bg = new ImageObject(file);
+                                        ImageObject bg = new ImageObject(file,null,null);
                                         if (bg != null) {
                                             Statics.userObjects.add(bg);
                                         }

@@ -1,9 +1,18 @@
 package com.klemstinegroup.sunshinelab.client;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.Base64Coder;
+import com.google.gwt.dom.client.ImageElement;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.klemstinegroup.sunshinelab.engine.Statics;
+import com.klemstinegroup.sunshinelab.engine.objects.ImageObject;
 import com.klemstinegroup.sunshinelab.engine.util.IPFSCIDListener;
 import com.klemstinegroup.sunshinelab.engine.util.IPFSFileListener;
 import com.klemstinegroup.sunshinelab.engine.util.IPFSUtils;
@@ -14,27 +23,44 @@ import java.util.Arrays;
 public class NativeNetworkGWT implements NativeNetworkInterface {
     ArrayMap<Integer,IPFSCIDListener> uploadListener=new ArrayMap<>();
     ArrayMap<Integer,IPFSFileListener> downloadListener=new ArrayMap<>();
-    int cnt=0;
     @Override
-    public void uploadIPFS(byte[] data, String mime, IPFSCIDListener listener) {
-        int j=cnt++;
+    public void uploadIPFS(byte[] data, IPFSCIDListener listener) {
+        int j= MathUtils.random(Integer.MIN_VALUE,Integer.MAX_VALUE);
         this.uploadListener.put(j,listener);
-        uploadToIPFS(new String(Base64Coder.encode(data)), mime,j);
+        uploadToIPFS(new String(Base64Coder.encode(data)),j);
     }
 
     @Override
     public void downloadIPFS(String cid, IPFSFileListener listener) {
-        int j=cnt++;
+        int j=MathUtils.random(Integer.MIN_VALUE,Integer.MAX_VALUE);
         downloadListener.put(j,listener);
         downloadFromIPFS(cid,j);
     }
 
     @Override
     public void downloadFile(String url, IPFSFileListener listener) {
-        int j=cnt++;
+        int j=MathUtils.random(Integer.MIN_VALUE,Integer.MAX_VALUE);
         Gdx.app.log("downloadind:",url+"\t"+j);
         downloadListener.put(j,listener);
         downloadFromNet(url,j);
+    }
+
+    @Override
+    public void downloadPixmap(String url, Pixmap.DownloadPixmapResponseListener listener) {
+        final Image img = new Image(Statics.CORSGateway+url);
+        ImageElement.as(img.getElement()).setAttribute("crossorigin","anonymous");
+        final RootPanel root = RootPanel.get("embed-image");
+
+        root.add(img);
+        img.setVisible(false);
+        img.addLoadHandler(new LoadHandler() {
+            @Override
+            public void onLoad(LoadEvent event) {
+                listener.downloadComplete(new Pixmap(ImageElement.as(img.getElement())));
+
+            }
+        });
+
     }
 
     native void downloadFromNet(String url, int iii)/*-{
@@ -163,9 +189,9 @@ function toBase64(dataArr){
       run(cid);
     }-*/;
 
-    native void uploadToIPFS(String base64, String content, int iii)/*-{
+    native void uploadToIPFS(String base64, int iii)/*-{
       var self = this;
-      function run(base64,content){
+      function run(base64){
       var byteCharacters = atob(base64);
       var byteNumbers = new Array(byteCharacters.length);
       for (var i = 0; i < byteCharacters.length; i++) {
@@ -174,7 +200,7 @@ function toBase64(dataArr){
       var byteArray = new Uint8Array(byteNumbers);
       if(!($wnd.node && $wnd.node.isOnline()) ){
           console.log("Node not running!");
-          setTimeout(run,1000,base64,content);
+          setTimeout(run,1000,base64);
       }
       else{
           $wnd.node.add(byteArray).then(function(fileAdded){
@@ -183,12 +209,11 @@ function toBase64(dataArr){
       });
       }
       };
-      run(base64,content);
+      run(base64);
     }-*/;
 
     public void finishUpload(String cid,int i) {
         Gdx.app.log("upload",cid+"\t"+i);
-        IPFSUtils.pinFile(cid);
         uploadListener.get(i).cid(cid);
         uploadListener.removeKey(i);
     }

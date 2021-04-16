@@ -87,7 +87,6 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
                         .translate( sd.position.x, sd.position.y, 0)
                         .rotate(0, 0, 1, sd.rotation)
                         .scale(sd.scale, sd.scale, 1)
-//                .translate(-position.x, -position.y, 0)
 //                        .translate(-center.x, -center.y, 0)
         );
 
@@ -199,10 +198,10 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
     }
 
 
-    public static FontObject deserialize(JsonValue json) {
+    public static void  deserialize(JsonValue json) {
         FontData fd1=SerializeUtil.deserialize(json.get("fontData"),FontData.class);
         ScreenData sd1=SerializeUtil.deserialize(json.get("screenData"),ScreenData.class);
-        return new FontObject(fd1,sd1);
+        Statics.userObjects.add(new FontObject(fd1,sd1));
     }
 
 }
