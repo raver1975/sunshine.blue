@@ -138,7 +138,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (fontObject != null) {
-                    ((FontObject) fontObject).setFont(((List) actor).getSelectedIndex());
+                    ((FontObject) fontObject).setFont((String)((List) actor).getSelected());
                     ((FontObject) fontObject).generate();
                 }
             }

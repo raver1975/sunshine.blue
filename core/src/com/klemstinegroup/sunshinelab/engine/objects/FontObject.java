@@ -36,8 +36,8 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
         generate();
     }
 
-    public void setFont(int index){
-        fd.fontName= fontList[index].nameWithoutExtension();
+    public void setFont(String name){
+            fd.fontName = name;
     }
     public void setSize(int size){
         fd.size=size;
