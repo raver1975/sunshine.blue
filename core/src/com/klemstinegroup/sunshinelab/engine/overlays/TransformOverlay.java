@@ -34,7 +34,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                Statics.backOverlay();
+                Overlay.backOverlay();
             }
         });
         stage.addActor(exitButton);

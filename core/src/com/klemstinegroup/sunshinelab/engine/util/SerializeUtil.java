@@ -109,7 +109,7 @@ public class SerializeUtil {
         try {
             Method method = ClassReflection.getMethod(ClassReflection.forName(si.getClass().getName()), "deserialize", JsonValue.class);
             Gdx.app.log("method", method.getName());
-            Statics.userObjects.add((T) method.invoke(null, temp));
+            method.invoke(null, temp);
         } catch (ReflectionException e) {
             e.printStackTrace();
         }

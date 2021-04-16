@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Base64Coder;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 import com.github.tommyettinger.anim8.GifDecoder;
@@ -48,6 +49,8 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                             Statics.exceptionLog("uload", t);
                         }
                     });
+                } else {
+                    ImageObject.this.cid = cid;
                 }
 
 
@@ -133,12 +136,44 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
     }
 
     public static void load(String url) {
-        Gdx.app.log("url", url);
+//        Gdx.app.log("url", url);
         Gdx.app.postRunnable(new Runnable() {
             @Override
             public void run() {
                 if (url == null || url.isEmpty()) {
                     return;
+                }
+                if (url.startsWith("data:")) {
+                    try {
+                        final byte[] b = Base64Coder.decode(url.split(",")[1]);
+                        SunshineLab.nativeNet.uploadIPFS(b, new IPFSCIDListener() {
+                            @Override
+                            public void cid(String cid) {
+                                SunshineLab.nativeNet.downloadPixmap(Statics.IPFSGateway+cid, new Pixmap.DownloadPixmapResponseListener() {
+                                    @Override
+                                    public void downloadComplete(Pixmap pixmap) {
+                                        Statics.userObjects.add(new ImageObject(b, pixmap, cid));
+                                    }
+
+                                    @Override
+                                    public void downloadFailed(Throwable t) {
+                                        Statics.userObjects.add(new ImageObject(b, null, cid));
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void uploadFailed(Throwable t) {
+                                Statics.exceptionLog("data url1",t);
+                            }
+                        });
+
+                    } catch (Exception e) {
+                        Statics.exceptionLog("data url",e);
+                    }
+                    ;
+
+
                 }
                 if (url.startsWith("Q")) {
                     SunshineLab.nativeNet.downloadIPFS(url, new IPFSFileListener() {
@@ -147,11 +182,13 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                             SunshineLab.nativeNet.downloadPixmap(Statics.IPFSGateway + url, new Pixmap.DownloadPixmapResponseListener() {
                                 @Override
                                 public void downloadComplete(Pixmap pixmap) {
+                                    Gdx.app.log("downl","complete");
                                     Statics.userObjects.add(new ImageObject(file, pixmap, url));
                                 }
 
                                 @Override
                                 public void downloadFailed(Throwable t) {
+                                    Gdx.app.log("downl","failed");
                                     Statics.userObjects.add(new ImageObject(file, null, url));
                                 }
                             });
@@ -159,6 +196,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 
                         @Override
                         public void downloadFailed(Throwable t) {
+                            Statics.exceptionLog("downloadfailed",t);
 
                         }
                     });
@@ -191,7 +229,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 
     }
 
-    private static void continueDownload(Pixmap pixmap, String url) {
+   /* private static void continueDownload(Pixmap pixmap, String url) {
         Gdx.app.postRunnable(new Runnable() {
             @Override
             public void run() {
@@ -213,7 +251,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                 });
             }
         });
-    }
+    }*/
 
    /* public ImageObject() {
 
@@ -282,15 +320,15 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
         });
     }
 
-    public ImageObject(Pixmap pixmap, String cid) {
-        if (cid != null && !cid.isEmpty()) {
-            this.cid = cid;
-        } else {
-            uploadPNG(pixmap);
-        }
-        this.texture = new Texture(pixmap);
-        setBound();
-    }
+//    public ImageObject(Pixmap pixmap, String cid) {
+//        if (cid != null && !cid.isEmpty()) {
+//            this.cid = cid;
+//        } else {
+//            uploadPNG(pixmap);
+//        }
+//        this.texture = new Texture(pixmap);
+//        setBound();
+//    }
 
     private void setBound() {
 //        sd.position.add(-sd.center.x, -sd.center.y);
@@ -420,9 +458,22 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
         SunshineLab.nativeNet.downloadIPFS(cid, new IPFSFileListener() {
             @Override
             public void downloaded(byte[] file) {
-                ImageObject io = new ImageObject(file, null, cid);
-                io.sd = sd1;
-                Statics.userObjects.add(io);
+                SunshineLab.nativeNet.downloadPixmap(Statics.IPFSGateway + cid, new Pixmap.DownloadPixmapResponseListener() {
+                    @Override
+                    public void downloadComplete(Pixmap pixmap) {
+                        ImageObject io = new ImageObject(file, pixmap, cid);
+                        io.sd = sd1;
+                        Statics.userObjects.add(io);
+                    }
+
+                    @Override
+                    public void downloadFailed(Throwable t) {
+                        ImageObject io = new ImageObject(file, null, cid);
+                        io.sd = sd1;
+                        Statics.userObjects.add(io);
+                    }
+                });
+
             }
 
             @Override

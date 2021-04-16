@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -49,7 +48,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                Statics.backOverlay();
+                Overlay.backOverlay();
             }
         });
 
@@ -212,7 +211,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         Statics.viewport.unproject(touchdown.set(screenX, screenY));
         if (fontObject.isSelected(touchdown)) {
-            Statics.setOverlay(Statics.TRANSFORM_OVERLAY);
+            Overlay.setOverlay(Statics.TRANSFORM_OVERLAY);
             Statics.TRANSFORM_OVERLAY.touchDown(screenX, screenY, pointer, button);
             Statics.selectedObjects.clear();
             Statics.selectedObjects.add(fontObject);

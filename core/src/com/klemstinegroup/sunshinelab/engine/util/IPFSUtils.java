@@ -134,6 +134,7 @@ public class IPFSUtils {
     }
 
     public static void downloadFromIPFS(String url, final IPFSFileListener responseListener) {
+        Gdx.app.log("ur;",url);
         Net.HttpRequest request = new Net.HttpRequest(Net.HttpMethods.GET);
         request.setUrl(Statics.IPFSGateway + url);
         Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {

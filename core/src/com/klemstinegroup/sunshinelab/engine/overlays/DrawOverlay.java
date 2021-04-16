@@ -42,7 +42,7 @@ public class DrawOverlay extends ScreenObject implements Overlay, Touchable, Dra
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                Statics.backOverlay();
+                Overlay.backOverlay();
             }
         });
         stage.addActor(exitButton);

@@ -17,7 +17,7 @@ public class NativeNetwork implements NativeNetworkInterface {
 
     @Override
     public void downloadFile(String url, IPFSFileListener listener) {
-        Gdx.app.log("downloading",url);
+        Gdx.app.log("downloading",url.substring(0,10));
         Net.HttpRequest request = new Net.HttpRequest(Net.HttpMethods.GET);
         request.setUrl(url);
         Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {

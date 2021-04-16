@@ -1,7 +1,6 @@
 package com.klemstinegroup.sunshinelab.engine.overlays;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -34,7 +33,7 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                Statics.backOverlay();
+                Overlay.backOverlay();
             }
         });
         stage.addActor(exitButton);
@@ -47,68 +46,9 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
                     Gdx.input.setOnscreenKeyboardVisible(false);
                     Gdx.app.log("ta", ta.getText());
                     String text = ta.getText().replaceAll("\n", "");
-                    if (text.startsWith("data:")) {
-                        Gdx.app.postRunnable(new Runnable() {
-                            @Override
-                            public void run() {
-                                final byte[] b = Base64Coder.decode(text.split(",")[1]);
-                                ImageObject bg = new ImageObject(b,null,null);
-                                if (bg != null) {
-                                    Statics.userObjects.add(bg);
-                                }
-                                ta.setText("");
-                                Statics.backOverlay();
-                            }
-                        });
-
-                    } else if (text.startsWith("Q")) {
-                        SunshineLab.nativeNet.downloadIPFS(text, new IPFSFileListener() {
-                            @Override
-                            public void downloaded(byte[] file) {
-                                Gdx.app.postRunnable(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        ImageObject bg = new ImageObject(file,null,text);
-                                        if (bg != null) {
-                                            Statics.userObjects.add(bg);
-                                        }
-                                        ta.setText("");
-                                        Statics.backOverlay();
-
-                                    }
-                                });
-
-                            }
-
-                            @Override
-                            public void downloadFailed(Throwable t) {
-
-                            }
-                        });
-                    } else {
-                        SunshineLab.nativeNet.downloadFile(text, new IPFSFileListener() {
-                            @Override
-                            public void downloaded(byte[] file) {
-                                Gdx.app.postRunnable(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        ImageObject bg = new ImageObject(file,null,null);
-                                        if (bg != null) {
-                                            Statics.userObjects.add(bg);
-                                        }
-                                        ta.setText("");
-                                        Statics.backOverlay();
-                                    }
-                                });
-
-                            }
-
-                            @Override
-                            public void downloadFailed(Throwable t) {
-
-                            }
-                        });
-                    }
+                    ImageObject.load(text);
+                    ta.setText("");
+                    Overlay.backOverlay();
                 }
             }
         };

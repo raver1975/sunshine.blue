@@ -58,7 +58,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
                 Statics.userObjects.add(ff);
                 Statics.FONT_OVERLAY.setFontObject(ff);
-                Statics.setOverlay(Statics.FONT_OVERLAY);
+                Overlay.setOverlay(Statics.FONT_OVERLAY);
                 ff.sd.position.set(-ff.sd.center.x, -ff.sd.center.y);
 //        ((ScreenObject) Statics.objects.get(0)).position.set(-((ScreenObject) Statics.objects.get(0)).bounds.x/2, -((ScreenObject) Statics.objects.get(0)).bounds.y/2, 0);
             }
@@ -80,7 +80,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                Statics.setOverlay(Statics.IMAGE_OVERLAY);
+                Overlay.setOverlay(Statics.IMAGE_OVERLAY);
             }
         });
 
@@ -95,7 +95,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 DrawObject doi = new DrawObject();
                 Statics.userObjects.add(doi);
                 Statics.DRAW_OVERLAY.setTouchable(doi);
-                Statics.setOverlay(Statics.DRAW_OVERLAY);
+                Overlay.setOverlay(Statics.DRAW_OVERLAY);
 //                pasteButton.setVisible(true);
             }
         });
@@ -137,9 +137,9 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
             }
         }
         if (Statics.selectedObjects.size > 0) {
-            Statics.setOverlay(Statics.TRANSFORM_OVERLAY);
+            Overlay.setOverlay(Statics.TRANSFORM_OVERLAY);
         } else {
-            Statics.setOverlay(Statics.BASIC_UI_OVERLAY);
+            Overlay.setOverlay(Statics.BASIC_UI_OVERLAY);
         }
         return false;
     }

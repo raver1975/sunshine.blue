@@ -34,6 +34,7 @@ public class NativeNetworkGWT implements NativeNetworkInterface {
     public void downloadIPFS(String cid, IPFSFileListener listener) {
         int j=MathUtils.random(Integer.MIN_VALUE,Integer.MAX_VALUE);
         downloadListener.put(j,listener);
+        Gdx.app.log("requesting",cid);
         downloadFromIPFS(cid,j);
     }
 
@@ -47,7 +48,7 @@ public class NativeNetworkGWT implements NativeNetworkInterface {
 
     @Override
     public void downloadPixmap(String url, Pixmap.DownloadPixmapResponseListener listener) {
-        final Image img = new Image(Statics.CORSGateway+url);
+        final Image img = new Image(url);
         ImageElement.as(img.getElement()).setAttribute("crossorigin","anonymous");
         final RootPanel root = RootPanel.get("embed-image");
 
@@ -174,13 +175,15 @@ function toBase64(dataArr){
     return ret;
 }
 
-    function run(cid){
+    function run(cid1){
+      console.log("loading1 cid:"+cid1);
       if(!($wnd.node&& $wnd.node.isOnline())){
           console.log("Node not running!");
-          setTimeout(run,1000,cid);
+          setTimeout(function(){run(cid1);},1000);
       }
+
       else{
-          $wnd.node.cat(cid).next().then(function(chunk){
+          $wnd.node.cat(cid1).next().then(function(chunk){
             var base64encoded=toBase64(chunk.value);
             self.@com.klemstinegroup.sunshinelab.client.NativeNetworkGWT::finishDownload(Ljava/lang/String;I)(base64encoded,iii);
           });
@@ -200,7 +203,7 @@ function toBase64(dataArr){
       var byteArray = new Uint8Array(byteNumbers);
       if(!($wnd.node && $wnd.node.isOnline()) ){
           console.log("Node not running!");
-          setTimeout(run,1000,base64);
+          setTimeout(function(){run(base64);},1000);
       }
       else{
           $wnd.node.add(byteArray).then(function(fileAdded){

@@ -26,23 +26,13 @@ public class Statics {
     public static Preferences prefs = Gdx.app.getPreferences("scenes");
     public static final String IPFSGateway = "https://ipfs.io/ipfs/";
     public static final String CORSGateway="https://api.codetabs.com/v1/proxy?quest=";
-    public static final String IPFSMediaViewer = "QmWWoB9DUFXz8v1ZVGXT8KjjZ7r7kbUQJPzPDxfpz36ei6";
     public static final boolean debug = false;
     public static Matrix4 mx4Batch = new Matrix4();
-    //    public static GifEncoder gifEncoder;
-//    public static MemoryFileHandle gifEncoderFile;
-//        public static ImageOptions gifOptions;
-//    public static AnimatedGifEncoder gifEncoderA;
     public static int transformButton;
     public static ScreenViewport viewport;
     public static Stack<Overlay> overlays = new Stack<>();
     public static boolean gif = true;
-//    public static AnimatedPNG apng;
-    ;
-//    public static final boolean debug = true;
-
     static TextureRegion whitePixel;
-
     static {
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGB888);
         pixmap.setColor(Color.WHITE);
@@ -66,41 +56,6 @@ public class Statics {
     public static ArrayMap<Gestureable, GestureDetector> gestureDetectors = new ArrayMap<>();
 
     public Statics(){}
-
-    public static void setOverlay(Overlay overlay) {
-        Overlay topOverlay = Statics.overlay;
-        if (topOverlay != null) {
-            if (topOverlay instanceof Touchable) {
-                im.removeProcessor((Touchable) topOverlay);
-            }
-            if (topOverlay instanceof Gestureable) {
-                if (gestureDetectors.containsKey((Gestureable) topOverlay)) {
-                    im.removeProcessor(gestureDetectors.get((Gestureable) topOverlay));
-                    gestureDetectors.removeKey((Gestureable) topOverlay);
-                }
-            }
-
-            topOverlay.removeInput();
-            Statics.overlays.push(Statics.overlay);
-        }
-        if (overlay != null) {
-            overlay.setInput();
-            if (overlay instanceof Touchable) {
-                im.addProcessor((Touchable) overlay);
-            }
-            if (overlay instanceof Gestureable) {
-                GestureDetector gd = new GestureDetector(((Gestureable) overlay));
-                im.addProcessor(gd);
-                gestureDetectors.put((Gestureable) overlay, gd);
-            }
-            Statics.overlay = overlay;
-        }
-    }
-
-    public static void backOverlay() {
-        setOverlay(overlays.pop());
-        overlays.pop();
-    }
 
     public static void exceptionLog(String tag,Exception e) {
         Gdx.app.log(tag,e.toString());

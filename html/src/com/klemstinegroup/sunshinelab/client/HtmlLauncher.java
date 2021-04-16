@@ -10,11 +10,10 @@ import com.badlogic.gdx.graphics.g2d.freetype.gwt.FreetypeInjector;
 import com.badlogic.gdx.graphics.g2d.freetype.gwt.inject.OnCompletion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
+import com.badlogic.gdx.utils.Base64Coder;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.ErrorEvent;
-import com.google.gwt.event.dom.client.ErrorHandler;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.user.client.ui.Image;
@@ -23,10 +22,8 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.klemstinegroup.sunshinelab.SunshineLab;
 import com.klemstinegroup.sunshinelab.engine.Statics;
 import com.klemstinegroup.sunshinelab.engine.objects.*;
+import com.klemstinegroup.sunshinelab.engine.overlays.Overlay;
 import com.klemstinegroup.sunshinelab.engine.util.IPFSFileListener;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 public class HtmlLauncher extends GwtApplication {
     private static HtmlLauncher instance;
@@ -202,7 +199,7 @@ public class HtmlLauncher extends GwtApplication {
         if (focusedActor != null && focusedActor instanceof TextArea) {
             TextArea ta = ((TextArea) focusedActor);
             ta.setText(text);
-            if (text.startsWith("Q")) {
+            /*if (text.startsWith("Q")) {
                 String finalText = text;
                 SunshineLab.nativeNet.downloadIPFS(text, new IPFSFileListener() {
                     @Override
@@ -215,11 +212,11 @@ public class HtmlLauncher extends GwtApplication {
                         img.addLoadHandler(new LoadHandler() {
                             @Override
                             public void onLoad(LoadEvent event) {
-                                if (((data[0] & 0xff) == 71 && (data[1] & 0xff) == 73 && (data[2] & 0xff) == 70) || ((data[0] & 0xff) == 137 && (data[1] & 0xff) == 80 && (data[2] & 0xff) == 78 && (data[3] & 0xff) == 71)) {
-                                    Statics.userObjects.add(new ImageObject(data, new Pixmap(ImageElement.as(img.getElement())),finalText));
-                                } else {
-                                    Statics.userObjects.add(new ImageObject(new Pixmap(ImageElement.as(img.getElement())),finalText));
-                                }
+//                                if (((data[0] & 0xff) == 71 && (data[1] & 0xff) == 73 && (data[2] & 0xff) == 70) || ((data[0] & 0xff) == 137 && (data[1] & 0xff) == 80 && (data[2] & 0xff) == 78 && (data[3] & 0xff) == 71)) {
+//                                    Statics.userObjects.add(new ImageObject(data, new Pixmap(ImageElement.as(img.getElement())),finalText));
+//                                } else {
+                                    Statics.userObjects.add(new ImageObject(data,new Pixmap(ImageElement.as(img.getElement())),finalText));
+//                                }
                             }
                         });
                     }
@@ -237,10 +234,11 @@ public class HtmlLauncher extends GwtApplication {
                 final RootPanel root = RootPanel.get("embed-image");
                 root.add(img);
                 img.setVisible(false);
+                final byte[] b = Base64Coder.decode(text.split(",")[1]);
                 img.addLoadHandler(new LoadHandler() {
                     @Override
                     public void onLoad(LoadEvent event) {
-                        Statics.userObjects.add(new ImageObject(new Pixmap(ImageElement.as(img.getElement())),null));
+                        Statics.userObjects.add(new ImageObject(b,new Pixmap(ImageElement.as(img.getElement())),null));
                     }
                 });
             } else {
@@ -258,12 +256,12 @@ public class HtmlLauncher extends GwtApplication {
                         img.addLoadHandler(new LoadHandler() {
                             @Override
                             public void onLoad(LoadEvent event) {
-                                    if (((data[0] & 0xff) == 71 && (data[1] & 0xff) == 73 && (data[2] & 0xff) == 70) || ((data[0] & 0xff) == 137 && (data[1] & 0xff) == 80 && (data[2] & 0xff) == 78 && (data[3] & 0xff) == 71)) {
-                                        Statics.userObjects.add(new ImageObject(data, new Pixmap(ImageElement.as(img.getElement())),null));
-                                    }
-                                    else{
-                                        Statics.userObjects.add(new ImageObject(new Pixmap(ImageElement.as(img.getElement())),null));
-                                    }
+//                                    if (((data[0] & 0xff) == 71 && (data[1] & 0xff) == 73 && (data[2] & 0xff) == 70) || ((data[0] & 0xff) == 137 && (data[1] & 0xff) == 80 && (data[2] & 0xff) == 78 && (data[3] & 0xff) == 71)) {
+//                                        Statics.userObjects.add(new ImageObject(data, new Pixmap(ImageElement.as(img.getElement())),null));
+//                                    }
+//                                    else{
+                                        Statics.userObjects.add(new ImageObject(data,new Pixmap(ImageElement.as(img.getElement())),null));
+//                                    }
                             }
                         });
 
@@ -276,7 +274,7 @@ public class HtmlLauncher extends GwtApplication {
                 });
             }
             ta.setText("");
-            Statics.backOverlay();
+            Overlay.backOverlay();*/
 //                        ta.setText("");
 //            }
                         /*Actor focusedActor = ((BasicScreen)((Game)getApplicationListener()).getScreen()).getStage().getKeyboardFocus();
@@ -295,10 +293,5 @@ public class HtmlLauncher extends GwtApplication {
         return getClipboard().getContents();
     }
 
-    static native ImageElement createImage() /*-{
-		var image = new Image();
-		image.crossorigin="anonymous";
-		return image;
-	}-*/;
 
 }
