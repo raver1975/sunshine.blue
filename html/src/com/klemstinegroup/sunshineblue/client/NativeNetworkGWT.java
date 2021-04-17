@@ -19,14 +19,14 @@ public class NativeNetworkGWT implements NativeNetworkInterface {
     ArrayMap<Integer,IPFSFileListener> downloadListener=new ArrayMap<>();
     @Override
     public void uploadIPFS(byte[] data, IPFSCIDListener listener) {
-        int j= MathUtils.random(Integer.MAX_VALUE);
+        int j= MathUtils.random(Integer.MIN_VALUE,Integer.MAX_VALUE);
         this.uploadListener.put(j,listener);
         uploadToIPFS(new String(Base64Coder.encode(data)),j);
     }
 
     @Override
     public void downloadIPFS(String cid, IPFSFileListener listener) {
-        int j=MathUtils.random(Integer.MAX_VALUE);
+        int j=MathUtils.random(Integer.MIN_VALUE,Integer.MAX_VALUE);
         downloadListener.put(j,listener);
         Gdx.app.log("requesting",cid);
         downloadFromIPFS(cid,j);
@@ -34,7 +34,7 @@ public class NativeNetworkGWT implements NativeNetworkInterface {
 
     @Override
     public void downloadFile(String url, IPFSFileListener listener) {
-        int j=MathUtils.random(Integer.MAX_VALUE);
+        int j=MathUtils.random(Integer.MIN_VALUE,Integer.MAX_VALUE);
         Gdx.app.log("downloadind:",url+"\t"+j);
         downloadListener.put(j,listener);
         downloadFromNet(url,j);

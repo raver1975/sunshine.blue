@@ -14,7 +14,6 @@ import com.badlogic.gdx.utils.NumberUtils;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Random;
 
 /**
  * Data that can be used to limit the colors present in a Pixmap or other image, here with the goal of using 256 or less
@@ -2130,12 +2129,11 @@ public class PaletteReducer {
      * when masked with 255 as with {@code (palette.randomColorIndex(random) & 255)}, can be used as an index into a
      * palette array with 256 or less elements that should have been used with {@link #exact(int[])} before to set the
      * palette this uses.
-     * @param random a Random instance, which may be seeded
      * @return a randomly selected color index from this palette with a non-uniform distribution, can be any byte but 0
      */
-    public byte randomColorIndex(Random random)
+    public byte randomColorIndex()
     {
-        return paletteMapping[random.nextInt() >>> 17];
+        return paletteMapping[MathUtils.random(Integer.MIN_VALUE,Integer.MAX_VALUE) >>> 17];
     }
 
     /**
@@ -2143,12 +2141,11 @@ public class PaletteReducer {
      * colors that are used more often in reductions (those with few similar colors). The color is returned as an
      * RGBA8888 int; you can assign one of these into a Color with {@link Color#rgba8888ToColor(Color, int)} or
      * {@link Color#set(int)}.
-     * @param random a Random instance, which may be seeded
      * @return a randomly selected RGBA8888 color from this palette with a non-uniform distribution
      */
-    public int randomColor(Random random)
+    public int randomColor()
     {
-        return paletteArray[paletteMapping[random.nextInt() >>> 17] & 255];
+        return paletteArray[paletteMapping[MathUtils.random(Integer.MIN_VALUE,Integer.MAX_VALUE) >>> 17] & 255];
     }
 
     /**
