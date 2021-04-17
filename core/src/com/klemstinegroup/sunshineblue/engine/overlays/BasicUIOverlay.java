@@ -50,9 +50,9 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 super.clicked(event, x, y);
                 Gdx.input.setOnscreenKeyboardVisible(true);
                 FontObject ff = new FontObject();
-
                 Statics.userObjects.add(ff);
                 fo.setFontObject(ff);
+                fo.generate();
                 Overlay.setOverlay(fo);
                 ff.sd.position.set(-ff.sd.center.x, -ff.sd.center.y);
 //        ((ScreenObject) Statics.objects.get(0)).position.set(-((ScreenObject) Statics.objects.get(0)).bounds.x/2, -((ScreenObject) Statics.objects.get(0)).bounds.y/2, 0);

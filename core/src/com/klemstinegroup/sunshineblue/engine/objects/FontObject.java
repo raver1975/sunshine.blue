@@ -28,60 +28,34 @@ import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
 
 public class FontObject extends ScreenObject implements Drawable, Touchable {
 
-    public FontData fd=new FontData();
+    public FontData fd = new FontData();
+    public BitmapFont font;
 
-    private final FileHandle[] fontList;
-    BitmapFont font;
 
-    FreetypeFontLoader.FreeTypeFontLoaderParameter parameter;
     private int caretFlash = 0;
     private GlyphLayout nn;
     public Polygon polygon;
     public boolean edit;
 
     public FontObject(FontData fd, ScreenData sd) {
-        fontList = Gdx.files.internal("fonts").list();
-        this.fd=fd;
-        this.sd=sd;
-        generate();
+        this.fd = fd;
+        this.sd = sd;
+        //generate();
     }
 
-    public void setFont(String name){
-            fd.fontName = name;
+    public void setFont(String name) {
+        fd.fontName = name;
     }
-    public void setSize(int size){
-        fd.size=size;
-        generate();
+
+    public void setSize(int size) {
+        fd.size = size;
+        //generate();
     }
+
     public FontObject() {
-        fontList = Gdx.files.internal("fonts").list();
-        generate();
+        //generate();
     }
 
-    public void generate() {
-        FileHandle ff = fontList[MathUtils.random(fontList.length - 1)];
-        if (fd.fontName==null) {
-            fd.fontName=ff.nameWithoutExtension();
-        }
-        for (FileHandle fh: fontList){
-            if (fh.nameWithoutExtension().equals(fd.fontName)){ff=fh;}
-        }
-//        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(ff);
-        parameter = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
-        parameter.fontParameters.size = fd.size;
-        parameter.fontParameters.color = fd.color;
-        parameter.fontFileName=ff.path();
-        String random= ff.pathWithoutExtension()+"-"+fd.size+".ttf";
-        FileHandleResolver resolver = new InternalFileHandleResolver();
-        AssetManager assetManager=new AssetManager();
-        assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
-        assetManager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
-        assetManager.load(random,BitmapFont.class,parameter);//getgenerator.generateFont(parameter);
-        assetManager.finishLoadingAsset(random);
-        font=assetManager.get(random,BitmapFont.class);
-        setBounds();
-        sd.center.set(sd.bounds.x / 2f, sd.bounds.y / 2f);
-    }
 
     public void setBounds() {
         nn = new GlyphLayout();
@@ -99,17 +73,19 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
     @Override
     public void draw(Batch batch) {
         batch.setTransformMatrix(new Matrix4().idt()
-                        .translate( sd.position.x, sd.position.y, 0)
+                        .translate(sd.position.x, sd.position.y, 0)
                         .rotate(0, 0, 1, sd.rotation)
                         .scale(sd.scale, sd.scale, 1)
 //                        .translate(-center.x, -center.y, 0)
         );
 
-        font.draw(batch, fd.text, 0-sd.center.x, +sd.bounds.y-sd.center.y, Float.MAX_VALUE, Align.left, true);
+        if (font != null) {
+            font.draw(batch, fd.text, 0 - sd.center.x, +sd.bounds.y - sd.center.y, Float.MAX_VALUE, Align.left, true);
+        }
 
         if (edit) {
             boolean b = (caretFlash++ % 50 <= 15);
-            SunshineBlue.shapedrawer.setColor(parameter.fontParameters.color);
+            SunshineBlue.shapedrawer.setColor(fd.color);
             if (b) {
                 float off = nn.runs.size > 0 ? nn.runs.get(nn.runs.size - 1).width - sd.center.x : 0 + font.getSpaceXadvance() / 2f - sd.center.x;
                 if (fd.text.length() > 0 && fd.text.charAt(fd.text.length() - 1) == '\n') {
@@ -189,34 +165,35 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
 
     @Override
     public boolean isSelected(Vector2 touch) {
-        polygon = new Polygon(new float[]{0, 0, sd.bounds.x, 0, sd.bounds.x, sd.bounds.y, 0,  sd.bounds.y, 0, 0});
-        polygon.setOrigin(sd.center.x,sd.center.y);
-        polygon.setScale(sd.scale,sd.scale);
+        polygon = new Polygon(new float[]{0, 0, sd.bounds.x, 0, sd.bounds.x, sd.bounds.y, 0, sd.bounds.y, 0, 0});
+        polygon.setOrigin(sd.center.x, sd.center.y);
+        polygon.setScale(sd.scale, sd.scale);
         polygon.rotate(sd.rotation);
-        polygon.translate(sd.position.x-sd.center.x,sd.position.y-sd.center.y);
+        polygon.translate(sd.position.x - sd.center.x, sd.position.y - sd.center.y);
         return polygon.contains(touch);
     }
 
     public void setColor(Color newColor) {
-        if (newColor!=null) {
+        if (newColor != null) {
             fd.color = newColor;
             font.setColor(fd.color);
         }
     }
+
     @Override
     public JsonValue serialize() {
-        JsonValue val=new JsonValue(JsonValue.ValueType.object);
+        JsonValue val = new JsonValue(JsonValue.ValueType.object);
         val.addChild("screenData", SerializeUtil.serialize(sd));
-        val.addChild("fontData",SerializeUtil.serialize(fd));
-        val.addChild("class",new JsonValue(FontObject.class.getName()));
+        val.addChild("fontData", SerializeUtil.serialize(fd));
+        val.addChild("class", new JsonValue(FontObject.class.getName()));
         return val;
     }
 
 
-    public static void  deserialize(JsonValue json) {
-        FontData fd1=SerializeUtil.deserialize(json.get("fontData"),FontData.class);
-        ScreenData sd1=SerializeUtil.deserialize(json.get("screenData"),ScreenData.class);
-        Statics.userObjects.add(new FontObject(fd1,sd1));
+    public static void deserialize(JsonValue json) {
+        FontData fd1 = SerializeUtil.deserialize(json.get("fontData"), FontData.class);
+        ScreenData sd1 = SerializeUtil.deserialize(json.get("screenData"), ScreenData.class);
+        Statics.userObjects.add(new FontObject(fd1, sd1));
     }
 
 }

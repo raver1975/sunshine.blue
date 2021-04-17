@@ -2,10 +2,16 @@ package com.klemstinegroup.sunshineblue.engine.overlays;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
+import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -13,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.DragScrollListener;
 import com.badlogic.gdx.utils.Array;
 import com.klemstinegroup.sunshineblue.colorpicker.DialogColorPicker;
 import com.klemstinegroup.sunshineblue.colorpicker.Spinner;
@@ -24,10 +31,13 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
 
     public final Stage stage;
     private final TransformOverlay to;
+    private final AssetManager assetManager;
     public FontObject fontObject;
     private Vector2 touchdown=new Vector2();
 
     public FontOverlay(AssetManager assetManager, TransformOverlay to) {
+        this.assetManager=assetManager;
+        FileHandle[] fontList = Gdx.files.internal("fonts").list();
         this.to=to;
         new BitmapFont();
         stage = new Stage(Statics.overlayViewport);
@@ -130,14 +140,14 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (fontObject != null) {
-                    ((FontObject) fontObject).setFont((String)((List) actor).getSelected());
-                    ((FontObject) fontObject).generate();
+                    fontObject.setFont((String)((List) actor).getSelected());
+                    generate();
                 }
             }
         });
         ScrollPane scrollPane = new ScrollPane(list,skin);
         Array<String> fontListStr = new Array<>();
-        FileHandle[] fontList = Gdx.files.internal("fonts").list();
+
         for (FileHandle fh : fontList) {
             fontListStr.add(fh.nameWithoutExtension());
         }
@@ -174,7 +184,15 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         slider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+
+            }
+        });
+        slider.addListener(new DragScrollListener(scrollPane){
+            @Override
+            public void dragStop(InputEvent event, float x, float y, int pointer) {
+                super.dragStop(event, x, y, pointer);
                 fontObject.setSize((int)slider.getValue());
+                generate();
             }
         });
         stage.addActor(slider);
@@ -269,5 +287,28 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         stage.act();
     }
 
+    public void generate() {
+        FileHandle[] fontList = Gdx.files.internal("fonts").list();
+        FileHandle ff = fontList[MathUtils.random(fontList.length - 1)];
+        if (fontObject.fd.fontName==null) {
+            fontObject.fd.fontName=ff.nameWithoutExtension();
+        }
+        for (FileHandle fh: fontList){
+            if (fh.nameWithoutExtension().equals(fontObject.fd.fontName)){ff=fh;}
+        }
+//        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(ff);
+        FreetypeFontLoader.FreeTypeFontLoaderParameter parameter;
+        parameter = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
+        parameter.fontParameters.size = fontObject.fd.size;
+        parameter.fontParameters.color = fontObject.fd.color;
+        parameter.fontFileName=ff.path();
+        String random= ff.pathWithoutExtension()+"-"+fontObject.fd.size+".ttf";
+
+        assetManager.load(random,BitmapFont.class,parameter);//getgenerator.generateFont(parameter);
+        assetManager.finishLoadingAsset(random);
+        fontObject.font=assetManager.get(random,BitmapFont.class);
+        fontObject.setBounds();
+        sd.center.set(sd.bounds.x / 2f, sd.bounds.y / 2f);
+    }
 
 }

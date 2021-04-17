@@ -2,13 +2,19 @@ package com.klemstinegroup.sunshineblue;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
+import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.tommyettinger.anim8.IncrementalAnimatedPNG;
@@ -73,6 +79,10 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         batch = new PolygonSpriteBatch();
         shapedrawer= new ShapeDrawer(batch, whitePixel);
 //        shapedrawer = new ShapeDrawer(batch, Statics.whitePixel);
+        FileHandleResolver resolver = new InternalFileHandleResolver();
+        assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
+        assetManager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
+
         assetManager.load("skins/orange/skin/uiskin.json", Skin.class);
         assetManager.load("skin-composer-ui/skin-composer-ui.json", Skin.class);
         Texture.setAssetManager(assetManager);
