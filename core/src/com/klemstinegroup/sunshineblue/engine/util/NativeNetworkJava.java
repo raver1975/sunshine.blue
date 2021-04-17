@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.graphics.Pixmap;
 
-public class NativeNetwork implements NativeNetworkInterface {
+public class NativeNetworkJava implements NativeNetworkInterface {
     @Override
     public void uploadIPFS(byte[] data, IPFSCIDListener listener) {
         IPFSUtils.uploadFile(data, listener);
@@ -16,8 +16,7 @@ public class NativeNetwork implements NativeNetworkInterface {
     }
 
     @Override
-    public void downloadFile(String url, IPFSFileListener listener) {
-        Gdx.app.log("downloading",url.substring(0,10));
+    public void downloadFile(String url, boolean b, IPFSFileListener listener) {
         Net.HttpRequest request = new Net.HttpRequest(Net.HttpMethods.GET);
         request.setUrl(url);
         Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {

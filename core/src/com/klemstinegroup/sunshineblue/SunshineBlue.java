@@ -2,20 +2,13 @@ package com.klemstinegroup.sunshineblue;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.FileHandleResolver;
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
-import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.tommyettinger.anim8.IncrementalAnimatedPNG;
@@ -52,7 +45,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     //    Camera camera;
     public SunshineBlue() {
         super();
-        this.nativeNet = new NativeNetwork();
+        this.nativeNet = new NativeNetworkJava();
     }
 
     public SunshineBlue(NativeNetworkInterface nativeIPFS) {
@@ -379,7 +372,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
                 Overlay.backOverlay();
             }
         }
-        return true;
+        return false;
     }
 
     @Override

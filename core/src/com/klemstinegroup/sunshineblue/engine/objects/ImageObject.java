@@ -201,7 +201,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                         }
                     });
                 } else {
-                    SunshineBlue.nativeNet.downloadFile(url, new IPFSFileListener() {
+                    SunshineBlue.nativeNet.downloadFile(url,true, new IPFSFileListener() {
                         @Override
                         public void downloaded(byte[] file) {
                             SunshineBlue.nativeNet.downloadPixmap(url, new Pixmap.DownloadPixmapResponseListener() {

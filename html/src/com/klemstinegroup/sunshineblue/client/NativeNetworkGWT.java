@@ -34,11 +34,11 @@ public class NativeNetworkGWT implements NativeNetworkInterface {
     }
 
     @Override
-    public void downloadFile(String url, IPFSFileListener listener) {
+    public void downloadFile(String url, boolean cors, IPFSFileListener listener) {
         int j=MathUtils.random.nextInt();
         Gdx.app.log("downloadind:",url+"\t"+j);
         downloadListener.put(j,listener);
-        downloadFromNet(url,j);
+        downloadFromNet((cors?Statics.CORSGateway:"")+url,j);
     }
 
     @Override
