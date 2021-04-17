@@ -29,7 +29,6 @@ public class Statics {
 //    public static  DrawOverlay DRAW_OVERLAY = new DrawOverlay(assetManager);
 //    public static  ImageOverlay IMAGE_OVERLAY = new ImageOverlay(assetManager);
     public static Overlay overlay=null;
-    public static Preferences prefs = Gdx.app.getPreferences("scenes");
     public static final String IPFSGateway = "https://ipfs.io/ipfs/";
     public static final String CORSGateway="https://api.codetabs.com/v1/proxy?quest=";
     public static final boolean debug = false;

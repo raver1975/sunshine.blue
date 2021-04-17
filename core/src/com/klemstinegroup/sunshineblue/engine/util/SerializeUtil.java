@@ -1,6 +1,7 @@
 package com.klemstinegroup.sunshineblue.engine.util;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.Method;
@@ -40,7 +41,7 @@ public class SerializeUtil {
     }
 
     public static void load(String name) {
-        String cid = Statics.prefs.getString(name);
+        String cid = Gdx.app.getPreferences("scenes").getString(name);
         Gdx.app.log("name:",name+"\t"+cid);
         if (cid != null) {
             SunshineBlue.nativeNet.downloadIPFS(cid, new IPFSFileListener() {
@@ -65,9 +66,10 @@ public class SerializeUtil {
         SunshineBlue.nativeNet.uploadIPFS(val.toJson(JsonWriter.OutputType.javascript).getBytes(StandardCharsets.UTF_8), new IPFSCIDListener() {
             @Override
             public void cid(String cid) {
-                Statics.prefs.putString(name, cid);
-                Statics.prefs.putString("current", cid);
-                Statics.prefs.flush();
+                Preferences prefs = Gdx.app.getPreferences("scenes");
+                prefs.putString(name, cid);
+                prefs.putString("current", cid);
+                prefs.flush();
                 if (ipfscidListener != null) {
                     ipfscidListener.cid(cid);
                 }
