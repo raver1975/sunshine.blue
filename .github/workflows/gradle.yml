@@ -25,9 +25,15 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew html:dist
+    - name: pwd
+      run: |
+        pwd
+    - name: ls
+      run: |
+        ls
     - name: copy directory
       run: |
-        cp -r ./html/build/dist ./docs
+        cp -rv ./html/build/dist ./docs
     - name: Commit files
       run: |
         git config --local user.email "action@github.com"
