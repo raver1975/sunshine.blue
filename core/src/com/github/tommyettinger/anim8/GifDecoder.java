@@ -15,9 +15,6 @@ import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
-import com.klemstinegroup.sunshinelab.engine.Statics;
-
-import javax.xml.soap.Text;
 
 public class GifDecoder {
     /**

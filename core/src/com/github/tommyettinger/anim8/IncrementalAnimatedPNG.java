@@ -1,13 +1,11 @@
 package com.github.tommyettinger.anim8;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ByteArray;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.StreamUtils;
-import com.klemstinegroup.sunshinelab.engine.util.MemoryFileHandle;
+import com.klemstinegroup.sunshineblue.engine.util.MemoryFileHandle;
 import net.sf.jazzlib.Deflater;
 import net.sf.jazzlib.DeflaterOutputStream;
 

@@ -1,7 +1,7 @@
-package com.klemstinegroup.sunshinelab;
+package com.klemstinegroup.sunshineblue;
 
-import com.klemstinegroup.sunshinelab.engine.Statics;
-import com.klemstinegroup.sunshinelab.engine.objects.ScreenObject;
+import com.klemstinegroup.sunshineblue.engine.Statics;
+import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
 
 public class HelloWorld {
     public static void main(final String... args) {

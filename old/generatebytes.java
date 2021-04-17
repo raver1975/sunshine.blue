@@ -1,4 +1,4 @@
-package com.klemstinegroup.sunshinelab;
+package com.klemstinegroup.sunshineblue;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;

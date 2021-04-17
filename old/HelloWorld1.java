@@ -1,4 +1,4 @@
-package com.klemstinegroup.sunshinelab;
+package com.klemstinegroup.sunshineblue;
 
 import com.badlogic.gdx.Gdx;
 import com.igormaznitsa.jjjvm.impl.JJJVMClassImpl;
@@ -36,7 +36,7 @@ public class HelloWorld1 {
     }*/
 
 
-    File file = new File("C:\\Users\\Paul\\IdeaProjects\\sunshinelab\\core\\build\\classes\\java\\main\\com\\klemstinegroup\\sunshinelab\\HelloWorld.class");
+    File file = new File("C:\\Users\\Paul\\IdeaProjects\\com.klemstinegroup.sunshineblue\\core\\build\\classes\\java\\main\\com\\klemstinegroup\\com.klemstinegroup.sunshineblue\\HelloWorld.class");
 
     byte[] b=readContentIntoByteArray(file);
     System.out.println(Arrays.toString(b));

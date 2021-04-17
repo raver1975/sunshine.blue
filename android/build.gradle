@@ -17,7 +17,7 @@ android {
         exclude 'META-INF/robovm/ios/robovm.xml'
     }
     defaultConfig {
-        applicationId "com.klemstinegroup.sunshinelab"
+        applicationId "com.klemstinegroup.sunshineblue"
         minSdkVersion 24
         targetSdkVersion 29
         versionCode 1
@@ -86,7 +86,7 @@ task run(type: Exec) {
     }
 
     def adb = path + "/platform-tools/adb"
-    commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.klemstinegroup.sunshinelab/com.klemstinegroup.sunshinelab.AndroidLauncher'
+    commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.klemstinegroup.sunshineblue/com.klemstinegroup.sunshineblue.AndroidLauncher'
 }
 
 eclipse.project.name = appName + "-android"

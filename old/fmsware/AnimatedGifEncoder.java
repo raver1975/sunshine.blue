@@ -2,7 +2,7 @@ package com.madgag.gif.fmsware;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.klemstinegroup.sunshinelab.engine.util.MemoryFileHandle;
+import com.klemstinegroup.sunshineblue.engine.util.MemoryFileHandle;
 
 import java.io.*;
 
