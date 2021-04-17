@@ -37,16 +37,7 @@ public class Statics {
     public static int transformButton;
     public static ScreenViewport viewport;
     public static boolean gif = true;
-    static TextureRegion whitePixel;
-    static {
-        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGB888);
-        pixmap.setColor(Color.WHITE);
-        pixmap.drawPixel(0, 0);
-        whitePixel = new TextureRegion(new Texture(pixmap));
-    }
 
-    public static Batch batch = new PolygonSpriteBatch();
-    public static final ShapeDrawer shapedrawer = new ShapeDrawer(batch, whitePixel);
 
     public static final Array<BaseObject> userObjects = new Array<BaseObject>();
     public static final Array<BaseObject> selectedObjects = new Array<BaseObject>();

@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
@@ -216,7 +217,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
 
 //        Statics.batch.setProjectionMatrix(mx4Overlay.idt());
         for (int i = 0; i < Statics.selectedObjects.size; i++) {
-            Statics.shapedrawer.filledCircle(170 + 30 * i, 20, 10);
+            SunshineBlue.shapedrawer.filledCircle(170 + 30 * i, 20, 10);
         }
         stage.draw();
     }

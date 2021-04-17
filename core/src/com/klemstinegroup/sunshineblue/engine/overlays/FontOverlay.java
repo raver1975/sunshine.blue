@@ -85,7 +85,9 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
 //                    "buttonPlusStyle": "spinner-plus-h",
 //                    "textFieldStyle": "spinner"
 //        }
-        Skin skin1=new Skin(Gdx.files.internal("skin-composer-ui/skin-composer-ui.json"));
+        assetManager.finishLoadingAsset("skin-composer-ui/skin-composer-ui.json");
+        Skin skin1 = assetManager.get("skin-composer-ui/skin-composer-ui.json",Skin.class);
+//        Skin skin1=new Skin(Gdx.files.internal("skin-composer-ui/skin-composer-ui.json"));
 
         Button.ButtonStyle buttonMinusStyle = skin1.get("spinner-minus-h", Button.ButtonStyle.class);
         Button.ButtonStyle buttonPlusStyle = skin1.get("spinner-plus-h", Button.ButtonStyle.class);

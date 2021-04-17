@@ -11,6 +11,7 @@ import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.overlays.Drawable;
 import com.klemstinegroup.sunshineblue.engine.overlays.Touchable;
 import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
+import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public class DrawObject extends ScreenObject implements Drawable, Touchable {
     DrawData dd=new DrawData();
@@ -95,22 +96,22 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
                         .scale(sd.scale, sd.scale, 1)
         );
 //        Statics.shapedrawer.setTextureRegion(new TextureRegion(((RectTextureObject)Statics.userObjects.get(0)).texture));
-        Statics.shapedrawer.setColor(Color.WHITE);
+        SunshineBlue.shapedrawer.setColor(Color.WHITE);
         if (dd.path.size > 0) {
             for (Array<Vector2> partialPath : dd.path) {
                 if (partialPath.size > 1) {
-                    Statics.shapedrawer.path(partialPath, 10, true);
+                    SunshineBlue.shapedrawer.path(partialPath, 10, true);
                 }
             }
         }
-        Statics.shapedrawer.setColor(Color.RED);
-        Statics.shapedrawer.filledCircle(0, 0, 15);
+        SunshineBlue.shapedrawer.setColor(Color.RED);
+        SunshineBlue.shapedrawer.filledCircle(0, 0, 15);
         batch.end();
         batch.setTransformMatrix(Statics.mx4Batch);
         batch.begin();
         setbounds();
         if (polygon != null) {
-            Statics.shapedrawer.polygon(polygon);
+            SunshineBlue.shapedrawer.polygon(polygon);
         }
     }
 

@@ -4,8 +4,11 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -23,6 +26,7 @@ import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.objects.*;
 import com.klemstinegroup.sunshineblue.engine.overlays.*;
 import com.klemstinegroup.sunshineblue.engine.util.*;
+import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import java.io.ByteArrayInputStream;
 import java.util.Comparator;
@@ -37,6 +41,13 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     private ImageOverlay IMAGE_OVERLAY;
     private DrawOverlay DRAW_OVERLAY;
     private BasicUIOverlay BASIC_UI_OVERLAY;
+    public static Batch batch ;
+    static {
+
+    }
+
+
+    public static ShapeDrawer shapedrawer;
 
     //    Camera camera;
     public SunshineBlue() {
@@ -56,12 +67,21 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     private IncrementalAnimatedPNG apng;
     private MemoryFileHandle mfh;
 
-    public static AssetManager assetManager = new AssetManager();
+    public AssetManager assetManager = new AssetManager();
 
     @Override
     public void create() {
+        Gdx.app.log("create","started");
+        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGB888);
+        pixmap.setColor(Color.WHITE);
+        pixmap.drawPixel(0, 0);
+        TextureRegion whitePixel = new TextureRegion(new Texture(pixmap));
         // set the loaders for the generator and the fonts themselves
+        batch = new PolygonSpriteBatch();
+        shapedrawer= new ShapeDrawer(batch, whitePixel);
+//        shapedrawer = new ShapeDrawer(batch, Statics.whitePixel);
         assetManager.load("skins/orange/skin/uiskin.json", Skin.class);
+        assetManager.load("skin-composer-ui/skin-composer-ui.json", Skin.class);
         Texture.setAssetManager(assetManager);
         TRANSFORM_OVERLAY = new TransformOverlay(assetManager);
         FONT_OVERLAY = new FontOverlay(assetManager, TRANSFORM_OVERLAY);
@@ -69,12 +89,12 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         DRAW_OVERLAY = new DrawOverlay(assetManager);
         BASIC_UI_OVERLAY = new BasicUIOverlay(assetManager, FONT_OVERLAY, IMAGE_OVERLAY, DRAW_OVERLAY, TRANSFORM_OVERLAY);
 
-//        Gdx.input.setCatchKey(Input.Keys.BACK, true);
+        Gdx.input.setCatchKey(Input.Keys.BACK, true);
         Gdx.input.setCatchKey(Input.Keys.ESCAPE, true);
 //        VisUI.load(VisUI.SkinScale.X2);
         Gdx.input.setInputProcessor(Statics.im);
         Statics.im.addProcessor(this);
-        Overlay.setOverlay(BASIC_UI_OVERLAY);
+        if (Statics.overlay==null)Overlay.setOverlay(BASIC_UI_OVERLAY);
         Gdx.app.setLogLevel(LOG_INFO);
 /*//        img = new Texture("badlogic.jpg");
 
@@ -111,7 +131,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
 
         Statics.viewport = new ScreenViewport();
-        Statics.mx4Batch = Statics.batch.getTransformMatrix().cpy();
+        Statics.mx4Batch = batch.getTransformMatrix().cpy();
 
 
 //--------------------------------------------------------------------------------------------------
@@ -168,8 +188,8 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         Statics.viewport.apply();
 
 
-        Statics.batch.setProjectionMatrix(Statics.viewport.getCamera().combined);
-        Statics.batch.begin();
+        batch.setProjectionMatrix(Statics.viewport.getCamera().combined);
+        batch.begin();
 
 //        if (cnt--==2800){
 //            ImageObject.load("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/PNG_Test.png/477px-PNG_Test.png");
@@ -226,7 +246,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         if (Statics.gif) {
             if (cnt-- > 0 && cnt < 10) {
 //                Statics.gifEncoderA.addFrame(FrameBufferUtils.drawObjectsPix(Statics.viewport, Statics.userObjects, 400, 400));
-                apng.write(FrameBufferUtils.drawObjectsPix(Statics.viewport, Statics.userObjects, 400, 400));
+                apng.write(FrameBufferUtils.drawObjectsPix(batch,Statics.viewport, Statics.userObjects, 400, 400));
                 Gdx.app.log("count", cnt + "");
                 if (cnt == 4) {
                     int gg = Statics.userObjects.size;
@@ -288,17 +308,17 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         });
         for (BaseObject bo : Statics.userObjects) {
             if (bo instanceof Drawable) {
-                ((Drawable) bo).draw(Statics.batch);
+                ((Drawable) bo).draw(batch);
             }
-            Statics.batch.setTransformMatrix(Statics.mx4Batch);
+            batch.setTransformMatrix(Statics.mx4Batch);
         }
         if (Statics.overlay != null) {
             Statics.overlay.act();
-            ((Drawable) Statics.overlay).draw(Statics.batch);
+            ((Drawable) Statics.overlay).draw(batch);
         }
-        Statics.batch.setTransformMatrix(Statics.mx4Batch);
+        batch.setTransformMatrix(Statics.mx4Batch);
 
-        Statics.batch.end();
+        batch.end();
 
 /*        //------------------------------------------------------------
         try {
@@ -313,7 +333,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public void dispose() {
-//        Statics.batch.dispose();
+//        batch.dispose();
     }
 
     @Override
@@ -504,7 +524,20 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     //    @Override
     public void resume() {
         super.resume();
-        Overlay.setOverlay(BASIC_UI_OVERLAY);
-        SerializeUtil.load("current");
+        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGB888);
+        pixmap.setColor(Color.WHITE);
+        pixmap.drawPixel(0, 0);
+        TextureRegion whitePixel = new TextureRegion(new Texture(pixmap));
+        shapedrawer = new ShapeDrawer(batch, whitePixel);
+        TRANSFORM_OVERLAY = new TransformOverlay(assetManager);
+        FONT_OVERLAY = new FontOverlay(assetManager, TRANSFORM_OVERLAY);
+        IMAGE_OVERLAY = new ImageOverlay(assetManager);
+        DRAW_OVERLAY = new DrawOverlay(assetManager);
+        BASIC_UI_OVERLAY = new BasicUIOverlay(assetManager, FONT_OVERLAY, IMAGE_OVERLAY, DRAW_OVERLAY, TRANSFORM_OVERLAY);
+//        Overlay.backOverlay();
+
+//        Statics.prefs = Gdx.app.getPreferences("scenes");
+//        Overlay.setOverlay(BASIC_UI_OVERLAY);
+//        SerializeUtil.load("current");
     }
 }

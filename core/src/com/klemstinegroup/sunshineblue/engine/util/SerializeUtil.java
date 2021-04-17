@@ -26,25 +26,29 @@ public class SerializeUtil {
         Gdx.app.log("scene", val.toJson(JsonWriter.OutputType.minimal));
         Statics.userObjects.clear();
         JsonValue array = val.get("userObjects");
-        for (int i = 0; i < array.size; i++) {
-            JsonValue jv = array.get(i);
-            Gdx.app.log("scene", jv.toJson(JsonWriter.OutputType.minimal));
-            try {
-                ClassReflection.getMethod(ClassReflection.forName(jv.getString("class")), "deserialize", JsonValue.class).invoke(null, jv);
-            } catch (ReflectionException e) {
-                e.printStackTrace();
+        if(array!=null) {
+            for (int i = 0; i < array.size; i++) {
+                JsonValue jv = array.get(i);
+                Gdx.app.log("scene", jv.toJson(JsonWriter.OutputType.minimal));
+                try {
+                    ClassReflection.getMethod(ClassReflection.forName(jv.getString("class")), "deserialize", JsonValue.class).invoke(null, jv);
+                } catch (ReflectionException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     public static void load(String name) {
         String cid = Statics.prefs.getString(name);
+        Gdx.app.log("name:",name+"\t"+cid);
         if (cid != null) {
             SunshineBlue.nativeNet.downloadIPFS(cid, new IPFSFileListener() {
                 @Override
                 public void downloaded(byte[] file) {
                     JsonReader reader = new JsonReader();
                     JsonValue val = reader.parse(new String(file));
+                    Gdx.app.log("val",val.toJson(JsonWriter.OutputType.minimal));
                     deserializeScene(val);
                 }
 
@@ -61,19 +65,12 @@ public class SerializeUtil {
         SunshineBlue.nativeNet.uploadIPFS(val.toJson(JsonWriter.OutputType.javascript).getBytes(StandardCharsets.UTF_8), new IPFSCIDListener() {
             @Override
             public void cid(String cid) {
+                Statics.prefs.putString(name, cid);
+                Statics.prefs.putString("current", cid);
+                Statics.prefs.flush();
                 if (ipfscidListener != null) {
                     ipfscidListener.cid(cid);
                 }
-                Gdx.app.postRunnable(new Runnable() {
-                    @Override
-                    public void run() {
-                        Statics.prefs.putString(name, cid);
-                        Statics.prefs.putString("current", cid);
-                        Statics.prefs.flush();
-
-                    }
-                });
-
             }
 
             @Override

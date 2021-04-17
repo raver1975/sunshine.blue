@@ -14,6 +14,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Panel;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
+import com.klemstinegroup.sunshineblue.engine.overlays.ImageOverlay;
 
 public class HtmlLauncher extends GwtApplication {
     private static HtmlLauncher instance;
@@ -185,10 +186,11 @@ public class HtmlLauncher extends GwtApplication {
 //        if (!oldText.equals(text)) {
         getClipboard().setContents(text);
         Gdx.app.log("cliboard paste", text);
-        Actor focusedActor = Statics.IMAGE_OVERLAY.stage.getKeyboardFocus();
-        if (focusedActor != null && focusedActor instanceof TextArea) {
-            TextArea ta = ((TextArea) focusedActor);
-            ta.setText(text);
+        if (Statics.overlay instanceof ImageOverlay) {
+            Actor focusedActor = ((ImageOverlay)Statics.overlay).stage.getKeyboardFocus();
+            if (focusedActor != null && focusedActor instanceof TextArea) {
+                TextArea ta = ((TextArea) focusedActor);
+                ta.setText(text);
             /*if (text.startsWith("Q")) {
                 String finalText = text;
                 SunshineBlue.nativeNet.downloadIPFS(text, new IPFSFileListener() {
@@ -276,6 +278,7 @@ public class HtmlLauncher extends GwtApplication {
                                 }
                                 ((TextField)focusedActor).appendText(text);
                         }*/
+            }
         }
     }
 

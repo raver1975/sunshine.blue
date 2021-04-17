@@ -109,26 +109,26 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
 
         if (edit) {
             boolean b = (caretFlash++ % 50 <= 15);
-            Statics.shapedrawer.setColor(parameter.fontParameters.color);
+            SunshineBlue.shapedrawer.setColor(parameter.fontParameters.color);
             if (b) {
                 float off = nn.runs.size > 0 ? nn.runs.get(nn.runs.size - 1).width - sd.center.x : 0 + font.getSpaceXadvance() / 2f - sd.center.x;
                 if (fd.text.length() > 0 && fd.text.charAt(fd.text.length() - 1) == '\n') {
                     off = font.getSpaceXadvance() / 2f - sd.center.x;
                 }
-                Statics.shapedrawer.filledRectangle(off, -sd.center.y, 5, font.getCapHeight());
+                SunshineBlue.shapedrawer.filledRectangle(off, -sd.center.y, 5, font.getCapHeight());
             }
         }
 
         if (Statics.debug || Statics.selectedObjects.contains(this, true)) {
-            Statics.shapedrawer.rectangle(new Rectangle(-sd.center.x, -sd.center.y, sd.bounds.x, sd.bounds.y));
-            Statics.shapedrawer.filledCircle(0, 0, 15);
+            SunshineBlue.shapedrawer.rectangle(new Rectangle(-sd.center.x, -sd.center.y, sd.bounds.x, sd.bounds.y));
+            SunshineBlue.shapedrawer.filledCircle(0, 0, 15);
         }
         batch.end();
         batch.setTransformMatrix(Statics.mx4Batch);
         batch.begin();
         if (polygon != null) {
-            Statics.shapedrawer.setColor(Color.WHITE);
-            Statics.shapedrawer.polygon(polygon);
+            SunshineBlue.shapedrawer.setColor(Color.WHITE);
+            SunshineBlue.shapedrawer.polygon(polygon);
         }
     }
 
