@@ -10,6 +10,7 @@ import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.util.IPFSCIDListener;
 import com.klemstinegroup.sunshineblue.engine.util.IPFSFileListener;
 import com.klemstinegroup.sunshineblue.engine.util.NativeNetworkInterface;
@@ -42,7 +43,7 @@ public class NativeNetworkGWT implements NativeNetworkInterface {
 
     @Override
     public void downloadPixmap(String url, Pixmap.DownloadPixmapResponseListener listener) {
-        final Image img = new Image(url);
+        final Image img = new Image(Statics.CORSGateway+url);
         ImageElement.as(img.getElement()).setAttribute("crossorigin","anonymous");
         final RootPanel root = RootPanel.get("embed-image");
 
