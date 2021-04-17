@@ -2133,7 +2133,7 @@ public class PaletteReducer {
      */
     public byte randomColorIndex()
     {
-        return paletteMapping[MathUtils.random(Integer.MIN_VALUE,Integer.MAX_VALUE) >>> 17];
+        return paletteMapping[MathUtils.random.nextInt() >>> 17];
     }
 
     /**
@@ -2145,7 +2145,7 @@ public class PaletteReducer {
      */
     public int randomColor()
     {
-        return paletteArray[paletteMapping[MathUtils.random(Integer.MIN_VALUE,Integer.MAX_VALUE) >>> 17] & 255];
+        return paletteArray[paletteMapping[MathUtils.random.nextInt() >>> 17] & 255];
     }
 
     /**
