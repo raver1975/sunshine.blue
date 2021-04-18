@@ -69,8 +69,17 @@ public class NativeGWT implements NativeInterface {
     }
 
     native void doneSavingSceneJS(String cid) /*-{
+        $wnd.onpopstate=function(event){
+            var currentState = event.state;
+            console.log("onpopstate:"+currentState.cid);
+            @com.klemstinegroup.sunshineblue.engine.util.SerializeUtil::infromGWT(Ljava/lang/String;)(currentState.cid);
+//            $doc.body.innerHTML = currentState.innerhtml;
+
+        }
         console.log("changing url:"+cid);
-        $wnd.history.pushState( {} , 'sunshine.blue', '/?'+cid );
+//        var stateObj = { url: settings.url, innerhtml: document.body.innerHTML,cid:cid };
+        var stateObj = {cid:cid };
+        $wnd.history.pushState( stateObj, 'sunshine.blue', '/?'+cid );
     }-*/;
 
     native void downloadFromNet(String url, int iii)/*-{

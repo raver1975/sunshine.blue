@@ -128,6 +128,7 @@ public class SerializeUtil {
     }
 
     public static void infromGWT(String cid){
+        Gdx.app.log("infromGWT",cid);
         load(cid);
         ImageObject.load(cid);
     }
