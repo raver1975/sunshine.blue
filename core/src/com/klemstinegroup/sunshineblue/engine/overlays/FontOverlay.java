@@ -186,7 +186,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
             }
         });
         stage.addActor(sizeSpinner);*/
-        Slider slider = new Slider(1, 500, 1, true, skin);
+        Slider slider = new Slider(1, 218, 1, true, skin);
         slider.setPosition(Statics.overlayViewport.getWorldWidth() - 40, 80);
         slider.setSize(20, Statics.overlayViewport.getWorldHeight() - 150);
         slider.setValue(50);
@@ -194,8 +194,9 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         slider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.log("event",slider.getValue()+"");
                 if (!slider.isDragging()) {
-                    fontObject.setSize((int) slider.getValue());
+                    fontObject.setSize((int) (slider.getValue()));
                     generate(assetManager,fontObject);
                 }
             }
