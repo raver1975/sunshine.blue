@@ -76,7 +76,7 @@ public class HtmlLauncher extends GwtApplication {
 
     @Override
     public ApplicationListener createApplicationListener() {
-        return new SunshineBlue(new NativeNetworkGWT());
+        return new SunshineBlue(new NativeGWT());
     }
 
     @Override

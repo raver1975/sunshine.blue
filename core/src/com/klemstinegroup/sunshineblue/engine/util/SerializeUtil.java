@@ -69,12 +69,15 @@ public class SerializeUtil {
         SunshineBlue.nativeNet.uploadIPFS(val.toJson(JsonWriter.OutputType.javascript).getBytes(StandardCharsets.UTF_8), new IPFSCIDListener() {
             @Override
             public void cid(String cid) {
-                Preferences prefs = Gdx.app.getPreferences("scenes");
-                prefs.putString(name, cid);
-                prefs.putString("current", cid);
-                prefs.flush();
-                if (ipfscidListener != null) {
-                    ipfscidListener.cid(cid);
+                if (cid!=null && !cid.isEmpty()) {
+                    Preferences prefs = Gdx.app.getPreferences("scenes");
+                    prefs.putString(name, cid);
+                    prefs.putString("current", cid);
+                    prefs.flush();
+                    SunshineBlue.nativeNet.doneSavingScene(cid);
+                    if (ipfscidListener != null) {
+                        ipfscidListener.cid(cid);
+                    }
                 }
             }
 

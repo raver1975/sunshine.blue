@@ -34,7 +34,7 @@ import static com.badlogic.gdx.Application.LOG_INFO;
 
 public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
-    public static NativeNetworkInterface nativeNet;
+    public static NativeInterface nativeNet;
     private TransformOverlay TRANSFORM_OVERLAY;
     private FontOverlay FONT_OVERLAY;
     private ImageOverlay IMAGE_OVERLAY;
@@ -51,10 +51,10 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     //    Camera camera;
     public SunshineBlue() {
         super();
-        this.nativeNet = new NativeNetworkJava();
+        this.nativeNet = new NativeJava();
     }
 
-    public SunshineBlue(NativeNetworkInterface nativeIPFS) {
+    public SunshineBlue(NativeInterface nativeIPFS) {
         super();
         this.nativeNet = nativeIPFS;
     }
