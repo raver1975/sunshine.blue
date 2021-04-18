@@ -52,7 +52,7 @@ public class IPFSUtils {
 
     public static void uploadFile(byte[] data, IPFSCIDListener listen) {
 
-        Gdx.app.log("upload", data.length + "");
+        Gdx.app.log("upload", data.length + " bytes uploading");
         String url = "https://ipfs.infura.io:5001/api/v0/add";
         String boundary = "12345678901234567890"; // Just generate some unique random value.
         String CRLF = "\r\n"; // Line separator required by multipart/form-data.
@@ -80,6 +80,7 @@ public class IPFSUtils {
                     JsonValue jons = jsonReader.parse(res);
                     String hash = jons.getString("Hash");
                     if (hash != null && listen != null) {
+                        Gdx.app.log("upload","uploaded to "+hash);
                         listen.cid(hash);
                     } else {
                         listen.uploadFailed(new Throwable("upload failed"));

@@ -1,19 +1,11 @@
 package com.klemstinegroup.sunshineblue.engine.objects;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.FileHandleResolver;
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
-import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
@@ -23,6 +15,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.overlays.Drawable;
+import com.klemstinegroup.sunshineblue.engine.overlays.FontOverlay;
 import com.klemstinegroup.sunshineblue.engine.overlays.Touchable;
 import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
 
@@ -193,7 +186,13 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
     public static void deserialize(JsonValue json) {
         FontData fd1 = SerializeUtil.deserialize(json.get("fontData"), FontData.class);
         ScreenData sd1 = SerializeUtil.deserialize(json.get("screenData"), ScreenData.class);
-        Statics.userObjects.add(new FontObject(fd1, sd1));
+        Statics.addUserObj(new FontObject(fd1, sd1));
     }
+
+    @Override
+    public void regenerate(AssetManager assetManager) {
+        FontOverlay.generate(assetManager,this);
+    }
+
 
 }

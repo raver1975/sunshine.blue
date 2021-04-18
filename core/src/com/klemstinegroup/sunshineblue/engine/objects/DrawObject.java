@@ -11,7 +11,6 @@ import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.overlays.Drawable;
 import com.klemstinegroup.sunshineblue.engine.overlays.Touchable;
 import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
-import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public class DrawObject extends ScreenObject implements Drawable, Touchable {
     DrawData dd=new DrawData();
@@ -179,6 +178,6 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
             Array<Vector2> vecAr=SerializeUtil.deserialize(subarray,Array.class);
             dd.path.add(vecAr);
         }
-        Statics.userObjects.add(new DrawObject(dd));
+        Statics.addUserObj(new DrawObject(dd));
     }
 }

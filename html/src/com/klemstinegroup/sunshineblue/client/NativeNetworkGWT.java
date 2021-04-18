@@ -27,6 +27,9 @@ public class NativeNetworkGWT implements NativeNetworkInterface {
 
     @Override
     public void downloadIPFS(String cid, IPFSFileListener listener) {
+        if (cid==null||cid.isEmpty()||!cid.startsWith("Q")){
+            return;
+        }
         int j=MathUtils.random.nextInt();
         downloadListener.put(j,listener);
         Gdx.app.log("requesting",cid);

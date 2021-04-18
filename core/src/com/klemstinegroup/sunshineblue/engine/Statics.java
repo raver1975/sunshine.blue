@@ -17,6 +17,8 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.klemstinegroup.sunshineblue.engine.objects.*;
 import com.klemstinegroup.sunshineblue.engine.overlays.*;
+import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
+import com.klemstinegroup.sunshineblue.engine.util.UUID;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public class Statics {
@@ -57,5 +59,9 @@ public class Statics {
 
     public static void exceptionLog(String tag, Throwable t) {
         exceptionLog(tag,(Exception)t);
+    }
+
+    public static void addUserObj(BaseObject b){
+        userObjects.add(b);
     }
 }

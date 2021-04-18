@@ -31,19 +31,21 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
 
     public final Stage stage;
     private final TransformOverlay to;
-    private final AssetManager assetManager;
+    private AssetManager assetManager;
+    //    private final List<String> list;
+    private final SelectBox scrollPane;
     public FontObject fontObject;
-    private Vector2 touchdown=new Vector2();
+    private Vector2 touchdown = new Vector2();
 
     public FontOverlay(AssetManager assetManager, TransformOverlay to) {
-        this.assetManager=assetManager;
+        this.assetManager = assetManager;
         FileHandle[] fontList = Gdx.files.internal("fonts").list();
-        this.to=to;
+        this.to = to;
         new BitmapFont();
         stage = new Stage(Statics.overlayViewport);
         assetManager.finishLoadingAsset("skins/orange/skin/uiskin.json");
-        Skin skin = assetManager.get("skins/orange/skin/uiskin.json",Skin.class);
-        TextButton exitButton = new TextButton("X",skin);
+        Skin skin = assetManager.get("skins/orange/skin/uiskin.json", Skin.class);
+        TextButton exitButton = new TextButton("X", skin);
         exitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 55, Statics.overlayViewport.getWorldHeight() - 55);
         exitButton.addListener(new ClickListener() {
             @Override
@@ -89,22 +91,22 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
 
 //        stage.addActor(colorPicker);
 */
-        Gdx.app.log("color-picker","here");
+        Gdx.app.log("color-picker", "here");
 //        "default": {
 //            "buttonMinusStyle": "spinner-minus-h",
 //                    "buttonPlusStyle": "spinner-plus-h",
 //                    "textFieldStyle": "spinner"
 //        }
         assetManager.finishLoadingAsset("skin-composer-ui/skin-composer-ui.json");
-        Skin skin1 = assetManager.get("skin-composer-ui/skin-composer-ui.json",Skin.class);
+        Skin skin1 = assetManager.get("skin-composer-ui/skin-composer-ui.json", Skin.class);
 //        Skin skin1=new Skin(Gdx.files.internal("skin-composer-ui/skin-composer-ui.json"));
 
         Button.ButtonStyle buttonMinusStyle = skin1.get("spinner-minus-h", Button.ButtonStyle.class);
         Button.ButtonStyle buttonPlusStyle = skin1.get("spinner-plus-h", Button.ButtonStyle.class);
         TextField.TextFieldStyle textFieldStyle = skin1.get("spinner", TextField.TextFieldStyle.class);
-        Spinner.SpinnerStyle style=new Spinner.SpinnerStyle(buttonMinusStyle,buttonPlusStyle,textFieldStyle);
+        Spinner.SpinnerStyle style = new Spinner.SpinnerStyle(buttonMinusStyle, buttonPlusStyle, textFieldStyle);
 
-        skin1.add("default",style);
+        skin1.add("default", style);
         DialogColorPicker picker = new DialogColorPicker("default", skin1, new DialogColorPicker.ColorListener() {
             @Override
             public void selected(Color color) {
@@ -134,35 +136,43 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         colorButton.setPosition(Statics.overlayViewport.getWorldWidth() - 55, 10);
         stage.addActor(colorButton);
 
-        List list = new List(skin);
-        list.addListener(new ChangeListener() {
+//        list = new List(skin);
+//        list.addListener(new ChangeListener() {
+//
+//            @Override
+//            public void changed(ChangeEvent event, Actor actor) {
+//                if (fontObject != null) {
+//                    fontObject.setFont((String)((List) actor).getSelected());
+//                    generate();
+//                }
+//            }
+//        });
+        scrollPane = new SelectBox<String>(skin);
+        scrollPane.addListener(new ChangeListener() {
 
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (fontObject != null) {
-                    fontObject.setFont((String)((List) actor).getSelected());
-                    generate();
+                    fontObject.setFont((String) ((SelectBox<String>) actor).getSelected());
+                    generate(assetManager,fontObject);
                 }
             }
         });
-        ScrollPane scrollPane = new ScrollPane(list,skin);
         Array<String> fontListStr = new Array<>();
 
         for (FileHandle fh : fontList) {
             fontListStr.add(fh.nameWithoutExtension());
         }
         fontListStr.sort();
-        list.setItems(fontListStr);
-        list.layout();
+//        list.setItems(fontListStr);
+//        list.layout();
 
-        scrollPane.setSize(200, Statics.overlayViewport.getWorldHeight());
-        scrollPane.setPosition(0, 0);
-        scrollPane.setFlickScroll(true);
-        scrollPane.setScrollingDisabled(true, false);
-        boolean enable_x = false;
-        boolean enable_y = true;
-        scrollPane.setForceScroll(enable_x,enable_y);
-
+//        scrollPane.setHeight(Statics.overlayViewport.getWorldHeight());
+        scrollPane.setPosition(10, Statics.overlayViewport.getWorldHeight() - 60);
+//        scrollPane.setFlickScroll(true);
+        scrollPane.setWidth(200);
+        scrollPane.setScrollingDisabled(false);
+        scrollPane.setItems(fontListStr);
         scrollPane.layout();
         /*final IntSpinnerModel intModel = new IntSpinnerModel(60, 1, 1000, 1);
         Spinner sizeSpinner = new Spinner("", intModel);
@@ -177,36 +187,33 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         });
         stage.addActor(sizeSpinner);*/
         Slider slider = new Slider(1, 500, 1, true, skin);
-        slider.setPosition(Statics.overlayViewport.getWorldWidth() - 40,80);
-        slider.setSize(20,Statics.overlayViewport.getWorldHeight()-150);
+        slider.setPosition(Statics.overlayViewport.getWorldWidth() - 40, 80);
+        slider.setSize(20, Statics.overlayViewport.getWorldHeight() - 150);
         slider.setValue(50);
 
         slider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-
+                if (!slider.isDragging()) {
+                    fontObject.setSize((int) slider.getValue());
+                    generate(assetManager,fontObject);
+                }
             }
         });
-        slider.addListener(new DragScrollListener(scrollPane){
-            @Override
-            public void dragStop(InputEvent event, float x, float y, int pointer) {
-                super.dragStop(event, x, y, pointer);
-                fontObject.setSize((int)slider.getValue());
-                generate();
-            }
-        });
+        ;
         stage.addActor(slider);
         stage.addActor(exitButton);
         stage.addActor(scrollPane);
     }
 
     public void setFontObject(FontObject fontObject) {
-        if (this.fontObject!=null){
-            this.fontObject.edit=false;
+
+        if (this.fontObject != null) {
+            this.fontObject.edit = false;
         }
         this.fontObject = fontObject;
-        if (this.fontObject!=null){
-            this.fontObject.edit=true;
+        if (this.fontObject != null) {
+            this.fontObject.edit = true;
         }
     }
 
@@ -233,7 +240,8 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
             to.touchDown(screenX, screenY, pointer, button);
             Statics.selectedObjects.clear();
             Statics.selectedObjects.add(fontObject);
-        };
+        }
+        ;
         return false;
     }
 
@@ -287,28 +295,39 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         stage.act();
     }
 
-    public void generate() {
+    public static void generate(AssetManager assetManager,FontObject fontObject) {
         FileHandle[] fontList = Gdx.files.internal("fonts").list();
         FileHandle ff = fontList[MathUtils.random(fontList.length - 1)];
-        if (fontObject.fd.fontName==null) {
-            fontObject.fd.fontName=ff.nameWithoutExtension();
+        if (fontObject.fd.fontName == null) {
+            fontObject.fd.fontName = ff.nameWithoutExtension();
         }
-        for (FileHandle fh: fontList){
-            if (fh.nameWithoutExtension().equals(fontObject.fd.fontName)){ff=fh;}
+        for (FileHandle fh : fontList) {
+            if (fh.nameWithoutExtension().equals(fontObject.fd.fontName)) {
+                ff = fh;
+            }
         }
 //        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(ff);
         FreetypeFontLoader.FreeTypeFontLoaderParameter parameter;
         parameter = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         parameter.fontParameters.size = fontObject.fd.size;
         parameter.fontParameters.color = fontObject.fd.color;
-        parameter.fontFileName=ff.path();
-        String random= ff.pathWithoutExtension()+"-"+fontObject.fd.size+".ttf";
+        parameter.fontFileName = ff.path();
+        String random = ff.pathWithoutExtension() + "-" + fontObject.fd.size + ".ttf";
 
-        assetManager.load(random,BitmapFont.class,parameter);//getgenerator.generateFont(parameter);
+        assetManager.load(random, BitmapFont.class, parameter);
         assetManager.finishLoadingAsset(random);
-        fontObject.font=assetManager.get(random,BitmapFont.class);
+        fontObject.font = assetManager.get(random, BitmapFont.class);
         fontObject.setBounds();
-        sd.center.set(sd.bounds.x / 2f, sd.bounds.y / 2f);
+//        sd.center.set(sd.bounds.x / 2f, sd.bounds.y / 2f);
+    }
+
+    public void setList() {
+        String name=fontObject.fd.fontName;
+        Gdx.app.log("name",name);
+        int dotIndex = name.lastIndexOf('.');
+
+        scrollPane.setSelected(dotIndex==-1?name:name.substring(0,dotIndex));
+        scrollPane.layout();
     }
 
 }

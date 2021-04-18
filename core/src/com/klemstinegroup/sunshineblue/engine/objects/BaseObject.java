@@ -1,14 +1,17 @@
 package com.klemstinegroup.sunshineblue.engine.objects;
 
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.utils.JsonValue;
 import com.klemstinegroup.sunshineblue.engine.overlays.SerialInterface;
 
 public class BaseObject implements SerialInterface {
-
-  String UUID= com.klemstinegroup.sunshineblue.engine.util.UUID.randomUUID().toString();
-
+  public boolean regen=true;
   @Override
   public JsonValue serialize() {
     return null;
+  }
+
+  public void regenerate(AssetManager assetManager){
+
   }
 }

@@ -152,12 +152,12 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                                 SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway+cid, new Pixmap.DownloadPixmapResponseListener() {
                                     @Override
                                     public void downloadComplete(Pixmap pixmap) {
-                                        Statics.userObjects.add(new ImageObject(b, pixmap, cid));
+                                        Statics.addUserObj(new ImageObject(b, pixmap, cid));
                                     }
 
                                     @Override
                                     public void downloadFailed(Throwable t) {
-                                        Statics.userObjects.add(new ImageObject(b, null, cid));
+                                        Statics.addUserObj(new ImageObject(b, null, cid));
                                     }
                                 });
                             }
@@ -183,13 +183,13 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                                 @Override
                                 public void downloadComplete(Pixmap pixmap) {
                                     Gdx.app.log("downl","complete");
-                                    Statics.userObjects.add(new ImageObject(file, pixmap, url));
+                                    Statics.addUserObj(new ImageObject(file, pixmap, url));
                                 }
 
                                 @Override
                                 public void downloadFailed(Throwable t) {
                                     Gdx.app.log("downl","failed");
-                                    Statics.userObjects.add(new ImageObject(file, null, url));
+                                    Statics.addUserObj(new ImageObject(file, null, url));
                                 }
                             });
                         }
@@ -207,12 +207,12 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                             SunshineBlue.nativeNet.downloadPixmap(url, new Pixmap.DownloadPixmapResponseListener() {
                                 @Override
                                 public void downloadComplete(Pixmap pixmap) {
-                                    Statics.userObjects.add(new ImageObject(file, pixmap, null));
+                                    Statics.addUserObj(new ImageObject(file, pixmap, null));
                                 }
 
                                 @Override
                                 public void downloadFailed(Throwable t) {
-                                    Statics.userObjects.add(new ImageObject(file, null, null));
+                                    Statics.addUserObj(new ImageObject(file, null, null));
                                 }
                             });
                         }
@@ -238,7 +238,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                     @Override
                     public void downloaded(byte[] file) {
                         Gdx.app.log("continue", "download success");
-                        Statics.userObjects.add(new ImageObject(file, pixmap, null));
+                        Statics.adduserObj(new ImageObject(file, pixmap, null));
 
                     }
 
@@ -246,7 +246,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                     public void downloadFailed(Throwable t) {
                         Gdx.app.log("continue", "download failed");
                         Statics.exceptionLog("continued", (Exception) t);
-                        Statics.userObjects.add(new ImageObject(pixmap, null));
+                        Statics.adduserObj(new ImageObject(pixmap, null));
                     }
                 });
             }
@@ -463,14 +463,14 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                     public void downloadComplete(Pixmap pixmap) {
                         ImageObject io = new ImageObject(file, pixmap, cid);
                         io.sd = sd1;
-                        Statics.userObjects.add(io);
+                        Statics.addUserObj(io);
                     }
 
                     @Override
                     public void downloadFailed(Throwable t) {
                         ImageObject io = new ImageObject(file, null, cid);
                         io.sd = sd1;
-                        Statics.userObjects.add(io);
+                        Statics.addUserObj(io);
                     }
                 });
 

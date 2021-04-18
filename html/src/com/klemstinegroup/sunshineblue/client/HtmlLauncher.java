@@ -102,6 +102,11 @@ public class HtmlLauncher extends GwtApplication {
 
     native void setupCopyListener() /*-{
         var self = this;
+
+        var query = $wnd.location.search.substring(1);
+        console.log("query",query);
+        @com.klemstinegroup.sunshineblue.engine.util.SerializeUtil::infromGWT(Ljava/lang/String;)(query);
+
         var isSafari = navigator.appVersion.search('Safari') != -1 && navigator.appVersion.search('Chrome') == -1 && navigator.appVersion.search('CrMo') == -1 && navigator.appVersion.search('CriOS') == -1;
         var isIe = (navigator.userAgent.toLowerCase().indexOf("msie") != -1 || navigator.userAgent.toLowerCase().indexOf("trident") != -1);
 
@@ -205,9 +210,9 @@ public class HtmlLauncher extends GwtApplication {
                             @Override
                             public void onLoad(LoadEvent event) {
 //                                if (((data[0] & 0xff) == 71 && (data[1] & 0xff) == 73 && (data[2] & 0xff) == 70) || ((data[0] & 0xff) == 137 && (data[1] & 0xff) == 80 && (data[2] & 0xff) == 78 && (data[3] & 0xff) == 71)) {
-//                                    Statics.userObjects.add(new ImageObject(data, new Pixmap(ImageElement.as(img.getElement())),finalText));
+//                                    Statics.adduserObj(new ImageObject(data, new Pixmap(ImageElement.as(img.getElement())),finalText));
 //                                } else {
-                                    Statics.userObjects.add(new ImageObject(data,new Pixmap(ImageElement.as(img.getElement())),finalText));
+                                    Statics.adduserObj(new ImageObject(data,new Pixmap(ImageElement.as(img.getElement())),finalText));
 //                                }
                             }
                         });
@@ -230,11 +235,11 @@ public class HtmlLauncher extends GwtApplication {
                 img.addLoadHandler(new LoadHandler() {
                     @Override
                     public void onLoad(LoadEvent event) {
-                        Statics.userObjects.add(new ImageObject(b,new Pixmap(ImageElement.as(img.getElement())),null));
+                        Statics.adduserObj(new ImageObject(b,new Pixmap(ImageElement.as(img.getElement())),null));
                     }
                 });
             } else {
-//                        Statics.userObjects.add(new ImageObject(text.replaceAll("\n", "")));
+//                        Statics.adduserObj(new ImageObject(text.replaceAll("\n", "")));
                 String finalText1 = "https://api.codetabs.com/v1/proxy?quest="+text;
                 SunshineBlue.nativeNet.downloadFile(finalText1, new IPFSFileListener() {
                     @Override
@@ -249,10 +254,10 @@ public class HtmlLauncher extends GwtApplication {
                             @Override
                             public void onLoad(LoadEvent event) {
 //                                    if (((data[0] & 0xff) == 71 && (data[1] & 0xff) == 73 && (data[2] & 0xff) == 70) || ((data[0] & 0xff) == 137 && (data[1] & 0xff) == 80 && (data[2] & 0xff) == 78 && (data[3] & 0xff) == 71)) {
-//                                        Statics.userObjects.add(new ImageObject(data, new Pixmap(ImageElement.as(img.getElement())),null));
+//                                        Statics.adduserObj(new ImageObject(data, new Pixmap(ImageElement.as(img.getElement())),null));
 //                                    }
 //                                    else{
-                                        Statics.userObjects.add(new ImageObject(data,new Pixmap(ImageElement.as(img.getElement())),null));
+                                        Statics.adduserObj(new ImageObject(data,new Pixmap(ImageElement.as(img.getElement())),null));
 //                                    }
                             }
                         });

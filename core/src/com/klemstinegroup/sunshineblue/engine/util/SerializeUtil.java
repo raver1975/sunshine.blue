@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
+import com.klemstinegroup.sunshineblue.engine.objects.ImageObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
 import com.klemstinegroup.sunshineblue.engine.overlays.SerialInterface;
 
@@ -40,9 +41,11 @@ public class SerializeUtil {
         }
     }
 
-    public static void load(String name) {
-        String cid = Gdx.app.getPreferences("scenes").getString(name);
-        Gdx.app.log("name:",name+"\t"+cid);
+    public static void load(String cid) {
+        if (cid==null || cid.isEmpty() ||!cid.startsWith("Q")){
+            return;
+        }
+        Gdx.app.log("name:",cid+"\t"+cid);
         if (cid != null) {
             SunshineBlue.nativeNet.downloadIPFS(cid, new IPFSFileListener() {
                 @Override
@@ -119,5 +122,14 @@ public class SerializeUtil {
 
     public static void save(String name) {
         save(name, null);
+    }
+
+    public static void infromGWT(String cid){
+        load(cid);
+        ImageObject.load(cid);
+    }
+
+    public static void save() {
+        save("autosave-"+TimeUtils.millis());
     }
 }

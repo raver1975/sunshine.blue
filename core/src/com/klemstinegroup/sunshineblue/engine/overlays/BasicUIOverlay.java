@@ -15,6 +15,7 @@ import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
 import com.klemstinegroup.sunshineblue.engine.objects.DrawObject;
 import com.klemstinegroup.sunshineblue.engine.objects.FontObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
+import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
 
 
 public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
@@ -38,6 +39,17 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         Actor fontButton = new TextButton("Text", skin);
 //        fontButton.setColor(Color.WHITE);
 
+        Actor saveButton = new TextButton("Save", skin);
+        saveButton.setPosition(10, Statics.overlayViewport.getWorldHeight()-60);
+        saveButton.addListener(new ClickListener() {
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+               SerializeUtil.save();
+            }
+        });
+        stage.addActor(saveButton);
+
         fontButton.addListener(new ClickListener() {
 //            @Override
 //            public void changed(ChangeEvent event, Actor actor) {
@@ -50,15 +62,16 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 super.clicked(event, x, y);
                 Gdx.input.setOnscreenKeyboardVisible(true);
                 FontObject ff = new FontObject();
-                Statics.userObjects.add(ff);
+                Statics.addUserObj(ff);
                 fo.setFontObject(ff);
-                fo.generate();
+                fo.generate(assetManager,ff);
+                fo.setList();
                 Overlay.setOverlay(fo);
                 ff.sd.position.set(-ff.sd.center.x, -ff.sd.center.y);
 //        ((ScreenObject) Statics.objects.get(0)).position.set(-((ScreenObject) Statics.objects.get(0)).bounds.x/2, -((ScreenObject) Statics.objects.get(0)).bounds.y/2, 0);
             }
         });
-        fontButton.setPosition(0,10);
+        fontButton.setPosition(10,10);
         stage.addActor(fontButton);
 
 
@@ -88,7 +101,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 super.clicked(event, x, y);
                 Gdx.input.setOnscreenKeyboardVisible(false);
                 DrawObject doi = new DrawObject();
-                Statics.userObjects.add(doi);
+                Statics.addUserObj(doi);
                 dor.setTouchable(doi);
                 Overlay.setOverlay(dor);
 //                pasteButton.setVisible(true);
