@@ -88,6 +88,11 @@ public class DrawOverlay extends ScreenObject implements Overlay, Touchable, Dra
     }
 
     @Override
+    public void setBounds() {
+
+    }
+
+    @Override
     public void setInput() {
         Statics.im.addProcessor(stage);
         if (touchable!=null) Statics.im.addProcessor(touchable);

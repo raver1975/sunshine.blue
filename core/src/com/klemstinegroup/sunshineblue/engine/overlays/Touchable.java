@@ -7,6 +7,6 @@ public interface Touchable extends InputProcessor {
 
 
     boolean isSelected(Vector2 touch);
-
+    void setBounds();
 
 }

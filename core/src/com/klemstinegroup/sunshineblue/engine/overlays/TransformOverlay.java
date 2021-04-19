@@ -22,7 +22,6 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
 
     Vector2 touchdrag = new Vector2();
     Vector2 touchdown = new Vector2();
-    private Vector2 touchdragcpy = new Vector2();
 
     public TransformOverlay(AssetManager assetManager) {
         stage = new Stage(Statics.overlayViewport);
@@ -166,7 +165,11 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-
+        for (BaseObject bo : Statics.selectedObjects) {
+            if (bo instanceof Touchable) {
+                ((Touchable) bo).setBounds();
+            }
+        }
         return false;
     }
 
@@ -190,6 +193,9 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                         break;
                     case 3:
                         break;
+                }
+                if (bo instanceof Touchable) {
+                    ((Touchable) bo).setBounds();
                 }
 
             }
@@ -225,6 +231,11 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
     @Override
     public boolean isSelected(Vector2 touch) {
         return false;
+    }
+
+    @Override
+    public void setBounds() {
+
     }
 
     @Override

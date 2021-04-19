@@ -71,9 +71,13 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     @Override
     public void create() {
         Gdx.app.log("create","started");
-        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGB888);
+        Pixmap pixmap = new Pixmap(3, 3, Pixmap.Format.RGB888);
+        pixmap.setColor(Color.RED);
+        pixmap.fill();
         pixmap.setColor(Color.WHITE);
         pixmap.drawPixel(0, 0);
+        pixmap.drawPixel(1, 1);
+        pixmap.drawPixel(2, 2);
         TextureRegion whitePixel = new TextureRegion(new Texture(pixmap));
         // set the loaders for the generator and the fonts themselves
         batch = new PolygonSpriteBatch();
@@ -178,7 +182,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     }
 
 
-    int cnt = 10000;
+    int cnt = 100;
 
     @Override
     public void render() {
