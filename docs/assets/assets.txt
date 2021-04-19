@@ -29,10 +29,10 @@ b:skins/orange/README.md:skins/orange/README-5fcc55ba81bb23528ed6e8ea4473098f.md
 d:skin-composer-ui:skin-composer-ui:0:application/unknown:1
 t:skin-composer-ui/skin-composer-ui.atlas:skin-composer-ui/skin-composer-ui-762d472466d3d692647cb1b99b254ff9.atlas:67118:application/unknown:1
 i:skin-composer-ui/skin-composer-ui.png:skin-composer-ui/skin-composer-ui-eda08beff49b66fb97384b5825ffaab8.png:1355153:image/png:1
-t:skin-composer-ui/nirmala20.fnt:skin-composer-ui/nirmala20-bddbeeaa25b37fdab51a536876f34ce9.fnt:11117:application/unknown:1
+t:skin-composer-ui/nirmala20.fnt:skin-composer-ui/nirmala20-1a36d2d1619b0fd35844aecd914ef484.fnt:11010:application/unknown:1
 t:skin-composer-ui/skin-composer-ui.json:skin-composer-ui/skin-composer-ui-ff7435906ad5304b2abecf8ca748bc1e.json:25229:application/unknown:1
 t:skin-composer-ui/font-export.fnt:skin-composer-ui/font-export-c765cb44d040c66afe3ae0be1d8f16f0.fnt:11173:application/unknown:1
-i:skin-composer-ui/nirmala20.png:skin-composer-ui/nirmala20-1a43461c9c6c2b7272e376342988ea47.png:14115:image/png:1
+i:skin-composer-ui/nirmala20.png:skin-composer-ui/nirmala20-59503648e697867335537c6420657b8b.png:15167:image/png:1
 t:skin-composer-ui/font-title-export.fnt:skin-composer-ui/font-title-export-b946b6e73de42b655a677af5912d84f4.fnt:11534:application/unknown:1
 d:fonts:fonts:0:application/unknown:1
 b:fonts/Cezanne-Medium.ttf:fonts/Cezanne-Medium-6d7b2443b90be3c73b4a6d5b5f616399.ttf:94968:application/unknown:1
