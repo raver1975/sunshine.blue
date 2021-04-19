@@ -36,6 +36,9 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
         //generate();
     }
 
+    public FontObject() {
+    }
+
     public void setFont(String name) {
         fd.fontName = name;
     }
@@ -44,11 +47,6 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
         fd.size = size;
         //generate();
     }
-
-    public FontObject() {
-        //generate();
-    }
-
 
     public void setBounds() {
         nn = new GlyphLayout();
@@ -165,7 +163,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
     @Override
     public boolean isSelected(Vector2 touch) {
         setBounds();
-        if (polygon!=null){
+        if (polygon != null) {
             return polygon.contains(touch);
         }
         return false;
@@ -196,7 +194,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
 
     @Override
     public void regenerate(AssetManager assetManager) {
-        FontOverlay.generate(assetManager,this);
+        FontOverlay.generate(assetManager, this);
     }
 
 

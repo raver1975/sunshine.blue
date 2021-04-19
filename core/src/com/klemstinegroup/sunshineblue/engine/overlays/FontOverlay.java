@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.Array;
 import com.klemstinegroup.sunshineblue.colorpicker.DialogColorPicker;
 import com.klemstinegroup.sunshineblue.colorpicker.Spinner;
 import com.klemstinegroup.sunshineblue.engine.Statics;
+import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
 import com.klemstinegroup.sunshineblue.engine.objects.FontObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
 
@@ -31,6 +32,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
     private final SelectBox selectBox;
     public FontObject fontObject;
     private Vector2 touchdown = new Vector2();
+    Vector2 touchdrag = new Vector2();
 
     public FontOverlay(AssetManager assetManager, TransformOverlay to) {
         this.assetManager = assetManager;
@@ -165,7 +167,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
 //        list.layout();
 
 //        scrollPane.setHeight(Statics.overlayViewport.getWorldHeight());
-        selectBox.setPosition(10, Statics.overlayViewport.getWorldHeight() - 60);
+        selectBox.setPosition(10, 10);
 //        scrollPane.setFlickScroll(true);
         selectBox.setWidth(200);
         selectBox.setScrollingDisabled(false);
@@ -195,6 +197,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
                 if (!slider.isDragging()) {
                     fontObject.setSize((int) (slider.getValue()));
                     generate(assetManager, fontObject);
+                    setBounds();
                 }
             }
         });
@@ -232,26 +235,28 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+
         Statics.viewport.unproject(touchdown.set(screenX, screenY));
-        if (fontObject.isSelected(touchdown)) {
-            Overlay.setOverlay(to);
-            to.touchDown(screenX, screenY, pointer, button);
-            Statics.selectedObjects.clear();
-            Statics.selectedObjects.add(fontObject);
-        }
-        ;
         return false;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        fontObject.setBounds();
         return false;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        Statics.viewport.unproject(touchdrag.set(screenX, screenY));
+
+        fontObject.sd.position.add(touchdrag.cpy().sub(touchdown));
+        fontObject.setBounds();
+
+        touchdown.set(touchdrag);
         return false;
     }
+
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {

@@ -24,7 +24,7 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
     public ImageOverlay(AssetManager assetManager) {
         stage = new Stage(Statics.overlayViewport);
         assetManager.finishLoadingAsset("skins/orange/skin/uiskin.json");
-        Skin skin = assetManager.get("skins/orange/skin/uiskin.json",Skin.class);
+        Skin skin = assetManager.get("skins/orange/skin/uiskin.json", Skin.class);
 
         TextButton exitButton = new TextButton("X", skin);
         exitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 55, Statics.overlayViewport.getWorldHeight() - 55);
@@ -36,8 +36,6 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
             }
         });
         stage.addActor(exitButton);
-
-        ta = new TextArea(null, skin,"search");
 
         TextField.TextFieldListener tfl = new TextField.TextFieldListener() {
             @Override
@@ -52,15 +50,31 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
                 }
             }
         };
-        TextField tfield=new TextField("JPG,PNG,GIF,IPFS CID,or data URI",skin);
+
+        TextButton submitButton = new TextButton("Shine!", skin);
+        submitButton.setSize(100, 100);
+        submitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 100, 10);
+        submitButton.addListener(new ClickListener() {
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                tfl.keyTyped(ta,(char)13);
+            }
+        });
+        stage.addActor(submitButton);
+
+        ta = new TextArea(null, skin, "default");
+
+
+        TextField tfield = new TextField("JPG,PNG,GIF,IPFS,or DATA url", skin);
         tfield.setDisabled(true);
-        tfield.setPosition(10,110);
+        tfield.setPosition(10, 110);
+        tfield.setWidth(270);
         stage.addActor(tfield);
         ta.addListener(new ActorGestureListener() {
             @Override
             public boolean longPress(Actor actor, float x, float y) {
                 ta.setText(Gdx.app.getClipboard().getContents());
-                tfl.keyTyped(ta, (char) 13);
                 return true;// super.longPress(actor, x, y);
             }
 
@@ -69,9 +83,9 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
         ta.setTextFieldListener(tfl);
 
         ta.setPosition(10, 10);
-//        ta.setWidth(Statics.overlayViewport.getWorldWidth() - 20);
-//        ta.setHeight(100);
-        ta.setMessageText("Accepts http urls for PNG GIF,and JPG. also base64 Data URI's and IPFS addresses");
+        ta.setWidth(Statics.overlayViewport.getWorldWidth() - 100);
+        ta.setHeight(100);
+//        ta.setMessageText("Accepts http urls for PNG GIF,and JPG. also base64 Data URI's and IPFS addresses");
         stage.addActor(ta);
         stage.setKeyboardFocus(ta);
 

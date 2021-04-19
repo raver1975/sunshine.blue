@@ -15,6 +15,7 @@ import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
 import com.klemstinegroup.sunshineblue.engine.objects.DrawObject;
 import com.klemstinegroup.sunshineblue.engine.objects.FontObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
+import com.klemstinegroup.sunshineblue.engine.util.IPFSCIDListener;
 import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
 
 
@@ -50,6 +51,28 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         });
         stage.addActor(saveButton);
 
+        Actor popButton = new TextButton("Pop", skin);
+        popButton.setPosition(10, Statics.overlayViewport.getWorldHeight()-120);
+        popButton.addListener(new ClickListener() {
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                SerializeUtil.save("pop", new IPFSCIDListener() {
+                    @Override
+                    public void cid(String cid) {
+                        Gdx.net.openURI("https://sunshine.blue/?"+cid);
+                    }
+
+                    @Override
+                    public void uploadFailed(Throwable t) {
+
+                    }
+                });
+
+            }
+        });
+        stage.addActor(popButton);
+
         fontButton.addListener(new ClickListener() {
 //            @Override
 //            public void changed(ChangeEvent event, Actor actor) {
@@ -66,8 +89,16 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 fo.setFontObject(ff);
                 fo.generate(assetManager,ff);
                 fo.setList();
+//                ff.sd.position.set(-ff.sd.center.x, -ff.sd.center.y);
+                Vector2 vec = new Vector2(50,50);
+//                Statics.viewport.unproject(Statics.overlayViewport.project(vec));
+//                Statics.viewport.project(Statics.overlayViewport.unproject(vec));
+//                Statics.overlayViewport.unproject(Statics.viewport.project(vec));
+                Statics.overlayViewport.project(Statics.viewport.unproject(vec));
+                System.out.println(vec);
+                ff.sd.position.set(vec);
                 Overlay.setOverlay(fo);
-                ff.sd.position.set(-ff.sd.center.x, -ff.sd.center.y);
+
 //        ((ScreenObject) Statics.objects.get(0)).position.set(-((ScreenObject) Statics.objects.get(0)).bounds.x/2, -((ScreenObject) Statics.objects.get(0)).bounds.y/2, 0);
             }
         });

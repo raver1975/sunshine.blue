@@ -22,7 +22,6 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
 
     Vector2 touchdrag = new Vector2();
     Vector2 touchdown = new Vector2();
-    private Vector2 touchdragcpy = new Vector2();
 
     public TransformOverlay(AssetManager assetManager) {
         stage = new Stage(Statics.overlayViewport);
