@@ -33,9 +33,21 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         this.dor=dor;
         this.io=io;
         this.to=to;
-        stage = new Stage(Statics.overlayViewport);
         assetManager.finishLoadingAsset("skins/orange/skin/uiskin.json");
         Skin skin = assetManager.get("skins/orange/skin/uiskin.json",Skin.class);
+        stage = new Stage(Statics.overlayViewport);
+        TextButton exitButton = new TextButton("X",skin);
+        exitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 60, 10);
+        exitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                Overlay.backOverlay();
+            }
+        });
+        stage.addActor(exitButton);
+
+
 //        Skin skin = new Skin(Gdx.files.internal("skins/default/skin/uiskin.json"));
         Actor fontButton = new TextButton("Text", skin);
 //        fontButton.setColor(Color.WHITE);
@@ -178,7 +190,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         if (Statics.selectedObjects.size > 0) {
             Overlay.setOverlay(to);
         } else {
-            Overlay.setOverlay(this);
+//            Overlay.setOverlay(this);
         }
         return false;
     }

@@ -88,7 +88,7 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
         ta.setWidth(Statics.overlayViewport.getWorldWidth() - 110);
         ta.setHeight(100);
 
-        TextButton clearButton = new TextButton(".", skin);
+        TextButton clearButton = new TextButton("x", skin);
         clearButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -105,9 +105,9 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
         stage.setKeyboardFocus(ta);
     }
 
-    public void setTouchable(Touchable touchable) {
-        this.touchable = touchable;
-    }
+//    public void setTouchable(Touchable touchable) {
+//        this.touchable = touchable;
+//    }
 
     @Override
     public boolean keyDown(int keycode) {
@@ -167,14 +167,14 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
     @Override
     public void setInput() {
         Statics.im.addProcessor(stage);
-        if (touchable != null) Statics.im.addProcessor(touchable);
+//        if (touchable != null) Statics.im.addProcessor(touchable);
         stage.setKeyboardFocus(ta);
     }
 
     @Override
     public void removeInput() {
         Statics.im.removeProcessor(stage);
-        if (touchable != null) Statics.im.removeProcessor(touchable);
+//        if (touchable != null) Statics.im.removeProcessor(touchable);
     }
 
     @Override

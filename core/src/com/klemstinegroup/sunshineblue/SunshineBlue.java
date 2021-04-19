@@ -21,15 +21,20 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.tommyettinger.anim8.IncrementalAnimatedPNG;
 import com.igormaznitsa.jjjvm.impl.JJJVMClassImpl;
 import com.igormaznitsa.jjjvm.impl.jse.JSEProviderImpl;
+import com.igormaznitsa.jjjvm.model.JJJVMMethod;
+import com.igormaznitsa.jjjvm.model.JJJVMObject;
 import com.igormaznitsa.jjjvm.model.JJJVMProvider;
 import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.objects.*;
 import com.klemstinegroup.sunshineblue.engine.overlays.*;
 import com.klemstinegroup.sunshineblue.engine.util.*;
 import space.earlygrey.shapedrawer.ShapeDrawer;
+import sun.security.provider.Sun;
 
 import java.io.ByteArrayInputStream;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Map;
 
 import static com.badlogic.gdx.Application.LOG_INFO;
 
@@ -41,6 +46,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     private ImageOverlay IMAGE_OVERLAY;
     private DrawOverlay DRAW_OVERLAY;
     private BasicUIOverlay BASIC_UI_OVERLAY;
+    private BlankOverlay BLANK_OVERLAY;
     public static Batch batch;
 
     static {
@@ -49,6 +55,8 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
 
     public static ShapeDrawer shapedrawer;
+    public JSEProviderImpl JJVMprovider=new JSEProviderImpl();
+    public static SunshineBlue instance;
 
     //    Camera camera;
     public SunshineBlue() {
@@ -64,7 +72,6 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
 //    public static Matrix4 mx4Batch = new Matrix4();
 
-    JJJVMClassImpl jjjvmClass = null;
     private IncrementalAnimatedPNG apng;
     private MemoryFileHandle mfh;
 
@@ -73,6 +80,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     @Override
     public void create() {
         Gdx.app.log("create", "started");
+        this.instance=this;
         // set the loaders for the generator and the fonts themselves
         batch = new PolygonSpriteBatch();
         shapedrawer = new ShapeDrawer(batch, new TextureRegion(new Texture(getWhitePixel())));
@@ -90,13 +98,13 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         IMAGE_OVERLAY = new ImageOverlay(assetManager);
         DRAW_OVERLAY = new DrawOverlay(assetManager);
         BASIC_UI_OVERLAY = new BasicUIOverlay(assetManager, FONT_OVERLAY, IMAGE_OVERLAY, DRAW_OVERLAY, TRANSFORM_OVERLAY);
-
+        BLANK_OVERLAY = new BlankOverlay(BASIC_UI_OVERLAY);
         Gdx.input.setCatchKey(Input.Keys.BACK, true);
         Gdx.input.setCatchKey(Input.Keys.ESCAPE, true);
 //        VisUI.load(VisUI.SkinScale.X2);
         Gdx.input.setInputProcessor(Statics.im);
         Statics.im.addProcessor(this);
-        if (Statics.overlay == null) Overlay.setOverlay(BASIC_UI_OVERLAY);
+        if (Statics.overlay == null) Overlay.setOverlay(BLANK_OVERLAY);
         Gdx.app.setLogLevel(LOG_INFO);
 /*//        img = new Texture("badlogic.jpg");
 
@@ -137,27 +145,9 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
 
 //--------------------------------------------------------------------------------------------------
-        JJJVMProvider provider = new JSEProviderImpl() {
-            /*@Override
-            public Object invoke(JJJVMClass caller, Object instance, String jvmFormattedClassName, String methodName, String methodSignature, Object[] arguments) throws Throwable {
-                if (jvmFormattedClassName.equals("java/io/PrintStream") && methodName.equals("println") && methodSignature.equals("(Ljava/lang/String;)V")){
-                    Gdx.app.log("out","<<"+arguments[0]+">>");
-                    return null;
-                }
-                return super.invoke(caller, instance, jvmFormattedClassName, methodName, methodSignature, arguments); //To change body of generated methods, choose Tools | Templates.
-            }*/
-        };
 
-        Gdx.app.log("out", "invoking");
-        try {
-//            byte[] b = new byte[]{-54, -2, -70, -66, 0, 0, 0, 50, 0, 35, 1, 0, 10, 72, 101, 108, 108, 111, 87, 111, 114, 108, 100, 7, 0, 1, 1, 0, 16, 106, 97, 118, 97, 47, 108, 97, 110, 103, 47, 79, 98, 106, 101, 99, 116, 7, 0, 3, 1, 0, 4, 109, 97, 105, 110, 1, 0, 22, 40, 91, 76, 106, 97, 118, 97, 47, 108, 97, 110, 103, 47, 83, 116, 114, 105, 110, 103, 59, 41, 86, 1, 0, 19, 91, 76, 106, 97, 118, 97, 47, 108, 97, 110, 103, 47, 83, 116, 114, 105, 110, 103, 59, 7, 0, 7, 1, 0, 45, 99, 111, 109, 47, 107, 108, 101, 109, 115, 116, 105, 110, 101, 103, 114, 111, 117, 112, 47, 115, 117, 110, 115, 104, 105, 110, 101, 108, 97, 98, 47, 101, 110, 103, 105, 110, 101, 47, 83, 116, 97, 116, 105, 99, 115, 7, 0, 9, 1, 0, 11, 117, 115, 101, 114, 79, 98, 106, 101, 99, 116, 115, 1, 0, 30, 76, 99, 111, 109, 47, 98, 97, 100, 108, 111, 103, 105, 99, 47, 103, 100, 120, 47, 117, 116, 105, 108, 115, 47, 65, 114, 114, 97, 121, 59, 12, 0, 11, 0, 12, 9, 0, 10, 0, 13, 1, 0, 28, 99, 111, 109, 47, 98, 97, 100, 108, 111, 103, 105, 99, 47, 103, 100, 120, 47, 117, 116, 105, 108, 115, 47, 65, 114, 114, 97, 121, 7, 0, 15, 1, 0, 3, 103, 101, 116, 1, 0, 21, 40, 73, 41, 76, 106, 97, 118, 97, 47, 108, 97, 110, 103, 47, 79, 98, 106, 101, 99, 116, 59, 12, 0, 17, 0, 18, 10, 0, 16, 0, 19, 1, 0, 58, 99, 111, 109, 47, 107, 108, 101, 109, 115, 116, 105, 110, 101, 103, 114, 111, 117, 112, 47, 115, 117, 110, 115, 104, 105, 110, 101, 108, 97, 98, 47, 101, 110, 103, 105, 110, 101, 47, 111, 98, 106, 101, 99, 116, 115, 47, 83, 99, 114, 101, 101, 110, 79, 98, 106, 101, 99, 116, 7, 0, 21, 1, 0, 8, 114, 111, 116, 97, 116, 105, 111, 110, 1, 0, 1, 70, 12, 0, 23, 0, 24, 9, 0, 22, 0, 25, 6, 63, -71, -103, -103, -103, -103, -103, -102, 1, 0, 13, 83, 116, 97, 99, 107, 77, 97, 112, 84, 97, 98, 108, 101, 1, 0, 4, 67, 111, 100, 101, 1, 0, 6, 60, 105, 110, 105, 116, 62, 1, 0, 3, 40, 41, 86, 12, 0, 31, 0, 32, 10, 0, 4, 0, 33, 0, 33, 0, 2, 0, 4, 0, 0, 0, 0, 0, 2, 0, 9, 0, 5, 0, 6, 0, 1, 0, 30, 0, 0, 0, 63, 0, 5, 0, 1, 0, 0, 0, 24, -78, 0, 14, 4, -74, 0, 20, -64, 0, 22, 89, -76, 0, 26, -115, 20, 0, 27, 103, -112, -75, 0, 26, -79, 0, 0, 0, 1, 0, 29, 0, 0, 0, 21, 0, 3, 67, 7, 0, 16, -1, 0, 11, 0, 1, 7, 0, 8, 0, 2, 7, 0, 22, 3, 7, 0, 1, 0, 31, 0, 32, 0, 1, 0, 30, 0, 0, 0, 25, 0, 1, 0, 1, 0, 0, 0, 5, 42, -73, 0, 34, -79, 0, 0, 0, 1, 0, 29, 0, 0, 0, 2, 0, 0, 0, 0};
-            byte[] b = new byte[]{-54, -2, -70, -66, 0, 0, 0, 52, 0, 44, 10, 0, 8, 0, 22, 9, 0, 23, 0, 24, 10, 0, 25, 0, 26, 7, 0, 27, 9, 0, 4, 0, 28, 9, 0, 29, 0, 30, 7, 0, 31, 7, 0, 32, 1, 0, 6, 60, 105, 110, 105, 116, 62, 1, 0, 3, 40, 41, 86, 1, 0, 4, 67, 111, 100, 101, 1, 0, 15, 76, 105, 110, 101, 78, 117, 109, 98, 101, 114, 84, 97, 98, 108, 101, 1, 0, 18, 76, 111, 99, 97, 108, 86, 97, 114, 105, 97, 98, 108, 101, 84, 97, 98, 108, 101, 1, 0, 4, 116, 104, 105, 115, 1, 0, 43, 76, 99, 111, 109, 47, 107, 108, 101, 109, 115, 116, 105, 110, 101, 103, 114, 111, 117, 112, 47, 115, 117, 110, 115, 104, 105, 110, 101, 108, 97, 98, 47, 72, 101, 108, 108, 111, 87, 111, 114, 108, 100, 59, 1, 0, 4, 109, 97, 105, 110, 1, 0, 22, 40, 91, 76, 106, 97, 118, 97, 47, 108, 97, 110, 103, 47, 83, 116, 114, 105, 110, 103, 59, 41, 86, 1, 0, 4, 97, 114, 103, 115, 1, 0, 19, 91, 76, 106, 97, 118, 97, 47, 108, 97, 110, 103, 47, 83, 116, 114, 105, 110, 103, 59, 1, 0, 10, 83, 111, 117, 114, 99, 101, 70, 105, 108, 101, 1, 0, 15, 72, 101, 108, 108, 111, 87, 111, 114, 108, 100, 46, 106, 97, 118, 97, 12, 0, 9, 0, 10, 7, 0, 33, 12, 0, 34, 0, 35, 7, 0, 36, 12, 0, 37, 0, 38, 1, 0, 58, 99, 111, 109, 47, 107, 108, 101, 109, 115, 116, 105, 110, 101, 103, 114, 111, 117, 112, 47, 115, 117, 110, 115, 104, 105, 110, 101, 108, 97, 98, 47, 101, 110, 103, 105, 110, 101, 47, 111, 98, 106, 101, 99, 116, 115, 47, 83, 99, 114, 101, 101, 110, 79, 98, 106, 101, 99, 116, 12, 0, 39, 0, 40, 7, 0, 41, 12, 0, 42, 0, 43, 1, 0, 41, 99, 111, 109, 47, 107, 108, 101, 109, 115, 116, 105, 110, 101, 103, 114, 111, 117, 112, 47, 115, 117, 110, 115, 104, 105, 110, 101, 108, 97, 98, 47, 72, 101, 108, 108, 111, 87, 111, 114, 108, 100, 1, 0, 16, 106, 97, 118, 97, 47, 108, 97, 110, 103, 47, 79, 98, 106, 101, 99, 116, 1, 0, 45, 99, 111, 109, 47, 107, 108, 101, 109, 115, 116, 105, 110, 101, 103, 114, 111, 117, 112, 47, 115, 117, 110, 115, 104, 105, 110, 101, 108, 97, 98, 47, 101, 110, 103, 105, 110, 101, 47, 83, 116, 97, 116, 105, 99, 115, 1, 0, 11, 117, 115, 101, 114, 79, 98, 106, 101, 99, 116, 115, 1, 0, 30, 76, 99, 111, 109, 47, 98, 97, 100, 108, 111, 103, 105, 99, 47, 103, 100, 120, 47, 117, 116, 105, 108, 115, 47, 65, 114, 114, 97, 121, 59, 1, 0, 28, 99, 111, 109, 47, 98, 97, 100, 108, 111, 103, 105, 99, 47, 103, 100, 120, 47, 117, 116, 105, 108, 115, 47, 65, 114, 114, 97, 121, 1, 0, 3, 103, 101, 116, 1, 0, 21, 40, 73, 41, 76, 106, 97, 118, 97, 47, 108, 97, 110, 103, 47, 79, 98, 106, 101, 99, 116, 59, 1, 0, 2, 115, 100, 1, 0, 58, 76, 99, 111, 109, 47, 107, 108, 101, 109, 115, 116, 105, 110, 101, 103, 114, 111, 117, 112, 47, 115, 117, 110, 115, 104, 105, 110, 101, 108, 97, 98, 47, 101, 110, 103, 105, 110, 101, 47, 111, 98, 106, 101, 99, 116, 115, 47, 83, 99, 114, 101, 101, 110, 68, 97, 116, 97, 59, 1, 0, 56, 99, 111, 109, 47, 107, 108, 101, 109, 115, 116, 105, 110, 101, 103, 114, 111, 117, 112, 47, 115, 117, 110, 115, 104, 105, 110, 101, 108, 97, 98, 47, 101, 110, 103, 105, 110, 101, 47, 111, 98, 106, 101, 99, 116, 115, 47, 83, 99, 114, 101, 101, 110, 68, 97, 116, 97, 1, 0, 8, 114, 111, 116, 97, 116, 105, 111, 110, 1, 0, 1, 70, 0, 33, 0, 7, 0, 8, 0, 0, 0, 0, 0, 2, 0, 1, 0, 9, 0, 10, 0, 1, 0, 11, 0, 0, 0, 47, 0, 1, 0, 1, 0, 0, 0, 5, 42, -73, 0, 1, -79, 0, 0, 0, 2, 0, 12, 0, 0, 0, 6, 0, 1, 0, 0, 0, 6, 0, 13, 0, 0, 0, 12, 0, 1, 0, 0, 0, 5, 0, 14, 0, 15, 0, 0, 0, -119, 0, 16, 0, 17, 0, 1, 0, 11, 0, 0, 0, 69, 0, 3, 0, 1, 0, 0, 0, 23, -78, 0, 2, 4, -74, 0, 3, -64, 0, 4, -76, 0, 5, 89, -76, 0, 6, 12, 98, -75, 0, 6, -79, 0, 0, 0, 2, 0, 12, 0, 0, 0, 10, 0, 2, 0, 0, 0, 8, 0, 22, 0, 9, 0, 13, 0, 0, 0, 12, 0, 1, 0, 0, 0, 23, 0, 18, 0, 19, 0, 0, 0, 1, 0, 20, 0, 0, 0, 2, 0, 21};
 
-            jjjvmClass = new JJJVMClassImpl(new ByteArrayInputStream(b), provider);
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-            Gdx.app.log("out", throwable.toString());
-        }
+       Statics.addUserObj(new ScriptObject("QmWMV6SubKzFr9XatU8Y1KxnXKGM7L1J6ohk9jJij9nNN8"));
 
 
         //--------------------------------------------------------------------------------------------------
@@ -317,6 +307,9 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
             if (bo instanceof Drawable) {
                 ((Drawable) bo).draw(batch);
             }
+            if (bo instanceof Actable){
+                ((Actable) bo).act();
+            }
             batch.setTransformMatrix(Statics.mx4Batch);
         }
         if (Statics.overlay != null) {
@@ -326,15 +319,9 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         batch.setTransformMatrix(Statics.mx4Batch);
 
         batch.end();
+        //------------------------------------------------------------
 
-/*        //------------------------------------------------------------
-        try {
-            jjjvmClass.findMethod("main", "([Ljava/lang/String;)V").invoke(null, null);
-        } catch (
-                Throwable throwable) {
-            throwable.printStackTrace();
-        }
-        //------------------------------------------------------------*/
+        //------------------------------------------------------------
     }
 
 
@@ -531,7 +518,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     //    @Override
     public void resume() {
         super.resume();
-        Pixmap pixmap=getWhitePixel();
+        Pixmap pixmap = getWhitePixel();
         TextureRegion whitePixel = new TextureRegion(new Texture(pixmap));
         shapedrawer = new ShapeDrawer(batch, whitePixel);
         TRANSFORM_OVERLAY = new TransformOverlay(assetManager);

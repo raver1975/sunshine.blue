@@ -36,6 +36,7 @@ public interface Overlay {
                 Statics.gestureDetectors.put((Gestureable) overlay1, gd);
             }
             Statics.overlay = overlay1;
+            System.out.println("overlay size="+overlays.size());
         }
     }
 
