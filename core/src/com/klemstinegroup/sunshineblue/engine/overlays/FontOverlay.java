@@ -26,7 +26,6 @@ import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
 public class FontOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
 
     public final Stage stage;
-    private final TransformOverlay to;
     private AssetManager assetManager;
     //    private final List<String> list;
     private final SelectBox selectBox;
@@ -34,10 +33,9 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
     private Vector2 touchdown = new Vector2();
     Vector2 touchdrag = new Vector2();
 
-    public FontOverlay(AssetManager assetManager, TransformOverlay to) {
+    public FontOverlay(AssetManager assetManager) {
         this.assetManager = assetManager;
         FileHandle[] fontList = Gdx.files.internal("fonts").list();
-        this.to = to;
         new BitmapFont();
         stage = new Stage(Statics.overlayViewport);
         assetManager.finishLoadingAsset("skins/orange/skin/uiskin.json");

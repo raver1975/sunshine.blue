@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.tommyettinger.anim8.IncrementalAnimatedPNG;
@@ -40,7 +41,8 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     private ImageOverlay IMAGE_OVERLAY;
     private DrawOverlay DRAW_OVERLAY;
     private BasicUIOverlay BASIC_UI_OVERLAY;
-    public static Batch batch ;
+    public static Batch batch;
+
     static {
 
     }
@@ -70,18 +72,11 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public void create() {
-        Gdx.app.log("create","started");
-        Pixmap pixmap = new Pixmap(3, 3, Pixmap.Format.RGB888);
-        pixmap.setColor(Color.RED);
-        pixmap.fill();
-        pixmap.setColor(Color.WHITE);
-        pixmap.drawPixel(0, 0);
-        pixmap.drawPixel(1, 1);
-        pixmap.drawPixel(2, 2);
-        TextureRegion whitePixel = new TextureRegion(new Texture(pixmap));
+        Gdx.app.log("create", "started");
         // set the loaders for the generator and the fonts themselves
         batch = new PolygonSpriteBatch();
-        shapedrawer= new ShapeDrawer(batch, whitePixel);
+        shapedrawer = new ShapeDrawer(batch, new TextureRegion(new Texture(getWhitePixel())));
+
 //        shapedrawer = new ShapeDrawer(batch, Statics.whitePixel);
         FileHandleResolver resolver = new InternalFileHandleResolver();
         assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
@@ -91,7 +86,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         assetManager.load("skin-composer-ui/skin-composer-ui.json", Skin.class);
         Texture.setAssetManager(assetManager);
         TRANSFORM_OVERLAY = new TransformOverlay(assetManager);
-        FONT_OVERLAY = new FontOverlay(assetManager, TRANSFORM_OVERLAY);
+        FONT_OVERLAY = new FontOverlay(assetManager);
         IMAGE_OVERLAY = new ImageOverlay(assetManager);
         DRAW_OVERLAY = new DrawOverlay(assetManager);
         BASIC_UI_OVERLAY = new BasicUIOverlay(assetManager, FONT_OVERLAY, IMAGE_OVERLAY, DRAW_OVERLAY, TRANSFORM_OVERLAY);
@@ -101,7 +96,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 //        VisUI.load(VisUI.SkinScale.X2);
         Gdx.input.setInputProcessor(Statics.im);
         Statics.im.addProcessor(this);
-        if (Statics.overlay==null)Overlay.setOverlay(BASIC_UI_OVERLAY);
+        if (Statics.overlay == null) Overlay.setOverlay(BASIC_UI_OVERLAY);
         Gdx.app.setLogLevel(LOG_INFO);
 /*//        img = new Texture("badlogic.jpg");
 
@@ -253,7 +248,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         if (Statics.gif) {
             if (cnt-- > 0 && cnt < 10) {
 //                Statics.gifEncoderA.addFrame(FrameBufferUtils.drawObjectsPix(Statics.viewport, Statics.userObjects, 400, 400));
-                apng.write(FrameBufferUtils.drawObjectsPix(batch,Statics.viewport, Statics.userObjects, 400, 400));
+                apng.write(FrameBufferUtils.drawObjectsPix(batch, Statics.viewport, Statics.userObjects, 400, 400));
                 Gdx.app.log("count", cnt + "");
                 if (cnt == 4) {
                     int gg = Statics.userObjects.size;
@@ -315,7 +310,10 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
             }
         });
         for (BaseObject bo : Statics.userObjects) {
-            if (bo.regen){bo.regen=false;bo.regenerate(assetManager);}
+            if (bo.regen) {
+                bo.regen = false;
+                bo.regenerate(assetManager);
+            }
             if (bo instanceof Drawable) {
                 ((Drawable) bo).draw(batch);
             }
@@ -533,17 +531,11 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     //    @Override
     public void resume() {
         super.resume();
-        Pixmap pixmap = new Pixmap(3, 3, Pixmap.Format.RGB888);
-        pixmap.setColor(Color.RED);
-        pixmap.fill();
-        pixmap.setColor(Color.WHITE);
-        pixmap.drawPixel(0, 0);
-        pixmap.drawPixel(1, 1);
-        pixmap.drawPixel(2, 2);
+        Pixmap pixmap=getWhitePixel();
         TextureRegion whitePixel = new TextureRegion(new Texture(pixmap));
         shapedrawer = new ShapeDrawer(batch, whitePixel);
         TRANSFORM_OVERLAY = new TransformOverlay(assetManager);
-        FONT_OVERLAY = new FontOverlay(assetManager, TRANSFORM_OVERLAY);
+        FONT_OVERLAY = new FontOverlay(assetManager);
         IMAGE_OVERLAY = new ImageOverlay(assetManager);
         DRAW_OVERLAY = new DrawOverlay(assetManager);
         BASIC_UI_OVERLAY = new BasicUIOverlay(assetManager, FONT_OVERLAY, IMAGE_OVERLAY, DRAW_OVERLAY, TRANSFORM_OVERLAY);
@@ -552,5 +544,12 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 //        Statics.prefs = Gdx.app.getPreferences("scenes");
 //        Overlay.setOverlay(BASIC_UI_OVERLAY);
 //        SerializeUtil.load("current");
+    }
+
+    private Pixmap getWhitePixel() {
+        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGB888);
+        pixmap.setColor(Color.WHITE);
+        pixmap.fill();
+        return pixmap;
     }
 }

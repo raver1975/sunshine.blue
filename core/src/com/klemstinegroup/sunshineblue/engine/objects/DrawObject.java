@@ -18,14 +18,14 @@ import space.earlygrey.shapedrawer.JoinType;
 import sun.security.provider.Sun;
 
 public class DrawObject extends ScreenObject implements Drawable, Touchable {
-    DrawData dd=new DrawData();
+    DrawData dd = new DrawData();
     private final Vector2 touch = new Vector2();
     private Polygon polygon;
 
     Array<Vector2> currentPath = new Array<>();
 
     public DrawObject(DrawData dd) {
-        this.dd=dd;
+        this.dd = dd;
     }
 
     public DrawObject() {
@@ -50,22 +50,25 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         Statics.viewport.unproject(touch.set(screenX, screenY));
-        touch.sub(sd.position.x,sd.position.y);
+        touch.sub(sd.position.x, sd.position.y);
         touch.rotateDeg(-sd.rotation);
-        touch.scl(1f/sd.scale);
+        touch.scl(1f / sd.scale);
         currentPath = new Array<>();
         dd.path.add(currentPath);
         currentPath.add(touch.cpy());
         return false;
     }
 
+    Vector2 last = new Vector2();
+
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         Statics.viewport.unproject(touch.set(screenX, screenY));
-        touch.sub(sd.position.x-sd.center.x,sd.position.y-sd.center.y);
+        touch.sub(sd.position.x - sd.center.x, sd.position.y - sd.center.y);
         touch.rotateDeg(-sd.rotation);
-        touch.scl(1f/sd.scale);
-        currentPath.add(touch.cpy());
+        touch.scl(1f / sd.scale);
+
+
         setBounds();
         return false;
     }
@@ -74,9 +77,9 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         Statics.viewport.unproject(touch.set(screenX, screenY));
-        touch.sub(sd.position.x-sd.center.x,sd.position.y-sd.center.y);
+        touch.sub(sd.position.x - sd.center.x, sd.position.y - sd.center.y);
         touch.rotateDeg(-sd.rotation);
-        touch.scl(1f/sd.scale);
+        touch.scl(1f / sd.scale);
         currentPath.add(touch.cpy());
         return false;
     }
@@ -95,25 +98,16 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
     @Override
     public void draw(Batch batch) {
         batch.setTransformMatrix(new Matrix4().idt()
-                        .translate( sd.position.x,  sd.position.y, 0)
-                        .rotate(0, 0, 1, sd.rotation)
-                        .scale(sd.scale, sd.scale, 1)
+                .translate(sd.position.x, sd.position.y, 0)
+                .rotate(0, 0, 1, sd.rotation)
+                .scale(sd.scale, sd.scale, 1)
         );
 //        Statics.shapedrawer.setTextureRegion(new TextureRegion(((RectTextureObject)Statics.userObjects.get(0)).texture));
         SunshineBlue.shapedrawer.setColor(Color.WHITE);
-        Pixmap pixmap = new Pixmap(3, 3, Pixmap.Format.RGB888);
-        pixmap.setColor(Color.RED);
-        pixmap.fill();
-        pixmap.setColor(Color.WHITE);
-        pixmap.drawPixel(0, 0);
-        pixmap.drawPixel(1, 1);
-        pixmap.drawPixel(2, 2);
-        TextureRegion whitePixel = new TextureRegion(new Texture(pixmap));
-        SunshineBlue.shapedrawer.setTextureRegion(whitePixel);
         if (dd.path.size > 0) {
             for (Array<Vector2> partialPath : dd.path) {
                 if (partialPath.size > 1) {
-                    SunshineBlue.shapedrawer.path(partialPath, 10, JoinType.SMOOTH,true);
+                    SunshineBlue.shapedrawer.path(partialPath, 5, JoinType.SMOOTH, true);
                 }
             }
         }
@@ -149,10 +143,10 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
             }
         }
         ConvexHull ch = new ConvexHull();
-        if (verts.size>=6) {
+        if (verts.size >= 6) {
             polygon = new Polygon(ch.computePolygon(verts, false).toArray());
 //        polygon.translate(-center.x,-center.y);
-            polygon.setOrigin(0,0);
+            polygon.setOrigin(0, 0);
             polygon.setScale(sd.scale, sd.scale);
             sd.bounds.set(polygon.getBoundingRectangle().width, polygon.getBoundingRectangle().height);
 //            center.set(bounds.x/2f,bounds.y/2f);
@@ -165,8 +159,8 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
     public void recenter(Vector2 touchdown) {
         Vector2 touchdragcpy = touchdown.cpy();
         super.recenter(touchdragcpy);
-        for (Array<Vector2> subpath:dd.path){
-            for (Vector2 vec:subpath){
+        for (Array<Vector2> subpath : dd.path) {
+            for (Vector2 vec : subpath) {
                 vec.sub(touchdragcpy);
             }
         }
@@ -175,22 +169,22 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
 
     @Override
     public JsonValue serialize() {
-        JsonValue val=new JsonValue(JsonValue.ValueType.object);
-        JsonValue array=new JsonValue(JsonValue.ValueType.array);
-        val.addChild("array",array);
-        for (Array<Vector2> ar:dd.path){
+        JsonValue val = new JsonValue(JsonValue.ValueType.object);
+        JsonValue array = new JsonValue(JsonValue.ValueType.array);
+        val.addChild("array", array);
+        for (Array<Vector2> ar : dd.path) {
             array.addChild(SerializeUtil.serialize(ar));
         }
-        val.addChild("class",new JsonValue(DrawObject.class.getName()));
+        val.addChild("class", new JsonValue(DrawObject.class.getName()));
         return val;
     }
 
     public static void deserialize(JsonValue json) {
-        JsonValue array=json.get("array");
-        DrawData dd=new DrawData();
-        for (int i=0;i<array.size;i++){
-            JsonValue subarray=array.get(i);
-            Array<Vector2> vecAr=SerializeUtil.deserialize(subarray,Array.class);
+        JsonValue array = json.get("array");
+        DrawData dd = new DrawData();
+        for (int i = 0; i < array.size; i++) {
+            JsonValue subarray = array.get(i);
+            Array<Vector2> vecAr = SerializeUtil.deserialize(subarray, Array.class);
             dd.path.add(vecAr);
         }
         Statics.addUserObj(new DrawObject(dd));
