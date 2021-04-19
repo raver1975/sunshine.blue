@@ -91,10 +91,10 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 fo.setList();
 //                ff.sd.position.set(-ff.sd.center.x, -ff.sd.center.y);
                 Vector2 vec = new Vector2(50,50);
-//                Statics.viewport.unproject(Statics.overlayViewport.project(vec));
+                Statics.viewport.unproject(Statics.overlayViewport.project(vec));
 //                Statics.viewport.project(Statics.overlayViewport.unproject(vec));
 //                Statics.overlayViewport.unproject(Statics.viewport.project(vec));
-                Statics.overlayViewport.project(Statics.viewport.unproject(vec));
+//                Statics.overlayViewport.project(Statics.viewport.unproject(vec));
                 System.out.println(vec);
                 ff.sd.position.set(vec);
                 Overlay.setOverlay(fo);
