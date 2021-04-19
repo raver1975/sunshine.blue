@@ -11,7 +11,6 @@ import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.overlays.Actable;
 import com.klemstinegroup.sunshineblue.engine.util.IPFSFileListener;
-import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
 
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
@@ -36,9 +35,11 @@ public class ScriptObject extends BaseObject implements Actable {
                         System.out.println(e.getKey()+"\t"+e.getValue().getName()+"\t"+e.getValue().getSignature());
                     }
                     jjjinstance = jjjvmClass.newInstance(true);
-                    method = jjjvmClass.findMethod("render", "(Lcom/klemstinegroup/sunshineblue/SunshineBlue;)V");
+                    method = jjjvmClass.findMethod("loop", "(Lcom/klemstinegroup/sunshineblue/SunshineBlue;)V");
+                    Gdx.app.log("method",method.toString());
+                    Gdx.app.log("instance",jjjinstance.toString());
                 } catch (Throwable throwable) {
-                    throwable.printStackTrace();
+                    Statics.exceptionLog("construct script error",throwable);
                 }
             }
 
@@ -56,7 +57,7 @@ public class ScriptObject extends BaseObject implements Actable {
                     method.invoke(jjjinstance, null);
             } catch (
                     Throwable throwable) {
-                throwable.printStackTrace();
+                Statics.exceptionLog("script act:",throwable);
             }
         }
     }

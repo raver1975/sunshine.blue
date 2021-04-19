@@ -64,6 +64,7 @@ public class Statics {
     }
 
     public static void addUserObj(BaseObject b){
+        Gdx.app.log("userobject added",(b.getClass().toString()));
         userObjects.add(b);
     }
 }

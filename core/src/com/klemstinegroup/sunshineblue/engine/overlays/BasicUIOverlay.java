@@ -1,5 +1,6 @@
 package com.klemstinegroup.sunshineblue.engine.overlays;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -72,7 +73,12 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 SerializeUtil.save("pop", new IPFSCIDListener() {
                     @Override
                     public void cid(String cid) {
-                        Gdx.net.openURI("https://sunshine.blue/?"+cid);
+                        if (Statics.debug && Gdx.app.getType()== Application.ApplicationType.Desktop){
+                            Gdx.net.openURI("http://localhost:8080/?" + cid);
+                        }
+                        else {
+                            Gdx.net.openURI("https://sunshine.blue/?" + cid);
+                        }
                     }
 
                     @Override

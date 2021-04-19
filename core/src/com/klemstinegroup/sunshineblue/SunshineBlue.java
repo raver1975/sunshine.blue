@@ -147,7 +147,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 //--------------------------------------------------------------------------------------------------
 
 
-       Statics.addUserObj(new ScriptObject("QmWMV6SubKzFr9XatU8Y1KxnXKGM7L1J6ohk9jJij9nNN8"));
+//       Statics.addUserObj(new ScriptObject("QmRaUUxykwAdMAeS2s3Qg1KXaSBngGeTJrbqcU6VzTTz1r"));
 
 
         //--------------------------------------------------------------------------------------------------
@@ -236,22 +236,22 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 //        }
 
         if (Statics.gif) {
-            if (cnt-- > 0 && cnt < 10) {
-//                Statics.gifEncoderA.addFrame(FrameBufferUtils.drawObjectsPix(Statics.viewport, Statics.userObjects, 400, 400));
-                apng.write(FrameBufferUtils.drawObjectsPix(batch, Statics.viewport, Statics.userObjects, 400, 400));
-                Gdx.app.log("count", cnt + "");
-                if (cnt == 4) {
-                    int gg = Statics.userObjects.size;
-                    for (int draw = 0; draw < gg; draw++) {
-                        if (Statics.userObjects.get(draw) != null) {
-                            Gdx.app.log("class", Statics.userObjects.get(draw).getClass().getName());
-                            SerializeUtil.copy(Statics.userObjects.get(draw));
-                        }
-                    }
-                }
-
-
-            }
+//            if (cnt-- > 0 && cnt < 10) {
+////                Statics.gifEncoderA.addFrame(FrameBufferUtils.drawObjectsPix(Statics.viewport, Statics.userObjects, 400, 400));
+//                apng.write(FrameBufferUtils.drawObjectsPix(batch, Statics.viewport, Statics.userObjects, 400, 400));
+//                Gdx.app.log("count", cnt + "");
+//                if (cnt == 4) {
+//                    int gg = Statics.userObjects.size;
+//                    for (int draw = 0; draw < gg; draw++) {
+//                        if (Statics.userObjects.get(draw) != null) {
+//                            Gdx.app.log("class", Statics.userObjects.get(draw).getClass().getName());
+//                            ifSerializeUtil.copy(Statics.userObjects.get(draw));
+//                        }
+//                    }
+//                }
+//
+//
+//            }
 //            if (cnt == 9999) {
 //                SerializeUtil.load("current");
 //            }
