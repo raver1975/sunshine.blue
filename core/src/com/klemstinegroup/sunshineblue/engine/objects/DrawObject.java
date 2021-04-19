@@ -1,7 +1,10 @@
 package com.klemstinegroup.sunshineblue.engine.objects;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
@@ -11,6 +14,8 @@ import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.overlays.Drawable;
 import com.klemstinegroup.sunshineblue.engine.overlays.Touchable;
 import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
+import space.earlygrey.shapedrawer.JoinType;
+import sun.security.provider.Sun;
 
 public class DrawObject extends ScreenObject implements Drawable, Touchable {
     DrawData dd=new DrawData();
@@ -96,10 +101,19 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
         );
 //        Statics.shapedrawer.setTextureRegion(new TextureRegion(((RectTextureObject)Statics.userObjects.get(0)).texture));
         SunshineBlue.shapedrawer.setColor(Color.WHITE);
+        Pixmap pixmap = new Pixmap(3, 3, Pixmap.Format.RGB888);
+        pixmap.setColor(Color.RED);
+        pixmap.fill();
+        pixmap.setColor(Color.WHITE);
+        pixmap.drawPixel(0, 0);
+        pixmap.drawPixel(1, 1);
+        pixmap.drawPixel(2, 2);
+        TextureRegion whitePixel = new TextureRegion(new Texture(pixmap));
+        SunshineBlue.shapedrawer.setTextureRegion(whitePixel);
         if (dd.path.size > 0) {
             for (Array<Vector2> partialPath : dd.path) {
                 if (partialPath.size > 1) {
-                    SunshineBlue.shapedrawer.path(partialPath, 10, true);
+                    SunshineBlue.shapedrawer.path(partialPath, 10, JoinType.SMOOTH,true);
                 }
             }
         }

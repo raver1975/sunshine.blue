@@ -43,7 +43,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         assetManager.finishLoadingAsset("skins/orange/skin/uiskin.json");
         Skin skin = assetManager.get("skins/orange/skin/uiskin.json", Skin.class);
         TextButton exitButton = new TextButton("X", skin);
-        exitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 55, Statics.overlayViewport.getWorldHeight() - 55);
+        exitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 60, 10);
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -132,7 +132,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
                 }
             }
         });
-        colorButton.setPosition(Statics.overlayViewport.getWorldWidth() - 55, 10);
+        colorButton.setPosition(10, 70);
         stage.addActor(colorButton);
 
 //        list = new List(skin);

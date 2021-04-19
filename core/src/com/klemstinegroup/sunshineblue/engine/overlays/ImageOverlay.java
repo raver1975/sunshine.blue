@@ -27,7 +27,7 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
         Skin skin = assetManager.get("skins/orange/skin/uiskin.json", Skin.class);
 
         TextButton exitButton = new TextButton("X", skin);
-        exitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 55, Statics.overlayViewport.getWorldHeight() - 55);
+        exitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 60, 10);
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -53,12 +53,12 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
 
         TextButton submitButton = new TextButton("Shine!", skin);
         submitButton.setSize(100, 100);
-        submitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 100, 10);
+        submitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 100, Statics.overlayViewport.getWorldHeight() - 110);
         submitButton.addListener(new ClickListener() {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                tfl.keyTyped(ta,(char)13);
+                tfl.keyTyped(ta, (char) 13);
             }
         });
         stage.addActor(submitButton);
@@ -66,29 +66,43 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
         ta = new TextArea(null, skin, "default");
 
 
-        TextField tfield = new TextField("JPG,PNG,GIF,IPFS,or DATA url", skin);
-        tfield.setDisabled(true);
-        tfield.setPosition(10, 110);
+        Label tfield = new Label("JPG,PNG,GIF,IPFS,or DATA url", skin);
+        tfield.setPosition(250, Statics.overlayViewport.getWorldHeight() - 130);
         tfield.setWidth(270);
         stage.addActor(tfield);
+
+
+
         ta.addListener(new ActorGestureListener() {
             @Override
             public boolean longPress(Actor actor, float x, float y) {
                 ta.setText(Gdx.app.getClipboard().getContents());
-                return true;// super.longPress(actor, x, y);
+
+                return true;
             }
 
         });
-//        Actor pasteButton=new TextButton("paste",skin);
         ta.setTextFieldListener(tfl);
 
-        ta.setPosition(10, 10);
-        ta.setWidth(Statics.overlayViewport.getWorldWidth() - 100);
+        ta.setPosition(10, Statics.overlayViewport.getWorldHeight() - 110);
+        ta.setWidth(Statics.overlayViewport.getWorldWidth() - 110);
         ta.setHeight(100);
+
+        TextButton clearButton = new TextButton(".", skin);
+        clearButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                ta.setText("");
+            }
+        });
+        clearButton.setPosition(10, Statics.overlayViewport.getWorldHeight() - 110);
+        clearButton.setSize(20, 20);
+
+//ta.setZIndex(1);
 //        ta.setMessageText("Accepts http urls for PNG GIF,and JPG. also base64 Data URI's and IPFS addresses");
         stage.addActor(ta);
+        stage.addActor(clearButton);
         stage.setKeyboardFocus(ta);
-
     }
 
     public void setTouchable(Touchable touchable) {
