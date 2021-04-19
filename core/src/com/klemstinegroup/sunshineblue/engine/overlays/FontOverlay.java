@@ -2,14 +2,10 @@ package com.klemstinegroup.sunshineblue.engine.overlays;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.FileHandleResolver;
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -19,7 +15,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.DragScrollListener;
 import com.badlogic.gdx.utils.Array;
 import com.klemstinegroup.sunshineblue.colorpicker.DialogColorPicker;
 import com.klemstinegroup.sunshineblue.colorpicker.Spinner;
@@ -33,7 +28,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
     private final TransformOverlay to;
     private AssetManager assetManager;
     //    private final List<String> list;
-    private final SelectBox scrollPane;
+    private final SelectBox selectBox;
     public FontObject fontObject;
     private Vector2 touchdown = new Vector2();
 
@@ -147,8 +142,8 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
 //                }
 //            }
 //        });
-        scrollPane = new SelectBox<String>(skin);
-        scrollPane.addListener(new ChangeListener() {
+        selectBox = new SelectBox<String>(skin);
+        selectBox.addListener(new ChangeListener() {
 
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -168,12 +163,12 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
 //        list.layout();
 
 //        scrollPane.setHeight(Statics.overlayViewport.getWorldHeight());
-        scrollPane.setPosition(10, Statics.overlayViewport.getWorldHeight() - 60);
+        selectBox.setPosition(10, Statics.overlayViewport.getWorldHeight() - 60);
 //        scrollPane.setFlickScroll(true);
-        scrollPane.setWidth(200);
-        scrollPane.setScrollingDisabled(false);
-        scrollPane.setItems(fontListStr);
-        scrollPane.layout();
+        selectBox.setWidth(200);
+        selectBox.setScrollingDisabled(false);
+        selectBox.setItems(fontListStr);
+        selectBox.layout();
         /*final IntSpinnerModel intModel = new IntSpinnerModel(60, 1, 1000, 1);
         Spinner sizeSpinner = new Spinner("", intModel);
         sizeSpinner.setPosition(Statics.overlayViewport.getWorldWidth() - 100, 100);
@@ -204,7 +199,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         ;
         stage.addActor(slider);
         stage.addActor(exitButton);
-        stage.addActor(scrollPane);
+        stage.addActor(selectBox);
     }
 
     public void setFontObject(FontObject fontObject) {
@@ -280,6 +275,11 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
     }
 
     @Override
+    public void setBounds() {
+
+    }
+
+    @Override
     public void setInput() {
         Statics.im.addProcessor(stage);
         if (fontObject != null) Statics.im.addProcessor(fontObject);
@@ -327,8 +327,8 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         Gdx.app.log("name",name);
         int dotIndex = name.lastIndexOf('.');
 
-        scrollPane.setSelected(dotIndex==-1?name:name.substring(0,dotIndex));
-        scrollPane.layout();
+        selectBox.setSelected(dotIndex==-1?name:name.substring(0,dotIndex));
+        selectBox.layout();
     }
 
 }

@@ -61,7 +61,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
         touch.rotateDeg(-sd.rotation);
         touch.scl(1f/sd.scale);
         currentPath.add(touch.cpy());
-        setbounds();
+        setBounds();
         return false;
     }
 
@@ -108,7 +108,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
         batch.end();
         batch.setTransformMatrix(Statics.mx4Batch);
         batch.begin();
-        setbounds();
+        setBounds();
         if (polygon != null) {
             SunshineBlue.shapedrawer.polygon(polygon);
         }
@@ -118,7 +118,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
     public boolean isSelected(Vector2 touch) {
 
 //        polygon.translate(s);
-        setbounds();
+        setBounds();
 //        System.out.println(Arrays.toString(polygon.getTransformedVertices()));
         if (polygon != null) {
             return polygon.contains(touch);
@@ -126,7 +126,8 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
         return false;
     }
 
-    private void setbounds() {
+    @Override
+    public void setBounds() {
         FloatArray verts = new FloatArray();
         for (Array<Vector2> pa : dd.path) {
             for (Vector2 p : pa) {

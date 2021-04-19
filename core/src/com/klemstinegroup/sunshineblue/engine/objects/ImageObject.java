@@ -61,7 +61,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                     textures = gifDecoder.getAnimation(Animation.PlayMode.LOOP);
                     try {
                         if (textures != null) {
-                            setBound();
+                            setBounds();
                             return;
                         }
                     } catch (Exception e) {
@@ -103,7 +103,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                         }
                         if (arrayTexture.size > 0) {
                             textures = new Animation<>(num / den, arrayTexture);
-                            setBound();
+                            setBounds();
                             return;
                         }
                     } catch (Exception e) {
@@ -122,13 +122,13 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                     }
                     if (staticPixmap != null) {
                         texture = new Texture(staticPixmap);
-                        setBound();
+                        setBounds();
                     }
                 } else {
                     Gdx.app.log("image", "non-animated");
                     texture = new Texture(pixmapIn);
                     textures = null;
-                    setBound();
+                    setBounds();
                 }
             }
         });
@@ -330,7 +330,13 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 //        setBound();
 //    }
 
-    private void setBound() {
+    @Override
+    public void setBounds() {
+        polygon = new Polygon(new float[]{0, 0, sd.bounds.x, 0, sd.bounds.x, sd.bounds.y, 0, sd.bounds.y, 0, 0});
+        polygon.setOrigin(sd.center.x, sd.center.y);
+        polygon.setScale(sd.scale, sd.scale);
+        polygon.rotate(sd.rotation);
+        polygon.translate(sd.position.x - sd.center.x, sd.position.y - sd.center.y);
 //        sd.position.add(-sd.center.x, -sd.center.y);
         if (texture != null) {
             sd.bounds.set(new Vector2(texture.getWidth(), texture.getHeight()));
@@ -389,11 +395,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 
     @Override
     public boolean isSelected(Vector2 touch) {
-        polygon = new Polygon(new float[]{0, 0, sd.bounds.x, 0, sd.bounds.x, sd.bounds.y, 0, sd.bounds.y, 0, 0});
-        polygon.setOrigin(sd.center.x, sd.center.y);
-        polygon.setScale(sd.scale, sd.scale);
-        polygon.rotate(sd.rotation);
-        polygon.translate(sd.position.x - sd.center.x, sd.position.y - sd.center.y);
+setBounds();
 //        polygon.translate(-center.x*scale,-center.y*scale);
         return polygon.contains(touch);
     }

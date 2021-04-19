@@ -53,8 +53,12 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
     public void setBounds() {
         nn = new GlyphLayout();
         nn.setText(font, fd.text);
+        polygon = new Polygon(new float[]{0, 0, sd.bounds.x, 0, sd.bounds.x, sd.bounds.y, 0, sd.bounds.y, 0, 0});
+        polygon.setOrigin(sd.center.x, sd.center.y);
+        polygon.setScale(sd.scale, sd.scale);
+        polygon.rotate(sd.rotation);
+        polygon.translate(sd.position.x - sd.center.x, sd.position.y - sd.center.y);
         sd.bounds.set(nn.width, nn.height);
-
     }
 
     public void setText(String text) {
@@ -118,12 +122,14 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
         } else if (character == '\b') {
             if (!fd.text.isEmpty()) {
                 fd.text = fd.text.substring(0, fd.text.length() - 1);
+                setBounds();
             }
 
         } else if (character == Input.Keys.SHIFT_LEFT || character == Input.Keys.SHIFT_RIGHT || character < 13) {
 
         } else {
             fd.text = fd.text + character;
+            setBounds();
 //            System.out.println((int)character);
         }
         setBounds();
@@ -158,12 +164,11 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
 
     @Override
     public boolean isSelected(Vector2 touch) {
-        polygon = new Polygon(new float[]{0, 0, sd.bounds.x, 0, sd.bounds.x, sd.bounds.y, 0, sd.bounds.y, 0, 0});
-        polygon.setOrigin(sd.center.x, sd.center.y);
-        polygon.setScale(sd.scale, sd.scale);
-        polygon.rotate(sd.rotation);
-        polygon.translate(sd.position.x - sd.center.x, sd.position.y - sd.center.y);
-        return polygon.contains(touch);
+        setBounds();
+        if (polygon!=null){
+            return polygon.contains(touch);
+        }
+        return false;
     }
 
     public void setColor(Color newColor) {

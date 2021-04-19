@@ -37,7 +37,8 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
         });
         stage.addActor(exitButton);
 
-        ta = new TextArea("", skin);
+        ta = new TextArea(null, skin,"search");
+
         TextField.TextFieldListener tfl = new TextField.TextFieldListener() {
             @Override
             public void keyTyped(TextField textField, char c) {
@@ -46,11 +47,15 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
                     Gdx.app.log("ta", ta.getText());
                     String text = ta.getText().replaceAll("\n", "");
                     ImageObject.load(text);
-                    ta.setText("");
+                    ta.setText(null);
                     Overlay.backOverlay();
                 }
             }
         };
+        TextField tfield=new TextField("JPG,PNG,GIF,IPFS CID,or data URI",skin);
+        tfield.setDisabled(true);
+        tfield.setPosition(10,110);
+        stage.addActor(tfield);
         ta.addListener(new ActorGestureListener() {
             @Override
             public boolean longPress(Actor actor, float x, float y) {
@@ -64,7 +69,9 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
         ta.setTextFieldListener(tfl);
 
         ta.setPosition(10, 10);
-        ta.setWidth(Statics.overlayViewport.getWorldWidth() - 20);
+//        ta.setWidth(Statics.overlayViewport.getWorldWidth() - 20);
+//        ta.setHeight(100);
+        ta.setMessageText("Accepts http urls for PNG GIF,and JPG. also base64 Data URI's and IPFS addresses");
         stage.addActor(ta);
         stage.setKeyboardFocus(ta);
 
@@ -122,6 +129,11 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
     @Override
     public boolean isSelected(Vector2 touch) {
         return false;
+    }
+
+    @Override
+    public void setBounds() {
+
     }
 
     @Override
