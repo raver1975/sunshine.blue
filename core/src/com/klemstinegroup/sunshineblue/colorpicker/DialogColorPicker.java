@@ -55,7 +55,7 @@ public class DialogColorPicker extends Dialog {
         super("", skin, style);
         this.skin=skin;
         if (previousColor == null) {
-            selectedColor = new Color(Color.RED);
+            selectedColor = new Color(Color.WHITE);
         } else {
             this.previousColor = new Color(previousColor);
             selectedColor = new Color(previousColor);

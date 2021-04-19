@@ -102,12 +102,14 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         Spinner.SpinnerStyle style = new Spinner.SpinnerStyle(buttonMinusStyle, buttonPlusStyle, textFieldStyle);
 
         skin1.add("default", style);
-        DialogColorPicker picker = new DialogColorPicker("default", skin1, new DialogColorPicker.ColorListener() {
+        DialogColorPicker picker = new DialogColorPicker("main", skin1, new DialogColorPicker.ColorListener() {
             @Override
             public void selected(Color color) {
                 if (fontObject != null) fontObject.setColor(color);
             }
-        }, Color.RED);
+        }, Color.WHITE);
+//        picker.setResizable(true);
+//        picker.setScale(.9f);
 
         picker.addListener(new ChangeListener() {
             @Override
@@ -149,7 +151,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
             public void changed(ChangeEvent event, Actor actor) {
                 if (fontObject != null) {
                     fontObject.setFont((String) ((SelectBox<String>) actor).getSelected());
-                    generate(assetManager,fontObject);
+                    generate(assetManager, fontObject);
                 }
             }
         });
@@ -189,10 +191,10 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         slider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Gdx.app.log("event",slider.getValue()+"");
+                Gdx.app.log("event", slider.getValue() + "");
                 if (!slider.isDragging()) {
                     fontObject.setSize((int) (slider.getValue()));
-                    generate(assetManager,fontObject);
+                    generate(assetManager, fontObject);
                 }
             }
         });
@@ -296,7 +298,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         stage.act();
     }
 
-    public static void generate(AssetManager assetManager,FontObject fontObject) {
+    public static void generate(AssetManager assetManager, FontObject fontObject) {
         FileHandle[] fontList = Gdx.files.internal("fonts").list();
         FileHandle ff = fontList[MathUtils.random(fontList.length - 1)];
         if (fontObject.fd.fontName == null) {
@@ -323,11 +325,11 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
     }
 
     public void setList() {
-        String name=fontObject.fd.fontName;
-        Gdx.app.log("name",name);
+        String name = fontObject.fd.fontName;
+        Gdx.app.log("name", name);
         int dotIndex = name.lastIndexOf('.');
 
-        selectBox.setSelected(dotIndex==-1?name:name.substring(0,dotIndex));
+        selectBox.setSelected(dotIndex == -1 ? name : name.substring(0, dotIndex));
         selectBox.layout();
     }
 
