@@ -22,25 +22,17 @@ public class ScriptObject extends BaseObject implements Actable {
     private JJJVMObject jjjinstance;
     private JJJVMMethod method;
 
+    public ScriptObject(byte[] data) {
+       processBytes(data);
+    }
+
+
     public ScriptObject(String cid){
         this.cid=cid;
         SunshineBlue.nativeNet.downloadIPFS(cid, new IPFSFileListener() {
             @Override
             public void downloaded(byte[] file) {
-                try {
-                    System.out.println(Arrays.toString(file));
-                    jjjvmClass = new JJJVMClassImpl(new ByteArrayInputStream(file), SunshineBlue.instance.JJVMprovider);
-                    Map<String, JJJVMMethod> map = jjjvmClass.getAllDeclaredMethods();
-                    for (Map.Entry<String,JJJVMMethod> e:map.entrySet()){
-                        System.out.println(e.getKey()+"\t"+e.getValue().getName()+"\t"+e.getValue().getSignature());
-                    }
-                    jjjinstance = jjjvmClass.newInstance(true);
-                    method = jjjvmClass.findMethod("loop", "(Lcom/klemstinegroup/sunshineblue/SunshineBlue;)V");
-                    Gdx.app.log("method",method.toString());
-                    Gdx.app.log("instance",jjjinstance.toString());
-                } catch (Throwable throwable) {
-                    Statics.exceptionLog("construct script error",throwable);
-                }
+                processBytes(file);
             }
 
             @Override
@@ -49,6 +41,24 @@ public class ScriptObject extends BaseObject implements Actable {
             }
         });
     }
+
+    private void processBytes(byte[] file) {
+        try {
+            System.out.println(Arrays.toString(file));
+            jjjvmClass = new JJJVMClassImpl(new ByteArrayInputStream(file), SunshineBlue.instance.JJVMprovider);
+            Map<String, JJJVMMethod> map = jjjvmClass.getAllDeclaredMethods();
+            for (Map.Entry<String,JJJVMMethod> e:map.entrySet()){
+                System.out.println(e.getKey()+"\t"+e.getValue().getName()+"\t"+e.getValue().getSignature());
+            }
+            jjjinstance = jjjvmClass.newInstance(true);
+            method = jjjvmClass.findMethod("loop", "(Lcom/klemstinegroup/sunshineblue/SunshineBlue;)V");
+            Gdx.app.log("method",method.toString());
+            Gdx.app.log("instance",jjjinstance.toString());
+        } catch (Throwable throwable) {
+            Statics.exceptionLog("construct script error",throwable);
+        }
+    }
+
 
     @Override
     public void act() {

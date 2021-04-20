@@ -61,4 +61,9 @@ public class Statics {
         Gdx.app.log("userobject added",(b.getClass().toString()));
         userObjects.add(b);
     }
+
+    public static void removeUserObj(BaseObject b){
+        Gdx.app.log("userobject removed",(b.getClass().toString()));
+        userObjects.removeValue(b,true);
+    }
 }

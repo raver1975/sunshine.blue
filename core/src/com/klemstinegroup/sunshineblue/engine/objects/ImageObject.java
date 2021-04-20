@@ -52,7 +52,11 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                 } else {
                     ImageObject.this.cid = cid;
                 }
-
+                if (data[0]==-54 && data[1]==-2 && data[2]==-70 && data[3]==-66){
+                    Statics.removeUserObj(ImageObject.this);
+                    Statics.addUserObj(new ScriptObject(data));
+                    return;
+                }
 
                 if ((data[0] & 0xff) == 71 && (data[1] & 0xff) == 73 && (data[2] & 0xff) == 70) {
                     Gdx.app.log("type", "gif!");
@@ -67,6 +71,10 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                     } catch (Exception e) {
                         Statics.exceptionLog("error2", e);
                     }
+                }
+                for (int i=0;i<4;i++){
+
+                    System.out.println(i+"\t"+data[i]);
                 }
                 if ((data[0] & 0xff) == 137 && (data[1] & 0xff) == 80 && (data[2] & 0xff) == 78 && (data[3] & 0xff) == 71) {
                     Gdx.app.log("type", "png!");
