@@ -50,6 +50,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public BasicUIOverlay BASIC_UI_OVERLAY;
     public BlankOverlay BLANK_OVERLAY;
     public Batch batch;
+    public BitmapFont font;
 
     static {
 
@@ -59,6 +60,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public ShapeDrawer shapedrawer;
     public JSEProviderImpl JJVMprovider = new JSEProviderImpl();
     public static SunshineBlue instance;
+    private int recCounter;
 
     //    Camera camera;
     public SunshineBlue() {
@@ -82,16 +84,17 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     @Override
     public void create() {
         Gdx.app.log("create", "started");
+        font = new BitmapFont();
         Net.HttpRequest req = new Net.HttpRequest("GET");
         req.setUrl(Statics.IpfsGateway2 + "QmWATWQ7fVPP2EFGu71UkfnqhYXDYH566qy47CnJDgvs8u");
-        req.setTimeOut( 30000);
+        req.setTimeOut(30000);
         Gdx.app.postRunnable(new Runnable() {
             @Override
             public void run() {
                 Gdx.net.sendHttpRequest(req, new Net.HttpResponseListener() {
                     @Override
                     public void handleHttpResponse(Net.HttpResponse httpResponse) {
-                        String result=httpResponse.getResultAsString();
+                        String result = httpResponse.getResultAsString();
                         if (result.equals("Hello World\n")) {
                             String t1 = Statics.IPFSGateway;
                             Statics.IPFSGateway = Statics.IpfsGateway2;
@@ -191,11 +194,6 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 //        Statics.gifEncoderA.setDelay(10);
 //        Statics.gifEncoderA.start(gifEncoderFile);
 //        Statics.apng=new AnimatedPNG();
-        apng = new IncrementalAnimatedPNG();
-        apng.setFlipY(true);
-        mfh = new MemoryFileHandle();
-        apng.start(mfh, (short) 10, 400, 400);
-
 
     }
 
@@ -267,63 +265,13 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
             });*/
 
 //        }
-
-        if (Statics.gif) {
-//            if (cnt-- > 0 && cnt < 10) {
-////                Statics.gifEncoderA.addFrame(FrameBufferUtils.drawObjectsPix(Statics.viewport, Statics.userObjects, 400, 400));
-//                apng.write(FrameBufferUtils.drawObjectsPix(batch, Statics.viewport, Statics.userObjects, 400, 400));
-//                Gdx.app.log("count", cnt + "");
-//                if (cnt == 4) {
-//                    int gg = Statics.userObjects.size;
-//                    for (int draw = 0; draw < gg; draw++) {
-//                        if (Statics.userObjects.get(draw) != null) {
-//                            Gdx.app.log("class", Statics.userObjects.get(draw).getClass().getName());
-//                            ifSerializeUtil.copy(Statics.userObjects.get(draw));
-//                        }
-//                    }
-//                }
-//
-//
-//            }
-//            if (cnt == 9999) {
-//                SerializeUtil.load("current");
-//            }
-//            if (cnt == 2000) {
-//                SerializeUtil.save("test");
-//            }
-//            if (cnt == 100) {
-//                SerializeUtil.load("test");
-//            String cid = Gdx.app.getPreferences("scenes").getString(name);
-//            }
-            if (cnt == 0) {
-//                nativeNet.downloadIPFS("QmZtmD2qt6fJot32nabSP3CUjicnypEBz7bHVDhPQt9aAy", new IPFSFileListener() {
-//                    @Override
-//                    public void downloaded(byte[] file) {
-//                        Gdx.app.log("text", new String(file));
-//                    }
-//
-//                    @Override
-//                    public void downloadFailed(Throwable t) {
-//                        Gdx.app.log("textError", t.getMessage());
-//                    }
-//                });
-
-//                Statics.gifEncoderA.finish();
-                apng.end();
-                //                IPFSUtils.uploadFile(mfh.readBytes(), "image/apng", new IPFSResponseListener() {
-                /*SunshineBlue.nativeNet.uploadIPFS(mfh.readBytes(),  new IPFSCIDListener() {
-                    @Override
-                    public void cid(String cid) {
-                        IPFSUtils.openIPFSViewer(cid);
-                    }
-
-                    @Override
-                    public void uploadFailed(Throwable t) {
-
-                    }
-                });*/
+        if (isRecording) {
+            apng.write(FrameBufferUtils.drawObjectsPix(batch, Statics.viewport, Statics.userObjects, 400, 400));
+            if (recCounter-- <= 0) {
+                stopRecording();
             }
         }
+
         Statics.userObjects.sort(new Comparator<BaseObject>() {
             @Override
             public int compare(BaseObject o1, BaseObject o2) {
@@ -350,7 +298,9 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
             ((Drawable) Statics.overlay).draw(batch);
         }
         batch.setTransformMatrix(Statics.mx4Batch);
-
+        if (isRecording) {
+            font.draw(batch, "" + recCounter, 10, 10);
+        }
         batch.end();
         //------------------------------------------------------------
 
@@ -574,10 +524,27 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     }
 
     public void startRecording() {
-
+        isRecording = true;
+        recCounter = 300;
+        apng = new IncrementalAnimatedPNG();
+        apng.setFlipY(true);
+        mfh = new MemoryFileHandle();
+        apng.start(mfh, (short) 10, 400, 400);
     }
 
-    public void stopRecording(){
+    public void stopRecording() {
+        isRecording = false;
+        apng.end();
+        SunshineBlue.nativeNet.uploadIPFS(mfh.readBytes(), new IPFSCIDListener() {
+            @Override
+            public void cid(String cid) {
+                IPFSUtils.openIPFSViewer(cid);
+            }
 
+            @Override
+            public void uploadFailed(Throwable t) {
+
+            }
+        });
     }
 }

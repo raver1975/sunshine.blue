@@ -85,17 +85,23 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         });
         stage.addActor(popButton);
 
-        Actor apngButton = new TextButton("PNG", skin);
-        apngButton.setPosition(10, Statics.overlayViewport.getWorldHeight() - 180);
+        Actor apngButton = new TextButton("REC", skin);
+        apngButton.setPosition(10, Statics.overlayViewport.getWorldHeight() - 240);
         apngButton.addListener(new ClickListener() {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (SunshineBlue.instance.isRecording) {
+                    SunshineBlue.instance.stopRecording();
+                    apngButton.setName("REC");
+                } else {
                     SunshineBlue.instance.startRecording();
+                    apngButton.setName("Stop");
+
                 }
             }
         });
+        stage.addActor(apngButton);
 
         Actor screenshotButton = new TextButton("PNG", skin);
         screenshotButton.setPosition(10, Statics.overlayViewport.getWorldHeight() - 180);
