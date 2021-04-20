@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>sunshine.blue</title>
 </head>
 <body bgcolor="#dc143c">
-<img id="image" src="https://ipfs.io/ipfs/QmQJHHFZpmJV2JL3BqxPvqBtEmYnonb74m4u4GGi3PPo5F"/>
+<img id="image"/>
+<!--<img id="image" src="https://ipfs.io/ipfs/QmWpTD4gjmJFhhPVwiARBUo55HEWq7v4uTv11C9pw9ZzdZ"/>-->
 </body>
 <script>
 
@@ -22,24 +23,14 @@
     }
 
 
-     var   url = "https://ipfs.io/ipfs/" + getQueryVariable('url')
+    var url = "https://ipfs.io/ipfs/" + getQueryVariable('url')
     var storedText;
 
-    fetch(url)
-        .then(function (response) {
-            response.text().then(function (text) {
-                storedText = "data:image/apng;base64,"+atob(text);
-                done();
-            });
-        });
-
-    function done() {
-        var image = document.getElementById("image");
-        // var image = document.createElement("img");
-        // var imageParent = document.getElementById("body");
-        image.src = storedText;            // image.src = "IMAGE URL/PATH"
-        // imageParent.appendChild(image);
-    }
+    var image = document.getElementById("image");
+    // var image = document.createElement("img");
+    // var imageParent = document.getElementById("body");
+    image.src = url;            // image.src = "IMAGE URL/PATH"
+    // imageParent.appendChild(image);
 
 
 </script>

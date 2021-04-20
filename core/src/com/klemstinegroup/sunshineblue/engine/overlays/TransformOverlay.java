@@ -23,10 +23,10 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
     Vector2 touchdrag = new Vector2();
     Vector2 touchdown = new Vector2();
 
-    public TransformOverlay(AssetManager assetManager) {
+    public TransformOverlay() {
         stage = new Stage(Statics.overlayViewport);
-        assetManager.finishLoadingAsset("skins/orange/skin/uiskin.json");
-        Skin skin = assetManager.get("skins/orange/skin/uiskin.json",Skin.class);
+        SunshineBlue.instance.assetManager.finishLoadingAsset("skins/orange/skin/uiskin.json");
+        Skin skin = SunshineBlue.instance.assetManager.get("skins/orange/skin/uiskin.json",Skin.class);
 
 //        CheckBox exitButton = new CheckBox("", skin);
         TextButton exitButton = new TextButton("X",skin);
@@ -223,7 +223,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
 
 //        Statics.batch.setProjectionMatrix(mx4Overlay.idt());
         for (int i = 0; i < Statics.selectedObjects.size; i++) {
-            SunshineBlue.shapedrawer.filledCircle(170 + 30 * i, 20, 10);
+            SunshineBlue.instance.shapedrawer.filledCircle(170 + 30 * i, 20, 10);
         }
         stage.draw();
     }

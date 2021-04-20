@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.colorpicker.DialogColorPicker;
 import com.klemstinegroup.sunshineblue.colorpicker.Spinner;
 import com.klemstinegroup.sunshineblue.engine.Statics;
@@ -26,20 +27,18 @@ import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
 public class FontOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
 
     public final Stage stage;
-    private AssetManager assetManager;
     //    private final List<String> list;
     private final SelectBox selectBox;
     public FontObject fontObject;
     private Vector2 touchdown = new Vector2();
     Vector2 touchdrag = new Vector2();
 
-    public FontOverlay(AssetManager assetManager) {
-        this.assetManager = assetManager;
+    public FontOverlay() {
         FileHandle[] fontList = Gdx.files.internal("fonts").list();
         new BitmapFont();
         stage = new Stage(Statics.overlayViewport);
-        assetManager.finishLoadingAsset("skins/orange/skin/uiskin.json");
-        Skin skin = assetManager.get("skins/orange/skin/uiskin.json", Skin.class);
+        SunshineBlue.instance.assetManager.finishLoadingAsset("skins/orange/skin/uiskin.json");
+        Skin skin = SunshineBlue.instance.assetManager.get("skins/orange/skin/uiskin.json", Skin.class);
         TextButton exitButton = new TextButton("X", skin);
         exitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 60, 10);
         exitButton.addListener(new ClickListener() {
@@ -92,8 +91,8 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
 //                    "buttonPlusStyle": "spinner-plus-h",
 //                    "textFieldStyle": "spinner"
 //        }
-        assetManager.finishLoadingAsset("skin-composer-ui/skin-composer-ui.json");
-        Skin skin1 = assetManager.get("skin-composer-ui/skin-composer-ui.json", Skin.class);
+        SunshineBlue.instance.assetManager.finishLoadingAsset("skin-composer-ui/skin-composer-ui.json");
+        Skin skin1 = SunshineBlue.instance.assetManager.get("skin-composer-ui/skin-composer-ui.json", Skin.class);
 //        Skin skin1=new Skin(Gdx.files.internal("skin-composer-ui/skin-composer-ui.json"));
 
         Button.ButtonStyle buttonMinusStyle = skin1.get("spinner-minus-h", Button.ButtonStyle.class);
@@ -151,7 +150,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
             public void changed(ChangeEvent event, Actor actor) {
                 if (fontObject != null) {
                     fontObject.setFont((String) ((SelectBox<String>) actor).getSelected());
-                    generate(assetManager, fontObject);
+                    generate(SunshineBlue.instance.assetManager, fontObject);
                 }
             }
         });
@@ -194,7 +193,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
                 Gdx.app.log("event", slider.getValue() + "");
                 if (!slider.isDragging()) {
                     fontObject.setSize((int) (slider.getValue()));
-                    generate(assetManager, fontObject);
+                    generate(SunshineBlue.instance.assetManager, fontObject);
                     setBounds();
                 }
             }

@@ -126,8 +126,8 @@ public class IPFSUtils {
 
 
     public static void openIPFSViewer(String cid) {
-//        Gdx.net.openURI(Statics.IPFSGateway + Statics.IPFSMediaViewer + "?url=" + cid);
-        Gdx.net.openURI(Statics.IPFSGateway + cid);
+        Gdx.net.openURI(Statics.IPFSGateway + Statics.IPFSMediaViewer + "?url=" + cid);
+//        Gdx.net.openURI(Statics.IPFSGateway + cid);
     }
 
     public static void downloadFromIPFS(String url, final IPFSFileListener responseListener) {

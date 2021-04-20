@@ -103,22 +103,22 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
                 .scale(sd.scale, sd.scale, 1)
         );
 //        Statics.shapedrawer.setTextureRegion(new TextureRegion(((RectTextureObject)Statics.userObjects.get(0)).texture));
-        SunshineBlue.shapedrawer.setColor(Color.WHITE);
+        SunshineBlue.instance.shapedrawer.setColor(Color.WHITE);
         if (dd.path.size > 0) {
             for (Array<Vector2> partialPath : dd.path) {
                 if (partialPath.size > 1) {
-                    SunshineBlue.shapedrawer.path(partialPath, 5, JoinType.SMOOTH, true);
+                    SunshineBlue.instance.shapedrawer.path(partialPath, 5, JoinType.SMOOTH, true);
                 }
             }
         }
-        SunshineBlue.shapedrawer.setColor(Color.RED);
-        SunshineBlue.shapedrawer.filledCircle(0, 0, 15);
+        SunshineBlue.instance.shapedrawer.setColor(Color.RED);
+        SunshineBlue.instance.shapedrawer.filledCircle(0, 0, 15);
         batch.end();
         batch.setTransformMatrix(Statics.mx4Batch);
         batch.begin();
         setBounds();
         if (polygon != null) {
-            SunshineBlue.shapedrawer.polygon(polygon);
+            SunshineBlue.instance.shapedrawer.polygon(polygon);
         }
     }
 

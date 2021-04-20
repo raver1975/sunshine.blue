@@ -378,16 +378,16 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
         if (Statics.debug || Statics.selectedObjects.contains(this, true)) {
 //            batch.setColor(Color.RED);
 
-            SunshineBlue.shapedrawer.setColor(Color.RED);
-            SunshineBlue.shapedrawer.filledCircle(0, 0, 15);
+            SunshineBlue.instance.shapedrawer.setColor(Color.RED);
+            SunshineBlue.instance.shapedrawer.filledCircle(0, 0, 15);
         }
         batch.end();
         batch.setTransformMatrix(Statics.mx4Batch);
         batch.begin();
 
         if (polygon != null) {
-            SunshineBlue.shapedrawer.setColor(Color.WHITE);
-            SunshineBlue.shapedrawer.polygon(polygon);
+            SunshineBlue.instance.shapedrawer.setColor(Color.WHITE);
+            SunshineBlue.instance.shapedrawer.polygon(polygon);
         }
 
     }

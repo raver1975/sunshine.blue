@@ -27,25 +27,19 @@ public class Statics {
 
 
     public static StretchViewport overlayViewport = new StretchViewport((550f * Gdx.graphics.getWidth() / Gdx.graphics.getHeight()), 550);
-//    public static  FontOverlay FONT_OVERLAY = new FontOverlay(assetManager);
-//    public static  BasicUIOverlay BASIC_UI_OVERLAY = new BasicUIOverlay(assetManager);
-//    public static  TransformOverlay TRANSFORM_OVERLAY = new TransformOverlay(assetManager);
-//    public static  DrawOverlay DRAW_OVERLAY = new DrawOverlay(assetManager);
-//    public static  ImageOverlay IMAGE_OVERLAY = new ImageOverlay(assetManager);
     public static Overlay overlay=null;
-    public static final String IPFSGateway = "https://ipfs.io/ipfs/";
+    public static String IPFSGateway = "https://ipfs.io/ipfs/";
+    public static String IpfsGateway2 = "http://ipfs.infura.io/ipfs";
     public static final String CORSGateway="https://api.codetabs.com/v1/proxy?quest=";
+    public static String IPFSMediaViewer="QmUQBqWRN1UQSedX8YFnDTVAB9RgVoib13MxS8EwxgMtF7";
     public static final boolean debug = false;
     public static Matrix4 mx4Batch = new Matrix4();
     public static int transformButton;
     public static ScreenViewport viewport;
     public static boolean gif = true;
-
-
     public static final Array<BaseObject> userObjects = new Array<BaseObject>();
     public static final Array<BaseObject> selectedObjects = new Array<BaseObject>();
     public static InputMultiplexer im = new InputMultiplexer();
-
     public static ArrayMap<Gestureable, GestureDetector> gestureDetectors = new ArrayMap<>();
 
 

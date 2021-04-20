@@ -1,0 +1,11 @@
+docker run -d --name ipfs-node -v z:/ipfs/data:/data/ipfs -v z:/ipfs/staging:/export -p 7777:8080 -p 4001:4001 -p 127.0.0.1:5001:5001 ipfs/go-ipfs:latest
+https://blog.ipfs.io/1-run-ipfs-on-docker/
+
+http://127.0.0.1:5001/webui
+
+Stop all running containers
+docker stop $(docker ps -aq)
+Remove all containers
+docker rm $(docker ps -aq)
+Remove all images
+docker rmi $(docker images -q)

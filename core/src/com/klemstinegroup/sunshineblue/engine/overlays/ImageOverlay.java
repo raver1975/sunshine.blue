@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.objects.ImageObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
@@ -21,10 +22,10 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
     private final TextArea ta;
     Touchable touchable;
 
-    public ImageOverlay(AssetManager assetManager) {
+    public ImageOverlay() {
         stage = new Stage(Statics.overlayViewport);
-        assetManager.finishLoadingAsset("skins/orange/skin/uiskin.json");
-        Skin skin = assetManager.get("skins/orange/skin/uiskin.json", Skin.class);
+        SunshineBlue.instance.assetManager.finishLoadingAsset("skins/orange/skin/uiskin.json");
+        Skin skin = SunshineBlue.instance.assetManager.get("skins/orange/skin/uiskin.json", Skin.class);
 
         TextButton exitButton = new TextButton("X", skin);
         exitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 60, 10);

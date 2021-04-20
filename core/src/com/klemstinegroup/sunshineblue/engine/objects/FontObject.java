@@ -80,26 +80,26 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
 
         if (edit) {
             boolean b = (caretFlash++ % 50 <= 15);
-            SunshineBlue.shapedrawer.setColor(fd.color);
+            SunshineBlue.instance.shapedrawer.setColor(fd.color);
             if (b) {
                 float off = nn.runs.size > 0 ? nn.runs.get(nn.runs.size - 1).width - sd.center.x : 0 + font.getSpaceXadvance() / 2f - sd.center.x;
                 if (fd.text.length() > 0 && fd.text.charAt(fd.text.length() - 1) == '\n') {
                     off = font.getSpaceXadvance() / 2f - sd.center.x;
                 }
-                SunshineBlue.shapedrawer.filledRectangle(off, -sd.center.y, 5, font.getCapHeight());
+                SunshineBlue.instance.shapedrawer.filledRectangle(off, -sd.center.y, 5, font.getCapHeight());
             }
         }
 
         if (Statics.debug || Statics.selectedObjects.contains(this, true)) {
-            SunshineBlue.shapedrawer.rectangle(new Rectangle(-sd.center.x, -sd.center.y, sd.bounds.x, sd.bounds.y));
-            SunshineBlue.shapedrawer.filledCircle(0, 0, 15);
+            SunshineBlue.instance.shapedrawer.rectangle(new Rectangle(-sd.center.x, -sd.center.y, sd.bounds.x, sd.bounds.y));
+            SunshineBlue.instance.shapedrawer.filledCircle(0, 0, 15);
         }
         batch.end();
         batch.setTransformMatrix(Statics.mx4Batch);
         batch.begin();
         if (polygon != null) {
-            SunshineBlue.shapedrawer.setColor(Color.WHITE);
-            SunshineBlue.shapedrawer.polygon(polygon);
+            SunshineBlue.instance.shapedrawer.setColor(Color.WHITE);
+            SunshineBlue.instance.shapedrawer.polygon(polygon);
         }
     }
 

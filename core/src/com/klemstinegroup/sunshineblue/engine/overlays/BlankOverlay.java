@@ -8,18 +8,16 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
 
 
 public class BlankOverlay extends ScreenObject implements Overlay, Touchable,Drawable {
-
-    private final BasicUIOverlay bo;
     //    public final Stage stage;
     Touchable touchable;
 
-    public BlankOverlay(BasicUIOverlay bo) {
-        this.bo=bo;
+    public BlankOverlay( ) {
     }
 
     public void setTouchable(Touchable touchable) {
@@ -28,7 +26,7 @@ public class BlankOverlay extends ScreenObject implements Overlay, Touchable,Dra
 
     @Override
     public boolean keyDown(int keycode) {
-        Overlay.setOverlay(bo);
+        Overlay.setOverlay(SunshineBlue.instance.BASIC_UI_OVERLAY);
         return false;
     }
 
@@ -45,7 +43,7 @@ public class BlankOverlay extends ScreenObject implements Overlay, Touchable,Dra
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         System.out.println("Blank overlay touchdown");
-        Overlay.setOverlay(bo);
+        Overlay.setOverlay(SunshineBlue.instance.BASIC_UI_OVERLAY);
         return false;
     }
 

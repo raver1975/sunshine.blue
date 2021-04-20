@@ -2,6 +2,7 @@ package com.klemstinegroup.sunshineblue.engine.util;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.Method;
@@ -28,7 +29,7 @@ public class SerializeUtil {
         Gdx.app.log("scene", val.toJson(JsonWriter.OutputType.minimal));
         Statics.userObjects.clear();
         JsonValue array = val.get("userObjects");
-        if(array!=null) {
+        if (array != null) {
             for (int i = 0; i < array.size; i++) {
                 JsonValue jv = array.get(i);
                 Gdx.app.log("scene", jv.toJson(JsonWriter.OutputType.minimal));
@@ -42,17 +43,17 @@ public class SerializeUtil {
     }
 
     public static void load(String cid) {
-        if (cid==null || cid.isEmpty() ||!cid.startsWith("Q")){
+        if (cid == null || cid.isEmpty() || !cid.startsWith("Q")) {
             return;
         }
-        Gdx.app.log("name:",cid+"\t"+cid);
+        Gdx.app.log("name:", cid + "\t" + cid);
         if (cid != null) {
             SunshineBlue.nativeNet.downloadIPFS(cid, new IPFSFileListener() {
                 @Override
                 public void downloaded(byte[] file) {
                     JsonReader reader = new JsonReader();
                     JsonValue val = reader.parse(new String(file));
-                    Gdx.app.log("val",val.toJson(JsonWriter.OutputType.minimal));
+                    Gdx.app.log("val", val.toJson(JsonWriter.OutputType.minimal));
                     deserializeScene(val);
                 }
 
@@ -65,25 +66,41 @@ public class SerializeUtil {
     }
 
     public static void save(String name, IPFSCIDListener ipfscidListener) {
-        JsonValue val = serializeScene();
-        SunshineBlue.nativeNet.uploadIPFS(val.toJson(JsonWriter.OutputType.javascript).getBytes(StandardCharsets.UTF_8), new IPFSCIDListener() {
+        SunshineBlue.instance.batch.begin();
+        Pixmap screenshot = FrameBufferUtils.drawObjects(SunshineBlue.instance.batch, Statics.viewport, Statics.userObjects);
+        SunshineBlue.instance.batch.end();
+        IPFSUtils.uploadPngtoIPFS(screenshot, new IPFSCIDListener() {
             @Override
             public void cid(String cid) {
-                if (cid!=null && !cid.isEmpty()) {
-                    Preferences prefs = Gdx.app.getPreferences("scenes");
-                    prefs.putString(name, cid);
-                    prefs.putString("current", cid);
-                    prefs.flush();
-                    SunshineBlue.nativeNet.doneSavingScene(cid);
-                    if (ipfscidListener != null) {
-                        ipfscidListener.cid(cid);
+                JsonValue val = serializeScene();
+                val.addChild("screenshot", new JsonValue(cid));
+                SunshineBlue.nativeNet.uploadIPFS(val.toJson(JsonWriter.OutputType.javascript).getBytes(StandardCharsets.UTF_8), new IPFSCIDListener() {
+                    @Override
+                    public void cid(String cid) {
+                        if (cid != null && !cid.isEmpty()) {
+                            Preferences prefs = Gdx.app.getPreferences("scenes");
+                            prefs.putString(name, cid);
+                            prefs.putString("current", cid);
+                            prefs.flush();
+                            SunshineBlue.nativeNet.doneSavingScene(cid);
+                            if (ipfscidListener != null) {
+                                ipfscidListener.cid(cid);
+                            }
+                        }
                     }
-                }
+
+                    @Override
+                    public void uploadFailed(Throwable t) {
+                        ipfscidListener.uploadFailed(t);
+                    }
+                });
+
+
             }
 
             @Override
             public void uploadFailed(Throwable t) {
-                ipfscidListener.uploadFailed(t);
+
             }
         });
 
@@ -92,6 +109,7 @@ public class SerializeUtil {
     public static JsonValue serializeScene() {
         Gdx.app.log("scene", "serializing");
         JsonValue val = new JsonValue(JsonValue.ValueType.object);
+
         JsonValue array = new JsonValue(JsonValue.ValueType.array);
         val.addChild("userObjects", array);
         int cnt = 0;
@@ -127,13 +145,13 @@ public class SerializeUtil {
         save(name, null);
     }
 
-    public static void infromGWT(String cid){
-        Gdx.app.log("infromGWT",cid);
+    public static void infromGWT(String cid) {
+        Gdx.app.log("infromGWT", cid);
         load(cid);
         ImageObject.load(cid);
     }
 
     public static void save() {
-        save("autosave-"+TimeUtils.millis());
+        save("autosave-" + TimeUtils.millis());
     }
 }

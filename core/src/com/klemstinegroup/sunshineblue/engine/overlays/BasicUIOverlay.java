@@ -3,6 +3,7 @@ package com.klemstinegroup.sunshineblue.engine.overlays;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -16,28 +17,22 @@ import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
 import com.klemstinegroup.sunshineblue.engine.objects.DrawObject;
 import com.klemstinegroup.sunshineblue.engine.objects.FontObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
+import com.klemstinegroup.sunshineblue.engine.util.FrameBufferUtils;
 import com.klemstinegroup.sunshineblue.engine.util.IPFSCIDListener;
+import com.klemstinegroup.sunshineblue.engine.util.IPFSUtils;
 import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
 
 
 public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
 
     public final Stage stage;
-    private final FontOverlay fo;
-    private final DrawOverlay dor;
-    private final ImageOverlay io;
-    private final TransformOverlay to;
     Vector2 touchdown = new Vector2();
 
-    public BasicUIOverlay(AssetManager assetManager, FontOverlay fo,ImageOverlay io, DrawOverlay dor, TransformOverlay to) {
-        this.fo=fo;
-        this.dor=dor;
-        this.io=io;
-        this.to=to;
-        assetManager.finishLoadingAsset("skins/orange/skin/uiskin.json");
-        Skin skin = assetManager.get("skins/orange/skin/uiskin.json",Skin.class);
+    public BasicUIOverlay() {
+        SunshineBlue.instance.assetManager.finishLoadingAsset("skins/orange/skin/uiskin.json");
+        Skin skin = SunshineBlue.instance.assetManager.get("skins/orange/skin/uiskin.json", Skin.class);
         stage = new Stage(Statics.overlayViewport);
-        TextButton exitButton = new TextButton("X",skin);
+        TextButton exitButton = new TextButton("X", skin);
         exitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 60, 10);
         exitButton.addListener(new ClickListener() {
             @Override
@@ -54,18 +49,18 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 //        fontButton.setColor(Color.WHITE);
 
         Actor saveButton = new TextButton("Save", skin);
-        saveButton.setPosition(10, Statics.overlayViewport.getWorldHeight()-60);
+        saveButton.setPosition(10, Statics.overlayViewport.getWorldHeight() - 60);
         saveButton.addListener(new ClickListener() {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-               SerializeUtil.save();
+                SerializeUtil.save();
             }
         });
         stage.addActor(saveButton);
 
         Actor popButton = new TextButton("Pop", skin);
-        popButton.setPosition(10, Statics.overlayViewport.getWorldHeight()-120);
+        popButton.setPosition(10, Statics.overlayViewport.getWorldHeight() - 120);
         popButton.addListener(new ClickListener() {
 
             @Override
@@ -73,10 +68,9 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 SerializeUtil.save("pop", new IPFSCIDListener() {
                     @Override
                     public void cid(String cid) {
-                        if (Statics.debug && Gdx.app.getType()== Application.ApplicationType.Desktop){
+                        if (Statics.debug && Gdx.app.getType() == Application.ApplicationType.Desktop) {
                             Gdx.net.openURI("http://localhost:8080/?" + cid);
-                        }
-                        else {
+                        } else {
                             Gdx.net.openURI("https://sunshine.blue/?" + cid);
                         }
                     }
@@ -91,6 +85,43 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         });
         stage.addActor(popButton);
 
+        Actor apngButton = new TextButton("PNG", skin);
+        apngButton.setPosition(10, Statics.overlayViewport.getWorldHeight() - 180);
+        apngButton.addListener(new ClickListener() {
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (SunshineBlue.instance.isRecording) {
+                    SunshineBlue.instance.startRecording();
+                }
+            }
+        });
+
+        Actor screenshotButton = new TextButton("PNG", skin);
+        screenshotButton.setPosition(10, Statics.overlayViewport.getWorldHeight() - 180);
+        screenshotButton.addListener(new ClickListener() {
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                SunshineBlue.instance.batch.begin();
+                Pixmap screenshot = FrameBufferUtils.drawObjects(SunshineBlue.instance.batch,  Statics.viewport, Statics.userObjects);
+                SunshineBlue.instance.batch.end();
+                IPFSUtils.uploadPngtoIPFS(screenshot, new IPFSCIDListener() {
+                    @Override
+                    public void cid(String cid) {
+                        IPFSUtils.openIPFSViewer(cid);
+                    }
+
+                    @Override
+                    public void uploadFailed(Throwable t) {
+
+                    }
+                });
+            }
+        });
+
+        stage.addActor(screenshotButton);
+
         fontButton.addListener(new ClickListener() {
 //            @Override
 //            public void changed(ChangeEvent event, Actor actor) {
@@ -104,23 +135,23 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 Gdx.input.setOnscreenKeyboardVisible(true);
                 FontObject ff = new FontObject();
                 Statics.addUserObj(ff);
-                fo.setFontObject(ff);
-                fo.generate(assetManager,ff);
-                fo.setList();
+                SunshineBlue.instance.FONT_OVERLAY.setFontObject(ff);
+                SunshineBlue.instance.FONT_OVERLAY.generate(SunshineBlue.instance.assetManager, ff);
+                SunshineBlue.instance.FONT_OVERLAY.setList();
 //                ff.sd.position.set(-ff.sd.center.x, -ff.sd.center.y);
-                Vector2 vec = new Vector2(50,50);
+                Vector2 vec = new Vector2(50, 50);
                 Statics.viewport.unproject(Statics.overlayViewport.project(vec));
 //                Statics.viewport.project(Statics.overlayViewport.unproject(vec));
 //                Statics.overlayViewport.unproject(Statics.viewport.project(vec));
 //                Statics.overlayViewport.project(Statics.viewport.unproject(vec));
                 System.out.println(vec);
                 ff.sd.position.set(vec);
-                Overlay.setOverlay(fo);
+                Overlay.setOverlay(SunshineBlue.instance.FONT_OVERLAY);
 
 //        ((ScreenObject) Statics.objects.get(0)).position.set(-((ScreenObject) Statics.objects.get(0)).bounds.x/2, -((ScreenObject) Statics.objects.get(0)).bounds.y/2, 0);
             }
         });
-        fontButton.setPosition(10,10);
+        fontButton.setPosition(10, 10);
         stage.addActor(fontButton);
 
 
@@ -132,12 +163,11 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         //                    pasteButton.setVisible(false);
 
 
-
         imageButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                Overlay.setOverlay(io);
+                Overlay.setOverlay(SunshineBlue.instance.IMAGE_OVERLAY);
             }
         });
 
@@ -151,8 +181,8 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 Gdx.input.setOnscreenKeyboardVisible(false);
                 DrawObject doi = new DrawObject();
                 Statics.addUserObj(doi);
-                dor.setTouchable(doi);
-                Overlay.setOverlay(dor);
+                SunshineBlue.instance.DRAW_OVERLAY.setTouchable(doi);
+                Overlay.setOverlay(SunshineBlue.instance.DRAW_OVERLAY);
 //                pasteButton.setVisible(true);
             }
         });
@@ -194,7 +224,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
             }
         }
         if (Statics.selectedObjects.size > 0) {
-            Overlay.setOverlay(to);
+            Overlay.setOverlay(SunshineBlue.instance.TRANSFORM_OVERLAY);
         } else {
 //            Overlay.setOverlay(this);
         }
@@ -225,7 +255,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
 //        Statics.batch.setProjectionMatrix(mx4Overlay.idt());
         for (int i = 0; i < Statics.selectedObjects.size; i++) {
-            SunshineBlue.shapedrawer.filledCircle(170 + 30 * i, 20, 10);
+            SunshineBlue.instance.shapedrawer.filledCircle(170 + 30 * i, 20, 10);
         }
         stage.draw();
     }
