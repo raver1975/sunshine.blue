@@ -88,7 +88,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         Gdx.app.log("create", "started");
         font = new BitmapFont();
         Net.HttpRequest req = new Net.HttpRequest("GET");
-        req.setUrl(Statics.IpfsGateway2 + "QmWATWQ7fVPP2EFGu71UkfnqhYXDYH566qy47CnJDgvs8u");
+       /* req.setUrl(Statics.IpfsGateway2 + "QmWATWQ7fVPP2EFGu71UkfnqhYXDYH566qy47CnJDgvs8u");
         req.setTimeOut(30000);
         Gdx.app.postRunnable(new Runnable() {
             @Override
@@ -116,7 +116,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
                 });
 
             }
-        });
+        });*/
 
         this.instance = this;
         // set the loaders for the generator and the fonts themselves
