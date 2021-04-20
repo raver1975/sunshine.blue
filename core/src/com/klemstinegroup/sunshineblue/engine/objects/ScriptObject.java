@@ -24,23 +24,23 @@ public class ScriptObject extends BaseObject implements Actable {
     private JJJVMMethod method;
 
     public ScriptObject(byte[] data) {
-       SunshineBlue.nativeNet.uploadIPFS(data, new IPFSCIDListener() {
-           @Override
-           public void cid(String cid) {
-               this.cid(cid);
-               processBytes(data);
-           }
+        SunshineBlue.nativeNet.uploadIPFS(data, new IPFSCIDListener() {
+            @Override
+            public void cid(String cid) {
+                ScriptObject.this.cid=cid;
+                processBytes(data);
+            }
 
-           @Override
-           public void uploadFailed(Throwable t) {
-
-           }
-       });
+            @Override
+            public void uploadFailed(Throwable t) {
+                Statics.exceptionLog("script?", t);
+            }
+        });
     }
 
 
-    public ScriptObject(String cid){
-        this.cid=cid;
+    public ScriptObject(String cid) {
+        this.cid = cid;
         SunshineBlue.nativeNet.downloadIPFS(cid, new IPFSFileListener() {
             @Override
             public void downloaded(byte[] file) {
@@ -49,7 +49,7 @@ public class ScriptObject extends BaseObject implements Actable {
 
             @Override
             public void downloadFailed(Throwable t) {
-
+                Statics.exceptionLog("script2?", t);
             }
         });
     }
@@ -59,27 +59,27 @@ public class ScriptObject extends BaseObject implements Actable {
             System.out.println(Arrays.toString(file));
             jjjvmClass = new JJJVMClassImpl(new ByteArrayInputStream(file), SunshineBlue.instance.JJVMprovider);
             Map<String, JJJVMMethod> map = jjjvmClass.getAllDeclaredMethods();
-            for (Map.Entry<String,JJJVMMethod> e:map.entrySet()){
-                System.out.println(e.getKey()+"\t"+e.getValue().getName()+"\t"+e.getValue().getSignature());
+            for (Map.Entry<String, JJJVMMethod> e : map.entrySet()) {
+                System.out.println(e.getKey() + "\t" + e.getValue().getName() + "\t" + e.getValue().getSignature());
             }
             jjjinstance = jjjvmClass.newInstance(true);
             method = jjjvmClass.findMethod("loop", "(Lcom/klemstinegroup/sunshineblue/SunshineBlue;)V");
-            Gdx.app.log("method",method.toString());
-            Gdx.app.log("instance",jjjinstance.toString());
+            Gdx.app.log("method", method.toString());
+            Gdx.app.log("instance", jjjinstance.toString());
         } catch (Throwable throwable) {
-            Statics.exceptionLog("construct script error",throwable);
+            Statics.exceptionLog("construct script error", throwable);
         }
     }
 
 
     @Override
     public void act() {
-        if (jjjinstance!=null && method!=null) {
+        if (jjjinstance != null && method != null) {
             try {
-                    method.invoke(jjjinstance, null);
+                method.invoke(jjjinstance, null);
             } catch (
                     Throwable throwable) {
-                Statics.exceptionLog("script act:",throwable);
+                Statics.exceptionLog("script act:", throwable);
             }
         }
     }
