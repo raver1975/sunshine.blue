@@ -10,6 +10,7 @@ import com.igormaznitsa.jjjvm.model.JJJVMObject;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.overlays.Actable;
+import com.klemstinegroup.sunshineblue.engine.util.IPFSCIDListener;
 import com.klemstinegroup.sunshineblue.engine.util.IPFSFileListener;
 
 import java.io.ByteArrayInputStream;
@@ -23,7 +24,18 @@ public class ScriptObject extends BaseObject implements Actable {
     private JJJVMMethod method;
 
     public ScriptObject(byte[] data) {
-       processBytes(data);
+       SunshineBlue.nativeNet.uploadIPFS(data, new IPFSCIDListener() {
+           @Override
+           public void cid(String cid) {
+               this.cid(cid);
+               processBytes(data);
+           }
+
+           @Override
+           public void uploadFailed(Throwable t) {
+
+           }
+       });
     }
 
 
