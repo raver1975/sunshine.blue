@@ -61,6 +61,8 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public JSEProviderImpl JJVMprovider = new JSEProviderImpl();
     public static SunshineBlue instance;
     private int recCounter;
+    private float recHalfSec=0;
+    private static final float fps=10;
 
     //    Camera camera;
     public SunshineBlue() {
@@ -265,7 +267,9 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
             });*/
 
 //        }
-        if (isRecording) {
+        recHalfSec+=Gdx.graphics.getDeltaTime();
+        if (isRecording &&recHalfSec>(1f/fps) ) {
+            recHalfSec=0;
             apng.write(FrameBufferUtils.drawObjectsPix(batch, Statics.viewport, Statics.userObjects, 400, 400));
             if (recCounter-- <= 0) {
                 stopRecording();
@@ -299,7 +303,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         }
         batch.setTransformMatrix(Statics.mx4Batch);
         if (isRecording) {
-            font.draw(batch, "" + recCounter, 10, 10);
+            font.draw(batch, "" + (recCounter), 10, 10);
         }
         batch.end();
         //------------------------------------------------------------
@@ -526,10 +530,11 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public void startRecording() {
         isRecording = true;
         recCounter = 300;
+        recHalfSec=0;
         apng = new IncrementalAnimatedPNG();
         apng.setFlipY(true);
         mfh = new MemoryFileHandle();
-        apng.start(mfh, (short) 10, 400, 400);
+        apng.start(mfh, (short) fps, 400, 400);
     }
 
     public void stopRecording() {
