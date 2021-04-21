@@ -47,22 +47,20 @@ public class SerializeUtil {
             return;
         }
         Gdx.app.log("name:", cid + "\t" + cid);
-        if (cid != null) {
-            SunshineBlue.nativeNet.downloadIPFS(cid, new IPFSFileListener() {
-                @Override
-                public void downloaded(byte[] file) {
-                    JsonReader reader = new JsonReader();
-                    JsonValue val = reader.parse(new String(file));
-                    Gdx.app.log("val", val.toJson(JsonWriter.OutputType.minimal));
-                    deserializeScene(val);
-                }
+        SunshineBlue.nativeNet.downloadIPFS(cid, new IPFSFileListener() {
+            @Override
+            public void downloaded(byte[] file) {
+                JsonReader reader = new JsonReader();
+                JsonValue val = reader.parse(new String(file));
+                Gdx.app.log("val", val.toJson(JsonWriter.OutputType.minimal));
+                deserializeScene(val);
+            }
 
-                @Override
-                public void downloadFailed(Throwable t) {
-                    Statics.exceptionLog("load fail", t);
-                }
-            });
-        }
+            @Override
+            public void downloadFailed(Throwable t) {
+                Statics.exceptionLog("load fail", t);
+            }
+        });
     }
 
     public static void save(String name, IPFSCIDListener ipfscidListener) {

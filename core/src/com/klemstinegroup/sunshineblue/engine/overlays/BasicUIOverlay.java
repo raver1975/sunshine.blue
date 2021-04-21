@@ -93,11 +93,11 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
             public void clicked(InputEvent event, float x, float y) {
                 if (SunshineBlue.instance.isRecording) {
                     SunshineBlue.instance.stopRecording();
-                    apngButton.setName("REC");
+
                 } else {
                     SunshineBlue.instance.startRecording();
                     apngButton.setName("Stop");
-
+                    Overlay.setOverlay(SunshineBlue.instance.BLANK_OVERLAY);
                 }
             }
         });
@@ -110,7 +110,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 SunshineBlue.instance.batch.begin();
-                Pixmap screenshot = FrameBufferUtils.drawObjects(SunshineBlue.instance.batch,  SunshineBlue.instance.viewport, SunshineBlue.instance.userObjects);
+                Pixmap screenshot = FrameBufferUtils.drawObjects(SunshineBlue.instance.batch, SunshineBlue.instance.viewport, SunshineBlue.instance.userObjects);
                 SunshineBlue.instance.batch.end();
                 IPFSUtils.uploadPngtoIPFS(screenshot, new IPFSCIDListener() {
                     @Override
@@ -270,6 +270,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
     public void setInput() {
         SunshineBlue.instance.im.addProcessor(stage);
         SunshineBlue.instance.selectedObjects.clear();
+        if (SunshineBlue.instance.isRecording){SunshineBlue.instance.stopRecording();}
     }
 
     @Override

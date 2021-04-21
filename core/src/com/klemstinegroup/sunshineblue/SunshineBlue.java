@@ -47,6 +47,7 @@ import static com.badlogic.gdx.Application.LOG_INFO;
 public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
     public static NativeInterface nativeNet;
+    private String loadCid;
     public boolean isRecording;
     public TransformOverlay TRANSFORM_OVERLAY;
     public FontOverlay FONT_OVERLAY;
@@ -56,7 +57,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public BlankOverlay BLANK_OVERLAY;
     public Batch batch;
     public BitmapFont font;
-    public Overlay overlay=null;
+    public Overlay overlay = null;
     public StretchViewport overlayViewport;
     public ScreenViewport viewport;
     public final Array<BaseObject> userObjects = new Array<BaseObject>();
@@ -69,8 +70,8 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public JSEProviderImpl JJVMprovider = new JSEProviderImpl();
     public static SunshineBlue instance;
     private int recCounter;
-    private float recHalfSec=0;
-    private static final float fps=10;
+    private float recHalfSec = 0;
+    private static final float fps = 10;
 
     //    Camera camera;
     public SunshineBlue() {
@@ -91,13 +92,19 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
     public AssetManager assetManager = new AssetManager();
 
+    public SunshineBlue(String cid) {
+        super();
+        loadCid = cid;
+        this.nativeNet=new NativeJava();
+    }
+
     @Override
     public void create() {
         Gdx.app.log("create", "started");
         font = new BitmapFont();
         overlayViewport = new StretchViewport((550f * Gdx.graphics.getWidth() / Gdx.graphics.getHeight()), 550);
-        Net.HttpRequest req = new Net.HttpRequest("GET");
-       /* req.setUrl(Statics.IpfsGateway2 + "QmWATWQ7fVPP2EFGu71UkfnqhYXDYH566qy47CnJDgvs8u");
+       /* Net.HttpRequest req = new Net.HttpRequest("GET");
+        req.setUrl(Statics.IpfsGateway2 + "QmWATWQ7fVPP2EFGu71UkfnqhYXDYH566qy47CnJDgvs8u");
         req.setTimeOut(30000);
         Gdx.app.postRunnable(new Runnable() {
             @Override
@@ -205,11 +212,11 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 //        Statics.gifEncoderA.setDelay(10);
 //        Statics.gifEncoderA.start(gifEncoderFile);
 //        Statics.apng=new AnimatedPNG();
-
+        if (loadCid != null) {
+            SerializeUtil.load(loadCid);
+        }
     }
 
-
-    int cnt = 100;
 
     @Override
     public void render() {
@@ -276,10 +283,10 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
             });*/
 
 //        }
-        recHalfSec+=Gdx.graphics.getDeltaTime();
-        if (isRecording &&recHalfSec>(1f/fps) ) {
-            recHalfSec=0;
-            apng.write(FrameBufferUtils.drawObjectsPix(batch, viewport, userObjects, 600*viewport.getScreenWidth()/viewport.getScreenHeight(), 600));
+        recHalfSec += Gdx.graphics.getDeltaTime();
+        if (isRecording && recHalfSec > (1f / fps)) {
+            recHalfSec = 0;
+            apng.write(FrameBufferUtils.drawObjectsPix(batch, viewport, userObjects, 600 * viewport.getScreenWidth() / viewport.getScreenHeight(), 600));
             if (recCounter-- <= 0) {
                 stopRecording();
             }
@@ -312,7 +319,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         }
         batch.setTransformMatrix(mx4Batch);
         if (isRecording) {
-            font.draw(batch, "" + (recCounter/10), 10, 10);
+            font.draw(batch, "" + (recCounter / 10), 10, 10);
         }
         batch.end();
         //------------------------------------------------------------
@@ -539,11 +546,11 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public void startRecording() {
         isRecording = true;
         recCounter = 300;
-        recHalfSec=0;
+        recHalfSec = 0;
         apng = new IncrementalAnimatedPNG();
         apng.setFlipY(true);
         mfh = new MemoryFileHandle();
-        apng.start(mfh, (short) fps, 600*viewport.getScreenWidth()/viewport.getScreenHeight(), 600);
+        apng.start(mfh, (short) fps, 600 * viewport.getScreenWidth() / viewport.getScreenHeight(), 600);
     }
 
     public void stopRecording() {
@@ -561,13 +568,14 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
             }
         });
     }
-    public static void addUserObj(BaseObject b){
-        Gdx.app.log("userobject added",(b.getClass().toString()));
+
+    public static void addUserObj(BaseObject b) {
+        Gdx.app.log("userobject added", (b.getClass().toString()));
         SunshineBlue.instance.userObjects.add(b);
     }
 
-    public static void removeUserObj(BaseObject b){
-        Gdx.app.log("userobject removed",(b.getClass().toString()));
-        SunshineBlue.instance.userObjects.removeValue(b,true);
+    public static void removeUserObj(BaseObject b) {
+        Gdx.app.log("userobject removed", (b.getClass().toString()));
+        SunshineBlue.instance.userObjects.removeValue(b, true);
     }
 }

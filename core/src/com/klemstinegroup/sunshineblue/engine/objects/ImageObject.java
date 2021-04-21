@@ -400,8 +400,8 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
             SunshineBlue.instance.shapedrawer.line(new Vector2(),angleCalc,2);
 
         }
-        batch.end();
-        batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
+//        batch.end();
+//        batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
 //        batch.begin();
 //
 //        if (polygon != null) {
