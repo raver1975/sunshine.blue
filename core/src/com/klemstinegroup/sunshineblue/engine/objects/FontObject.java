@@ -18,6 +18,7 @@ import com.klemstinegroup.sunshineblue.engine.overlays.Drawable;
 import com.klemstinegroup.sunshineblue.engine.overlays.FontOverlay;
 import com.klemstinegroup.sunshineblue.engine.overlays.Touchable;
 import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
+import sun.security.provider.Sun;
 
 public class FontObject extends ScreenObject implements Drawable, Touchable {
 
@@ -30,7 +31,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
     private int caretFlash = 0;
     private GlyphLayout nn;
     public Polygon polygon;
-    public boolean edit;
+//    public boolean edit;
 
     public FontObject(FontData fd, ScreenData sd) {
         this.fd = fd;
@@ -80,7 +81,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
             font.draw(batch, fd.text, 0 - sd.center.x, +sd.bounds.y - sd.center.y, Float.MAX_VALUE, Align.left, true);
         }
 
-        if (edit) {
+        if (SunshineBlue.instance.FONT_OVERLAY.fontObject==this && SunshineBlue.instance.overlay==SunshineBlue.instance.FONT_OVERLAY){
             boolean b = (caretFlash++ % 50 <= 15);
             SunshineBlue.instance.shapedrawer.setColor(fd.color);
             if (b) {

@@ -40,20 +40,21 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
         });
         stage.addActor(exitButton);
 
-        ButtonGroup transformButtons = new ButtonGroup();
-        CheckBox moveButton = new CheckBox("Move", skin);
+        ButtonGroup<CheckBox> transformButtons = new ButtonGroup();
+        CheckBox moveButton = new CheckBox(" Move", skin);
         moveButton.getStyle().fontColor = Color.RED;
         moveButton.setName("move");
         moveButton.setPosition(10, 0);
-        CheckBox rotateButton = new CheckBox("Rotate", skin);
+        CheckBox rotateButton = new CheckBox(" Rotate", skin);
         rotateButton.setPosition(10, 30);
         rotateButton.setName("rotate");
-        CheckBox scaleButton = new CheckBox("Scale", skin);
+        CheckBox scaleButton = new CheckBox(" Scale", skin);
         scaleButton.setPosition(10, 60);
         scaleButton.setName("scale");
-        CheckBox centerButton = new CheckBox("Center", skin);
+        CheckBox centerButton = new CheckBox(" Center", skin);
         centerButton.setPosition(10, 90);
         centerButton.setName("center");
+
 
         transformButtons.add(moveButton);
         transformButtons.add(rotateButton);
@@ -100,6 +101,8 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
         transformGroup.addActor(centerButton);
         transformGroup.setVisible(true);
         stage.addActor(transformGroup);
+
+
 //stage.addActor(scaleButton);
 //stage.addActor(rotateButton);
 

@@ -125,8 +125,8 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
             angleCalc.rotateDeg(90);
             SunshineBlue.instance.shapedrawer.line(new Vector2(),angleCalc,2);
         }
-        batch.end();
-        batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
+//        batch.end();
+//        batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
         /*batch.begin();
         setBounds();
         if (polygon != null) {

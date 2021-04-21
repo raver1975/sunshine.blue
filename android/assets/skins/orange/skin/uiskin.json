@@ -333,7 +333,7 @@ com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
 	default: {
 		checkboxOn: check-box,
 		checkboxOff: check-box-off,
-		font: font,
+		font: font-title,
 		fontColor: { a: 1, b: 0.08235294, g: 0.627451, r: 1 }
 	},
 	switch-text: {
