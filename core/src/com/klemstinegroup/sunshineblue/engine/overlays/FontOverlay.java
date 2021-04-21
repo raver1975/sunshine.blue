@@ -190,8 +190,9 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         slider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Gdx.app.log("event", slider.getValue() + "");
                 if (!slider.isDragging()) {
+
+
                     fontObject.setSize((int) (slider.getValue()));
                     generate(SunshineBlue.instance.assetManager, fontObject);
                     setBounds();
