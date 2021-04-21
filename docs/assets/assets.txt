@@ -22,7 +22,7 @@ t:skins/orange/skin/extras/skin-composer-dark/dark-peel-ui.json:skins/orange/ski
 t:skins/orange/skin/extras/skin-composer-dark/dark-peel-ui.atlas:skins/orange/skin/extras/skin-composer-dark/dark-peel-ui-7ee8f24b5a9f4bea4d85843f554a3379.atlas:24603:application/unknown:1
 t:skins/orange/skin/extras/skin-composer-dark/font-export.fnt:skins/orange/skin/extras/skin-composer-dark/font-export-1c5a17b1b7601d985e4a6650d786bc3b.fnt:9721:application/unknown:1
 t:skins/orange/skin/extras/skin-composer-dark/font-title-export.fnt:skins/orange/skin/extras/skin-composer-dark/font-title-export-5b7008f68a75114c5a2591dbfc8ed5fc.fnt:9805:application/unknown:1
-t:skins/orange/skin/uiskin.json:skins/orange/skin/uiskin-ac9c57f73e5486e5ecd8fd25dc51bd48.json:11572:application/unknown:1
+t:skins/orange/skin/uiskin.json:skins/orange/skin/uiskin-5965ce6f3f10ac15b314015e3786d71e.json:11578:application/unknown:1
 t:skins/orange/skin/font-title-export.fnt:skins/orange/skin/font-title-export-521815ba9b494e8621323ca141a076a7.fnt:9879:application/unknown:1
 i:skins/orange/skin/uiskin.png:skins/orange/skin/uiskin-4af5ee883b6bd042ce75e9bd0ba628a2.png:81624:image/png:1
 b:skins/orange/README.md:skins/orange/README-5fcc55ba81bb23528ed6e8ea4473098f.md:593:application/unknown:1
