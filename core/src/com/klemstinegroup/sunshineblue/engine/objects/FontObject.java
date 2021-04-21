@@ -23,6 +23,8 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
 
     public FontData fd = new FontData();
     public BitmapFont font;
+    Vector2 angleCalc=new Vector2();
+    float angleRotateAnimAngle=0;
 
 
     private int caretFlash = 0;
@@ -90,17 +92,26 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
             }
         }
 
-        if (Statics.debug || Statics.selectedObjects.contains(this, true)) {
-            SunshineBlue.instance.shapedrawer.rectangle(new Rectangle(-sd.center.x, -sd.center.y, sd.bounds.x, sd.bounds.y));
-            SunshineBlue.instance.shapedrawer.filledCircle(0, 0, 15);
+        if (SunshineBlue.instance.selectedObjects.contains(this, true)) {
+            SunshineBlue.instance.shapedrawer.setColor(Color.RED);
+            SunshineBlue.instance.shapedrawer.circle(0, 0, 15,2);
+            angleCalc.set(0,15);
+            angleCalc.rotateDeg(angleRotateAnimAngle+=3);
+            SunshineBlue.instance.shapedrawer.line(new Vector2(),angleCalc,2);
+            angleCalc.rotateDeg(90);
+            SunshineBlue.instance.shapedrawer.line(new Vector2(),angleCalc,2);
+            angleCalc.rotateDeg(90);
+            SunshineBlue.instance.shapedrawer.line(new Vector2(),angleCalc,2);
+            angleCalc.rotateDeg(90);
+            SunshineBlue.instance.shapedrawer.line(new Vector2(),angleCalc,2);
         }
-        batch.end();
-        batch.setTransformMatrix(Statics.mx4Batch);
-        batch.begin();
-        if (polygon != null) {
-            SunshineBlue.instance.shapedrawer.setColor(Color.WHITE);
-            SunshineBlue.instance.shapedrawer.polygon(polygon);
-        }
+//        batch.end();
+//        batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
+//        batch.begin();
+//        if (polygon != null) {
+//            SunshineBlue.instance.shapedrawer.setColor(Color.WHITE);
+//            SunshineBlue.instance.shapedrawer.polygon(polygon);
+//        }
     }
 
     @Override
@@ -189,7 +200,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
     public static void deserialize(JsonValue json) {
         FontData fd1 = SerializeUtil.deserialize(json.get("fontData"), FontData.class);
         ScreenData sd1 = SerializeUtil.deserialize(json.get("screenData"), ScreenData.class);
-        Statics.addUserObj(new FontObject(fd1, sd1));
+        SunshineBlue.instance.addUserObj(new FontObject(fd1, sd1));
     }
 
     @Override

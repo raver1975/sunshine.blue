@@ -21,7 +21,8 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
     DrawData dd = new DrawData();
     private final Vector2 touch = new Vector2();
     private Polygon polygon;
-
+    Vector2 angleCalc=new Vector2();
+    float angleRotateAnimAngle=0;
     Array<Vector2> currentPath = new Array<>();
 
     public DrawObject(DrawData dd) {
@@ -49,7 +50,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        Statics.viewport.unproject(touch.set(screenX, screenY));
+        SunshineBlue.instance.viewport.unproject(touch.set(screenX, screenY));
         touch.sub(sd.position.x, sd.position.y);
         touch.rotateDeg(-sd.rotation);
         touch.scl(1f / sd.scale);
@@ -63,7 +64,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        Statics.viewport.unproject(touch.set(screenX, screenY));
+        SunshineBlue.instance.viewport.unproject(touch.set(screenX, screenY));
         touch.sub(sd.position.x - sd.center.x, sd.position.y - sd.center.y);
         touch.rotateDeg(-sd.rotation);
         touch.scl(1f / sd.scale);
@@ -76,7 +77,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        Statics.viewport.unproject(touch.set(screenX, screenY));
+        SunshineBlue.instance.viewport.unproject(touch.set(screenX, screenY));
         touch.sub(sd.position.x - sd.center.x, sd.position.y - sd.center.y);
         touch.rotateDeg(-sd.rotation);
         touch.scl(1f / sd.scale);
@@ -111,15 +112,26 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
                 }
             }
         }
-        SunshineBlue.instance.shapedrawer.setColor(Color.RED);
-        SunshineBlue.instance.shapedrawer.filledCircle(0, 0, 15);
+        if (SunshineBlue.instance.selectedObjects.contains(this, true)) {
+            SunshineBlue.instance.shapedrawer.setColor(Color.RED);
+            SunshineBlue.instance.shapedrawer.circle(0, 0, 15,2);
+            angleCalc.set(0,15);
+            angleCalc.rotateDeg(angleRotateAnimAngle+=3);
+            SunshineBlue.instance.shapedrawer.line(new Vector2(),angleCalc,2);
+            angleCalc.rotateDeg(90);
+            SunshineBlue.instance.shapedrawer.line(new Vector2(),angleCalc,2);
+            angleCalc.rotateDeg(90);
+            SunshineBlue.instance.shapedrawer.line(new Vector2(),angleCalc,2);
+            angleCalc.rotateDeg(90);
+            SunshineBlue.instance.shapedrawer.line(new Vector2(),angleCalc,2);
+        }
         batch.end();
-        batch.setTransformMatrix(Statics.mx4Batch);
-        batch.begin();
+        batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
+        /*batch.begin();
         setBounds();
         if (polygon != null) {
             SunshineBlue.instance.shapedrawer.polygon(polygon);
-        }
+        }*/
     }
 
     @Override
@@ -187,6 +199,6 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
             Array<Vector2> vecAr = SerializeUtil.deserialize(subarray, Array.class);
             dd.path.add(vecAr);
         }
-        Statics.addUserObj(new DrawObject(dd));
+        SunshineBlue.instance.addUserObj(new DrawObject(dd));
     }
 }

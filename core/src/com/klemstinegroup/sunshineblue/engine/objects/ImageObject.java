@@ -27,6 +27,8 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
     private Polygon polygon;
     private String cid;
     private float stateTime;
+    Vector2 angleCalc=new Vector2();
+    float angleRotateAnimAngle=0;
 
 
     public ImageObject(byte[] data, Pixmap pixmapIn, String cid) {
@@ -53,8 +55,8 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                     ImageObject.this.cid = cid;
                 }
                 if (data[0]==-54 && data[1]==-2 && data[2]==-70 && data[3]==-66){
-                    Statics.removeUserObj(ImageObject.this);
-                    Statics.addUserObj(new ScriptObject(data));
+                    SunshineBlue.instance.removeUserObj(ImageObject.this);
+                    SunshineBlue.instance.addUserObj(new ScriptObject(data));
                     return;
                 }
 
@@ -160,12 +162,12 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                                 SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway+cid, new Pixmap.DownloadPixmapResponseListener() {
                                     @Override
                                     public void downloadComplete(Pixmap pixmap) {
-                                        Statics.addUserObj(new ImageObject(b, pixmap, cid));
+                                        SunshineBlue.instance.addUserObj(new ImageObject(b, pixmap, cid));
                                     }
 
                                     @Override
                                     public void downloadFailed(Throwable t) {
-                                        Statics.addUserObj(new ImageObject(b, null, cid));
+                                        SunshineBlue.instance.addUserObj(new ImageObject(b, null, cid));
                                     }
                                 });
                             }
@@ -191,13 +193,13 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                                 @Override
                                 public void downloadComplete(Pixmap pixmap) {
                                     Gdx.app.log("downl","complete");
-                                    Statics.addUserObj(new ImageObject(file, pixmap, url));
+                                    SunshineBlue.instance.addUserObj(new ImageObject(file, pixmap, url));
                                 }
 
                                 @Override
                                 public void downloadFailed(Throwable t) {
                                     Gdx.app.log("downl","failed");
-                                    Statics.addUserObj(new ImageObject(file, null, url));
+                                    SunshineBlue.instance.addUserObj(new ImageObject(file, null, url));
                                 }
                             });
                         }
@@ -215,12 +217,12 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                             SunshineBlue.nativeNet.downloadPixmap(url, new Pixmap.DownloadPixmapResponseListener() {
                                 @Override
                                 public void downloadComplete(Pixmap pixmap) {
-                                    Statics.addUserObj(new ImageObject(file, pixmap, null));
+                                    SunshineBlue.instance.addUserObj(new ImageObject(file, pixmap, null));
                                 }
 
                                 @Override
                                 public void downloadFailed(Throwable t) {
-                                    Statics.addUserObj(new ImageObject(file, null, null));
+                                    SunshineBlue.instance.addUserObj(new ImageObject(file, null, null));
                                 }
                             });
                         }
@@ -383,14 +385,23 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
             }
         }
 
-        if (Statics.debug || Statics.selectedObjects.contains(this, true)) {
+        if ( SunshineBlue.instance.selectedObjects.contains(this, true)) {
 //            batch.setColor(Color.RED);
-
             SunshineBlue.instance.shapedrawer.setColor(Color.RED);
-            SunshineBlue.instance.shapedrawer.filledCircle(0, 0, 15);
+            SunshineBlue.instance.shapedrawer.circle(0, 0, 15,2);
+            angleCalc.set(0,15);
+            angleCalc.rotateDeg(angleRotateAnimAngle+=3);
+            SunshineBlue.instance.shapedrawer.line(new Vector2(),angleCalc,2);
+            angleCalc.rotateDeg(90);
+            SunshineBlue.instance.shapedrawer.line(new Vector2(),angleCalc,2);
+            angleCalc.rotateDeg(90);
+            SunshineBlue.instance.shapedrawer.line(new Vector2(),angleCalc,2);
+            angleCalc.rotateDeg(90);
+            SunshineBlue.instance.shapedrawer.line(new Vector2(),angleCalc,2);
+
         }
         batch.end();
-        batch.setTransformMatrix(Statics.mx4Batch);
+        batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
         batch.begin();
 
         if (polygon != null) {
@@ -473,14 +484,14 @@ setBounds();
                     public void downloadComplete(Pixmap pixmap) {
                         ImageObject io = new ImageObject(file, pixmap, cid);
                         io.sd = sd1;
-                        Statics.addUserObj(io);
+                        SunshineBlue.instance.addUserObj(io);
                     }
 
                     @Override
                     public void downloadFailed(Throwable t) {
                         ImageObject io = new ImageObject(file, null, cid);
                         io.sd = sd1;
-                        Statics.addUserObj(io);
+                        SunshineBlue.instance.addUserObj(io);
                     }
                 });
 

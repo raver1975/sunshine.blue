@@ -96,6 +96,6 @@ public class ScriptObject extends BaseObject implements Actable {
         Gdx.app.log("deserialize", json.toJson(JsonWriter.OutputType.minimal));
         String cid = json.getString("CID");
         Gdx.app.log("cidd:", cid);
-        Statics.addUserObj(new ScriptObject(cid));
+        SunshineBlue.instance.addUserObj(new ScriptObject(cid));
     }
 }

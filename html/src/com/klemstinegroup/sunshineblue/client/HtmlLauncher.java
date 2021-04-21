@@ -191,8 +191,8 @@ public class HtmlLauncher extends GwtApplication {
 //        if (!oldText.equals(text)) {
         getClipboard().setContents(text);
         Gdx.app.log("cliboard paste", text);
-        if (Statics.overlay instanceof ImageOverlay) {
-            Actor focusedActor = ((ImageOverlay)Statics.overlay).stage.getKeyboardFocus();
+        if (SunshineBlue.instance.overlay instanceof ImageOverlay) {
+            Actor focusedActor = ((ImageOverlay)SunshineBlue.instance.overlay).stage.getKeyboardFocus();
             if (focusedActor != null && focusedActor instanceof TextArea) {
                 TextArea ta = ((TextArea) focusedActor);
                 ta.setText(text);

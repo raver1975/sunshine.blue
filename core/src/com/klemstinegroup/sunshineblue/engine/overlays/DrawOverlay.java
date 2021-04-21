@@ -19,11 +19,11 @@ public class DrawOverlay extends ScreenObject implements Overlay, Touchable, Dra
     Touchable touchable;
 
     public DrawOverlay( ) {
-        stage = new Stage(Statics.overlayViewport);
+        stage = new Stage(SunshineBlue.instance.overlayViewport);
         SunshineBlue.instance.assetManager.finishLoadingAsset("skins/orange/skin/uiskin.json");
         Skin skin = SunshineBlue.instance.assetManager.get("skins/orange/skin/uiskin.json",Skin.class);
         TextButton exitButton = new TextButton("X",skin);
-        exitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 60, 10);
+        exitButton.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 60, 10);
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -95,14 +95,14 @@ public class DrawOverlay extends ScreenObject implements Overlay, Touchable, Dra
 
     @Override
     public void setInput() {
-        Statics.im.addProcessor(stage);
-        if (touchable!=null) Statics.im.addProcessor(touchable);
+        SunshineBlue.instance.im.addProcessor(stage);
+        if (touchable!=null) SunshineBlue.instance.im.addProcessor(touchable);
     }
 
     @Override
     public void removeInput() {
-        Statics.im.removeProcessor(stage);
-        if (touchable!=null)Statics.im.removeProcessor(touchable);
+        SunshineBlue.instance.im.removeProcessor(stage);
+        if (touchable!=null)SunshineBlue.instance.im.removeProcessor(touchable);
     }
 
     @Override

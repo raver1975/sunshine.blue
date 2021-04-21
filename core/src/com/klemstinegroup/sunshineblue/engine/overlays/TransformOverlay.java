@@ -19,18 +19,18 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
 
     public final Stage stage;
     private final Group transformGroup;
-
+    public int transformButton;
     Vector2 touchdrag = new Vector2();
     Vector2 touchdown = new Vector2();
 
     public TransformOverlay() {
-        stage = new Stage(Statics.overlayViewport);
+        stage = new Stage(SunshineBlue.instance.overlayViewport);
         SunshineBlue.instance.assetManager.finishLoadingAsset("skins/orange/skin/uiskin.json");
         Skin skin = SunshineBlue.instance.assetManager.get("skins/orange/skin/uiskin.json",Skin.class);
 
 //        CheckBox exitButton = new CheckBox("", skin);
         TextButton exitButton = new TextButton("X",skin);
-        exitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 60, 10);
+        exitButton.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 60, 10);
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -63,28 +63,28 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                Statics.transformButton = 0;
+                transformButton = 0;
             }
         });
         rotateButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                Statics.transformButton = 1;
+                transformButton = 1;
             }
         });
         scaleButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                Statics.transformButton = 2;
+                transformButton = 2;
             }
         });
         centerButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                Statics.transformButton = 3;
+                transformButton = 3;
             }
         });
 
@@ -123,7 +123,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 
-        Statics.viewport.unproject(touchdown.set(screenX, screenY));
+        SunshineBlue.instance.viewport.unproject(touchdown.set(screenX, screenY));
 //        Statics.selectedObjects.clear();
 //        for (BaseObject bo : Statics.userObjects) {
 //            if (bo instanceof Touchable) {
@@ -135,10 +135,10 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
 //        }
 
 
-        for (BaseObject bo : Statics.selectedObjects) {
+        for (BaseObject bo : SunshineBlue.instance.selectedObjects) {
             if (bo instanceof ScreenObject) {
                 ScreenObject so = ((ScreenObject) bo);
-                switch (Statics.transformButton) {
+                switch (transformButton) {
                     case 0:
                         break;
                     case 1:
@@ -165,7 +165,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        for (BaseObject bo : Statics.selectedObjects) {
+        for (BaseObject bo : SunshineBlue.instance.selectedObjects) {
             if (bo instanceof Touchable) {
                 ((Touchable) bo).setBounds();
             }
@@ -176,12 +176,12 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
 //        Statics.viewport.unproject(touchdrag.set(screenX, screenY));
-        Statics.viewport.unproject(touchdrag.set(screenX, screenY));
+        SunshineBlue.instance.viewport.unproject(touchdrag.set(screenX, screenY));
 
-        for (BaseObject bo : Statics.selectedObjects) {
+        for (BaseObject bo : SunshineBlue.instance.selectedObjects) {
             if (bo instanceof ScreenObject) {
                 ScreenObject so = ((ScreenObject) bo);
-                switch (Statics.transformButton) {
+                switch (transformButton) {
                     case 0:
                         so.sd.position.add(touchdrag.cpy().sub(touchdown));
                         break;
@@ -192,6 +192,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                         so.sd.scale += (touchdrag.x - touchdown.x) / 200f;
                         break;
                     case 3:
+                        so.recenter(touchdown);
                         break;
                 }
                 if (bo instanceof Touchable) {
@@ -222,7 +223,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
 //        mx4Overlay.
 
 //        Statics.batch.setProjectionMatrix(mx4Overlay.idt());
-        for (int i = 0; i < Statics.selectedObjects.size; i++) {
+        for (int i = 0; i < SunshineBlue.instance.selectedObjects.size; i++) {
             SunshineBlue.instance.shapedrawer.filledCircle(170 + 30 * i, 20, 10);
         }
         stage.draw();
@@ -240,13 +241,13 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
 
     @Override
     public void setInput() {
-        Statics.im.addProcessor(stage);
+        SunshineBlue.instance.im.addProcessor(stage);
 //        transformGroup.setVisible(Statics.selectedObjects.size>0);
     }
 
     @Override
     public void removeInput() {
-        Statics.im.removeProcessor(stage);
+        SunshineBlue.instance.im.removeProcessor(stage);
     }
 
     @Override

@@ -12,9 +12,9 @@ public class RotateSecondObject  {
     }
 
     public void loop(SunshineBlue sun) {
-        if (Statics.userObjects.size > 1) {
+        if (SunshineBlue.instance.userObjects.size > 1) {
             try {
-                ((ScreenObject) Statics.userObjects.get(1)).sd.rotation += .1f;
+                ((ScreenObject) SunshineBlue.instance.userObjects.get(1)).sd.rotation += .1f;
             } catch (Exception e) {
                 Statics.exceptionLog("script error", e);
             }

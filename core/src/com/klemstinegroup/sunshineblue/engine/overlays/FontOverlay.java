@@ -36,11 +36,11 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
     public FontOverlay() {
         FileHandle[] fontList = Gdx.files.internal("fonts").list();
         new BitmapFont();
-        stage = new Stage(Statics.overlayViewport);
+        stage = new Stage(SunshineBlue.instance.overlayViewport);
         SunshineBlue.instance.assetManager.finishLoadingAsset("skins/orange/skin/uiskin.json");
         Skin skin = SunshineBlue.instance.assetManager.get("skins/orange/skin/uiskin.json", Skin.class);
         TextButton exitButton = new TextButton("X", skin);
-        exitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 60, 10);
+        exitButton.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 60, 10);
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -183,8 +183,8 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         });
         stage.addActor(sizeSpinner);*/
         Slider slider = new Slider(1, 218, 1, true, skin);
-        slider.setPosition(Statics.overlayViewport.getWorldWidth() - 40, 80);
-        slider.setSize(20, Statics.overlayViewport.getWorldHeight() - 150);
+        slider.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 40, 80);
+        slider.setSize(20, SunshineBlue.instance.overlayViewport.getWorldHeight() - 150);
         slider.setValue(50);
 
         slider.addListener(new ChangeListener() {
@@ -233,7 +233,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 
-        Statics.viewport.unproject(touchdown.set(screenX, screenY));
+        SunshineBlue.instance.viewport.unproject(touchdown.set(screenX, screenY));
         return false;
     }
 
@@ -245,7 +245,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        Statics.viewport.unproject(touchdrag.set(screenX, screenY));
+        SunshineBlue.instance.viewport.unproject(touchdrag.set(screenX, screenY));
 
         fontObject.sd.position.add(touchdrag.cpy().sub(touchdown));
         fontObject.setBounds();
@@ -285,14 +285,14 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
 
     @Override
     public void setInput() {
-        Statics.im.addProcessor(stage);
-        if (fontObject != null) Statics.im.addProcessor(fontObject);
+        SunshineBlue.instance.im.addProcessor(stage);
+        if (fontObject != null) SunshineBlue.instance.im.addProcessor(fontObject);
     }
 
     @Override
     public void removeInput() {
-        Statics.im.removeProcessor(stage);
-        if (fontObject != null) Statics.im.removeProcessor(fontObject);
+        SunshineBlue.instance.im.removeProcessor(stage);
+        if (fontObject != null) SunshineBlue.instance.im.removeProcessor(fontObject);
     }
 
     @Override

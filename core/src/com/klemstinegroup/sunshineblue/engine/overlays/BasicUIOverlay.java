@@ -31,9 +31,9 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
     public BasicUIOverlay() {
         SunshineBlue.instance.assetManager.finishLoadingAsset("skins/orange/skin/uiskin.json");
         Skin skin = SunshineBlue.instance.assetManager.get("skins/orange/skin/uiskin.json", Skin.class);
-        stage = new Stage(Statics.overlayViewport);
+        stage = new Stage(SunshineBlue.instance.overlayViewport);
         TextButton exitButton = new TextButton("X", skin);
-        exitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 60, 10);
+        exitButton.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 60, 10);
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -49,7 +49,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 //        fontButton.setColor(Color.WHITE);
 
         Actor saveButton = new TextButton("Save", skin);
-        saveButton.setPosition(10, Statics.overlayViewport.getWorldHeight() - 60);
+        saveButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 60);
         saveButton.addListener(new ClickListener() {
 
             @Override
@@ -60,7 +60,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         stage.addActor(saveButton);
 
         Actor popButton = new TextButton("Pop", skin);
-        popButton.setPosition(10, Statics.overlayViewport.getWorldHeight() - 120);
+        popButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 120);
         popButton.addListener(new ClickListener() {
 
             @Override
@@ -86,7 +86,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         stage.addActor(popButton);
 
         Actor apngButton = new TextButton("REC", skin);
-        apngButton.setPosition(10, Statics.overlayViewport.getWorldHeight() - 240);
+        apngButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 240);
         apngButton.addListener(new ClickListener() {
 
             @Override
@@ -104,13 +104,13 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         stage.addActor(apngButton);
 
         Actor screenshotButton = new TextButton("PNG", skin);
-        screenshotButton.setPosition(10, Statics.overlayViewport.getWorldHeight() - 180);
+        screenshotButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 180);
         screenshotButton.addListener(new ClickListener() {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 SunshineBlue.instance.batch.begin();
-                Pixmap screenshot = FrameBufferUtils.drawObjects(SunshineBlue.instance.batch,  Statics.viewport, Statics.userObjects);
+                Pixmap screenshot = FrameBufferUtils.drawObjects(SunshineBlue.instance.batch,  SunshineBlue.instance.viewport, SunshineBlue.instance.userObjects);
                 SunshineBlue.instance.batch.end();
                 IPFSUtils.uploadPngtoIPFS(screenshot, new IPFSCIDListener() {
                     @Override
@@ -132,7 +132,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 //            @Override
 //            public void changed(ChangeEvent event, Actor actor) {
 //                Gdx.input.setOnscreenKeyboardVisible(true);
-//                Statics.objects.add(new FontObject(FontObject.fontList[MathUtils.random(FontObject.fontList.length - 1)], 40));
+//                SunshineBlue.instance.objects.add(new FontObject(FontObject.fontList[MathUtils.random(FontObject.fontList.length - 1)], 40));
 //            }
 
             @Override
@@ -140,13 +140,13 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 super.clicked(event, x, y);
                 Gdx.input.setOnscreenKeyboardVisible(true);
                 FontObject ff = new FontObject();
-                Statics.addUserObj(ff);
+                SunshineBlue.addUserObj(ff);
                 SunshineBlue.instance.FONT_OVERLAY.setFontObject(ff);
                 SunshineBlue.instance.FONT_OVERLAY.generate(SunshineBlue.instance.assetManager, ff);
                 SunshineBlue.instance.FONT_OVERLAY.setList();
 //                ff.sd.position.set(-ff.sd.center.x, -ff.sd.center.y);
-                Vector2 vec = new Vector2(50, 50);
-                Statics.viewport.unproject(Statics.overlayViewport.project(vec));
+                Vector2 vec = new Vector2(100, 200);
+                SunshineBlue.instance.viewport.unproject(SunshineBlue.instance.overlayViewport.project(vec));
 //                Statics.viewport.project(Statics.overlayViewport.unproject(vec));
 //                Statics.overlayViewport.unproject(Statics.viewport.project(vec));
 //                Statics.overlayViewport.project(Statics.viewport.unproject(vec));
@@ -186,7 +186,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 super.clicked(event, x, y);
                 Gdx.input.setOnscreenKeyboardVisible(false);
                 DrawObject doi = new DrawObject();
-                Statics.addUserObj(doi);
+                SunshineBlue.instance.addUserObj(doi);
                 SunshineBlue.instance.DRAW_OVERLAY.setTouchable(doi);
                 Overlay.setOverlay(SunshineBlue.instance.DRAW_OVERLAY);
 //                pasteButton.setVisible(true);
@@ -219,17 +219,17 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        Statics.viewport.unproject(touchdown.set(screenX, screenY));
-        Statics.selectedObjects.clear();
-        for (BaseObject bo : Statics.userObjects) {
+        SunshineBlue.instance.viewport.unproject(touchdown.set(screenX, screenY));
+        SunshineBlue.instance.selectedObjects.clear();
+        for (BaseObject bo : SunshineBlue.instance.userObjects) {
             if (bo instanceof Touchable) {
                 if (((Touchable) bo).isSelected(touchdown.cpy())) {
-                    Statics.selectedObjects.add(bo);
+                    SunshineBlue.instance.selectedObjects.add(bo);
                 }
 
             }
         }
-        if (Statics.selectedObjects.size > 0) {
+        if (SunshineBlue.instance.selectedObjects.size > 0) {
             Overlay.setOverlay(SunshineBlue.instance.TRANSFORM_OVERLAY);
         } else {
 //            Overlay.setOverlay(this);
@@ -259,8 +259,8 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 //        mx4Overlay.setToOrtho2D(0, 0, 100, 100);
 //        mx4Overlay.
 
-//        Statics.batch.setProjectionMatrix(mx4Overlay.idt());
-        for (int i = 0; i < Statics.selectedObjects.size; i++) {
+//        SunshineBlue.instance.batch.setProjectionMatrix(mx4Overlay.idt());
+        for (int i = 0; i < SunshineBlue.instance.selectedObjects.size; i++) {
             SunshineBlue.instance.shapedrawer.filledCircle(170 + 30 * i, 20, 10);
         }
         stage.draw();
@@ -268,7 +268,8 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
     @Override
     public void setInput() {
-        Statics.im.addProcessor(stage);
+        SunshineBlue.instance.im.addProcessor(stage);
+        SunshineBlue.instance.selectedObjects.clear();
     }
 
     @Override
@@ -283,7 +284,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
     @Override
     public void removeInput() {
-        Statics.im.removeProcessor(stage);
+        SunshineBlue.instance.im.removeProcessor(stage);
     }
 
     @Override

@@ -23,12 +23,12 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
     Touchable touchable;
 
     public ImageOverlay() {
-        stage = new Stage(Statics.overlayViewport);
+        stage = new Stage(SunshineBlue.instance.overlayViewport);
         SunshineBlue.instance.assetManager.finishLoadingAsset("skins/orange/skin/uiskin.json");
         Skin skin = SunshineBlue.instance.assetManager.get("skins/orange/skin/uiskin.json", Skin.class);
 
         TextButton exitButton = new TextButton("X", skin);
-        exitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 60, 10);
+        exitButton.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 60, 10);
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -54,7 +54,7 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
 
         TextButton submitButton = new TextButton("Shine!", skin);
         submitButton.setSize(100, 100);
-        submitButton.setPosition(Statics.overlayViewport.getWorldWidth() - 100, Statics.overlayViewport.getWorldHeight() - 110);
+        submitButton.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 100, SunshineBlue.instance.overlayViewport.getWorldHeight() - 110);
         submitButton.addListener(new ClickListener() {
 
             @Override
@@ -68,7 +68,7 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
 
 
         Label tfield = new Label("JPG,PNG,GIF,IPFS,or DATA url", skin);
-        tfield.setPosition(250, Statics.overlayViewport.getWorldHeight() - 130);
+        tfield.setPosition(250, SunshineBlue.instance.overlayViewport.getWorldHeight() - 130);
         tfield.setWidth(270);
         stage.addActor(tfield);
 
@@ -85,8 +85,8 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
         });
         ta.setTextFieldListener(tfl);
 
-        ta.setPosition(10, Statics.overlayViewport.getWorldHeight() - 110);
-        ta.setWidth(Statics.overlayViewport.getWorldWidth() - 110);
+        ta.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 110);
+        ta.setWidth(SunshineBlue.instance.overlayViewport.getWorldWidth() - 110);
         ta.setHeight(100);
 
         TextButton clearButton = new TextButton("x", skin);
@@ -96,7 +96,7 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
                 ta.setText("");
             }
         });
-        clearButton.setPosition(10, Statics.overlayViewport.getWorldHeight() - 110);
+        clearButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 110);
         clearButton.setSize(20, 20);
 
 //ta.setZIndex(1);
@@ -167,14 +167,14 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
 
     @Override
     public void setInput() {
-        Statics.im.addProcessor(stage);
+        SunshineBlue.instance.im.addProcessor(stage);
 //        if (touchable != null) Statics.im.addProcessor(touchable);
         stage.setKeyboardFocus(ta);
     }
 
     @Override
     public void removeInput() {
-        Statics.im.removeProcessor(stage);
+        SunshineBlue.instance.im.removeProcessor(stage);
 //        if (touchable != null) Statics.im.removeProcessor(touchable);
     }
 

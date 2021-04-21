@@ -26,22 +26,11 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 public class Statics {
 
 
-    public static StretchViewport overlayViewport = new StretchViewport((550f * Gdx.graphics.getWidth() / Gdx.graphics.getHeight()), 550);
-    public static Overlay overlay=null;
     public static String IPFSGateway = "https://ipfs.io/ipfs/";
-//    public static String IpfsGateway2 = "http://ipfs.infura.io/ipfs/";
+    //    public static String IpfsGateway2 = "http://ipfs.infura.io/ipfs/";
     public static final String CORSGateway="https://api.codetabs.com/v1/proxy?quest=";
     public static String IPFSMediaViewer="QmUQBqWRN1UQSedX8YFnDTVAB9RgVoib13MxS8EwxgMtF7";
     public static final boolean debug = false;
-    public static Matrix4 mx4Batch = new Matrix4();
-    public static int transformButton;
-    public static ScreenViewport viewport;
-    public static boolean gif = true;
-    public static final Array<BaseObject> userObjects = new Array<BaseObject>();
-    public static final Array<BaseObject> selectedObjects = new Array<BaseObject>();
-    public static InputMultiplexer im = new InputMultiplexer();
-    public static ArrayMap<Gestureable, GestureDetector> gestureDetectors = new ArrayMap<>();
-
 
     public Statics(){}
 
@@ -57,13 +46,4 @@ public class Statics {
         exceptionLog(tag,(Exception)t);
     }
 
-    public static void addUserObj(BaseObject b){
-        Gdx.app.log("userobject added",(b.getClass().toString()));
-        userObjects.add(b);
-    }
-
-    public static void removeUserObj(BaseObject b){
-        Gdx.app.log("userobject removed",(b.getClass().toString()));
-        userObjects.removeValue(b,true);
-    }
 }

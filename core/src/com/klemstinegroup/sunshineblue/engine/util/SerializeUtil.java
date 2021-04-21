@@ -27,7 +27,7 @@ public class SerializeUtil {
 
     public static void deserializeScene(JsonValue val) {
         Gdx.app.log("scene", val.toJson(JsonWriter.OutputType.minimal));
-        Statics.userObjects.clear();
+        SunshineBlue.instance.userObjects.clear();
         JsonValue array = val.get("userObjects");
         if (array != null) {
             for (int i = 0; i < array.size; i++) {
@@ -67,7 +67,7 @@ public class SerializeUtil {
 
     public static void save(String name, IPFSCIDListener ipfscidListener) {
         SunshineBlue.instance.batch.begin();
-        Pixmap screenshot = FrameBufferUtils.drawObjects(SunshineBlue.instance.batch, Statics.viewport, Statics.userObjects);
+        Pixmap screenshot = FrameBufferUtils.drawObjects(SunshineBlue.instance.batch, SunshineBlue.instance.viewport, SunshineBlue.instance.userObjects);
         SunshineBlue.instance.batch.end();
         IPFSUtils.uploadPngtoIPFS(screenshot, new IPFSCIDListener() {
             @Override
@@ -113,7 +113,7 @@ public class SerializeUtil {
         JsonValue array = new JsonValue(JsonValue.ValueType.array);
         val.addChild("userObjects", array);
         int cnt = 0;
-        for (BaseObject bo : Statics.userObjects) {
+        for (BaseObject bo : SunshineBlue.instance.userObjects) {
             if (bo instanceof ScreenObject) {
                 ((ScreenObject) bo).sd.layer = cnt++;
             }

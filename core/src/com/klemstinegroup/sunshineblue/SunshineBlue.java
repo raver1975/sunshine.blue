@@ -15,10 +15,15 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.net.HttpStatus;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.github.tommyettinger.anim8.IncrementalAnimatedPNG;
 import com.igormaznitsa.jjjvm.impl.JJJVMClassImpl;
 import com.igormaznitsa.jjjvm.impl.jse.JSEProviderImpl;
@@ -51,12 +56,15 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public BlankOverlay BLANK_OVERLAY;
     public Batch batch;
     public BitmapFont font;
+    public Overlay overlay=null;
+    public StretchViewport overlayViewport;
+    public ScreenViewport viewport;
+    public final Array<BaseObject> userObjects = new Array<BaseObject>();
+    public final Array<BaseObject> selectedObjects = new Array<BaseObject>();
+    public InputMultiplexer im = new InputMultiplexer();
+    public ArrayMap<Gestureable, GestureDetector> gestureDetectors = new ArrayMap<>();
 
-    static {
-
-    }
-
-
+    public Matrix4 mx4Batch = new Matrix4();
     public ShapeDrawer shapedrawer;
     public JSEProviderImpl JJVMprovider = new JSEProviderImpl();
     public static SunshineBlue instance;
@@ -87,6 +95,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public void create() {
         Gdx.app.log("create", "started");
         font = new BitmapFont();
+        overlayViewport = new StretchViewport((550f * Gdx.graphics.getWidth() / Gdx.graphics.getHeight()), 550);
         Net.HttpRequest req = new Net.HttpRequest("GET");
        /* req.setUrl(Statics.IpfsGateway2 + "QmWATWQ7fVPP2EFGu71UkfnqhYXDYH566qy47CnJDgvs8u");
         req.setTimeOut(30000);
@@ -140,9 +149,9 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         Gdx.input.setCatchKey(Input.Keys.BACK, true);
         Gdx.input.setCatchKey(Input.Keys.ESCAPE, true);
 //        VisUI.load(VisUI.SkinScale.X2);
-        Gdx.input.setInputProcessor(Statics.im);
-        Statics.im.addProcessor(this);
-        if (Statics.overlay == null) Overlay.setOverlay(BLANK_OVERLAY);
+        Gdx.input.setInputProcessor(im);
+        im.addProcessor(this);
+        if (overlay == null) Overlay.setOverlay(BLANK_OVERLAY);
         Gdx.app.setLogLevel(LOG_INFO);
 /*//        img = new Texture("badlogic.jpg");
 
@@ -178,8 +187,8 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 //        Statics.adduserObj(new ImageObject("https://i.redd.it/0h1nbwj4bto61.jpg"));
 
 
-        Statics.viewport = new ScreenViewport();
-        Statics.mx4Batch = batch.getTransformMatrix().cpy();
+        viewport = new ScreenViewport();
+        mx4Batch = batch.getTransformMatrix().cpy();
 
 
 //--------------------------------------------------------------------------------------------------
@@ -189,7 +198,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
 
         //--------------------------------------------------------------------------------------------------
-        Statics.viewport.apply();
+        viewport.apply();
 //        Statics.gifOptions = new ImageOptions();
 
 //        Statics.gifEncoderA = new AnimatedGifEncoder();
@@ -210,10 +219,10 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);
-        Statics.viewport.apply();
+        viewport.apply();
 
 
-        batch.setProjectionMatrix(Statics.viewport.getCamera().combined);
+        batch.setProjectionMatrix(viewport.getCamera().combined);
         batch.begin();
 
 //        if (cnt--==2800){
@@ -270,13 +279,13 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         recHalfSec+=Gdx.graphics.getDeltaTime();
         if (isRecording &&recHalfSec>(1f/fps) ) {
             recHalfSec=0;
-            apng.write(FrameBufferUtils.drawObjectsPix(batch, Statics.viewport, Statics.userObjects, 400, 400));
+            apng.write(FrameBufferUtils.drawObjectsPix(batch, viewport, userObjects, 600*viewport.getScreenWidth()/viewport.getScreenHeight(), 600));
             if (recCounter-- <= 0) {
                 stopRecording();
             }
         }
 
-        Statics.userObjects.sort(new Comparator<BaseObject>() {
+        userObjects.sort(new Comparator<BaseObject>() {
             @Override
             public int compare(BaseObject o1, BaseObject o2) {
                 if (o1 instanceof ScreenObject && o2 instanceof ScreenObject) {
@@ -284,7 +293,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
                 } else return 0;
             }
         });
-        for (BaseObject bo : Statics.userObjects) {
+        for (BaseObject bo : userObjects) {
             if (bo.regen) {
                 bo.regen = false;
                 bo.regenerate(assetManager);
@@ -295,15 +304,15 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
             if (bo instanceof Actable) {
                 ((Actable) bo).act();
             }
-            batch.setTransformMatrix(Statics.mx4Batch);
+            batch.setTransformMatrix(mx4Batch);
         }
-        if (Statics.overlay != null) {
-            Statics.overlay.act();
-            ((Drawable) Statics.overlay).draw(batch);
+        if (overlay != null) {
+            overlay.act();
+            ((Drawable) overlay).draw(batch);
         }
-        batch.setTransformMatrix(Statics.mx4Batch);
+        batch.setTransformMatrix(mx4Batch);
         if (isRecording) {
-            font.draw(batch, "" + (recCounter), 10, 10);
+            font.draw(batch, "" + (recCounter/10), 10, 10);
         }
         batch.end();
         //------------------------------------------------------------
@@ -322,8 +331,8 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         Gdx.app.log("resize", width + "\t" + height);
 //        int WORLD_WIDTH=(550*width)/height;
 //        int WORLD_HEIGHT=550;
-        Statics.viewport.update(width, height);
-        Statics.overlayViewport.update(width, height);
+        viewport.update(width, height);
+        overlayViewport.update(width, height);
 //        Statics.overlayViewport.getCamera().viewportWidth = WORLD_WIDTH;
 //        Statics.overlayViewport.getCamera().viewportHeight = WORLD_HEIGHT;
 //        Statics.overlayViewport.getCamera().position.set(WORLD_WIDTH/2,WORLD_HEIGHT/2, 0);
@@ -534,7 +543,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         apng = new IncrementalAnimatedPNG();
         apng.setFlipY(true);
         mfh = new MemoryFileHandle();
-        apng.start(mfh, (short) fps, 400, 400);
+        apng.start(mfh, (short) fps, 600*viewport.getScreenWidth()/viewport.getScreenHeight(), 600);
     }
 
     public void stopRecording() {
@@ -551,5 +560,14 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
             }
         });
+    }
+    public static void addUserObj(BaseObject b){
+        Gdx.app.log("userobject added",(b.getClass().toString()));
+        SunshineBlue.instance.userObjects.add(b);
+    }
+
+    public static void removeUserObj(BaseObject b){
+        Gdx.app.log("userobject removed",(b.getClass().toString()));
+        SunshineBlue.instance.userObjects.removeValue(b,true);
     }
 }
