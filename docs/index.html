@@ -24,7 +24,8 @@
                 repo: 'ipfs-' + Math.random(),
                 EXPERIMENTAL: {
                     pubsub: true
-                }
+                },
+                config: {Pubsub: {Enabled: true}}
             })
             window.ipfs = ipfs
 
@@ -32,8 +33,8 @@
 
             console.log(`Node status: ${status}`)
             const {id, agentVersion} = await ipfs.id();
-            nextTopic = "test";
-            await ipfs.pubsub.subscribe(nextTopic, msg => {
+            topic = "test";
+            await ipfs.pubsub.subscribe(topic, msg => {
                 const from = msg.from
                 const seqno = msg.seqno.toString('hex')
                 if (from === id) return console.log(`Ignoring message ${seqno} from self`)
@@ -50,13 +51,12 @@
                         console.log(`<span class="red">${err.message}</span>`)
                         topic = null
                         console.log('Resubscribing in 5s...')
-                        setTimeout(catchAndLog(() => subscribe(nextTopic), log), 5000)
+                        setTimeout(catchAndLog(() => subscribe(topic), log), 5000)
                     } else {
                         console.warn(err)
                     }
                 }
             })
-            topic = nextTopic
             console.log(`<span class="green">Success!</span>`)
 
 
