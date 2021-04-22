@@ -20,7 +20,10 @@
     <script src="https://cdn.jsdelivr.net/npm/ipfs/dist/index.min.js"></script>
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', async () => {
-            const ipfs = await Ipfs.create({ repo: 'ipfs-' + Math.random() })
+            const ipfs = await Ipfs.create({ repo: 'ipfs-' + Math.random(),EXPERIMENTAL: {
+                    pubsub: true
+                }
+            })
             window.ipfs = ipfs
 
             const status = ipfs.isOnline() ? 'online' : 'offline'
