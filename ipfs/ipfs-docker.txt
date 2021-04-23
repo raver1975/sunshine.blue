@@ -9,3 +9,29 @@ Remove all containers
 docker rm $(docker ps -aq)
 Remove all images
 docker rmi $(docker images -q)
+
+
+https://suda.pl/free-webrtc-star-heroku/
+# Login to Heroku
+$ heroku login
+# Login to the Container Registry
+$ heroku container:login
+# Clone the webrtc-star repo
+$ git clone https://github.com/libp2p/js-libp2p-webrtc-star.git
+$ cd js-libp2p-webrtc-star
+# Create a Heroku app
+$ heroku create
+# Build and push the image
+$ heroku container:push web
+# Release the image to your app
+$ heroku container:release web
+# Scale to one free worker
+$ heroku ps:scale web=1
+# Open the app in the browser
+$ heroku open
+
+https://stormy-meadow-13494.herokuapp.com/
+
+                  '/dns4/wrtc-star1.par.dwebops.pub/tcp/443/wss/p2p-webrtc-star',
+                            '/dns4/wrtc-star2.sjc.dwebops.pub/tcp/443/wss/p2p-webrtc-star',
+                            '/dns4/ws-star.discovery.libp2p.io/tcp/443/wss/p2p-websocket-star'
