@@ -39,7 +39,7 @@
 
             console.log(`Node status: ${status}`)
             const {id, agentVersion} = await ipfs.id();
-            topic = "test";
+            topic = "peers";
             await ipfs.pubsub.subscribe(topic, msg => {
                 const from = msg.from
                 const seqno = msg.seqno.toString('hex')
@@ -74,13 +74,7 @@
                 setTimeout(sendMessage,2000);
             }
 
-            sendMessage();
-
-            //document.getElementById('status').innerHTML = `Node status: ${status}`
-
-            // You can write more code here to use it. Use methods like
-            // node.add, node.get. See the API docs here:
-            // https://github.com/ipfs/js-ipfs/tree/master/packages/interface-ipfs-core
+            //sendMessage();
         })
 
 
