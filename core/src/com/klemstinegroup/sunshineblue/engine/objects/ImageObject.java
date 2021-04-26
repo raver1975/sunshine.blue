@@ -55,7 +55,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                     ImageObject.this.cid = cid;
                 }
                 if (data[0]==-54 && data[1]==-2 && data[2]==-70 && data[3]==-66){
-                    SunshineBlue.instance.removeUserObj(ImageObject.this);
+                    SunshineBlue.removeUserObj(ImageObject.this);
                     SunshineBlue.addUserObj(new ScriptObject(data));
                     return;
                 }

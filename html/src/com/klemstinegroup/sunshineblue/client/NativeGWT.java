@@ -46,7 +46,14 @@ public class NativeGWT implements NativeInterface {
 
     @Override
     public void downloadPixmap(String url, Pixmap.DownloadPixmapResponseListener listener) {
-        final Image img = new Image(Statics.CORSGateway+url);
+        final Image img;
+        if (!url.contains(Statics.IPFSGateway)){
+            img = new Image(url);
+        }
+        else{
+            img = new Image(Statics.CORSGateway+url);
+        }
+
         ImageElement.as(img.getElement()).setAttribute("crossorigin","anonymous");
         final RootPanel root = RootPanel.get("embed-image");
 
