@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.input.GestureDetector;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
+import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
 
 import java.util.Stack;
 
@@ -51,4 +52,6 @@ public interface Overlay {
     void removeInput();
 
     void act();
+
+    void setObject(BaseObject bo);
 }

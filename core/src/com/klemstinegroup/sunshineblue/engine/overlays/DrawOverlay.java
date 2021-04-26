@@ -14,6 +14,7 @@ import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.colorpicker.DialogColorPicker;
 import com.klemstinegroup.sunshineblue.colorpicker.Spinner;
 import com.klemstinegroup.sunshineblue.engine.Statics;
+import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
 import com.klemstinegroup.sunshineblue.engine.objects.DrawObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
 
@@ -22,7 +23,7 @@ public class DrawOverlay extends ScreenObject implements Overlay, Touchable, Dra
 
     public final Stage stage;
     Touchable touchable;
-    DrawObject drawObject;
+    BaseObject drawObject;
 
     public DrawOverlay( ) {
         stage = new Stage(SunshineBlue.instance.overlayViewport);
@@ -53,7 +54,7 @@ public class DrawOverlay extends ScreenObject implements Overlay, Touchable, Dra
         DialogColorPicker picker = new DialogColorPicker("main", skin1, new DialogColorPicker.ColorListener() {
             @Override
             public void selected(Color color) {
-                if (drawObject != null) drawObject.setColor(color);
+                if (drawObject != null) ((DrawObject)drawObject).setColor(color);
             }
         }, Color.WHITE);
 //        picker.setResizable(true);
@@ -62,7 +63,7 @@ public class DrawOverlay extends ScreenObject implements Overlay, Touchable, Dra
         picker.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (drawObject != null) drawObject.setColor(picker.getSelectedColor());
+                if (drawObject != null) ((DrawObject)drawObject).setColor(picker.getSelectedColor());
             }
         });
         TextButton colorButton = new TextButton("color", skin);
@@ -89,7 +90,7 @@ public class DrawOverlay extends ScreenObject implements Overlay, Touchable, Dra
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (!slider.isDragging()) {
-                    drawObject.setSize((int) (slider.getValue()));
+                    ((DrawObject)drawObject).setSize((int) (slider.getValue()));
                     setBounds();
                 }
             }
@@ -174,7 +175,8 @@ public class DrawOverlay extends ScreenObject implements Overlay, Touchable, Dra
         stage.act();
     }
 
-    public void setDrawObject(DrawObject doi) {
+    @Override
+    public void setObject(BaseObject doi) {
         this.drawObject=doi;
     }
 }

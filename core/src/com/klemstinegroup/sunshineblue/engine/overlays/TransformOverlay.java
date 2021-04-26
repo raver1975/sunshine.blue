@@ -259,6 +259,11 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
     }
 
     @Override
+    public void setObject(BaseObject bo) {
+
+    }
+
+    @Override
     public boolean touchDown(float x, float y, int pointer, int button) {
         return false;
     }

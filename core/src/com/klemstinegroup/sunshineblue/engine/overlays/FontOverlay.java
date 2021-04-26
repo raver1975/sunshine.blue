@@ -29,7 +29,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
     public final Stage stage;
     //    private final List<String> list;
     private final SelectBox selectBox;
-    public FontObject fontObject;
+    public BaseObject fontObject;
     private Vector2 touchdown = new Vector2();
     Vector2 touchdrag = new Vector2();
 
@@ -104,7 +104,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         DialogColorPicker picker = new DialogColorPicker("main", skin1, new DialogColorPicker.ColorListener() {
             @Override
             public void selected(Color color) {
-                if (fontObject != null) fontObject.setColor(color);
+                if (fontObject != null) ((FontObject)fontObject).setColor(color);
             }
         }, Color.WHITE);
 //        picker.setResizable(true);
@@ -113,7 +113,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         picker.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (fontObject != null) fontObject.setColor(picker.getSelectedColor());
+                if (fontObject != null) ((FontObject)fontObject).setColor(picker.getSelectedColor());
             }
         });
 //        picker.setScale(.7f);
@@ -160,8 +160,8 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (fontObject != null) {
-                    fontObject.setFont((String) ((SelectBox<String>) actor).getSelected());
-                    generate(SunshineBlue.instance.assetManager, fontObject);
+                    ((FontObject)fontObject).setFont((String) ((SelectBox<String>) actor).getSelected());
+                    generate(SunshineBlue.instance.assetManager, ((FontObject)fontObject));
                 }
             }
         });
@@ -217,8 +217,8 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
                 if (!slider.isDragging()) {
 
 
-                    fontObject.setSize((int) (slider.getValue()));
-                    generate(SunshineBlue.instance.assetManager, fontObject);
+                    ((FontObject)fontObject).setSize((int) (slider.getValue()));
+                    generate(SunshineBlue.instance.assetManager, ((FontObject)fontObject));
                     setBounds();
                 }
             }
@@ -229,7 +229,8 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         stage.addActor(selectBox);
     }
 
-    public void setFontObject(FontObject fontObject) {
+    @Override
+    public void setObject(BaseObject fontObject) {
         this.fontObject = fontObject;
     }
 
@@ -257,7 +258,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        fontObject.setBounds();
+        ((FontObject)fontObject).setBounds();
         return false;
     }
 
@@ -265,8 +266,8 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         SunshineBlue.instance.viewport.unproject(touchdrag.set(screenX, screenY));
 
-        fontObject.sd.position.add(touchdrag.cpy().sub(touchdown));
-        fontObject.setBounds();
+        ((FontObject)fontObject).sd.position.add(touchdrag.cpy().sub(touchdown));
+        ((FontObject)fontObject).setBounds();
 
         touchdown.set(touchdrag);
         return false;
@@ -287,7 +288,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
     public void draw(Batch batch) {
         stage.draw();
         if (fontObject != null) {
-            fontObject.draw(batch);
+            ((FontObject)fontObject).draw(batch);
         }
     }
 
@@ -304,13 +305,13 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
     @Override
     public void setInput() {
         SunshineBlue.instance.im.addProcessor(stage);
-        if (fontObject != null) SunshineBlue.instance.im.addProcessor(fontObject);
+        if (fontObject != null) SunshineBlue.instance.im.addProcessor(((FontObject)fontObject));
     }
 
     @Override
     public void removeInput() {
         SunshineBlue.instance.im.removeProcessor(stage);
-        if (fontObject != null) SunshineBlue.instance.im.removeProcessor(fontObject);
+        if (fontObject != null) SunshineBlue.instance.im.removeProcessor(((FontObject)fontObject));
     }
 
     @Override
@@ -345,7 +346,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
     }
 
     public void setList() {
-        String name = fontObject.fd.fontName;
+        String name = ((FontObject)fontObject).fd.fontName;
         Gdx.app.log("name", name);
         int dotIndex = name.lastIndexOf('.');
 

@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
+import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
 
 
@@ -88,6 +89,11 @@ public class BlankOverlay extends ScreenObject implements Overlay, Touchable,Dra
 
     @Override
     public void act() {
+    }
+
+    @Override
+    public void setObject(BaseObject bo) {
+
     }
 
     @Override
