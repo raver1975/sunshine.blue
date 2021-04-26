@@ -3,6 +3,7 @@ package com.klemstinegroup.sunshineblue.engine.util;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.Method;
@@ -19,6 +20,28 @@ import java.util.Comparator;
 
 public class SerializeUtil {
     public static Json json = new Json();
+    static {
+        json.setSerializer(Vector2.class, new Json.Serializer<Vector2>(){
+
+            @Override
+            public void write(Json json, Vector2 v, Class knownType) {
+                json.writeObjectStart();
+                json.writeValue("v", Float.floatToIntBits(v.x)+","+Float.floatToIntBits(v.y));
+                json.writeObjectEnd();
+            }
+
+            @Override
+            public Vector2 read(Json json, JsonValue jsonData, Class type) {
+                Vector2 v=new Vector2();
+                String bs=jsonData.child().asString();
+                String[] bd=bs.split(",");
+                float a=Float.intBitsToFloat(Integer.parseInt(bd[0]));
+                float b=Float.intBitsToFloat(Integer.parseInt(bd[1]));
+                v.set(a,b);
+                return v;
+            }
+        });
+    }
     public static JsonReader jsonReader = new JsonReader();
 
     public static JsonValue serialize(Object o) {

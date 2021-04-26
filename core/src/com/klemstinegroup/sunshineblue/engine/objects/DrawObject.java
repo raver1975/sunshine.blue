@@ -24,8 +24,8 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
     Vector2 angleCalc = new Vector2();
     float angleRotateAnimAngle = 0;
     Array<Vector2> currentPath = new Array<>();
-    private Color color=Color.WHITE;
-    private int size=5;
+    private Color color = Color.WHITE;
+    private int size = 5;
 
     public DrawObject(DrawData dd) {
         this.dd = dd;
@@ -62,8 +62,6 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
         return false;
     }
 
-    Vector2 last = new Vector2();
-
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         SunshineBlue.instance.viewport.unproject(touch.set(screenX, screenY));
@@ -83,7 +81,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
         touch.sub(sd.position.x - sd.center.x, sd.position.y - sd.center.y);
         touch.rotateDeg(-sd.rotation);
         touch.scl(1f / sd.scale);
-        if (currentPath.size>0 && currentPath.get(currentPath.size - 1).dst(touch) > 1f && Math.abs(currentPath.get(currentPath.size - 1).y - touch.y)>1f) {
+        if (currentPath.size > 0 && currentPath.get(currentPath.size - 1).dst(touch) >= 5f) {
             currentPath.add(touch.cpy());
         }
         return false;
@@ -110,9 +108,13 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
 //        Statics.shapedrawer.setTextureRegion(new TextureRegion(((RectTextureObject)Statics.userObjects.get(0)).texture));
         if (dd.path.size > 0) {
             for (PathObject partialPath : dd.path) {
-                if (partialPath.size > 1) {
-                    SunshineBlue.instance.shapedrawer.setColor(partialPath.color);
-                    SunshineBlue.instance.shapedrawer.path(partialPath.path, partialPath.size, JoinType.SMOOTH, true);
+                SunshineBlue.instance.shapedrawer.setColor(partialPath.color);
+                if (partialPath.path.size >= 1) {
+                    SunshineBlue.instance.shapedrawer.filledCircle(partialPath.path.get(0), partialPath.size / 2f);
+                    if (partialPath.path.size >= 2) {
+                        SunshineBlue.instance.shapedrawer.path(partialPath.path, partialPath.size, JoinType.SMOOTH, true);
+                    }
+                    SunshineBlue.instance.shapedrawer.filledCircle(partialPath.path.get(partialPath.path.size - 1), partialPath.size / 2f);
                 }
             }
         }
@@ -207,10 +209,10 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
     }
 
     public void setColor(Color color) {
-        this.color=color;
+        this.color = color;
     }
 
     public void setSize(int size) {
-        this.size=size;
+        this.size = size;
     }
 }
