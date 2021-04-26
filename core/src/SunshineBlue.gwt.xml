@@ -30,6 +30,7 @@
 	<extend-configuration-property name="gdx.reflect.include" value="com.badlogic.gdx.Gdx" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.klemstinegroup.sunshineblue.client.HtmlLauncher" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.klemstinegroup.sunshineblue.engine" />
+	<extend-configuration-property name="gdx.reflect.include" value="com.klemstinegroup.sunshineblue.SunshineBlue" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.klemstinegroup.sunshineblue.engine.Statics" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.badlogic.gdx.Application" />
 </module>
