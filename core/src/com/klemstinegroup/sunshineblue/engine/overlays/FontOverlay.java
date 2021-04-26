@@ -139,7 +139,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
                 Gdx.input.setOnscreenKeyboardVisible(true);
             }
         });
-        keyButton.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth()-120,10);
+        keyButton.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 120, 10);
         stage.addActor(keyButton);
 
 
@@ -217,14 +217,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
     }
 
     public void setFontObject(FontObject fontObject) {
-
-        if (this.fontObject != null) {
-//            this.fontObject.edit = false;
-        }
         this.fontObject = fontObject;
-        if (this.fontObject != null) {
-//            this.fontObject.edit = true;
-        }
     }
 
     @Override

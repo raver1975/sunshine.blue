@@ -187,6 +187,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 Gdx.input.setOnscreenKeyboardVisible(false);
                 DrawObject doi = new DrawObject();
                 SunshineBlue.instance.addUserObj(doi);
+                SunshineBlue.instance.DRAW_OVERLAY.setDrawObject(doi);
                 SunshineBlue.instance.DRAW_OVERLAY.setTouchable(doi);
                 Overlay.setOverlay(SunshineBlue.instance.DRAW_OVERLAY);
 //                pasteButton.setVisible(true);

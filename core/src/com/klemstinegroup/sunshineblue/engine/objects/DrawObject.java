@@ -21,9 +21,11 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
     DrawData dd = new DrawData();
     private final Vector2 touch = new Vector2();
     private Polygon polygon;
-    Vector2 angleCalc=new Vector2();
-    float angleRotateAnimAngle=0;
+    Vector2 angleCalc = new Vector2();
+    float angleRotateAnimAngle = 0;
     Array<Vector2> currentPath = new Array<>();
+    private Color color=Color.WHITE;
+    private int size=5;
 
     public DrawObject(DrawData dd) {
         this.dd = dd;
@@ -55,7 +57,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
         touch.rotateDeg(-sd.rotation);
         touch.scl(1f / sd.scale);
         currentPath = new Array<>();
-        dd.path.add(currentPath);
+        dd.path.add(new PathObject(color.cpy(), size, currentPath));
         currentPath.add(touch.cpy());
         return false;
     }
@@ -81,7 +83,9 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
         touch.sub(sd.position.x - sd.center.x, sd.position.y - sd.center.y);
         touch.rotateDeg(-sd.rotation);
         touch.scl(1f / sd.scale);
-        currentPath.add(touch.cpy());
+        if (currentPath.size>0 && currentPath.get(currentPath.size - 1).dst(touch) > 1f && Math.abs(currentPath.get(currentPath.size - 1).y - touch.y)>1f) {
+            currentPath.add(touch.cpy());
+        }
         return false;
     }
 
@@ -104,26 +108,26 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
                 .scale(sd.scale, sd.scale, 1)
         );
 //        Statics.shapedrawer.setTextureRegion(new TextureRegion(((RectTextureObject)Statics.userObjects.get(0)).texture));
-        SunshineBlue.instance.shapedrawer.setColor(Color.WHITE);
         if (dd.path.size > 0) {
-            for (Array<Vector2> partialPath : dd.path) {
+            for (PathObject partialPath : dd.path) {
                 if (partialPath.size > 1) {
-                    SunshineBlue.instance.shapedrawer.path(partialPath, 5, JoinType.SMOOTH, true);
+                    SunshineBlue.instance.shapedrawer.setColor(partialPath.color);
+                    SunshineBlue.instance.shapedrawer.path(partialPath.path, partialPath.size, JoinType.SMOOTH, true);
                 }
             }
         }
         if (SunshineBlue.instance.selectedObjects.contains(this, true)) {
             SunshineBlue.instance.shapedrawer.setColor(Color.RED);
-            SunshineBlue.instance.shapedrawer.circle(0, 0, 15,2);
-            angleCalc.set(0,15);
-            angleCalc.rotateDeg(angleRotateAnimAngle+=3);
-            SunshineBlue.instance.shapedrawer.line(new Vector2(),angleCalc,2);
+            SunshineBlue.instance.shapedrawer.circle(0, 0, 15, 2);
+            angleCalc.set(0, 15);
+            angleCalc.rotateDeg(angleRotateAnimAngle += 3);
+            SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
             angleCalc.rotateDeg(90);
-            SunshineBlue.instance.shapedrawer.line(new Vector2(),angleCalc,2);
+            SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
             angleCalc.rotateDeg(90);
-            SunshineBlue.instance.shapedrawer.line(new Vector2(),angleCalc,2);
+            SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
             angleCalc.rotateDeg(90);
-            SunshineBlue.instance.shapedrawer.line(new Vector2(),angleCalc,2);
+            SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
         }
 //        batch.end();
 //        batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
@@ -149,8 +153,8 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
     @Override
     public void setBounds() {
         FloatArray verts = new FloatArray();
-        for (Array<Vector2> pa : dd.path) {
-            for (Vector2 p : pa) {
+        for (PathObject pa : dd.path) {
+            for (Vector2 p : pa.path) {
                 verts.add(p.x, p.y);
             }
         }
@@ -171,8 +175,8 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
     public void recenter(Vector2 touchdown) {
         Vector2 touchdragcpy = touchdown.cpy();
         super.recenter(touchdragcpy);
-        for (Array<Vector2> subpath : dd.path) {
-            for (Vector2 vec : subpath) {
+        for (PathObject subpath : dd.path) {
+            for (Vector2 vec : subpath.path) {
                 vec.sub(touchdragcpy);
             }
         }
@@ -184,7 +188,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
         JsonValue val = new JsonValue(JsonValue.ValueType.object);
         JsonValue array = new JsonValue(JsonValue.ValueType.array);
         val.addChild("array", array);
-        for (Array<Vector2> ar : dd.path) {
+        for (PathObject ar : dd.path) {
             array.addChild(SerializeUtil.serialize(ar));
         }
         val.addChild("class", new JsonValue(DrawObject.class.getName()));
@@ -196,9 +200,13 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
         DrawData dd = new DrawData();
         for (int i = 0; i < array.size; i++) {
             JsonValue subarray = array.get(i);
-            Array<Vector2> vecAr = SerializeUtil.deserialize(subarray, Array.class);
+            PathObject vecAr = SerializeUtil.deserialize(subarray, PathObject.class);
             dd.path.add(vecAr);
         }
-        SunshineBlue.instance.addUserObj(new DrawObject(dd));
+        SunshineBlue.addUserObj(new DrawObject(dd));
+    }
+
+    public void setColor(Color color) {
+        this.color=color;
     }
 }
