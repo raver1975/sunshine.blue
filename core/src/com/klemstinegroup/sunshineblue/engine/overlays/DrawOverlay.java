@@ -7,10 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
@@ -82,6 +79,23 @@ public class DrawOverlay extends ScreenObject implements Overlay, Touchable, Dra
         });
         colorButton.setPosition(10, 70);
         stage.addActor(colorButton);
+
+        Slider slider = new Slider(1, 100, 1, true, skin);
+        slider.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 40, 80);
+        slider.setSize(20, SunshineBlue.instance.overlayViewport.getWorldHeight() - 150);
+        slider.setValue(10);
+
+        slider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (!slider.isDragging()) {
+                    drawObject.setSize((int) (slider.getValue()));
+                    setBounds();
+                }
+            }
+        });
+        ;
+        stage.addActor(slider);
     }
 
     public void setTouchable(Touchable touchable) {

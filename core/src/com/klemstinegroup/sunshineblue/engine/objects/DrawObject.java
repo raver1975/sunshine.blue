@@ -209,4 +209,8 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
     public void setColor(Color color) {
         this.color=color;
     }
+
+    public void setSize(int size) {
+        this.size=size;
+    }
 }
