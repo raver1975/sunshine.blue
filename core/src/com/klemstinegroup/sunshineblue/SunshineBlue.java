@@ -542,9 +542,14 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     }
 
     private Pixmap getWhitePixel() {
-        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGB888);
-        pixmap.setColor(Color.WHITE);
+        Pixmap pixmap = new Pixmap(10, 10, Pixmap.Format.RGB888);
+        pixmap.setColor(Color.BLACK);
         pixmap.fill();
+
+        pixmap.setColor(Color.WHITE);
+        for (int i=0;i<10;i++){
+            pixmap.drawPixel(i,i);
+        }
         return pixmap;
     }
 

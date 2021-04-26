@@ -47,7 +47,7 @@ public class NativeGWT implements NativeInterface {
     @Override
     public void downloadPixmap(String url, Pixmap.DownloadPixmapResponseListener listener) {
         final Image img;
-        if (!url.contains(Statics.IPFSGateway)){
+        if (url.contains(Statics.IPFSGateway)){
             img = new Image(url);
         }
         else{
