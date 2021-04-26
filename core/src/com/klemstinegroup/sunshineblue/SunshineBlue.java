@@ -298,9 +298,9 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
                 if (o1 instanceof ScreenObject && o2 instanceof ScreenObject) {
                     return Integer.compare(((ScreenObject) o1).sd.layer, ((ScreenObject) o2).sd.layer);
                 } else if (o1 instanceof ScreenObject) {
-                    return 1;
-                } else if (o2 instanceof ScreenObject) {
                     return -1;
+                } else if (o2 instanceof ScreenObject) {
+                    return 1;
                 }
                 return 0;
             }
