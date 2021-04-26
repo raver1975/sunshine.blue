@@ -15,6 +15,7 @@ import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
 import com.klemstinegroup.sunshineblue.engine.overlays.SerialInterface;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Comparator;
 
 public class SerializeUtil {
     public static Json json = new Json();
@@ -40,6 +41,19 @@ public class SerializeUtil {
                 }
             }
         }
+        SunshineBlue.instance.userObjects.sort(new Comparator<BaseObject>() {
+            @Override
+            public int compare(BaseObject o1, BaseObject o2) {
+                if (o1 instanceof ScreenObject && o2 instanceof ScreenObject) {
+                    return Integer.compare(((ScreenObject) o1).sd.layer, ((ScreenObject) o2).sd.layer);
+                } else if (o1 instanceof ScreenObject) {
+                    return 1;
+                } else if (o2 instanceof ScreenObject) {
+                    return -1;
+                }
+                return 0;
+            }
+        });
     }
 
     public static void load(String cid) {
