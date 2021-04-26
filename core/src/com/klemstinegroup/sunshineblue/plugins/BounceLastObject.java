@@ -10,10 +10,11 @@ public class BounceLastObject {
 
     int dir=1;
     int layer=0;
-    public BounceLastObject(){
-        Gdx.app.log("script","loaded");
-        layer=SunshineBlue.instance.userObjects.size-2;
-        if (layer<0){layer=0;}    }
+    public BounceLastObject() {
+        Gdx.app.log("script", "loaded");
+//        layer=SunshineBlue.instance.userObjects.size-2;
+//        if (layer<0){layer=0;}    }
+    }
 
     public void loop(SunshineBlue sun) {
         if (layer>=0 && SunshineBlue.instance.userObjects.size > layer) {

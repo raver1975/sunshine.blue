@@ -80,10 +80,10 @@ public class SerializeUtil {
                             prefs.putString(name, cid);
                             prefs.putString("current", cid);
                             prefs.flush();
-                            SunshineBlue.nativeNet.doneSavingScene(cid);
                             if (ipfscidListener != null) {
                                 ipfscidListener.cid(cid);
                             }
+                            SunshineBlue.nativeNet.doneSavingScene(cid);
                         }
                     }
 
