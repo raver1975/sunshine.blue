@@ -56,7 +56,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                 }
                 if (data[0]==-54 && data[1]==-2 && data[2]==-70 && data[3]==-66){
                     SunshineBlue.instance.removeUserObj(ImageObject.this);
-                    SunshineBlue.instance.addUserObj(new ScriptObject(data));
+                    SunshineBlue.addUserObj(new ScriptObject(data));
                     return;
                 }
 
@@ -162,12 +162,12 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                                 SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway+cid, new Pixmap.DownloadPixmapResponseListener() {
                                     @Override
                                     public void downloadComplete(Pixmap pixmap) {
-                                        SunshineBlue.instance.addUserObj(new ImageObject(b, pixmap, cid));
+                                        SunshineBlue.addUserObj(new ImageObject(b, pixmap, cid));
                                     }
 
                                     @Override
                                     public void downloadFailed(Throwable t) {
-                                        SunshineBlue.instance.addUserObj(new ImageObject(b, null, cid));
+                                        SunshineBlue.addUserObj(new ImageObject(b, null, cid));
                                     }
                                 });
                             }
@@ -228,7 +228,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 
                                 @Override
                                 public void downloadFailed(Throwable t) {
-                                    SunshineBlue.instance.addUserObj(new ImageObject(file, null, null));
+                                    SunshineBlue.addUserObj(new ImageObject(file, null, null));
                                 }
                             });
                         }
@@ -490,14 +490,14 @@ setBounds();
                     public void downloadComplete(Pixmap pixmap) {
                         ImageObject io = new ImageObject(file, pixmap, cid);
                         io.sd = sd1;
-                        SunshineBlue.instance.addUserObj(io);
+                        SunshineBlue.addUserObj(io);
                     }
 
                     @Override
                     public void downloadFailed(Throwable t) {
                         ImageObject io = new ImageObject(file, null, cid);
                         io.sd = sd1;
-                        SunshineBlue.instance.addUserObj(io);
+                        SunshineBlue.addUserObj(io);
                     }
                 });
 

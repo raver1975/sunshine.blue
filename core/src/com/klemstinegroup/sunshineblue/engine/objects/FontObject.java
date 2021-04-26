@@ -201,7 +201,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
     public static void deserialize(JsonValue json) {
         FontData fd1 = SerializeUtil.deserialize(json.get("fontData"), FontData.class);
         ScreenData sd1 = SerializeUtil.deserialize(json.get("screenData"), ScreenData.class);
-        SunshineBlue.instance.addUserObj(new FontObject(fd1, sd1));
+        SunshineBlue.addUserObj(new FontObject(fd1, sd1));
     }
 
     @Override
