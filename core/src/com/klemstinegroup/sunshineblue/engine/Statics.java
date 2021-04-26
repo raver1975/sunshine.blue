@@ -30,7 +30,7 @@ public class Statics {
     //    public static String IpfsGateway2 = "http://ipfs.infura.io/ipfs/";
     public static final String CORSGateway="https://api.codetabs.com/v1/proxy?quest=";
     public static String IPFSMediaViewer="QmUQBqWRN1UQSedX8YFnDTVAB9RgVoib13MxS8EwxgMtF7";
-    public static final boolean debug = false;
+    public static final boolean debug = true;
 
     public Statics(){}
 

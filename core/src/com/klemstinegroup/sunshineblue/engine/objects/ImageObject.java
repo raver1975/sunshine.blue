@@ -185,23 +185,29 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 
 
                 }
-                if (url.startsWith("Q")) {
+                else if (url.startsWith("Q")) {
                     SunshineBlue.nativeNet.downloadIPFS(url, new IPFSFileListener() {
                         @Override
                         public void downloaded(byte[] file) {
-                            SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + url, new Pixmap.DownloadPixmapResponseListener() {
-                                @Override
-                                public void downloadComplete(Pixmap pixmap) {
-                                    Gdx.app.log("downl","complete");
-                                    SunshineBlue.instance.addUserObj(new ImageObject(file, pixmap, url));
-                                }
+                            if (file[0]==-54 && file[1]==-2 && file[2]==-70 && file[3]==-66){
+                                SunshineBlue.addUserObj(new ScriptObject(file));
+                                return;
+                            }
+                            else {
+                                SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + url, new Pixmap.DownloadPixmapResponseListener() {
+                                    @Override
+                                    public void downloadComplete(Pixmap pixmap) {
+                                        Gdx.app.log("downl", "complete");
+                                        SunshineBlue.addUserObj(new ImageObject(file, pixmap, url));
+                                    }
 
-                                @Override
-                                public void downloadFailed(Throwable t) {
-                                    Gdx.app.log("downl","failed");
-                                    SunshineBlue.instance.addUserObj(new ImageObject(file, null, url));
-                                }
-                            });
+                                    @Override
+                                    public void downloadFailed(Throwable t) {
+                                        Gdx.app.log("downl", "failed");
+                                        SunshineBlue.addUserObj(new ImageObject(file, null, url));
+                                    }
+                                });
+                            };
                         }
 
                         @Override
@@ -217,7 +223,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                             SunshineBlue.nativeNet.downloadPixmap(url, new Pixmap.DownloadPixmapResponseListener() {
                                 @Override
                                 public void downloadComplete(Pixmap pixmap) {
-                                    SunshineBlue.instance.addUserObj(new ImageObject(file, pixmap, null));
+                                    SunshineBlue.addUserObj(new ImageObject(file, pixmap, null));
                                 }
 
                                 @Override

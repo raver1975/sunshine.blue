@@ -187,8 +187,6 @@ public class HtmlLauncher extends GwtApplication {
 
     private void paste(String text) {
         consoleLog("in paste" + text);
-//        String oldText = getClipboard().getContents();
-//        if (!oldText.equals(text)) {
         getClipboard().setContents(text);
         Gdx.app.log("cliboard paste", text);
         if (SunshineBlue.instance.overlay instanceof ImageOverlay) {
@@ -196,93 +194,6 @@ public class HtmlLauncher extends GwtApplication {
             if (focusedActor != null && focusedActor instanceof TextArea) {
                 TextArea ta = ((TextArea) focusedActor);
                 ta.setText(text);
-            /*if (text.startsWith("Q")) {
-                String finalText = text;
-                SunshineBlue.nativeNet.downloadIPFS(text, new IPFSFileListener() {
-                    @Override
-                    public void downloaded(byte[] data) {
-                        final Image img = new Image(Statics.IPFSGateway+ finalText);
-                        ImageElement.as(img.getElement()).setAttribute("crossorigin","anonymous");
-                        final RootPanel root = RootPanel.get("embed-image");
-                        root.add(img);
-                        img.setVisible(false);
-                        img.addLoadHandler(new LoadHandler() {
-                            @Override
-                            public void onLoad(LoadEvent event) {
-//                                if (((data[0] & 0xff) == 71 && (data[1] & 0xff) == 73 && (data[2] & 0xff) == 70) || ((data[0] & 0xff) == 137 && (data[1] & 0xff) == 80 && (data[2] & 0xff) == 78 && (data[3] & 0xff) == 71)) {
-//                                    Statics.adduserObj(new ImageObject(data, new Pixmap(ImageElement.as(img.getElement())),finalText));
-//                                } else {
-                                    Statics.adduserObj(new ImageObject(data,new Pixmap(ImageElement.as(img.getElement())),finalText));
-//                                }
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void downloadFailed(Throwable t) {
-
-                    }
-                });
-            }
-
-//                    if (text.startsWith("Q")){text=Statics.IPFSGateway+text;}
-            if (text.startsWith("data:")) {
-                final Image img = new Image(text);
-                final RootPanel root = RootPanel.get("embed-image");
-                root.add(img);
-                img.setVisible(false);
-                final byte[] b = Base64Coder.decode(text.split(",")[1]);
-                img.addLoadHandler(new LoadHandler() {
-                    @Override
-                    public void onLoad(LoadEvent event) {
-                        Statics.adduserObj(new ImageObject(b,new Pixmap(ImageElement.as(img.getElement())),null));
-                    }
-                });
-            } else {
-//                        Statics.adduserObj(new ImageObject(text.replaceAll("\n", "")));
-                String finalText1 = "https://api.codetabs.com/v1/proxy?quest="+text;
-                SunshineBlue.nativeNet.downloadFile(finalText1, new IPFSFileListener() {
-                    @Override
-                    public void downloaded(byte[] data) {
-                        final Image img = new Image(finalText1);
-                        ImageElement.as(img.getElement()).setAttribute("crossorigin","anonymous");
-                        final RootPanel root = RootPanel.get("embed-image");
-
-                        root.add(img);
-                        img.setVisible(false);
-                        img.addLoadHandler(new LoadHandler() {
-                            @Override
-                            public void onLoad(LoadEvent event) {
-//                                    if (((data[0] & 0xff) == 71 && (data[1] & 0xff) == 73 && (data[2] & 0xff) == 70) || ((data[0] & 0xff) == 137 && (data[1] & 0xff) == 80 && (data[2] & 0xff) == 78 && (data[3] & 0xff) == 71)) {
-//                                        Statics.adduserObj(new ImageObject(data, new Pixmap(ImageElement.as(img.getElement())),null));
-//                                    }
-//                                    else{
-                                        Statics.adduserObj(new ImageObject(data,new Pixmap(ImageElement.as(img.getElement())),null));
-//                                    }
-                            }
-                        });
-
-                    }
-
-                    @Override
-                    public void downloadFailed(Throwable t) {
-
-                    }
-                });
-            }
-            ta.setText("");
-            Overlay.backOverlay();*/
-//                        ta.setText("");
-//            }
-                        /*Actor focusedActor = ((BasicScreen)((Game)getApplicationListener()).getScreen()).getStage().getKeyboardFocus();
-                        if (focusedActor != null && focusedActor instanceof TextField) {
-                                if(!oldText.equals("")) {
-                                        String textFieldText = ((TextField)focusedActor).getText();
-                                        textFieldText = textFieldText.substring(0,textFieldText.lastIndexOf(oldText));
-                                        ((TextField)focusedActor).setText(textFieldText);
-                                }
-                                ((TextField)focusedActor).appendText(text);
-                        }*/
             }
         }
     }
