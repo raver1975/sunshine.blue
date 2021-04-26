@@ -77,7 +77,7 @@ public class DrawOverlay extends ScreenObject implements Overlay, Touchable, Dra
                 }
             }
         });
-        colorButton.setPosition(10, 70);
+        colorButton.setPosition(10, 10);
         stage.addActor(colorButton);
 
         Slider slider = new Slider(1, 100, 1, true, skin);

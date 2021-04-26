@@ -181,18 +181,31 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         selectBox.setScrollingDisabled(false);
         selectBox.setItems(fontListStr);
         selectBox.layout();
-        /*final IntSpinnerModel intModel = new IntSpinnerModel(60, 1, 1000, 1);
-        Spinner sizeSpinner = new Spinner("", intModel);
-        sizeSpinner.setPosition(Statics.overlayViewport.getWorldWidth() - 100, 100);
-        sizeSpinner.setRound(true);
-        sizeSpinner.addListener(new ChangeListener() {
+
+        TextButton downArrow = new TextButton("v", skin);
+        downArrow.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                fontObject.size = intModel.getValue();
-                fontObject.generate();
+                int index = selectBox.getSelectedIndex();
+                if (index == selectBox.getItems().size-1) {index = -1;}
+                selectBox.setSelectedIndex(index+1);
             }
         });
-        stage.addActor(sizeSpinner);*/
+        downArrow.setPosition(selectBox.getX() + selectBox.getWidth() + 10, 10);
+        stage.addActor(downArrow);
+
+        TextButton upArrow = new TextButton("^", skin);
+        upArrow.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                int index = selectBox.getSelectedIndex();
+                if (index == 0) {index = selectBox.getItems().size ;}
+                selectBox.setSelectedIndex(index-1);
+            }
+        });
+        upArrow.setPosition(selectBox.getX() + selectBox.getWidth() + 10, 70);
+        stage.addActor(upArrow);
+
         Slider slider = new Slider(1, 218, 1, true, skin);
         slider.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 40, 80);
         slider.setSize(20, SunshineBlue.instance.overlayViewport.getWorldHeight() - 150);
