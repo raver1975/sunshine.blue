@@ -81,7 +81,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
         touch.sub(sd.position.x - sd.center.x, sd.position.y - sd.center.y);
         touch.rotateDeg(-sd.rotation);
         touch.scl(1f / sd.scale);
-        if (currentPath.size > 0 && currentPath.get(currentPath.size - 1).dst(touch) >= 5f) {
+        if (currentPath.size > 0 && currentPath.get(currentPath.size - 1).dst(touch) >= 1f) {
             currentPath.add(touch.cpy());
         }
         return false;
@@ -106,15 +106,58 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
                 .scale(sd.scale, sd.scale, 1)
         );
 //        Statics.shapedrawer.setTextureRegion(new TextureRegion(((RectTextureObject)Statics.userObjects.get(0)).texture));
+        boolean flag = false;
         if (dd.path.size > 0) {
+            Array<Array<Vector2>> drawspos1 = new Array<>();
+            Array<Color> colors = new Array<>();
             for (PathObject partialPath : dd.path) {
-                SunshineBlue.instance.shapedrawer.setColor(partialPath.color);
-                if (partialPath.path.size >= 1) {
-                    SunshineBlue.instance.shapedrawer.filledCircle(partialPath.path.get(0), partialPath.size / 2f);
-                    if (partialPath.path.size >= 2) {
-                        SunshineBlue.instance.shapedrawer.path(partialPath.path, partialPath.size, JoinType.SMOOTH, true);
+                batch.setColor(partialPath.color);
+                if (flag) {
+                    SunshineBlue.instance.shapedrawer.setColor(partialPath.color);
+                    if (partialPath.path.size >= 1) {
+                        SunshineBlue.instance.shapedrawer.filledCircle(partialPath.path.get(0), partialPath.size / 2f);
+                        if (partialPath.path.size >= 2) {
+                            SunshineBlue.instance.shapedrawer.path(partialPath.path, partialPath.size, JoinType.SMOOTH, true);
+                        }
+                        SunshineBlue.instance.shapedrawer.filledCircle(partialPath.path.get(partialPath.path.size - 1), partialPath.size / 2f);
                     }
-                    SunshineBlue.instance.shapedrawer.filledCircle(partialPath.path.get(partialPath.path.size - 1), partialPath.size / 2f);
+                } else {
+                    float dist = 1f;
+                    Vector2 first = partialPath.path.get(0).cpy();
+                    Array<Vector2> drawspos = new Array<>();
+                    drawspos1.add(drawspos);
+                    colors.add(partialPath.color);
+                    drawspos.add(first.cpy());
+                    Vector2 second = new Vector2();
+                    Vector2 tempVec = new Vector2();
+                    int startcnt = 0;
+                    while (++startcnt < partialPath.path.size) {
+                        second.set(partialPath.path.get(startcnt));
+                        while (first.dst(second) > dist) {
+                            tempVec.set(second);
+                            tempVec.sub(first);
+                            tempVec.setLength(dist);
+                            tempVec.add(first);
+                            first.set(tempVec);
+                            drawspos.add(first.cpy());
+                        }
+                        drawspos.add(second.cpy());
+                        first.set(second.cpy());
+
+                    }
+
+
+                }
+
+            }
+            if (dd.BrushData.texture != null) {
+                int cnt = 0;
+                for (Array<Vector2> va : drawspos1) {
+                    batch.setColor(colors.get(cnt++));
+                    for (Vector2 v : va) {
+
+                        batch.draw(dd.BrushData.texture, v.x-dd.BrushData.halfWidth, v.y-dd.BrushData.halfHeight);
+                    }
                 }
             }
         }

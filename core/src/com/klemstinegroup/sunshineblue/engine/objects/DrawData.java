@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class DrawData {
         Array<PathObject> path = new Array<>();
+        BrushData BrushData=new BrushData();
 }
 
 
