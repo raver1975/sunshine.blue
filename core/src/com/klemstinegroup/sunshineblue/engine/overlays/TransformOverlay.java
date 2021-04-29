@@ -1,13 +1,16 @@
 package com.klemstinegroup.sunshineblue.engine.overlays;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
@@ -26,10 +29,10 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
     public TransformOverlay() {
         stage = new Stage(SunshineBlue.instance.overlayViewport);
         SunshineBlue.instance.assetManager.finishLoadingAsset("skins/orange/skin/uiskin.json");
-        Skin skin = SunshineBlue.instance.assetManager.get("skins/orange/skin/uiskin.json",Skin.class);
+        Skin skin = SunshineBlue.instance.assetManager.get("skins/orange/skin/uiskin.json", Skin.class);
 
 //        CheckBox exitButton = new CheckBox("", skin);
-        TextButton exitButton = new TextButton("X",skin);
+        TextButton exitButton = new TextButton("X", skin);
         exitButton.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 60, 10);
         exitButton.addListener(new ClickListener() {
             @Override
@@ -39,6 +42,53 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
             }
         });
         stage.addActor(exitButton);
+
+
+        TextButton clearButton = new TextButton("Del", skin);
+        clearButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                for (BaseObject ba:SunshineBlue.instance.userObjects){
+                    if (SunshineBlue.instance.selectedObjects.contains(ba,true)){
+                        SunshineBlue.instance.userObjects.removeValue(ba,true);
+                        SunshineBlue.instance.selectedObjects.removeValue(ba,true);
+                    }
+                }
+                Overlay.backOverlay();
+            }
+        });
+        clearButton.setPosition(10, 140);
+        stage.addActor(clearButton);
+
+        TextButton downArrow = new TextButton("v", skin);
+        downArrow.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                for (BaseObject ba : SunshineBlue.instance.selectedObjects) {
+                    if (ba instanceof ScreenObject) {
+                        ScreenObject so = (ScreenObject) ba;
+                        so.sd.layer--;
+                    }
+                }
+            }
+        });
+        downArrow.setPosition(10, 200);
+        stage.addActor(downArrow);
+
+        TextButton upArrow = new TextButton("^", skin);
+        upArrow.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                for (BaseObject ba : SunshineBlue.instance.selectedObjects) {
+                    if (ba instanceof ScreenObject) {
+                        ScreenObject so = (ScreenObject) ba;
+                        so.sd.layer++;
+                    }
+                }
+            }
+        });
+        upArrow.setPosition(10, 260);
+        stage.addActor(upArrow);
 
         ButtonGroup<CheckBox> transformButtons = new ButtonGroup();
         CheckBox moveButton = new CheckBox(" Move", skin);

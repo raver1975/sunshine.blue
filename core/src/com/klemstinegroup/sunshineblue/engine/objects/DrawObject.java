@@ -231,13 +231,13 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
             angleCalc.rotateDeg(90);
             SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
 
-//        batch.end();
-//        batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
-        /*batch.begin();
+        batch.end();
+        batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
+        batch.begin();
         setBounds();
         if (polygon != null) {
             SunshineBlue.instance.shapedrawer.polygon(polygon);
-        }*/
+        }
         }
     }
 
@@ -259,6 +259,15 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
         for (PathObject pa : dd.path) {
             for (Vector2 p : pa.path) {
                 verts.add(p.x, p.y);
+                verts.add(p.x-pa.size/2,p.y);
+                verts.add(p.x+pa.size/2,p.y);
+                verts.add(p.x-pa.size/2,p.y-pa.size/2);
+                verts.add(p.x+pa.size/2,p.y-pa.size/2);
+
+                verts.add(p.x,p.y-pa.size/2);
+                verts.add(p.x,p.y+pa.size/2);
+                verts.add(p.x-pa.size/2,p.y+pa.size/2);
+                verts.add(p.x+pa.size/2,p.y+pa.size/2);
             }
         }
         ConvexHull ch = new ConvexHull();
@@ -272,6 +281,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
             polygon.rotate(sd.rotation);
             polygon.translate(sd.position.x, sd.position.y);
         }
+
     }
 
     @Override

@@ -66,7 +66,7 @@ public class BrushData {
 
         d1.set(width / 2f, this.height / 2f);
         d2.set(0, 0);
-        float maxdist = d1.dst(d2) / 2f;
+        float maxdist = d1.dst(d2) / 1.5f;
         for (int yy = 0; yy < this.height; yy++) {
             for (int xx = 0; xx < width; xx++) {
                 grid[xx][yy] = Math.min(1, Math.max(0, 1f - d1.dst(d2.set(xx, yy)) / maxdist));
