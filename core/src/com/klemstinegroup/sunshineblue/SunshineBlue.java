@@ -72,6 +72,8 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     private int recCounter;
     private float recHalfSec = 0;
     private static final float fps = 10;
+//    private int dstFunc;
+//    private int srcFunc;
 
     //    Camera camera;
     public SunshineBlue() {
@@ -215,6 +217,9 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         if (loadCid != null) {
             SerializeUtil.load(loadCid);
         }
+        // remember SpriteBatch's current functions
+
+        batch.enableBlending();
     }
 
 
