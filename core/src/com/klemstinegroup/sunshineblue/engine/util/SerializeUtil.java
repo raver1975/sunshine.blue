@@ -89,8 +89,10 @@ public class SerializeUtil {
             public void downloaded(byte[] file) {
                 JsonReader reader = new JsonReader();
                 JsonValue val = reader.parse(new String(file));
-                Gdx.app.log("val", val.toJson(JsonWriter.OutputType.minimal));
-                deserializeScene(val);
+                if (val!=null) {
+                    Gdx.app.log("val", val.toJson(JsonWriter.OutputType.minimal));
+                    deserializeScene(val);
+                }
             }
 
             @Override

@@ -16,45 +16,45 @@ import com.klemstinegroup.sunshineblue.engine.util.IPFSFileListener;
 import com.klemstinegroup.sunshineblue.engine.util.NativeInterface;
 
 public class NativeGWT implements NativeInterface {
-    ArrayMap<Integer,IPFSCIDListener> uploadListener=new ArrayMap<>();
-    ArrayMap<Integer,IPFSFileListener> downloadListener=new ArrayMap<>();
+    ArrayMap<Integer, IPFSCIDListener> uploadListener = new ArrayMap<>();
+    ArrayMap<Integer, IPFSFileListener> downloadListener = new ArrayMap<>();
+
     @Override
     public void uploadIPFS(byte[] data, IPFSCIDListener listener) {
-        int j= MathUtils.random.nextInt() ;
-        this.uploadListener.put(j,listener);
-        uploadToIPFS(new String(Base64Coder.encode(data)),j);
+        int j = MathUtils.random.nextInt();
+        this.uploadListener.put(j, listener);
+        uploadToIPFS(new String(Base64Coder.encode(data)), j);
     }
 
     @Override
     public void downloadIPFS(String cid, IPFSFileListener listener) {
-        if (cid==null||cid.isEmpty()||!cid.startsWith("Q")){
+        if (cid == null || cid.isEmpty() || !cid.startsWith("Q")) {
             return;
         }
-        int j=MathUtils.random.nextInt();
-        downloadListener.put(j,listener);
-        Gdx.app.log("requesting",cid);
-        downloadFromIPFS(cid,j);
+        int j = MathUtils.random.nextInt();
+        downloadListener.put(j, listener);
+        Gdx.app.log("requesting", cid);
+        downloadFromIPFS(cid, j);
     }
 
     @Override
     public void downloadFile(String url, boolean cors, IPFSFileListener listener) {
-        int j=MathUtils.random.nextInt();
-        Gdx.app.log("downloadind:",url+"\t"+j);
-        downloadListener.put(j,listener);
-        downloadFromNet((cors?Statics.CORSGateway:"")+url,j);
+        int j = MathUtils.random.nextInt();
+        Gdx.app.log("downloadind:", url + "\t" + j);
+        downloadListener.put(j, listener);
+        downloadFromNet((cors ? Statics.CORSGateway : "") + url, j);
     }
 
     @Override
     public void downloadPixmap(String url, Pixmap.DownloadPixmapResponseListener listener) {
         final Image img;
-        if (url.contains(Statics.IPFSGateway)){
+        if (url.contains(Statics.IPFSGateway)) {
             img = new Image(url);
-        }
-        else{
-            img = new Image(Statics.CORSGateway+url);
+        } else {
+            img = new Image(Statics.CORSGateway + url);
         }
 
-        ImageElement.as(img.getElement()).setAttribute("crossorigin","anonymous");
+        ImageElement.as(img.getElement()).setAttribute("crossorigin", "anonymous");
         final RootPanel root = RootPanel.get("embed-image");
 
         root.add(img);
@@ -71,8 +71,8 @@ public class NativeGWT implements NativeInterface {
 
     @Override
     public void doneSavingScene(String cid) {
-        Gdx.app.log("done","done saving scene");
-     doneSavingSceneJS(cid);
+        Gdx.app.log("done", "done saving scene");
+        doneSavingSceneJS(cid);
     }
 
     native void doneSavingSceneJS(String cid) /*-{
@@ -199,6 +199,22 @@ function toBase64(dataArr){
     dataArr = null;
     return ret;
 }
+     function ggg(cat,chunks){
+            cat.next().then(function(chunk){
+               if (chunk.done){
+                self.@com.klemstinegroup.sunshineblue.client.NativeGWT::finishDownload(Ljava/lang/String;I)(toBase64(chunks),iii);
+                delete chunks;
+               }
+               else{
+                 var chunv=chunk.value;
+                 var c=new Uint8Array(chunks.length +chunv.length);
+                 c.set(chunks);
+                 c.set(chunv,chunks.length);
+                 setTimeout(function(){ggg(cat,c);},200);
+               }
+
+            });
+         }
 
     function run(cid1){
       console.log("loading1 cid:"+cid1);
@@ -208,10 +224,7 @@ function toBase64(dataArr){
       }
 
       else{
-          $wnd.node.cat(cid1).next().then(function(chunk){
-            var base64encoded=toBase64(chunk.value);
-            self.@com.klemstinegroup.sunshineblue.client.NativeGWT::finishDownload(Ljava/lang/String;I)(base64encoded,iii);
-          });
+         ggg($wnd.node.cat(cid1),new Uint8Array());
       }
       };
       run(cid);
@@ -240,15 +253,15 @@ function toBase64(dataArr){
       run(base64);
     }-*/;
 
-    public void finishUpload(String cid,int i) {
-        Gdx.app.log("upload",cid+"\t"+i);
+    public void finishUpload(String cid, int i) {
+        Gdx.app.log("upload", cid + "\t" + i);
         uploadListener.get(i).cid(cid);
         uploadListener.removeKey(i);
     }
 
-    public void finishDownload(String base64,int i) {
+    public void finishDownload(String base64, int i) {
         byte[] b = Base64Coder.decode(base64);
-        Gdx.app.log("download",base64.substring(0,10)+"\t"+i+"\tsize:"+b.length);
+        Gdx.app.log("download", base64.substring(0, 10) + "\t" + i + "\tsize:" + b.length);
         downloadListener.get(i).downloaded(b);
         downloadListener.removeKey(i);
     }

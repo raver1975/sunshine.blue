@@ -337,29 +337,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
         }
     }*/
 
-    private void uploadPNG(Pixmap pixmap) {
-        IPFSUtils.uploadPngtoIPFS(pixmap, new IPFSCIDListener() {
-            @Override
-            public void cid(String cid1) {
-                cid = cid1;
-            }
 
-            @Override
-            public void uploadFailed(Throwable t) {
-
-            }
-        });
-    }
-
-//    public ImageObject(Pixmap pixmap, String cid) {
-//        if (cid != null && !cid.isEmpty()) {
-//            this.cid = cid;
-//        } else {
-//            uploadPNG(pixmap);
-//        }
-//        this.texture = new Texture(pixmap);
-//        setBound();
-//    }
 
     @Override
     public void setBounds() {
