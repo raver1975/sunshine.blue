@@ -247,8 +247,8 @@ function toBase64(dataArr){
     }
 
     public void finishDownload(String base64,int i) {
-        Gdx.app.log("download",base64.substring(0,10)+"\t"+i);
         byte[] b = Base64Coder.decode(base64);
+        Gdx.app.log("download",base64.substring(0,10)+"\t"+i+"\tsize:"+b.length);
         downloadListener.get(i).downloaded(b);
         downloadListener.removeKey(i);
     }

@@ -83,15 +83,30 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                     try {
                         PngReaderApng apng = new PngReaderApng(new MemoryFileHandle(data));
                         Array<TextureRegion> arrayTexture = new Array<>();
+                        int bitdepth=apng.getImgInfo().bitDepth;
+                        int bytesperpixel=apng.getImgInfo().bytesPixel;
+                        int w=apng.getImgInfo().cols;
+                        int h=apng.getImgInfo().rows;
                         for (int i = 0; i < apng.getApngNumFrames(); i++) {
                             apng.advanceToFrame(i);
-                            Pixmap pixmap = new Pixmap(apng.getImgInfo().cols, apng.getImgInfo().rows, Pixmap.Format.RGBA8888);
-                            for (int y = 0; y < pixmap.getHeight(); y++) {
+                            int channels=apng.getCurImgInfo().channels;
+                            int offx=apng.getFctl().getxOff();
+                            int offy=apng.getFctl().getyOff();
+
+                            Pixmap pixmap = new Pixmap(w,h, Pixmap.Format.RGBA8888);
+                            Gdx.app.log("pixmap:",pixmap.getWidth()+"x"+pixmap.getHeight());
+                            for (int y = 0; y < apng.getCurImgInfo().rows; y++) {
                                 ImageLineByte imageLine = apng.readRowByte();
                                 byte[] linedata = imageLine.getScanline();
-                                for (int j = 0; j < pixmap.getWidth(); j++) {
-                                    pixmap.setColor(((linedata[4 * j] & 0xff) << 24) | ((linedata[4 * j + 1] & 0xff) << 16) | ((linedata[4 * j + 2] & 0xff) << 8) | linedata[4 * j + 3] & 0xff);
-                                    pixmap.drawPixel(j, y);
+//                                  Gdx.app.log("bits:",linedata.length+"\t"+bitdepth+"\t"+bytesperpixel+"\t"+channels);
+                                for (int j = 0; j < imageLine.getImageInfo().cols; j++) {
+                                    if (channels==3) {
+                                        pixmap.setColor(((linedata[3 * j] & 0xff) << 24) | ((linedata[3 * j + 1] & 0xff) << 16) | ((linedata[3 * j + 2] & 0xff) << 8) | 0xff);
+                                    }
+                                    else if (channels==4) {
+                                        pixmap.setColor(((linedata[4 * j] & 0xff) << 24) | ((linedata[4 * j + 1] & 0xff) << 16) | ((linedata[4 * j + 2] & 0xff) << 8) | linedata[4 * j + 3] & 0xff);
+                                    }
+                                    pixmap.drawPixel(j+offx, y+offy);
                                 }
                             }
                             TextureRegion region = null;
