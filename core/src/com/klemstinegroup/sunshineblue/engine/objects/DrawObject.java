@@ -1,22 +1,19 @@
 package com.klemstinegroup.sunshineblue.engine.objects;
 
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
+import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.JsonValue;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
-import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.overlays.Drawable;
 import com.klemstinegroup.sunshineblue.engine.overlays.Touchable;
 import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
 import space.earlygrey.shapedrawer.JoinType;
-import sun.security.provider.Sun;
 
 public class DrawObject extends ScreenObject implements Drawable, Touchable {
     DrawData dd = new DrawData();
@@ -113,6 +110,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
         if (dd.path.size > 0) {
             Array<Array<Vector2>> drawspos1 = new Array<>();
             Array<Color> colors = new Array<>();
+            IntArray sizeArray = new IntArray();
 
 
 //            FloatArray angles=new FloatArray();
@@ -135,6 +133,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
                     drawspos1.add(drawspos);
 
                     colors.add(partialPath.color);
+                    sizeArray.add(partialPath.size);
                     drawspos.add(first.cpy());
 //                    angles.add(0);
                     Vector2 second = new Vector2();
@@ -161,26 +160,40 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
                 }
 
             }
-            if (dd.BrushData.texture != null) {
+//            drawspos1.reverse();
+//            colors.reverse();
 //                batch.setBlendFunction(GL20.GL_SRC_COLOR, GL20.GL_SRC_ALPHA);
-                int cnt = 0;
-                for (Array<Vector2> va : drawspos1) {
-                    batch.setColor(colors.get(cnt++));
-                    Vector2 temp = new Vector2();
-                    if (va.size == 1) {
-                        Vector2 v = va.get(0);
-                        batch.draw(dd.BrushData.texture, v.x - dd.BrushData.halfWidth, v.y - dd.BrushData.halfHeight, dd.BrushData.halfWidth, dd.BrushData.halfHeight, dd.BrushData.texture.getRegionWidth(), dd.BrushData.texture.getRegionHeight(), 1, 1, 0);
-                    } else if (va.size > 1) {
+            int cnt = 0;
+            for (Array<Vector2> va : drawspos1) {
+                int ss = sizeArray.get(cnt);
+                batch.setColor(colors.get(cnt++));
+                Vector2 temp = new Vector2();
+                TextureRegion tex = dd.brushData.getTexture(ss);
+                int w = tex.getRegionWidth();
+                int h = tex.getRegionHeight();
+                int hw = w / 2;
+                int hh = h / 2;
+
+                if (va.size == 1) {
+                    Vector2 v = va.get(0);
+                    batch.draw(dd.brushData.getTexture(ss), v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);
+                    batch.draw(dd.brushData.getTexture(ss), v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);
+                } else if (va.size > 1) {
 //                        temp.set(va.get(0));
 //                        batch.draw(dd.BrushData.texture, temp.x - dd.BrushData.halfWidth, temp.y - dd.BrushData.halfHeight, dd.BrushData.halfWidth, dd.BrushData.halfHeight, dd.BrushData.texture.getRegionWidth(), dd.BrushData.texture.getRegionHeight(), 1, 1, 0);
-                        for (int vv = 1; vv < va.size; vv++) {
-                            Vector2 v = va.get(vv);
-                            batch.draw(dd.BrushData.texture, v.x - dd.BrushData.halfWidth, v.y - dd.BrushData.halfHeight, dd.BrushData.halfWidth, dd.BrushData.halfHeight, dd.BrushData.texture.getRegionWidth(), dd.BrushData.texture.getRegionHeight(), 1, 1, 0);
-                            temp.set(v);
-                        }
+                    Vector2 v = va.get(0);
+                    batch.draw(dd.brushData.getTexture(ss), v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);
+                    v = va.get(va.size-1);
+                    batch.draw(dd.brushData.getTexture(ss), v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);
+                    for (int vv = 1; vv < va.size; vv++) {
+                        v = va.get(vv);
+                        batch.draw(dd.brushData.getTexture(ss), v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);
+                        temp.set(v);
                     }
+
                 }
-                cnt = 0;
+            }
+                /*cnt = 0;
                 for (Array<Vector2> va : drawspos1) {
                     batch.setColor(Color.WHITE);
                     Vector2 temp = new Vector2();
@@ -196,14 +209,14 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
                             temp.set(v);
                         }
                     }
-                }
+                }*/
 
 
 //                batch.end();
 //                batch.setBlendFunction(srcFunc, dstFunc);
 //                batch.begin();
-            }
         }
+
 
         if (SunshineBlue.instance.selectedObjects.contains(this, true)) {
             SunshineBlue.instance.shapedrawer.setColor(Color.RED);
@@ -217,7 +230,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
             SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
             angleCalc.rotateDeg(90);
             SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
-        }
+
 //        batch.end();
 //        batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
         /*batch.begin();
@@ -225,6 +238,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
         if (polygon != null) {
             SunshineBlue.instance.shapedrawer.polygon(polygon);
         }*/
+        }
     }
 
     @Override
@@ -301,5 +315,12 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
 
     public void setSize(int size) {
         this.size = size;
+        dd.brushData.generate(this.size);
+    }
+
+    @Override
+    public void regenerate(AssetManager assetManager) {
+//        super.regenerate(assetManager);
+        dd.brushData.clear();
     }
 }
