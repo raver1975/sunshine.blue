@@ -79,7 +79,7 @@ public class IPFSUtils {
                     JsonValue jons = jsonReader.parse(res);
                     String hash = jons.getString("Hash");
                     if (hash != null && listen != null) {
-                        Gdx.app.log("upload","uploaded to "+hash);
+                        Gdx.app.log("upload", "uploaded to " + hash);
                         listen.cid(hash);
                     } else {
                         listen.uploadFailed(new Throwable("upload failed"));
@@ -126,8 +126,12 @@ public class IPFSUtils {
 
 
     public static void openIPFSViewer(String cid) {
-        Gdx.net.openURI(Statics.IPFSGateway + Statics.IPFSMediaViewer + "?url=" + cid);
-//        Gdx.net.openURI(Statics.IPFSGateway + cid);
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                Gdx.net.openURI(Statics.IPFSGateway + Statics.IPFSMediaViewer + "?url=" + cid);
+            }
+        });
     }
 
     public static void downloadFromIPFS(String url, final IPFSFileListener responseListener) {
