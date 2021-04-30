@@ -43,14 +43,12 @@ public class BlankOverlay extends ScreenObject implements Overlay, Touchable,Dra
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        System.out.println("Blank overlay touchdown");
-        Overlay.setOverlay(SunshineBlue.instance.BASIC_UI_OVERLAY);
         return false;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-
+        Overlay.setOverlay(SunshineBlue.instance.BASIC_UI_OVERLAY);
         return false;
     }
 

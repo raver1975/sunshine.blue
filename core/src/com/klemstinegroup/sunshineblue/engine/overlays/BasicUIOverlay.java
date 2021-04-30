@@ -217,6 +217,12 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         SunshineBlue.instance.viewport.unproject(touchdown.set(screenX, screenY));
         SunshineBlue.instance.selectedObjects.clear();
         for (BaseObject bo : SunshineBlue.instance.userObjects) {
@@ -232,12 +238,6 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         } else {
 //            Overlay.setOverlay(this);
         }
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-
         return false;
     }
 

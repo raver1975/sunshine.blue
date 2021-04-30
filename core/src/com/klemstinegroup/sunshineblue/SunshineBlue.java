@@ -72,6 +72,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     private int recCounter;
     private float recHalfSec = 0;
     private static final float fps = 10;
+    public float colorFlash=0;
 //    private int dstFunc;
 //    private int srcFunc;
 
@@ -112,6 +113,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public void create() {
         Gdx.app.log("create", "started");
         font = new BitmapFont();
+
         overlayViewport = new StretchViewport((550f * Gdx.graphics.getWidth() / Gdx.graphics.getHeight()), 550);
        /* Net.HttpRequest req = new Net.HttpRequest("GET");
         req.setUrl(Statics.IpfsGateway2 + "QmWATWQ7fVPP2EFGu71UkfnqhYXDYH566qy47CnJDgvs8u");
@@ -216,6 +218,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
         //--------------------------------------------------------------------------------------------------
         viewport.apply();
+        viewport.getCamera().update();
 //        Statics.gifOptions = new ImageOptions();
 
 //        Statics.gifEncoderA = new AnimatedGifEncoder();
@@ -234,11 +237,14 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         // remember SpriteBatch's current functions
 
         batch.enableBlending();
+        SunshineBlue.instance.shapedrawer.setDefaultLineWidth(2);
     }
 
 
     @Override
     public void render() {
+        colorFlash+=.05f;
+        if (colorFlash>.7f){colorFlash=0;}
         if (assetManager.update()) {
             // we are done loading, let's move to another screen!
         }

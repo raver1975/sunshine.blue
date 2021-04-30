@@ -96,7 +96,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
 
         setBounds();
         if (SunshineBlue.instance.selectedObjects.contains(this, true)) {
-            SunshineBlue.instance.shapedrawer.setColor(Color.RED);
+            SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / (float) (SunshineBlue.instance.userObjects.size-1)).cpy().lerp(Color.WHITE,SunshineBlue.instance.colorFlash));
             SunshineBlue.instance.shapedrawer.circle(0, 0, 15, 2);
             angleCalc.set(0, 15);
             angleCalc.rotateDeg(angleRotateAnimAngle += 3);
@@ -113,7 +113,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
                 batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
                 batch.begin();
 //                SunshineBlue.instance.shapedrawer.setColor(Color.WHITE);
-                SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / ((float) SunshineBlue.instance.userObjects.size-1)));
+                SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / ((float) SunshineBlue.instance.userObjects.size-1)).cpy().lerp(Color.WHITE,SunshineBlue.instance.colorFlash));
                 SunshineBlue.instance.shapedrawer.polygon(polygon);
             }
         }
