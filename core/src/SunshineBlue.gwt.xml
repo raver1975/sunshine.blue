@@ -15,7 +15,7 @@
 <!--	<extend-configuration-property name="gdx.reflect.include" value="java.security" />-->
 <!--	<extend-configuration-property name="gdx.reflect.include" value="java.sql" />-->
 <!--	<extend-configuration-property name="gdx.reflect.include" value="java.text" />-->
-	<extend-configuration-property name="gdx.reflect.include" value="java.util" />
+<!--	<extend-configuration-property name="gdx.reflect.include" value="java.util" />-->
 <!--	<extend-configuration-property name="gdx.reflect.include" value="java.util.Iterator" />-->
 <!--	<extend-configuration-property name="gdx.reflect.include" value="java.util.Arrays" />-->
 <!--	<extend-configuration-property name="gdx.reflect.include" value="org.codehaus.commons.compiler.CompileException" />-->
@@ -28,7 +28,7 @@
 <!--	<extend-configuration-property name="gdx.reflect.include" value="java.util.logging" />-->
 <!--	<extend-configuration-property name="gdx.reflect.include" value="java.util.stream" />-->
 	<extend-configuration-property name="gdx.reflect.include" value="com.badlogic.gdx.Gdx" />
-<!--	<extend-configuration-property name="gdx.reflect.include" value="com.klemstinegroup.sunshineblue.client.HtmlLauncher" />-->
+	<extend-configuration-property name="gdx.reflect.include" value="com.klemstinegroup.sunshineblue.client.HtmlLauncher" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.klemstinegroup.sunshineblue.engine" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.klemstinegroup.sunshineblue.SunshineBlue" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.klemstinegroup.sunshineblue.engine.Statics" />
