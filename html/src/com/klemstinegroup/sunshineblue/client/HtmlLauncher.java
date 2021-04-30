@@ -104,9 +104,6 @@ public class HtmlLauncher extends GwtApplication {
         var self = this;
 
         var query = $wnd.location.search.substring(1);
-        if (!query){
-          query='QmSRzF1noYX3qECi3dKGKzQUPGfidMJTGbR7Pw8PiR1L8a';
-        }
         console.log("query",query);
         @com.klemstinegroup.sunshineblue.engine.util.SerializeUtil::infromGWT(Ljava/lang/String;)(query);
 
