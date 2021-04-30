@@ -79,17 +79,19 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public SunshineBlue() {
         super();
         this.nativeNet = new NativeJava();
+        loadCid = "current";
     }
 
     public SunshineBlue(NativeInterface nativeIPFS) {
         super();
         this.nativeNet = nativeIPFS;
+        loadCid = "current";
     }
 
-    public SunshineBlue(NativeInterface nativeIPFS,String cid) {
+    public SunshineBlue(NativeInterface nativeIPFS, String cid) {
         super();
         this.nativeNet = nativeIPFS;
-        loadCid=cid;
+        loadCid = cid;
     }
 
 
@@ -103,7 +105,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public SunshineBlue(String cid) {
         super();
         loadCid = cid;
-        this.nativeNet=new NativeJava();
+        this.nativeNet = new NativeJava();
     }
 
     @Override
@@ -221,6 +223,12 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 //        Statics.gifEncoderA.start(gifEncoderFile);
 //        Statics.apng=new AnimatedPNG();
         if (loadCid != null) {
+            if (loadCid.equals("current")) {
+                Preferences prefs = Gdx.app.getPreferences("scenes");
+                loadCid = prefs.getString("current");
+
+            }
+            System.out.println("loading cid:" + loadCid);
             SerializeUtil.load(loadCid);
         }
         // remember SpriteBatch's current functions
@@ -512,14 +520,15 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         return false;
     }*/
 
-    @Override
+    /*@Override
     public void pause() {
-        super.pause();
+
         SerializeUtil.save("autosave-" + UUID.randomUUID(), new IPFSCIDListener() {
             @Override
             public void cid(String cid) {
                 Gdx.app.log("saved", "saved at " + cid);
-//                SunshineBlue.super.pause();
+//                Gdx.app.exit();
+                SunshineBlue.super.pause();
 //                Gdx.app.exit();
             }
 
@@ -528,15 +537,15 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
                 Gdx.app.log("saved", "failed");
                 Statics.exceptionLog("not saved", t);
 //                Gdx.app.exit();
-//                SunshineBlue.super.pause();
+                SunshineBlue.super.pause();
             }
         });
+//        super.pause();
+    }*/
 
-    }
-
-    //    @Override
+    /*//    @Override
     public void resume() {
-        super.resume();
+        *//*super.resume();
         Pixmap pixmap = getWhitePixel();
         TextureRegion whitePixel = new TextureRegion(new Texture(pixmap));
         shapedrawer = new ShapeDrawer(batch, whitePixel);
@@ -545,12 +554,11 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         IMAGE_OVERLAY = new ImageOverlay();
         DRAW_OVERLAY = new DrawOverlay();
         BASIC_UI_OVERLAY = new BasicUIOverlay();
-//        Overlay.backOverlay();
+        for (BaseObject bo:SunshineBlue.instance.userObjects){
+                bo.regenerate(assetManager);
+        }*//*
 
-//        Statics.prefs = Gdx.app.getPreferences("scenes");
-//        Overlay.setOverlay(BASIC_UI_OVERLAY);
-//        SerializeUtil.load("current");
-    }
+    }*/
 
     private Pixmap getWhitePixel() {
         Pixmap pixmap = new Pixmap(10, 10, Pixmap.Format.RGB888);
@@ -558,8 +566,8 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         pixmap.fill();
 
         pixmap.setColor(Color.WHITE);
-        for (int i=0;i<10;i++){
-            pixmap.drawPixel(i,i);
+        for (int i = 0; i < 10; i++) {
+            pixmap.drawPixel(i, i);
         }
         return pixmap;
     }

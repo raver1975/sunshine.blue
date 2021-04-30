@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.overlays.Drawable;
 import com.klemstinegroup.sunshineblue.engine.overlays.Touchable;
+import com.klemstinegroup.sunshineblue.engine.util.ColorHelper;
 import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
 import space.earlygrey.shapedrawer.JoinType;
 
@@ -105,8 +106,8 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
         );
 //        Statics.shapedrawer.setTextureRegion(new TextureRegion(((RectTextureObject)Statics.userObjects.get(0)).texture));
         boolean flag = false;
-        int srcFunc = batch.getBlendSrcFunc();
-        int dstFunc = batch.getBlendDstFunc();
+//        int srcFunc = batch.getBlendSrcFunc();
+//        int dstFunc = batch.getBlendDstFunc();
         if (dd.path.size > 0) {
             Array<Array<Vector2>> drawspos1 = new Array<>();
             Array<Color> colors = new Array<>();
@@ -176,18 +177,18 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
 
                 if (va.size == 1) {
                     Vector2 v = va.get(0);
-                    batch.draw(dd.brushData.getTexture(ss), v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);
-                    batch.draw(dd.brushData.getTexture(ss), v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);
+                    batch.draw(tex, v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);
+                    batch.draw(tex, v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);
                 } else if (va.size > 1) {
 //                        temp.set(va.get(0));
 //                        batch.draw(dd.BrushData.texture, temp.x - dd.BrushData.halfWidth, temp.y - dd.BrushData.halfHeight, dd.BrushData.halfWidth, dd.BrushData.halfHeight, dd.BrushData.texture.getRegionWidth(), dd.BrushData.texture.getRegionHeight(), 1, 1, 0);
                     Vector2 v = va.get(0);
-                    batch.draw(dd.brushData.getTexture(ss), v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);
-                    v = va.get(va.size-1);
-                    batch.draw(dd.brushData.getTexture(ss), v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);
+                    batch.draw(tex, v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);
+                    v = va.get(va.size - 1);
+                    batch.draw(tex, v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);
                     for (int vv = 1; vv < va.size; vv++) {
                         v = va.get(vv);
-                        batch.draw(dd.brushData.getTexture(ss), v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);
+                        batch.draw(tex, v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);
                         temp.set(v);
                     }
 
@@ -217,7 +218,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
 //                batch.begin();
         }
 
-
+        setBounds();
         if (SunshineBlue.instance.selectedObjects.contains(this, true)) {
             SunshineBlue.instance.shapedrawer.setColor(Color.RED);
             SunshineBlue.instance.shapedrawer.circle(0, 0, 15, 2);
@@ -231,13 +232,14 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
             angleCalc.rotateDeg(90);
             SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
 
-        batch.end();
-        batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
-        batch.begin();
-        setBounds();
-        if (polygon != null) {
-            SunshineBlue.instance.shapedrawer.polygon(polygon);
-        }
+
+            if (polygon != null) {
+                batch.end();
+                batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
+                batch.begin();
+                SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / (float) (SunshineBlue.instance.userObjects.size-1)));
+                SunshineBlue.instance.shapedrawer.polygon(polygon);
+            }
         }
     }
 
@@ -259,15 +261,15 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
         for (PathObject pa : dd.path) {
             for (Vector2 p : pa.path) {
                 verts.add(p.x, p.y);
-                verts.add(p.x-pa.size/2,p.y);
-                verts.add(p.x+pa.size/2,p.y);
-                verts.add(p.x-pa.size/2,p.y-pa.size/2);
-                verts.add(p.x+pa.size/2,p.y-pa.size/2);
+                verts.add(p.x - pa.size / 2, p.y);
+                verts.add(p.x + pa.size / 2, p.y);
+                verts.add(p.x - pa.size / 2, p.y - pa.size / 2);
+                verts.add(p.x + pa.size / 2, p.y - pa.size / 2);
 
-                verts.add(p.x,p.y-pa.size/2);
-                verts.add(p.x,p.y+pa.size/2);
-                verts.add(p.x-pa.size/2,p.y+pa.size/2);
-                verts.add(p.x+pa.size/2,p.y+pa.size/2);
+                verts.add(p.x, p.y - pa.size / 2);
+                verts.add(p.x, p.y + pa.size / 2);
+                verts.add(p.x - pa.size / 2, p.y + pa.size / 2);
+                verts.add(p.x + pa.size / 2, p.y + pa.size / 2);
             }
         }
         ConvexHull ch = new ConvexHull();
@@ -332,5 +334,6 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
     public void regenerate(AssetManager assetManager) {
 //        super.regenerate(assetManager);
         dd.brushData.clear();
+        dd.brushData.generate(this.size);
     }
 }

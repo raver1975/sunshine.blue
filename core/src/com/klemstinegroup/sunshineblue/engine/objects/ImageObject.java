@@ -380,7 +380,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 
             }
         }
-
+        setBounds();
         if (SunshineBlue.instance.selectedObjects.contains(this, true)) {
 //            batch.setColor(Color.RED);
             SunshineBlue.instance.shapedrawer.setColor(Color.RED);
@@ -394,12 +394,13 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
             SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
             angleCalc.rotateDeg(90);
             SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
+
+            if (polygon != null) {
             batch.end();
             batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
             batch.begin();
-
-            if (polygon != null) {
-                SunshineBlue.instance.shapedrawer.setColor(Color.WHITE);
+//                SunshineBlue.instance.shapedrawer.setColor(Color.WHITE);
+                SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / ((float) SunshineBlue.instance.userObjects.size-1)));
                 SunshineBlue.instance.shapedrawer.polygon(polygon);
             }
 

@@ -16,6 +16,7 @@ import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
+import com.klemstinegroup.sunshineblue.engine.util.ColorHelper;
 import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
 import sun.security.provider.Sun;
 
@@ -290,6 +291,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
 
 //        Statics.batch.setProjectionMatrix(mx4Overlay.idt());
         for (int i = 0; i < SunshineBlue.instance.selectedObjects.size; i++) {
+            SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(SunshineBlue.instance.selectedObjects.get(i), true) / ((float) SunshineBlue.instance.userObjects.size-1)));
             SunshineBlue.instance.shapedrawer.filledCircle(170 + 30 * i, 20, 10);
         }
         stage.draw();

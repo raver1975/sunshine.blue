@@ -17,6 +17,7 @@ import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.overlays.Drawable;
 import com.klemstinegroup.sunshineblue.engine.overlays.FontOverlay;
 import com.klemstinegroup.sunshineblue.engine.overlays.Touchable;
+import com.klemstinegroup.sunshineblue.engine.util.ColorHelper;
 import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
 import sun.security.provider.Sun;
 
@@ -24,8 +25,8 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
 
     public FontData fd = new FontData();
     public BitmapFont font;
-    Vector2 angleCalc=new Vector2();
-    float angleRotateAnimAngle=0;
+    Vector2 angleCalc = new Vector2();
+    float angleRotateAnimAngle = 0;
 
 
     private int caretFlash = 0;
@@ -81,7 +82,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
             font.draw(batch, fd.text, 0 - sd.center.x, +sd.bounds.y - sd.center.y, Float.MAX_VALUE, Align.left, true);
         }
 
-        if (SunshineBlue.instance.FONT_OVERLAY.fontObject==this && SunshineBlue.instance.overlay==SunshineBlue.instance.FONT_OVERLAY){
+        if (SunshineBlue.instance.FONT_OVERLAY.fontObject == this && SunshineBlue.instance.overlay == SunshineBlue.instance.FONT_OVERLAY) {
             boolean b = (caretFlash++ % 50 <= 15);
             SunshineBlue.instance.shapedrawer.setColor(fd.color);
             if (b) {
@@ -93,26 +94,30 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
             }
         }
 
+        setBounds();
         if (SunshineBlue.instance.selectedObjects.contains(this, true)) {
             SunshineBlue.instance.shapedrawer.setColor(Color.RED);
-            SunshineBlue.instance.shapedrawer.circle(0, 0, 15,2);
-            angleCalc.set(0,15);
-            angleCalc.rotateDeg(angleRotateAnimAngle+=3);
-            SunshineBlue.instance.shapedrawer.line(new Vector2(),angleCalc,2);
+            SunshineBlue.instance.shapedrawer.circle(0, 0, 15, 2);
+            angleCalc.set(0, 15);
+            angleCalc.rotateDeg(angleRotateAnimAngle += 3);
+            SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
             angleCalc.rotateDeg(90);
-            SunshineBlue.instance.shapedrawer.line(new Vector2(),angleCalc,2);
+            SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
             angleCalc.rotateDeg(90);
-            SunshineBlue.instance.shapedrawer.line(new Vector2(),angleCalc,2);
+            SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
             angleCalc.rotateDeg(90);
-            SunshineBlue.instance.shapedrawer.line(new Vector2(),angleCalc,2);
+            SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
+
+            if (polygon != null) {
+                batch.end();
+                batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
+                batch.begin();
+//                SunshineBlue.instance.shapedrawer.setColor(Color.WHITE);
+                SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / ((float) SunshineBlue.instance.userObjects.size-1)));
+                SunshineBlue.instance.shapedrawer.polygon(polygon);
+            }
         }
-//        batch.end();
-//        batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
-//        batch.begin();
-//        if (polygon != null) {
-//            SunshineBlue.instance.shapedrawer.setColor(Color.WHITE);
-//            SunshineBlue.instance.shapedrawer.polygon(polygon);
-//        }
+
     }
 
     @Override
