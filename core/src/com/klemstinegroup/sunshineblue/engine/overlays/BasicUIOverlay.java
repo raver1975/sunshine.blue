@@ -71,7 +71,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 SerializeUtil.save("pop", new IPFSCIDListener() {
                     @Override
                     public void cid(String cid) {
-                        if (Statics.debug && Gdx.app.getType() == Application.ApplicationType.Desktop) {
+                        if ( Gdx.app.getType() == Application.ApplicationType.Desktop) {
                             Gdx.net.openURI("http://localhost:8080/?" + cid);
                         } else {
                             Gdx.net.openURI("https://sunshine.blue/?" + cid);
