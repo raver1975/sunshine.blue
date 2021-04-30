@@ -3,6 +3,7 @@ package com.klemstinegroup.sunshineblue.engine.util;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
@@ -168,6 +169,9 @@ public class SerializeUtil {
     public static <T extends BaseObject> void copy(T si) {
         Gdx.app.log("copy class", si.getClass().getName());
         JsonValue temp = si.serialize();
+        if (si instanceof ScreenObject){
+            ((ScreenObject)si).sd.position.add(100,100);
+        }
 //        Gdx.app.log("json",temp.toJson(JsonWriter.OutputType.json));
         try {
             Method method = ClassReflection.getMethod(ClassReflection.forName(si.getClass().getName()), "deserialize", JsonValue.class);

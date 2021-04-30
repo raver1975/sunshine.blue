@@ -86,6 +86,12 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         this.nativeNet = nativeIPFS;
     }
 
+    public SunshineBlue(NativeInterface nativeIPFS,String cid) {
+        super();
+        this.nativeNet = nativeIPFS;
+        loadCid=cid;
+    }
+
 
 //    public static Matrix4 mx4Batch = new Matrix4();
 

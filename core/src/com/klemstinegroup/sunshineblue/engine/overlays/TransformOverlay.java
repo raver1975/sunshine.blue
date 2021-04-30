@@ -16,6 +16,8 @@ import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
+import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
+import sun.security.provider.Sun;
 
 
 public class TransformOverlay extends BaseObject implements Overlay, Touchable, Drawable, Gestureable {
@@ -43,9 +45,20 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
         });
         stage.addActor(exitButton);
 
+        TextButton cpyButton = new TextButton("Cpy", skin);
+        cpyButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                for (BaseObject ba: SunshineBlue.instance.selectedObjects){
+                    SerializeUtil.copy(ba);
+                }
+            }
+        });
+        cpyButton.setPosition(50, 140);
+        stage.addActor(cpyButton);
 
-        TextButton clearButton = new TextButton("Del", skin);
-        clearButton.addListener(new ChangeListener() {
+        TextButton delButton = new TextButton("Del", skin);
+        delButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 for (BaseObject ba:SunshineBlue.instance.userObjects){
@@ -57,8 +70,8 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                 Overlay.backOverlay();
             }
         });
-        clearButton.setPosition(10, 140);
-        stage.addActor(clearButton);
+        delButton.setPosition(10, 140);
+        stage.addActor(delButton);
 
         TextButton downArrow = new TextButton("v", skin);
         downArrow.addListener(new ChangeListener() {

@@ -27,8 +27,8 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
     private Polygon polygon;
     private String cid;
     private float stateTime;
-    Vector2 angleCalc=new Vector2();
-    float angleRotateAnimAngle=0;
+    Vector2 angleCalc = new Vector2();
+    float angleRotateAnimAngle = 0;
 
 
     public ImageObject(byte[] data, Pixmap pixmapIn, String cid) {
@@ -54,7 +54,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                 } else {
                     ImageObject.this.cid = cid;
                 }
-                if (data[0]==-54 && data[1]==-2 && data[2]==-70 && data[3]==-66){
+                if (data[0] == -54 && data[1] == -2 && data[2] == -70 && data[3] == -66) {
                     SunshineBlue.removeUserObj(ImageObject.this);
                     SunshineBlue.addUserObj(new ScriptObject(data));
                     return;
@@ -74,39 +74,38 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                         Statics.exceptionLog("error2", e);
                     }
                 }
-                for (int i=0;i<4;i++){
+                for (int i = 0; i < 4; i++) {
 
-                    System.out.println(i+"\t"+data[i]);
+                    System.out.println(i + "\t" + data[i]);
                 }
                 if ((data[0] & 0xff) == 137 && (data[1] & 0xff) == 80 && (data[2] & 0xff) == 78 && (data[3] & 0xff) == 71) {
                     Gdx.app.log("type", "png!");
                     try {
                         PngReaderApng apng = new PngReaderApng(new MemoryFileHandle(data));
                         Array<TextureRegion> arrayTexture = new Array<>();
-                        int bitdepth=apng.getImgInfo().bitDepth;
-                        int bytesperpixel=apng.getImgInfo().bytesPixel;
-                        int w=apng.getImgInfo().cols;
-                        int h=apng.getImgInfo().rows;
+                        int bitdepth = apng.getImgInfo().bitDepth;
+                        int bytesperpixel = apng.getImgInfo().bytesPixel;
+                        int w = apng.getImgInfo().cols;
+                        int h = apng.getImgInfo().rows;
                         for (int i = 0; i < apng.getApngNumFrames(); i++) {
                             apng.advanceToFrame(i);
-                            int channels=apng.getCurImgInfo().channels;
-                            int offx=apng.getFctl().getxOff();
-                            int offy=apng.getFctl().getyOff();
+                            int channels = apng.getCurImgInfo().channels;
+                            int offx = apng.getFctl().getxOff();
+                            int offy = apng.getFctl().getyOff();
 
-                            Pixmap pixmap = new Pixmap(w,h, Pixmap.Format.RGBA8888);
-                            Gdx.app.log("pixmap:",pixmap.getWidth()+"x"+pixmap.getHeight());
+                            Pixmap pixmap = new Pixmap(w, h, Pixmap.Format.RGBA8888);
+                            Gdx.app.log("pixmap:", pixmap.getWidth() + "x" + pixmap.getHeight());
                             for (int y = 0; y < apng.getCurImgInfo().rows; y++) {
                                 ImageLineByte imageLine = apng.readRowByte();
                                 byte[] linedata = imageLine.getScanline();
 //                                  Gdx.app.log("bits:",linedata.length+"\t"+bitdepth+"\t"+bytesperpixel+"\t"+channels);
                                 for (int j = 0; j < imageLine.getImageInfo().cols; j++) {
-                                    if (channels==3) {
+                                    if (channels == 3) {
                                         pixmap.setColor(((linedata[3 * j] & 0xff) << 24) | ((linedata[3 * j + 1] & 0xff) << 16) | ((linedata[3 * j + 2] & 0xff) << 8) | 0xff);
-                                    }
-                                    else if (channels==4) {
+                                    } else if (channels == 4) {
                                         pixmap.setColor(((linedata[4 * j] & 0xff) << 24) | ((linedata[4 * j + 1] & 0xff) << 16) | ((linedata[4 * j + 2] & 0xff) << 8) | linedata[4 * j + 3] & 0xff);
                                     }
-                                    pixmap.drawPixel(j+offx, y+offy);
+                                    pixmap.drawPixel(j + offx, y + offy);
                                 }
                             }
                             TextureRegion region = null;
@@ -174,7 +173,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                         SunshineBlue.nativeNet.uploadIPFS(b, new IPFSCIDListener() {
                             @Override
                             public void cid(String cid) {
-                                SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway+cid, new Pixmap.DownloadPixmapResponseListener() {
+                                SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + cid, new Pixmap.DownloadPixmapResponseListener() {
                                     @Override
                                     public void downloadComplete(Pixmap pixmap) {
                                         SunshineBlue.addUserObj(new ImageObject(b, pixmap, cid));
@@ -189,26 +188,24 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 
                             @Override
                             public void uploadFailed(Throwable t) {
-                                Statics.exceptionLog("data url1",t);
+                                Statics.exceptionLog("data url1", t);
                             }
                         });
 
                     } catch (Exception e) {
-                        Statics.exceptionLog("data url",e);
+                        Statics.exceptionLog("data url", e);
                     }
                     ;
 
 
-                }
-                else if (url.startsWith("Q")) {
+                } else if (url.startsWith("Q")) {
                     SunshineBlue.nativeNet.downloadIPFS(url, new IPFSFileListener() {
                         @Override
                         public void downloaded(byte[] file) {
-                            if (file[0]==-54 && file[1]==-2 && file[2]==-70 && file[3]==-66){
+                            if (file[0] == -54 && file[1] == -2 && file[2] == -70 && file[3] == -66) {
                                 SunshineBlue.addUserObj(new ScriptObject(file));
                                 return;
-                            }
-                            else {
+                            } else {
                                 SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + url, new Pixmap.DownloadPixmapResponseListener() {
                                     @Override
                                     public void downloadComplete(Pixmap pixmap) {
@@ -222,17 +219,18 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                                         SunshineBlue.addUserObj(new ImageObject(file, null, url));
                                     }
                                 });
-                            };
+                            }
+                            ;
                         }
 
                         @Override
                         public void downloadFailed(Throwable t) {
-                            Statics.exceptionLog("downloadfailed",t);
+                            Statics.exceptionLog("downloadfailed", t);
 
                         }
                     });
                 } else {
-                    SunshineBlue.nativeNet.downloadFile(url,true, new IPFSFileListener() {
+                    SunshineBlue.nativeNet.downloadFile(url, true, new IPFSFileListener() {
                         @Override
                         public void downloaded(byte[] file) {
                             SunshineBlue.nativeNet.downloadPixmap(url, new Pixmap.DownloadPixmapResponseListener() {
@@ -338,7 +336,6 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
     }*/
 
 
-
     @Override
     public void setBounds() {
         polygon = new Polygon(new float[]{0, 0, sd.bounds.x, 0, sd.bounds.x, sd.bounds.y, 0, sd.bounds.y, 0, 0});
@@ -384,36 +381,36 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
             }
         }
 
-        if ( SunshineBlue.instance.selectedObjects.contains(this, true)) {
+        if (SunshineBlue.instance.selectedObjects.contains(this, true)) {
 //            batch.setColor(Color.RED);
             SunshineBlue.instance.shapedrawer.setColor(Color.RED);
-            SunshineBlue.instance.shapedrawer.circle(0, 0, 15,2);
-            angleCalc.set(0,15);
-            angleCalc.rotateDeg(angleRotateAnimAngle+=3);
-            SunshineBlue.instance.shapedrawer.line(new Vector2(),angleCalc,2);
+            SunshineBlue.instance.shapedrawer.circle(0, 0, 15, 2);
+            angleCalc.set(0, 15);
+            angleCalc.rotateDeg(angleRotateAnimAngle += 3);
+            SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
             angleCalc.rotateDeg(90);
-            SunshineBlue.instance.shapedrawer.line(new Vector2(),angleCalc,2);
+            SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
             angleCalc.rotateDeg(90);
-            SunshineBlue.instance.shapedrawer.line(new Vector2(),angleCalc,2);
+            SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
             angleCalc.rotateDeg(90);
-            SunshineBlue.instance.shapedrawer.line(new Vector2(),angleCalc,2);
+            SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
+            batch.end();
+            batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
+            batch.begin();
+
+            if (polygon != null) {
+                SunshineBlue.instance.shapedrawer.setColor(Color.WHITE);
+                SunshineBlue.instance.shapedrawer.polygon(polygon);
+            }
 
         }
-//        batch.end();
-//        batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
-//        batch.begin();
-//
-//        if (polygon != null) {
-//            SunshineBlue.instance.shapedrawer.setColor(Color.WHITE);
-//            SunshineBlue.instance.shapedrawer.polygon(polygon);
-//        }
 
     }
 
 
     @Override
     public boolean isSelected(Vector2 touch) {
-setBounds();
+        setBounds();
 //        polygon.translate(-center.x*scale,-center.y*scale);
         return polygon.contains(touch);
     }
