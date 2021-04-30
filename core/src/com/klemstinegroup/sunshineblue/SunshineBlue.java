@@ -47,7 +47,7 @@ import static com.badlogic.gdx.Application.LOG_INFO;
 public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
     public static NativeInterface nativeNet;
-    private String loadCid;
+    public String loadCid;
     public boolean isRecording;
     public TransformOverlay TRANSFORM_OVERLAY;
     public FontOverlay FONT_OVERLAY;

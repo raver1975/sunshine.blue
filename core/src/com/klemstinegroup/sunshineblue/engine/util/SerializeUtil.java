@@ -188,6 +188,7 @@ public class SerializeUtil {
 
     public static void infromGWT(String cid) {
         Gdx.app.log("infromGWT", cid);
+        SunshineBlue.instance.loadCid=null;
         load(cid);
         ImageObject.load(cid);
     }
