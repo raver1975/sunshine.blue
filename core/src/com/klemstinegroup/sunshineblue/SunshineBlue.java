@@ -243,7 +243,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public void render() {
-        colorFlash+=.05f;
+        colorFlash+=.02f;
         if (colorFlash>.7f){colorFlash=0;}
         if (assetManager.update()) {
             // we are done loading, let's move to another screen!

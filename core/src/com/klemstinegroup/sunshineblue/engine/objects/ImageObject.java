@@ -384,9 +384,10 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
         setBounds();
         if (SunshineBlue.instance.selectedObjects.contains(this, true)) {
             SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / (float) (SunshineBlue.instance.userObjects.size-1)).cpy().lerp(Color.WHITE,SunshineBlue.instance.colorFlash));
-            SunshineBlue.instance.shapedrawer.circle(0, 0, 15, 2);
-            angleCalc.set(0, 15);
-            angleCalc.rotateDeg(angleRotateAnimAngle += 3);
+            float radius=10+10*SunshineBlue.instance.colorFlash;
+            SunshineBlue.instance.shapedrawer.circle(0, 0, radius, 2);
+            angleCalc.set(0, radius);
+            angleCalc.rotateDeg(angleRotateAnimAngle += 1);
             SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
             angleCalc.rotateDeg(90);
             SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
