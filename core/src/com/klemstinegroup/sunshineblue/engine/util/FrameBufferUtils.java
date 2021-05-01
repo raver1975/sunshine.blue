@@ -63,6 +63,6 @@ public class FrameBufferUtils {
 //                pixels[y][x] = pixmap.getPixel(x, height - y - 1)>>8;
 //            }
 //        }
-        return pixmap;
+        return flipPixmap(pixmap);
     }
 }

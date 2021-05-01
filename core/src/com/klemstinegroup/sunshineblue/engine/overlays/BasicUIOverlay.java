@@ -4,7 +4,9 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
@@ -13,15 +15,16 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
+import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
 import com.klemstinegroup.sunshineblue.engine.objects.DrawObject;
 import com.klemstinegroup.sunshineblue.engine.objects.FontObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
-import com.klemstinegroup.sunshineblue.engine.util.FrameBufferUtils;
-import com.klemstinegroup.sunshineblue.engine.util.IPFSCIDListener;
-import com.klemstinegroup.sunshineblue.engine.util.IPFSUtils;
-import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
+import com.klemstinegroup.sunshineblue.engine.util.*;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -35,6 +38,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
     Vector2 touchdownre = new Vector2();
     Vector2 oldtouchre=new Vector2();
     boolean touched=false;
+//    private Texture screenshotPixmap;
 
 
     public BasicUIOverlay() {
@@ -125,7 +129,52 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                     for (int i = 0; i < index; i++) {
                         iter.next();
                     }
-                    SerializeUtil.load(iter.next());
+                    String cid=iter.next();
+                    SunshineBlue.nativeNet.downloadIPFS(cid,new IPFSFileListener(){
+                        @Override
+                        public void downloaded(byte[] file) {
+                            JsonReader reader = new JsonReader();
+                            JsonValue val = reader.parse(new String(file));
+                            String screenshotCID=val.getString("screenshot");
+                            SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + screenshotCID, new Pixmap.DownloadPixmapResponseListener() {
+                                @Override
+                                public void downloadComplete(Pixmap pixmap) {
+                                    Dialog dialog = new Dialog(cid, skin){
+                                        @Override
+                                        protected void result(Object object) {
+                                            if (((Long) object).equals(1L)) {
+                                                SerializeUtil.load(cid);
+                                            }
+                                            this.hide();
+                                        }
+                                    };
+                                    Pixmap pixmap2=new Pixmap(pixmap.getWidth(),pixmap.getHeight(),pixmap.getFormat());
+                                    pixmap2.setColor(new Color(0xdd8500cc));
+                                    pixmap2.fill();
+                                    pixmap2.drawPixmap(pixmap,0,0);
+
+                                    pixmap.dispose();
+                                    dialog.setBackground(new SpriteDrawable(new Sprite(new Texture(pixmap2))));
+                                    dialog.button("load",1L);
+                                    dialog.button("cancel",2L);
+                                    dialog.setModal(true);
+                                    dialog.show(stage);
+//                                    BasicUIOverlay.this.screenshotPixmap=new Texture(pixmap);
+                                }
+
+                                @Override
+                                public void downloadFailed(Throwable t) {
+
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void downloadFailed(Throwable t) {
+
+                        }
+                    });
+
                 }
             }
         });
@@ -315,8 +364,12 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         if (touched){
             SunshineBlue.instance.shapedrawer.rectangle(oldtouch.x,oldtouch.y,touchdown.x-oldtouch.x,touchdown.y-oldtouch.y, Color.WHITE);
         }
+//        if (screenshotPixmap!=null){
+//            batch.draw(screenshotPixmap,50,50);
+//        }
         stage.draw();
         SunshineBlue.instance.font.draw(batch,""+SunshineBlue.instance.otherCIDS.size(),45,SunshineBlue.instance.overlayViewport.getWorldHeight() - 280);
+
     }
 
     @Override
