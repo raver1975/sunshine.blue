@@ -77,6 +77,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
         );
 
         if (font != null && sd.visible) {
+            font.setColor(fd.color);
             font.draw(batch, fd.text, 0 - sd.center.x, +sd.bounds.y - sd.center.y, Float.MAX_VALUE, Align.left, true);
         }
 
@@ -197,7 +198,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
 
     public void setColor(Color newColor) {
         if (newColor != null) {
-            fd.color = newColor;
+            fd.color = newColor.cpy();
             font.setColor(fd.color);
         }
     }

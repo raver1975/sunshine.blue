@@ -25,6 +25,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
     Array<Vector2> currentPath = new Array<>();
     private Color color = Color.WHITE;
     private int size = 5;
+    private boolean touched;
 
     public DrawObject(DrawData dd) {
         this.dd = dd;
@@ -33,6 +34,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
     public DrawObject() {
 
     }
+
 
     @Override
     public boolean keyDown(int keycode) {
@@ -51,6 +53,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        touched=true;
         SunshineBlue.instance.viewport.unproject(touch.set(screenX, screenY));
         touch.sub(sd.position.x, sd.position.y);
         touch.rotateDeg(-sd.rotation);
@@ -63,25 +66,30 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        SunshineBlue.instance.viewport.unproject(touch.set(screenX, screenY));
-        touch.sub(sd.position.x - sd.center.x, sd.position.y - sd.center.y);
-        touch.rotateDeg(-sd.rotation);
-        touch.scl(1f / sd.scale);
+        if (touched) {
+            SunshineBlue.instance.viewport.unproject(touch.set(screenX, screenY));
+            touch.sub(sd.position.x - sd.center.x, sd.position.y - sd.center.y);
+            touch.rotateDeg(-sd.rotation);
+            touch.scl(1f / sd.scale);
 
 
-        setBounds();
+            setBounds();
+            touched = false;
+        }
         return false;
     }
 
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        SunshineBlue.instance.viewport.unproject(touch.set(screenX, screenY));
-        touch.sub(sd.position.x - sd.center.x, sd.position.y - sd.center.y);
-        touch.rotateDeg(-sd.rotation);
-        touch.scl(1f / sd.scale);
-        if (currentPath.size > 0 && currentPath.get(currentPath.size - 1).dst(touch) >= 1f) {
-            currentPath.add(touch.cpy());
+        if (touched) {
+            SunshineBlue.instance.viewport.unproject(touch.set(screenX, screenY));
+            touch.sub(sd.position.x - sd.center.x, sd.position.y - sd.center.y);
+            touch.rotateDeg(-sd.rotation);
+            touch.scl(1f / sd.scale);
+            if (currentPath.size > 0 && currentPath.get(currentPath.size - 1).dst(touch) >= 1f) {
+                currentPath.add(touch.cpy());
+            }
         }
         return false;
     }

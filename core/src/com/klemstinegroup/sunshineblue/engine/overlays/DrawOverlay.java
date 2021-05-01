@@ -24,6 +24,7 @@ public class DrawOverlay extends ScreenObject implements Overlay, Touchable, Dra
     Touchable touchable;
     BaseObject drawObject;
 
+
     public DrawOverlay( ) {
         stage = new Stage(SunshineBlue.instance.overlayViewport);
         SunshineBlue.instance.assetManager.finishLoadingAsset("skins/orange/skin/uiskin.json");

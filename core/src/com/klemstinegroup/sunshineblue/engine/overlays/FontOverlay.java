@@ -310,7 +310,11 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
     @Override
     public void setInput() {
         SunshineBlue.instance.im.addProcessor(stage);
-        if (fontObject != null) SunshineBlue.instance.im.addProcessor(((FontObject)fontObject));
+        if (fontObject != null) {
+            SunshineBlue.instance.im.addProcessor(((FontObject) fontObject));
+            generate(SunshineBlue.instance.assetManager, ((FontObject) fontObject));
+        }
+
     }
 
     @Override
@@ -339,7 +343,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         FreetypeFontLoader.FreeTypeFontLoaderParameter parameter;
         parameter = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         parameter.fontParameters.size = fontObject.fd.size;
-        parameter.fontParameters.color = fontObject.fd.color;
+        parameter.fontParameters.color = Color.WHITE;
         parameter.fontFileName = ff.path();
         String random = ff.pathWithoutExtension() + "-" + fontObject.fd.size + ".ttf";
 
