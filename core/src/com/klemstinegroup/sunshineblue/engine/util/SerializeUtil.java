@@ -50,9 +50,11 @@ public class SerializeUtil {
     }
 
 
-    public static void deserializeScene(JsonValue val) {
+    public static void deserializeScene(JsonValue val,boolean merge) {
         Gdx.app.log("scene", val.toJson(JsonWriter.OutputType.minimal));
-        SunshineBlue.instance.userObjects.clear();
+        if (!merge){
+            SunshineBlue.instance.userObjects.clear();
+        }
         JsonValue array = val.get("userObjects");
         if (array != null) {
             for (int i = 0; i < array.size; i++) {
@@ -80,7 +82,7 @@ public class SerializeUtil {
         });
     }
 
-    public static void load(String cid) {
+    public static void load(String cid,boolean merge) {
         if (cid == null || cid.isEmpty() || !cid.startsWith("Q")) {
             return;
         }
@@ -93,7 +95,7 @@ public class SerializeUtil {
                 JsonValue val = reader.parse(new String(file));
                 if (val!=null) {
                     Gdx.app.log("val", val.toJson(JsonWriter.OutputType.minimal));
-                    deserializeScene(val);
+                    deserializeScene(val,merge);
                 }
             }
 
@@ -196,11 +198,14 @@ public class SerializeUtil {
     public static void infromGWT(String cid) {
         Gdx.app.log("infromGWT", cid);
         SunshineBlue.instance.loadCid=null;
-        load(cid);
+        load(cid,false);
         ImageObject.load(cid);
     }
 
     public static void save() {
         save("autosave-" + TimeUtils.millis());
     }
+
+
+
 }

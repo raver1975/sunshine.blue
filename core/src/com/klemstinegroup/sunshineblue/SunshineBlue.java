@@ -234,7 +234,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
             }
             System.out.println("loading cid:" + loadCid);
-            SerializeUtil.load(loadCid);
+            SerializeUtil.load(loadCid,false);
         }
         // remember SpriteBatch's current functions
 
