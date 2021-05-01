@@ -532,15 +532,14 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         return false;
     }*/
 
-    /*@Override
+    @Override
     public void pause() {
-
         SerializeUtil.save("autosave-" + UUID.randomUUID(), new IPFSCIDListener() {
             @Override
             public void cid(String cid) {
                 Gdx.app.log("saved", "saved at " + cid);
 //                Gdx.app.exit();
-                SunshineBlue.super.pause();
+//                SunshineBlue.super.pause();
 //                Gdx.app.exit();
             }
 
@@ -549,11 +548,11 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
                 Gdx.app.log("saved", "failed");
                 Statics.exceptionLog("not saved", t);
 //                Gdx.app.exit();
-                SunshineBlue.super.pause();
+//                SunshineBlue.super.pause();
             }
         });
-//        super.pause();
-    }*/
+        super.pause();
+    }
 
     /*//    @Override
     public void resume() {
