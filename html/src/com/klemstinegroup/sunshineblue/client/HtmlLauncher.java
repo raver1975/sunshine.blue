@@ -18,6 +18,7 @@ import com.klemstinegroup.sunshineblue.engine.overlays.ImageOverlay;
 
 public class HtmlLauncher extends GwtApplication {
     private static HtmlLauncher instance;
+    private String query;
 
     @Override
     protected void adjustMeterPanel(Panel meterPanel, Style meterStyle) {
@@ -76,7 +77,23 @@ public class HtmlLauncher extends GwtApplication {
 
     @Override
     public ApplicationListener createApplicationListener() {
-        return new SunshineBlue(new NativeGWT());
+
+        if (!query.startsWith("Q")) {
+            query = "current";
+        }
+        SunshineBlue sun = new SunshineBlue(new NativeGWT(), query);
+        return sun;
+    }
+
+    native void getQuery()/*-{
+        var query = $wnd.location.search.substring(1);
+        console.log("query",query);
+        var self = this;
+        self.@com.klemstinegroup.sunshineblue.client.HtmlLauncher::queryReturn(Ljava/lang/String;)(query);
+    }-*/;
+
+    public void queryReturn(String query) {
+        this.query = query;
     }
 
     @Override
@@ -88,13 +105,16 @@ public class HtmlLauncher extends GwtApplication {
                 HtmlLauncher.super.onModuleLoad();
             }
         });
+        getQuery();
         setLoadingListener(new LoadingListener() {
             @Override
             public void beforeSetup() {
+
             }
 
             @Override
             public void afterSetup() {
+
                 setupCopyListener();
             }
         });
@@ -102,10 +122,6 @@ public class HtmlLauncher extends GwtApplication {
 
     native void setupCopyListener() /*-{
         var self = this;
-
-        var query = $wnd.location.search.substring(1);
-        console.log("query",query);
-        @com.klemstinegroup.sunshineblue.engine.util.SerializeUtil::infromGWT(Ljava/lang/String;)(query);
 
         var isSafari = navigator.appVersion.search('Safari') != -1 && navigator.appVersion.search('Chrome') == -1 && navigator.appVersion.search('CrMo') == -1 && navigator.appVersion.search('CriOS') == -1;
         var isIe = (navigator.userAgent.toLowerCase().indexOf("msie") != -1 || navigator.userAgent.toLowerCase().indexOf("trident") != -1);
@@ -190,7 +206,7 @@ public class HtmlLauncher extends GwtApplication {
         getClipboard().setContents(text);
         Gdx.app.log("cliboard paste", text);
         if (SunshineBlue.instance.overlay instanceof ImageOverlay) {
-            Actor focusedActor = ((ImageOverlay)SunshineBlue.instance.overlay).stage.getKeyboardFocus();
+            Actor focusedActor = ((ImageOverlay) SunshineBlue.instance.overlay).stage.getKeyboardFocus();
             if (focusedActor != null && focusedActor instanceof TextArea) {
                 TextArea ta = ((TextArea) focusedActor);
                 ta.setText(text);
