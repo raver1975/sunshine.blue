@@ -240,6 +240,10 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
         batch.enableBlending();
         SunshineBlue.instance.shapedrawer.setDefaultLineWidth(2);
+        Preferences prefs = Gdx.app.getPreferences("scenes");
+        for(Map.Entry<String,?> pref:prefs.get().entrySet()){
+            SunshineBlue.instance.otherCIDS.add((String)pref.getValue());
+        }
     }
 
 
