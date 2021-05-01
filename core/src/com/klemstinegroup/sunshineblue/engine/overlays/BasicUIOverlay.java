@@ -2,18 +2,17 @@ package com.klemstinegroup.sunshineblue.engine.overlays;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
-import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
 import com.klemstinegroup.sunshineblue.engine.objects.DrawObject;
 import com.klemstinegroup.sunshineblue.engine.objects.FontObject;
@@ -22,13 +21,17 @@ import com.klemstinegroup.sunshineblue.engine.util.FrameBufferUtils;
 import com.klemstinegroup.sunshineblue.engine.util.IPFSCIDListener;
 import com.klemstinegroup.sunshineblue.engine.util.IPFSUtils;
 import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
-import sun.security.provider.Sun;
 
 
 public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
 
     public final Stage stage;
     Vector2 touchdown = new Vector2();
+    Vector2 oldtouch=new Vector2();
+    Vector2 touchdownre = new Vector2();
+    Vector2 oldtouchre=new Vector2();
+    boolean touched=false;
+
 
     public BasicUIOverlay() {
         SunshineBlue.instance.assetManager.finishLoadingAsset("skins/orange/skin/uiskin.json");
@@ -217,32 +220,53 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-
+        SunshineBlue.instance.overlayViewport.unproject(oldtouch.set(screenX, screenY));
+        SunshineBlue.instance.overlayViewport.unproject(touchdown.set(screenX, screenY));
+        SunshineBlue.instance.viewport.unproject(oldtouchre.set(screenX, screenY));
+        touched=true;
         return false;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        SunshineBlue.instance.viewport.unproject(touchdown.set(screenX, screenY));
+        SunshineBlue.instance.viewport.unproject(touchdownre.set(screenX, screenY));
         SunshineBlue.instance.selectedObjects.clear();
         for (BaseObject bo : SunshineBlue.instance.userObjects) {
             if (bo instanceof Touchable) {
-                if (((Touchable) bo).isSelected(touchdown.cpy())) {
+                Polygon box = new Polygon();
+                box.setVertices(new float[]{oldtouchre.x, oldtouchre.y, oldtouchre.x, touchdownre.y, touchdownre.x, touchdownre.y, touchdownre.x, oldtouchre.y, oldtouchre.x, oldtouchre.y});
+                if (((Touchable) bo).isSelected(box)) {
                     SunshineBlue.instance.selectedObjects.add(bo);
                 }
 
             }
         }
+
         if (SunshineBlue.instance.selectedObjects.size > 0) {
             Overlay.setOverlay(SunshineBlue.instance.TRANSFORM_OVERLAY);
         } else {
 //            Overlay.setOverlay(this);
         }
+        touched=false;
         return false;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        SunshineBlue.instance.overlayViewport.unproject(touchdown.set(screenX, screenY));
+        SunshineBlue.instance.viewport.unproject(touchdownre.set(screenX, screenY));
+        SunshineBlue.instance.selectedObjects.clear();
+        for (BaseObject bo : SunshineBlue.instance.userObjects) {
+            if (bo instanceof Touchable) {
+                Polygon box = new Polygon();
+                box.setVertices(new float[]{oldtouchre.x, oldtouchre.y, oldtouchre.x, touchdownre.y, touchdownre.x, touchdownre.y, touchdownre.x, oldtouchre.y, oldtouchre.x, oldtouchre.y});
+                if (((Touchable) bo).isSelected(box)) {
+                    SunshineBlue.instance.selectedObjects.add(bo);
+                }
+
+            }
+        }
+
         return false;
     }
 
@@ -263,10 +287,8 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 //        mx4Overlay.setToOrtho2D(0, 0, 100, 100);
 //        mx4Overlay.
 
-//        SunshineBlue.instance.batch.setProjectionMatrix(mx4Overlay.idt());
-        for (int i = 0; i < SunshineBlue.instance.selectedObjects.size; i++) {
-            SunshineBlue.instance.shapedrawer.filledCircle(170 + 30 * i, 20, 10);
-        }
+//        SunshineBlue.instance.batch.setProjectionMatrix(SunshineBlue.instance.mx4Batch);
+        if (touched)SunshineBlue.instance.shapedrawer.rectangle(oldtouch.x,oldtouch.y,touchdown.x-oldtouch.x,touchdown.y-oldtouch.y, Color.WHITE);
         stage.draw();
     }
 
@@ -278,7 +300,12 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
     }
 
     @Override
-    public boolean isSelected(Vector2 touch) {
+    public boolean isSelected( Vector2 touch) {
+        return false;
+    }
+
+    @Override
+    public boolean isSelected(Polygon gon) {
         return false;
     }
 

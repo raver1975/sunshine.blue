@@ -6,20 +6,18 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.JsonValue;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
-import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.overlays.Drawable;
 import com.klemstinegroup.sunshineblue.engine.overlays.FontOverlay;
 import com.klemstinegroup.sunshineblue.engine.overlays.Touchable;
 import com.klemstinegroup.sunshineblue.engine.util.ColorHelper;
 import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
-import sun.security.provider.Sun;
 
 public class FontObject extends ScreenObject implements Drawable, Touchable {
 
@@ -78,7 +76,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
 //                        .translate(-center.x, -center.y, 0)
         );
 
-        if (font != null) {
+        if (font != null && sd.visible) {
             font.draw(batch, fd.text, 0 - sd.center.x, +sd.bounds.y - sd.center.y, Float.MAX_VALUE, Align.left, true);
         }
 
@@ -175,6 +173,16 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
 
     @Override
     public boolean scrolled(float amountX, float amountY) {
+        return false;
+    }
+
+
+    @Override
+    public boolean isSelected(Polygon box) {
+        setBounds();
+        if (polygon != null) {
+            return Intersector.overlapConvexPolygons(box,polygon);
+        }
         return false;
     }
 

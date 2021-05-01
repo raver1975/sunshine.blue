@@ -108,92 +108,94 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
         boolean flag = false;
 //        int srcFunc = batch.getBlendSrcFunc();
 //        int dstFunc = batch.getBlendDstFunc();
-        if (dd.path.size > 0) {
-            Array<Array<Vector2>> drawspos1 = new Array<>();
-            Array<Color> colors = new Array<>();
-            IntArray sizeArray = new IntArray();
+        if (sd.visible) {
+
+            if (dd.path.size > 0) {
+                Array<Array<Vector2>> drawspos1 = new Array<>();
+                Array<Color> colors = new Array<>();
+                IntArray sizeArray = new IntArray();
 
 
 //            FloatArray angles=new FloatArray();
-            for (PathObject partialPath : dd.path) {
-                batch.setColor(partialPath.color);
-                if (flag) {
-                    SunshineBlue.instance.shapedrawer.setColor(partialPath.color);
-                    if (partialPath.path.size >= 1) {
-                        SunshineBlue.instance.shapedrawer.filledCircle(partialPath.path.get(0), partialPath.size / 2f);
-                        if (partialPath.path.size >= 2) {
-                            SunshineBlue.instance.shapedrawer.path(partialPath.path, partialPath.size, JoinType.SMOOTH, true);
+                for (PathObject partialPath : dd.path) {
+                    batch.setColor(partialPath.color);
+                    if (flag) {
+                        SunshineBlue.instance.shapedrawer.setColor(partialPath.color);
+                        if (partialPath.path.size >= 1) {
+                            SunshineBlue.instance.shapedrawer.filledCircle(partialPath.path.get(0), partialPath.size / 2f);
+                            if (partialPath.path.size >= 2) {
+                                SunshineBlue.instance.shapedrawer.path(partialPath.path, partialPath.size, JoinType.SMOOTH, true);
+                            }
+                            SunshineBlue.instance.shapedrawer.filledCircle(partialPath.path.get(partialPath.path.size - 1), partialPath.size / 2f);
                         }
-                        SunshineBlue.instance.shapedrawer.filledCircle(partialPath.path.get(partialPath.path.size - 1), partialPath.size / 2f);
-                    }
-                } else {
-                    float dist = 1f;
-                    Vector2 first = partialPath.path.get(0).cpy();
-                    Array<Vector2> drawspos = new Array<>();
+                    } else {
+                        float dist = 1f;
+                        Vector2 first = partialPath.path.get(0).cpy();
+                        Array<Vector2> drawspos = new Array<>();
 
-                    drawspos1.add(drawspos);
+                        drawspos1.add(drawspos);
 
-                    colors.add(partialPath.color);
-                    sizeArray.add(partialPath.size);
-                    drawspos.add(first.cpy());
+                        colors.add(partialPath.color);
+                        sizeArray.add(partialPath.size);
+                        drawspos.add(first.cpy());
 //                    angles.add(0);
-                    Vector2 second = new Vector2();
-                    Vector2 tempVec = new Vector2();
-                    int startcnt = 0;
-                    while (++startcnt < partialPath.path.size) {
-                        second.set(partialPath.path.get(startcnt));
-                        while (first.dst(second) > dist) {
-                            tempVec.set(second);
-                            tempVec.sub(first);
-                            tempVec.setLength(dist);
-                            tempVec.add(first);
-                            first.set(tempVec);
-                            drawspos.add(first.cpy());
+                        Vector2 second = new Vector2();
+                        Vector2 tempVec = new Vector2();
+                        int startcnt = 0;
+                        while (++startcnt < partialPath.path.size) {
+                            second.set(partialPath.path.get(startcnt));
+                            while (first.dst(second) > dist) {
+                                tempVec.set(second);
+                                tempVec.sub(first);
+                                tempVec.setLength(dist);
+                                tempVec.add(first);
+                                first.set(tempVec);
+                                drawspos.add(first.cpy());
 //                            angles.add(second.cpy().sub(first).angleDeg());
-                        }
+                            }
 //                        drawspos.add(second.cpy());
 //                        angles.add(second.cpy().sub(first).angleDeg());
-                        first.set(second.cpy());
+                            first.set(second.cpy());
+
+                        }
+
 
                     }
 
-
                 }
-
-            }
 //            drawspos1.reverse();
 //            colors.reverse();
 //                batch.setBlendFunction(GL20.GL_SRC_COLOR, GL20.GL_SRC_ALPHA);
-            int cnt = 0;
-            for (Array<Vector2> va : drawspos1) {
-                int ss = sizeArray.get(cnt);
-                batch.setColor(colors.get(cnt++));
-                Vector2 temp = new Vector2();
-                TextureRegion tex = dd.brushData.getTexture(ss);
-                int w = tex.getRegionWidth();
-                int h = tex.getRegionHeight();
-                int hw = w / 2;
-                int hh = h / 2;
+                int cnt = 0;
+                for (Array<Vector2> va : drawspos1) {
+                    int ss = sizeArray.get(cnt);
+                    batch.setColor(colors.get(cnt++));
+                    Vector2 temp = new Vector2();
+                    TextureRegion tex = dd.brushData.getTexture(ss);
+                    int w = tex.getRegionWidth();
+                    int h = tex.getRegionHeight();
+                    int hw = w / 2;
+                    int hh = h / 2;
 
-                if (va.size == 1) {
-                    Vector2 v = va.get(0);
-                    batch.draw(tex, v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);
-                    batch.draw(tex, v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);
-                } else if (va.size > 1) {
+                    if (va.size == 1) {
+                        Vector2 v = va.get(0);
+                        batch.draw(tex, v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);
+                        batch.draw(tex, v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);
+                    } else if (va.size > 1) {
 //                        temp.set(va.get(0));
 //                        batch.draw(dd.BrushData.texture, temp.x - dd.BrushData.halfWidth, temp.y - dd.BrushData.halfHeight, dd.BrushData.halfWidth, dd.BrushData.halfHeight, dd.BrushData.texture.getRegionWidth(), dd.BrushData.texture.getRegionHeight(), 1, 1, 0);
-                    Vector2 v = va.get(0);
-                    batch.draw(tex, v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);
-                    v = va.get(va.size - 1);
-                    batch.draw(tex, v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);
-                    for (int vv = 1; vv < va.size; vv++) {
-                        v = va.get(vv);
+                        Vector2 v = va.get(0);
                         batch.draw(tex, v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);
-                        temp.set(v);
-                    }
+                        v = va.get(va.size - 1);
+                        batch.draw(tex, v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);
+                        for (int vv = 1; vv < va.size; vv++) {
+                            v = va.get(vv);
+                            batch.draw(tex, v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);
+                            temp.set(v);
+                        }
 
+                    }
                 }
-            }
                 /*cnt = 0;
                 for (Array<Vector2> va : drawspos1) {
                     batch.setColor(Color.WHITE);
@@ -216,12 +218,13 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
 //                batch.end();
 //                batch.setBlendFunction(srcFunc, dstFunc);
 //                batch.begin();
+            }
         }
 
         setBounds();
         if (SunshineBlue.instance.selectedObjects.contains(this, true)) {
-            SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / (float) (SunshineBlue.instance.userObjects.size-1)).cpy().lerp(Color.WHITE,SunshineBlue.instance.colorFlash));
-            float radius=10+10*SunshineBlue.instance.colorFlash;
+            SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / (float) (SunshineBlue.instance.userObjects.size - 1)).cpy().lerp(Color.WHITE, SunshineBlue.instance.colorFlash));
+            float radius = 10 + 10 * SunshineBlue.instance.colorFlash;
             SunshineBlue.instance.shapedrawer.circle(0, 0, radius, 2);
             angleCalc.set(0, radius);
             angleCalc.rotateDeg(angleRotateAnimAngle += 1);
@@ -238,18 +241,24 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
                 batch.end();
                 batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
                 batch.begin();
-                SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / (float) (SunshineBlue.instance.userObjects.size-1)).cpy().lerp(Color.WHITE,SunshineBlue.instance.colorFlash));
+                SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / (float) (SunshineBlue.instance.userObjects.size - 1)).cpy().lerp(Color.WHITE, SunshineBlue.instance.colorFlash));
                 SunshineBlue.instance.shapedrawer.polygon(polygon);
             }
         }
     }
 
     @Override
-    public boolean isSelected(Vector2 touch) {
-
-//        polygon.translate(s);
+    public boolean isSelected(Polygon box) {
         setBounds();
-//        System.out.println(Arrays.toString(polygon.getTransformedVertices()));
+        if (polygon != null) {
+            return Intersector.overlapConvexPolygons(box, polygon);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isSelected(Vector2 point) {
+        setBounds();
         if (polygon != null) {
             return polygon.contains(touch);
         }

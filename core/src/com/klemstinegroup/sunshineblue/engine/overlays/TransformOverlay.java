@@ -1,24 +1,23 @@
 package com.klemstinegroup.sunshineblue.engine.overlays;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
-import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
 import com.klemstinegroup.sunshineblue.engine.util.ColorHelper;
 import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
-import sun.security.provider.Sun;
 
 
 public class TransformOverlay extends BaseObject implements Overlay, Touchable, Drawable, Gestureable {
@@ -29,6 +28,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
     public int transformButton;
     Vector2 touchdrag = new Vector2();
     Vector2 touchdown = new Vector2();
+    Array<CheckBox> checkBoxArray = new Array<>();
 
     public TransformOverlay() {
         stage = new Stage(SunshineBlue.instance.overlayViewport);
@@ -51,7 +51,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
         cpyButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                for (BaseObject ba: SunshineBlue.instance.selectedObjects){
+                for (BaseObject ba : SunshineBlue.instance.selectedObjects) {
                     SerializeUtil.copy(ba);
                 }
             }
@@ -63,12 +63,12 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
         delButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                for (BaseObject ba:SunshineBlue.instance.userObjects){
-                    if (SunshineBlue.instance.selectedObjects.contains(ba,true)){
-                        SunshineBlue.instance.userObjects.removeValue(ba,true);
-                        SunshineBlue.instance.selectedObjects.removeValue(ba,true);
+                for (BaseObject ba : SunshineBlue.instance.selectedObjects) {
+                    if (SunshineBlue.instance.userObjects.contains(ba, true)) {
+                        SunshineBlue.instance.userObjects.removeValue(ba, true);
                     }
                 }
+                SunshineBlue.instance.selectedObjects.clear();
                 Overlay.backOverlay();
             }
         });
@@ -298,15 +298,24 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
 //        mx4Overlay.
 
 //        Statics.batch.setProjectionMatrix(mx4Overlay.idt());
-        for (int i = 0; i < SunshineBlue.instance.selectedObjects.size; i++) {
-            SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(SunshineBlue.instance.selectedObjects.get(i), true) / ((float) SunshineBlue.instance.userObjects.size-1)).cpy().lerp(Color.WHITE,SunshineBlue.instance.colorFlash));
-            SunshineBlue.instance.shapedrawer.filledCircle(170 + 30 * i, 20, 10);
-        }
+//        for (int i = 0; i < SunshineBlue.instance.selectedObjects.size; i++) {
+//            SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(SunshineBlue.instance.selectedObjects.get(i), true) / ((float) SunshineBlue.instance.userObjects.size-1)).cpy().lerp(Color.WHITE,SunshineBlue.instance.colorFlash));
+//            SunshineBlue.instance.shapedrawer.filledCircle(170 + 30 * i, 20, 10);
+//        }
+//        for (CheckBox cb:checkBoxArray){
+//            cb.getImage().setColor(ColorHelper.numberToColorPercentage((float) checkBoxArray.indexOf(cb,true) / ((float) SunshineBlue.instance.userObjects.size-1)).cpy().lerp(Color.WHITE,SunshineBlue.instance.colorFlash));
+//            cb.setColor(ColorHelper.numberToColorPercentage((float) checkBoxArray.indexOf(cb,true) / ((float) SunshineBlue.instance.userObjects.size-1)).cpy().lerp(Color.WHITE,SunshineBlue.instance.colorFlash));
+//        }
         stage.draw();
     }
 
     @Override
     public boolean isSelected(Vector2 touch) {
+        return false;
+    }
+
+    @Override
+    public boolean isSelected(Polygon gon) {
         return false;
     }
 
@@ -318,12 +327,67 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
     @Override
     public void setInput() {
         SunshineBlue.instance.im.addProcessor(stage);
+        Skin skin = SunshineBlue.instance.assetManager.get("skins/orange/skin/uiskin.json", Skin.class);
+//        Skin skin = SunshineBlue.instance.assetManager.get("skin-composer-ui/skin-composer-ui.json", Skin.class);
+        int sx = 150, sy = 10;
+        int xc = 0;
+        int yc = 0;
+        int cnt=0;
+        for (BaseObject ba : SunshineBlue.instance.selectedObjects) {
+            CheckBox cb = new CheckBox("", skin, "switch");
+            cb.setUserObject(ba);
+//            ((TextureRegionDrawable)cb.getImage().getDrawable()).tint(Color.BLACK);
+            cb.getImage().setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(ba, true) / ((float) SunshineBlue.instance.userObjects.size - 1)).cpy().lerp(Color.WHITE, .3f));
+//            cb.setColor(Color.BLACK);
+            cb.setChecked(true);
+            cb.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    super.clicked(event, x, y);
+//                        ((ScreenObject)ba).sd.visible=cb.isChecked();
+                    if (cb.isChecked()) {
+                        SunshineBlue.instance.selectedObjects.add(ba);
+                    } else {
+                        SunshineBlue.instance.selectedObjects.removeValue(ba, true);
+                    }
+                }
+            });
+            cb.addListener(new ActorGestureListener(){
+                @Override
+                public boolean longPress(Actor actor, float x, float y) {
+                    cb.setChecked(!cb.isChecked());
+
+                    for (CheckBox cb1:checkBoxArray) {
+                        if (!cb.getUserObject().equals(cb1.getUserObject())) {
+                            stage.getActors().removeValue(cb1, true);
+                            //checkBoxArray.removeValue(cb1, true);
+                        }
+                    }
+                    SunshineBlue.instance.selectedObjects.clear();
+//                    SunshineBlue.instance.selectedObjects.add((BaseObject) cb.getUserObject());
+                    return true;
+                }
+            });
+            cb.setPosition(sx + xc * 50, sy + yc * 30);
+            stage.addActor(cb);
+            checkBoxArray.add(cb);
+            xc++;
+            if (sx + xc * 50>SunshineBlue.instance.overlayViewport.getWorldWidth() - 90) {
+                xc = 0;
+                yc++;
+            }
+
+        }
 //        transformGroup.setVisible(Statics.selectedObjects.size>0);
     }
 
     @Override
     public void removeInput() {
         SunshineBlue.instance.im.removeProcessor(stage);
+        for (CheckBox cb : checkBoxArray) {
+            stage.getActors().removeValue(cb, true);
+        }
+        checkBoxArray.clear();
     }
 
     @Override

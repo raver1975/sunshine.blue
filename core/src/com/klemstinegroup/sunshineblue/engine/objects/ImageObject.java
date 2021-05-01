@@ -20,7 +20,6 @@ import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.overlays.Drawable;
 import com.klemstinegroup.sunshineblue.engine.overlays.Touchable;
 import com.klemstinegroup.sunshineblue.engine.util.*;
-import sun.security.provider.Sun;
 
 public class ImageObject extends ScreenObject implements Drawable, Touchable {
     public Texture texture;
@@ -372,13 +371,15 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                         .scale(sd.scale, sd.scale, 1)
 //                        .translate(-center.x, -center.y, 0)
         );
-        if (textures != null) {
-            stateTime += Gdx.graphics.getDeltaTime();
-            batch.draw(textures.getKeyFrame(stateTime, true), -sd.center.x, -sd.center.y);
-        } else {
-            if (texture != null) {
-                batch.draw(texture, -sd.center.x, -sd.center.y);
+        if (sd.visible) {
+            if (textures != null) {
+                stateTime += Gdx.graphics.getDeltaTime();
+                batch.draw(textures.getKeyFrame(stateTime, true), -sd.center.x, -sd.center.y);
+            } else {
+                if (texture != null) {
+                    batch.draw(texture, -sd.center.x, -sd.center.y);
 
+                }
             }
         }
         setBounds();
@@ -416,6 +417,12 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
         setBounds();
 //        polygon.translate(-center.x*scale,-center.y*scale);
         return polygon.contains(touch);
+    }
+
+    @Override
+    public boolean isSelected(Polygon gon) {
+        setBounds();
+        return Intersector.overlapConvexPolygons(gon,polygon);
     }
 
     @Override
