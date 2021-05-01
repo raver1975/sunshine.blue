@@ -214,7 +214,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                     case 2:
                         break;
                     case 3:
-                        so.recenter(touchdown);
+                        so.recenter(touchdown.cpy());
 //                        so.center.sub(touchdragcpy);
 //                        so.position.set(touchdown.cpy());
 //                        touchdragcpy.scl(so.scale);
@@ -267,7 +267,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                         so.sd.scale += (touchdrag.x - touchdown.x) / 200f;
                         break;
                     case 3:
-                        so.recenter(touchdown);
+                        so.recenter(touchdown.cpy());
                         break;
                 }
                 if (bo instanceof Touchable) {
