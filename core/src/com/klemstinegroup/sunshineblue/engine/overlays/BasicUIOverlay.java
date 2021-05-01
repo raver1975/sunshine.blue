@@ -2,6 +2,7 @@ package com.klemstinegroup.sunshineblue.engine.overlays;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -28,6 +29,7 @@ import com.klemstinegroup.sunshineblue.engine.util.*;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 
 
 public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
@@ -38,6 +40,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
     Vector2 touchdownre = new Vector2();
     Vector2 oldtouchre=new Vector2();
     boolean touched=false;
+    private int otherIndex=0;
 //    private Texture screenshotPixmap;
 
 
@@ -123,10 +126,14 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Preferences prefs = Gdx.app.getPreferences("scenes");
+                for(Map.Entry<String,?> pref:prefs.get().entrySet()){
+                    SunshineBlue.instance.otherCIDS.add((String)pref.getValue());
+                }
                 if(SunshineBlue.instance.otherCIDS.size()>0) {
-                    int index = MathUtils.random(SunshineBlue.instance.otherCIDS.size() - 1);
+
                     Iterator<String> iter = SunshineBlue.instance.otherCIDS.iterator();
-                    for (int i = 0; i < index; i++) {
+                    for (int i = 0; i < otherIndex; i++) {
                         iter.next();
                     }
                     String cid=iter.next();
@@ -139,24 +146,61 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                             SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + screenshotCID, new Pixmap.DownloadPixmapResponseListener() {
                                 @Override
                                 public void downloadComplete(Pixmap pixmap) {
-                                    Dialog dialog = new Dialog(cid, skin){
+                                    Dialog dialog = new Dialog((otherIndex+1)+" / "+(SunshineBlue.instance.otherCIDS.size())+" : "+cid, skin){
                                         @Override
                                         protected void result(Object object) {
-                                            if (((Long) object).equals(1L)) {
-                                                SerializeUtil.load(cid);
+                                            if (object.equals(1L)) {
+                                                if (--otherIndex<0){
+                                                    otherIndex=SunshineBlue.instance.otherCIDS.size()-1;
+                                                }
+                                                InputEvent event1 = new InputEvent();
+                                                event1.setType(InputEvent.Type.touchDown);
+                                                randomButton.fire(event1);
+
+                                                InputEvent event2 = new InputEvent();
+                                                event2.setType(InputEvent.Type.touchUp);
+                                                randomButton.fire(event2);
                                             }
+                                            else  if (object.equals(2L)){
+                                                SerializeUtil.load(cid);
+
+                                            }
+                                            else if (object.equals(3L)) {
+                                                Gdx.app.getClipboard().setContents(cid);
+                                            }
+                                            else  if (object.equals(4L)){
+
+                                            }
+                                            else if (object.equals(5L)) {
+                                                if (++otherIndex>SunshineBlue.instance.otherCIDS.size()-1){
+                                                    otherIndex=0;
+                                                }
+                                                InputEvent event1 = new InputEvent();
+                                                event1.setType(InputEvent.Type.touchDown);
+                                                randomButton.fire(event1);
+
+                                                InputEvent event2 = new InputEvent();
+                                                event2.setType(InputEvent.Type.touchUp);
+                                                randomButton.fire(event2);
+                                            }
+
                                             this.hide();
                                         }
                                     };
                                     Pixmap pixmap2=new Pixmap(pixmap.getWidth(),pixmap.getHeight(),pixmap.getFormat());
-                                    pixmap2.setColor(new Color(0xdd8500cc));
+                                    pixmap2.setColor(new Color(0xbb6500ff));
                                     pixmap2.fill();
                                     pixmap2.drawPixmap(pixmap,0,0);
 
                                     pixmap.dispose();
                                     dialog.setBackground(new SpriteDrawable(new Sprite(new Texture(pixmap2))));
-                                    dialog.button("load",1L);
-                                    dialog.button("cancel",2L);
+                                    dialog.button("prev",1L);
+                                    dialog.button("next",5L);
+                                    dialog.button("copy",3L);
+                                    dialog.button("load",2L);
+                                    dialog.button("cancel",4L);
+
+
                                     dialog.setModal(true);
                                     dialog.show(stage);
 //                                    BasicUIOverlay.this.screenshotPixmap=new Texture(pixmap);
