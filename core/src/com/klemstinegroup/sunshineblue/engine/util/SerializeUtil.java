@@ -84,6 +84,7 @@ public class SerializeUtil {
         if (cid == null || cid.isEmpty() || !cid.startsWith("Q")) {
             return;
         }
+        SunshineBlue.nativeNet.doneSavingScene(cid);
         Gdx.app.log("name:", cid + "\t" + cid);
         SunshineBlue.nativeNet.downloadIPFS(cid, new IPFSFileListener() {
             @Override
@@ -105,7 +106,7 @@ public class SerializeUtil {
 
     public static void save(String name, IPFSCIDListener ipfscidListener) {
         SunshineBlue.instance.batch.begin();
-        Pixmap screenshot = FrameBufferUtils.drawObjects(SunshineBlue.instance.batch, SunshineBlue.instance.viewport, SunshineBlue.instance.userObjects);
+        Pixmap screenshot = FrameBufferUtils.drawObjectsPix(SunshineBlue.instance.batch, SunshineBlue.instance.viewport, SunshineBlue.instance.userObjects,400*SunshineBlue.instance.viewport.getScreenWidth()/SunshineBlue.instance.viewport.getScreenHeight(),400);
         SunshineBlue.instance.batch.end();
         IPFSUtils.uploadPngtoIPFS(screenshot, new IPFSCIDListener() {
             @Override
@@ -184,6 +185,12 @@ public class SerializeUtil {
 
     public static void save(String name) {
         save(name, null);
+    }
+
+
+    public static void infromGWTotherCID(String cid){
+        Gdx.app.log("infromGWTothercids", cid);
+        SunshineBlue.instance.otherCIDS.add(cid);
     }
 
     public static void infromGWT(String cid) {

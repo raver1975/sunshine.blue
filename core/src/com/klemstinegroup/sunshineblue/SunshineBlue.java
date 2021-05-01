@@ -40,6 +40,7 @@ import sun.security.provider.Sun;
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Map;
 
 import static com.badlogic.gdx.Application.LOG_INFO;
@@ -69,6 +70,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public ShapeDrawer shapedrawer;
     public JSEProviderImpl JJVMprovider = new JSEProviderImpl();
     public static SunshineBlue instance;
+    public HashSet<String> otherCIDS=new HashSet<>();
     private int recCounter;
     private float recHalfSec = 0;
     private static final float fps = 10;

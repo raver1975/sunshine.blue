@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -21,6 +22,9 @@ import com.klemstinegroup.sunshineblue.engine.util.FrameBufferUtils;
 import com.klemstinegroup.sunshineblue.engine.util.IPFSCIDListener;
 import com.klemstinegroup.sunshineblue.engine.util.IPFSUtils;
 import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
+
+import java.util.Collection;
+import java.util.Iterator;
 
 
 public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
@@ -108,6 +112,26 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
             }
         });
         stage.addActor(apngButton);
+
+        Actor randomButton = new TextButton("?", skin);
+        randomButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 300);
+        randomButton.addListener(new ClickListener() {
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if(SunshineBlue.instance.otherCIDS.size()>0) {
+                    int index = MathUtils.random(SunshineBlue.instance.otherCIDS.size() - 1);
+                    Iterator<String> iter = SunshineBlue.instance.otherCIDS.iterator();
+                    for (int i = 0; i < index; i++) {
+                        iter.next();
+                    }
+                    SerializeUtil.load(iter.next());
+                }
+            }
+        });
+        stage.addActor(randomButton);
+
+
 
         Actor screenshotButton = new TextButton("PNG", skin);
         screenshotButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 180);
@@ -288,8 +312,11 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 //        mx4Overlay.
 
 //        SunshineBlue.instance.batch.setProjectionMatrix(SunshineBlue.instance.mx4Batch);
-        if (touched)SunshineBlue.instance.shapedrawer.rectangle(oldtouch.x,oldtouch.y,touchdown.x-oldtouch.x,touchdown.y-oldtouch.y, Color.WHITE);
+        if (touched){
+            SunshineBlue.instance.shapedrawer.rectangle(oldtouch.x,oldtouch.y,touchdown.x-oldtouch.x,touchdown.y-oldtouch.y, Color.WHITE);
+        }
         stage.draw();
+        SunshineBlue.instance.font.draw(batch,""+SunshineBlue.instance.otherCIDS.size(),45,SunshineBlue.instance.overlayViewport.getWorldHeight() - 280);
     }
 
     @Override
