@@ -38,8 +38,8 @@
             const status = ipfs.isOnline() ? 'online' : 'offline'
 
             console.log(`Node status: ${status}`)
-            const {id, agentVersion} = await ipfs.id();
-            topic = "peers";
+            /*const {id, agentVersion} = await ipfs.id();
+            topic = "sunshine.blue";
             await ipfs.pubsub.subscribe(topic, msg => {
                 const from = msg.from
                 const seqno = msg.seqno.toString('hex')
@@ -67,12 +67,12 @@
 
 
 
-            async function sendMessage(){
+            async function sendMessage(msg){
                 console.log(`Sending message to ${topic}...`)
-                await ipfs.pubsub.publish(topic, "test1243")
-                console.log(`<span class="green">Success!</span>`)
+                await ipfs.pubsub.publish(topic, msg)
+                console.log(`Success!`)
                 setTimeout(sendMessage,2000);
-            }
+            }*/
 
             //sendMessage();
         })
