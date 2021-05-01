@@ -249,8 +249,8 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public void render() {
-        colorFlash+=.02f;
-        if (colorFlash>.7f){colorFlash=0;}
+        colorFlash+=Gdx.graphics.getDeltaTime()/3f;
+        if (colorFlash>.4f){colorFlash=0;}
         if (assetManager.update()) {
             // we are done loading, let's move to another screen!
         }

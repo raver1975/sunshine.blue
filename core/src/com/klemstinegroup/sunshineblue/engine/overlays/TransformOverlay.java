@@ -20,11 +20,11 @@ import com.klemstinegroup.sunshineblue.engine.util.ColorHelper;
 import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
 
 
-public class TransformOverlay extends BaseObject implements Overlay, Touchable, Drawable, Gestureable {
+public class TransformOverlay extends BaseObject implements Overlay, Touchable, Drawable {
 
     public final Stage stage;
     private final Group transformGroup;
-    private final CheckBox moveButton;
+    private final ButtonGroup<CheckBox> transformButtons;
     public int transformButton;
     Vector2 touchdrag = new Vector2();
     Vector2 touchdown = new Vector2();
@@ -105,20 +105,16 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
         upArrow.setPosition(10, 260);
         stage.addActor(upArrow);
 
-        ButtonGroup<CheckBox> transformButtons = new ButtonGroup();
-        moveButton = new CheckBox(" Move", skin);
+        transformButtons = new ButtonGroup();
+        CheckBox moveButton = new CheckBox(" Move", skin);
         moveButton.getStyle().fontColor = Color.RED;
-        moveButton.setName("move");
         moveButton.setPosition(10, 0);
         CheckBox rotateButton = new CheckBox(" Rotate", skin);
         rotateButton.setPosition(10, 30);
-        rotateButton.setName("rotate");
         CheckBox scaleButton = new CheckBox(" Scale", skin);
         scaleButton.setPosition(10, 60);
-        scaleButton.setName("scale");
         CheckBox centerButton = new CheckBox(" Center", skin);
         centerButton.setPosition(10, 90);
-        centerButton.setName("center");
 
 
         transformButtons.add(moveButton);
@@ -156,7 +152,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
 
 
         transformButtons.setUncheckLast(true);
-        transformButtons.setChecked("move");
+        transformButtons.setChecked(" Move");
         transformButtons.setMaxCheckCount(1);
         transformButtons.setMinCheckCount(1);
         transformGroup = new Group();
@@ -190,8 +186,8 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-
         SunshineBlue.instance.viewport.unproject(touchdown.set(screenX, screenY));
+        System.out.println(touchdown);
 //        SunshineBlue.instance.selectedObjects.clear();
 //        for (BaseObject bo : SunshineBlue.instance.userObjects) {
 //            if (bo instanceof Touchable) {
@@ -238,13 +234,8 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                 ((Touchable) bo).setBounds();
             }
         }
-        InputEvent event1 = new InputEvent();
-        event1.setType(InputEvent.Type.touchDown);
-        moveButton.fire(event1);
-
-        InputEvent event2 = new InputEvent();
-        event2.setType(InputEvent.Type.touchUp);
-        moveButton.fire(event2);
+        transformButtons.setChecked(" Move");
+        transformButton = 0;
         return false;
     }
 
@@ -252,7 +243,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
     public boolean touchDragged(int screenX, int screenY, int pointer) {
 //        Statics.viewport.unproject(touchdrag.set(screenX, screenY));
         SunshineBlue.instance.viewport.unproject(touchdrag.set(screenX, screenY));
-
+        System.out.println(touchdrag + "\t" + transformButton);
         for (BaseObject bo : SunshineBlue.instance.selectedObjects) {
             if (bo instanceof ScreenObject) {
                 ScreenObject so = ((ScreenObject) bo);
@@ -332,47 +323,62 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
         int sx = 150, sy = 10;
         int xc = 0;
         int yc = 0;
-        int cnt=0;
+        int cnt = 0;
         for (BaseObject ba : SunshineBlue.instance.selectedObjects) {
             CheckBox cb = new CheckBox("", skin, "switch");
             cb.setUserObject(ba);
 //            ((TextureRegionDrawable)cb.getImage().getDrawable()).tint(Color.BLACK);
             cb.getImage().setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(ba, true) / ((float) SunshineBlue.instance.userObjects.size - 1)).cpy().lerp(Color.WHITE, .3f));
 //            cb.setColor(Color.BLACK);
-            cb.setChecked(true);
+            cb.setChecked(((ScreenObject) ba).sd.visible);
             cb.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    super.clicked(event, x, y);
+//                    super.clicked(event, x, y);
 //                        ((ScreenObject)ba).sd.visible=cb.isChecked();
-                    if (cb.isChecked()) {
-                        SunshineBlue.instance.selectedObjects.add(ba);
-                    } else {
-                        SunshineBlue.instance.selectedObjects.removeValue(ba, true);
+                    if (!cb.isDisabled()) {
+                        if (cb.isChecked()) {
+                            SunshineBlue.instance.selectedObjects.add(ba);
+                            ((ScreenObject) ba).sd.visible = true;
+                        } else {
+                            SunshineBlue.instance.selectedObjects.removeValue(ba, true);
+                            ((ScreenObject) ba).sd.visible = false;
+                        }
                     }
                 }
             });
-            cb.addListener(new ActorGestureListener(){
+            cb.addListener(new ActorGestureListener() {
+                /*@Override
+                public void tap(InputEvent event, float x, float y, int count, int button) {
+                    if (count>1){
+                        ((ScreenObject)ba).sd.visible=!((ScreenObject)ba).sd.visible;
+                    }
+                }
+*/
                 @Override
                 public boolean longPress(Actor actor, float x, float y) {
-                    cb.setChecked(!cb.isChecked());
+                    cb.setDisabled(true);
+//                    cb.setChecked(!((ScreenObject)ba).sd.visible);
 
-                    for (CheckBox cb1:checkBoxArray) {
-                        if (!cb.getUserObject().equals(cb1.getUserObject())) {
-                            stage.getActors().removeValue(cb1, true);
-                            //checkBoxArray.removeValue(cb1, true);
-                        }
+//                    for (CheckBox cb1:checkBoxArray) {
+//                        if (cb.getUserObject().equals(cb1.getUserObject())) {
+                    stage.getActors().removeValue(cb, true);
+                    //checkBoxArray.removeValue(cb1, true);
+//                        }
+//                    }
+                    SunshineBlue.instance.selectedObjects.removeValue(ba, true);
+                    if (SunshineBlue.instance.selectedObjects.size == 0) {
+                        Overlay.backOverlay();
                     }
-                    SunshineBlue.instance.selectedObjects.clear();
 //                    SunshineBlue.instance.selectedObjects.add((BaseObject) cb.getUserObject());
-                    return true;
+                    return false;
                 }
             });
             cb.setPosition(sx + xc * 50, sy + yc * 30);
             stage.addActor(cb);
             checkBoxArray.add(cb);
             xc++;
-            if (sx + xc * 50>SunshineBlue.instance.overlayViewport.getWorldWidth() - 90) {
+            if (sx + xc * 50 > SunshineBlue.instance.overlayViewport.getWorldWidth() - 90) {
                 xc = 0;
                 yc++;
             }
@@ -400,7 +406,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
 
     }
 
-    @Override
+    /*@Override
     public boolean touchDown(float x, float y, int pointer, int button) {
         return false;
     }
@@ -444,5 +450,5 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
     @Override
     public void pinchStop() {
 
-    }
+    }*/
 }

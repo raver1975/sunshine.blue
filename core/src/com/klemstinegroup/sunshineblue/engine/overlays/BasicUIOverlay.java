@@ -346,23 +346,25 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        SunshineBlue.instance.viewport.unproject(touchdownre.set(screenX, screenY));
-        SunshineBlue.instance.selectedObjects.clear();
-        for (BaseObject bo : SunshineBlue.instance.userObjects) {
-            if (bo instanceof Touchable) {
-                Polygon box = new Polygon();
-                box.setVertices(new float[]{oldtouchre.x, oldtouchre.y, oldtouchre.x, touchdownre.y, touchdownre.x, touchdownre.y, touchdownre.x, oldtouchre.y, oldtouchre.x, oldtouchre.y});
-                if (((Touchable) bo).isSelected(box)) {
-                    SunshineBlue.instance.selectedObjects.add(bo);
+        if (touched){
+            SunshineBlue.instance.viewport.unproject(touchdownre.set(screenX, screenY));
+            SunshineBlue.instance.selectedObjects.clear();
+            for (BaseObject bo : SunshineBlue.instance.userObjects) {
+                if (bo instanceof Touchable) {
+                    Polygon box = new Polygon();
+                    box.setVertices(new float[]{oldtouchre.x, oldtouchre.y, oldtouchre.x, touchdownre.y, touchdownre.x, touchdownre.y, touchdownre.x, oldtouchre.y, oldtouchre.x, oldtouchre.y});
+                    if (((Touchable) bo).isSelected(box)) {
+                        SunshineBlue.instance.selectedObjects.add(bo);
+                    }
+
                 }
-
             }
-        }
 
-        if (SunshineBlue.instance.selectedObjects.size > 0) {
-            Overlay.setOverlay(SunshineBlue.instance.TRANSFORM_OVERLAY);
-        } else {
+            if (SunshineBlue.instance.selectedObjects.size > 0) {
+                Overlay.setOverlay(SunshineBlue.instance.TRANSFORM_OVERLAY);
+            } else {
 //            Overlay.setOverlay(this);
+            }
         }
         touched=false;
         return false;

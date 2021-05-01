@@ -3,6 +3,7 @@ package com.klemstinegroup.sunshineblue.engine.util;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.klemstinegroup.sunshineblue.SunshineBlue;
 
 public class NativeJava implements NativeInterface {
     @Override
@@ -47,5 +48,6 @@ public class NativeJava implements NativeInterface {
     @Override
     public void doneSavingScene(String cid) {
         Gdx.app.log("scene saved",cid);
+        SunshineBlue.instance.otherCIDS.add(cid);
     }
 }
