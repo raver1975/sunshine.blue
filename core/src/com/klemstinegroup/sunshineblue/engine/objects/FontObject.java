@@ -78,6 +78,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
 
         if (font != null && sd.visible) {
             font.setColor(fd.color);
+            batch.setColor(Color.WHITE);
             font.draw(batch, fd.text, 0 - sd.center.x, +sd.bounds.y - sd.center.y, Float.MAX_VALUE, Align.left, true);
         }
 

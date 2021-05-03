@@ -372,9 +372,9 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 //                        .translate(-center.x, -center.y, 0)
         );
         if (sd.visible) {
+            batch.setColor(Color.WHITE);
             if (textures != null) {
                 stateTime += Gdx.graphics.getDeltaTime();
-                batch.setColor(Color.WHITE);
                 batch.draw(textures.getKeyFrame(stateTime, true), -sd.center.x, -sd.center.y);
             } else {
                 if (texture != null) {

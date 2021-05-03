@@ -152,6 +152,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         // set the loaders for the generator and the fonts themselves
         batch = new PolygonSpriteBatch();
         shapedrawer = new ShapeDrawer(batch, new TextureRegion(new Texture(getWhitePixel())));
+        shapedrawer.setDefaultSnap(true);
 
 //        shapedrawer = new ShapeDrawer(batch, Statics.whitePixel);
         FileHandleResolver resolver = new InternalFileHandleResolver();

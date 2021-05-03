@@ -15,6 +15,7 @@ import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.overlays.Drawable;
 import com.klemstinegroup.sunshineblue.engine.overlays.Touchable;
 import com.klemstinegroup.sunshineblue.engine.util.ColorHelper;
+import com.klemstinegroup.sunshineblue.engine.util.LineSmoother;
 import com.klemstinegroup.sunshineblue.engine.util.RamerDouglasPeucker;
 import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
 import space.earlygrey.shapedrawer.JoinType;
@@ -29,7 +30,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
     private Color color = Color.WHITE;
     private int size = 5;
     private boolean touched;
-    private Vector2 v=new Vector2();
+    private Vector2 v = new Vector2();
 
     public DrawObject(DrawData dd) {
         this.dd = dd;
@@ -57,7 +58,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        touched=true;
+        touched = true;
         SunshineBlue.instance.viewport.unproject(touch.set(screenX, screenY));
         touch.sub(sd.position.x, sd.position.y);
         touch.rotateDeg(-sd.rotation);
@@ -78,11 +79,12 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
 
 
             setBounds();
-            Gdx.app.log("path size:",currentPath.size+"");
-            Array<Vector2> temp= RamerDouglasPeucker.douglasPeucker(currentPath,1f);
+            Gdx.app.log("path size:", currentPath.size + "");
+            Array<Vector2> temp1= LineSmoother.smoothLine2(currentPath);
+            Array<Vector2> temp = RamerDouglasPeucker.douglasPeucker(temp1, 1f);
             currentPath.clear();
             currentPath.addAll(temp);
-            Gdx.app.log("crunch path size:",currentPath.size+"");
+            Gdx.app.log("crunch path size:", currentPath.size + "");
             touched = false;
         }
         return false;
@@ -96,9 +98,9 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
             touch.sub(sd.position.x - sd.center.x, sd.position.y - sd.center.y);
             touch.rotateDeg(-sd.rotation);
             touch.scl(1f / sd.scale);
-//            if (currentPath.size > 0 && currentPath.get(currentPath.size - 1).dst(touch) >= 1f) {
+            if (currentPath.size > 0 && currentPath.get(currentPath.size - 1).dst(touch) >= 1f) {
                 currentPath.add(touch.cpy());
-//            }
+            }
         }
         return false;
     }
@@ -121,8 +123,9 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
                 .rotate(0, 0, 1, sd.rotation)
                 .scale(sd.scale, sd.scale, 1)
         );
+        SunshineBlue.instance.shapedrawer.update(true);
 //        Statics.shapedrawer.setTextureRegion(new TextureRegion(((RectTextureObject)Statics.userObjects.get(0)).texture));
-        boolean flag = false;
+        boolean flag = true;
         if (sd.visible) {
 
             if (dd.path.size > 0) {
@@ -136,13 +139,14 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
                     batch.setColor(partialPath.color);
                     if (flag) {
                         SunshineBlue.instance.shapedrawer.setColor(partialPath.color);
-                        if (partialPath.path.size >= 1) {
+                        if (partialPath.path.size == 1) {
                             SunshineBlue.instance.shapedrawer.filledCircle(partialPath.path.get(0), partialPath.size / 2f);
-                            if (partialPath.path.size >= 2) {
-                                SunshineBlue.instance.shapedrawer.path(partialPath.path, partialPath.size, JoinType.POINTY, true);
-                            }
-                            SunshineBlue.instance.shapedrawer.filledCircle(partialPath.path.get(partialPath.path.size - 1), partialPath.size / 2f);
                         }
+                        if (partialPath.path.size >= 2) {
+                            SunshineBlue.instance.shapedrawer.path(partialPath.path, partialPath.size, JoinType.SMOOTH, true);
+                        }
+//                            SunshineBlue.instance.shapedrawer.filledCircle(partialPath.path.get(partialPath.path.size - 1), partialPath.size / 2f);
+
                     } else {
                         float dist = 1f;
                         Vector2 first = partialPath.path.get(0).cpy();
@@ -182,8 +186,10 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
 //            colors.reverse();
                 batch.end();
                 Gdx.gl.glEnable(GL20.GL_BLEND);
-                Gdx.gl.glBlendFuncSeparate(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA,GL20.GL_ONE, GL20.GL_ONE);
-
+                Gdx.gl20.glBlendFuncSeparate(
+                        Gdx.gl20.GL_SRC_ALPHA, Gdx.gl30.GL_ONE_MINUS_SRC_ALPHA,
+                        Gdx.gl20.GL_ONE, Gdx.gl20.GL_ONE);
+                batch.setColor(Color.WHITE);
                 batch.begin();
                 int cnt = 0;
                 for (Array<Vector2> va : drawspos1) {
@@ -235,7 +241,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
 
 
                 batch.end();
-                Gdx.gl.glDisable(GL20.GL_BLEND);
+//                Gdx.gl.glDisable(GL20.GL_BLEND);
                 Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
                 batch.begin();
             }
