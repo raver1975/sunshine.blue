@@ -21,28 +21,30 @@ import java.util.Comparator;
 
 public class SerializeUtil {
     public static Json json = new Json();
+
     static {
-        json.setSerializer(Vector2.class, new Json.Serializer<Vector2>(){
+        json.setSerializer(Vector2.class, new Json.Serializer<Vector2>() {
 
             @Override
             public void write(Json json, Vector2 v, Class knownType) {
                 json.writeObjectStart();
-                json.writeValue("v", Float.floatToIntBits(v.x)+","+Float.floatToIntBits(v.y));
+                json.writeValue("v", Float.floatToIntBits(v.x) + "," + Float.floatToIntBits(v.y));
                 json.writeObjectEnd();
             }
 
             @Override
             public Vector2 read(Json json, JsonValue jsonData, Class type) {
-                Vector2 v=new Vector2();
-                String bs=jsonData.child().asString();
-                String[] bd=bs.split(",");
-                float a=Float.intBitsToFloat(Integer.parseInt(bd[0]));
-                float b=Float.intBitsToFloat(Integer.parseInt(bd[1]));
-                v.set(a,b);
+                Vector2 v = new Vector2();
+                String bs = jsonData.child().asString();
+                String[] bd = bs.split(",");
+                float a = Float.intBitsToFloat(Integer.parseInt(bd[0]));
+                float b = Float.intBitsToFloat(Integer.parseInt(bd[1]));
+                v.set(a, b);
                 return v;
             }
         });
     }
+
     public static JsonReader jsonReader = new JsonReader();
 
     public static JsonValue serialize(Object o) {
@@ -50,9 +52,9 @@ public class SerializeUtil {
     }
 
 
-    public static void deserializeScene(JsonValue val,boolean merge) {
+    public static void deserializeScene(JsonValue val, boolean merge) {
         Gdx.app.log("scene", val.toJson(JsonWriter.OutputType.minimal));
-        if (!merge){
+        if (!merge) {
             SunshineBlue.instance.userObjects.clear();
         }
         JsonValue array = val.get("userObjects");
@@ -82,7 +84,7 @@ public class SerializeUtil {
         });
     }
 
-    public static void load(String cid,boolean merge) {
+    public static void load(String cid, boolean merge) {
         if (cid == null || cid.isEmpty() || !cid.startsWith("Q")) {
             return;
         }
@@ -93,9 +95,9 @@ public class SerializeUtil {
             public void downloaded(byte[] file) {
                 JsonReader reader = new JsonReader();
                 JsonValue val = reader.parse(new String(file));
-                if (val!=null) {
+                if (val != null) {
                     Gdx.app.log("val", val.toJson(JsonWriter.OutputType.minimal));
-                    deserializeScene(val,merge);
+                    deserializeScene(val, merge);
                 }
             }
 
@@ -108,7 +110,7 @@ public class SerializeUtil {
 
     public static void save(String name, IPFSCIDListener ipfscidListener) {
         SunshineBlue.instance.batch.begin();
-        Pixmap screenshot = FrameBufferUtils.drawObjectsPix(SunshineBlue.instance.batch, SunshineBlue.instance.viewport, SunshineBlue.instance.userObjects,400*SunshineBlue.instance.viewport.getScreenWidth()/SunshineBlue.instance.viewport.getScreenHeight(),400,true);
+        Pixmap screenshot = FrameBufferUtils.drawObjectsPix(SunshineBlue.instance.batch, SunshineBlue.instance.viewport, SunshineBlue.instance.userObjects, 400 * SunshineBlue.instance.viewport.getScreenWidth() / SunshineBlue.instance.viewport.getScreenHeight(), 400, true);
         SunshineBlue.instance.batch.end();
         JsonValue val = serializeScene();
         IPFSUtils.uploadPngtoIPFS(screenshot, new IPFSCIDListener() {
@@ -120,9 +122,13 @@ public class SerializeUtil {
                     public void cid(String cid) {
                         if (cid != null && !cid.isEmpty()) {
                             Preferences prefs = Gdx.app.getPreferences("scenes");
-                            prefs.putString(name, cid);
+                            prefs.remove("current");
+                            if (!prefs.get().values().contains(cid)) {
+                                prefs.putString(name, cid);
+                            }
                             prefs.putString("current", cid);
                             prefs.flush();
+
                             SunshineBlue.instance.otherCIDS.add(cid);
                             SunshineBlue.nativeNet.doneSavingScene(cid);
                             if (ipfscidListener != null) {
@@ -190,15 +196,15 @@ public class SerializeUtil {
     }
 
 
-    public static void infromGWTotherCID(String cid){
+    public static void infromGWTotherCID(String cid) {
         Gdx.app.log("infromGWTothercids", cid);
         SunshineBlue.instance.otherCIDS.add(cid);
     }
 
     public static void infromGWT(String cid) {
         Gdx.app.log("infromGWT", cid);
-        SunshineBlue.instance.loadCid=null;
-        load(cid,false);
+        SunshineBlue.instance.loadCid = null;
+        load(cid, false);
         ImageObject.load(cid);
     }
 
@@ -207,9 +213,8 @@ public class SerializeUtil {
     }
 
     public static void save(IPFSCIDListener listener) {
-        save("autosave-" + TimeUtils.millis(),listener);
+        save("autosave-" + TimeUtils.millis(), listener);
     }
-
 
 
 }
