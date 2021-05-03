@@ -21,6 +21,8 @@ import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
 public class DrawOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
 
     public final Stage stage;
+    public final Slider slider;
+    public final DialogColorPicker picker;
     Touchable touchable;
     BaseObject drawObject;
 
@@ -51,7 +53,7 @@ public class DrawOverlay extends ScreenObject implements Overlay, Touchable, Dra
         Spinner.SpinnerStyle style = new Spinner.SpinnerStyle(buttonMinusStyle, buttonPlusStyle, textFieldStyle);
 
         skin1.add("default", style);
-        DialogColorPicker picker = new DialogColorPicker("main", skin1, new DialogColorPicker.ColorListener() {
+        picker = new DialogColorPicker("main", skin1, new DialogColorPicker.ColorListener() {
             @Override
             public void selected(Color color) {
                 if (drawObject != null) ((DrawObject)drawObject).setColor(color);
@@ -81,11 +83,11 @@ public class DrawOverlay extends ScreenObject implements Overlay, Touchable, Dra
         colorButton.setPosition(10, 10);
         stage.addActor(colorButton);
 
-        Slider slider = new Slider(1, 100, 1, true, skin);
+        slider = new Slider(1, 100, 1, true, skin);
         slider.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 40, 80);
         slider.setSize(20, SunshineBlue.instance.overlayViewport.getWorldHeight() - 150);
-        slider.setValue(10);
-
+        slider.setValue(40);
+//slider.setWidth(100);
         slider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
