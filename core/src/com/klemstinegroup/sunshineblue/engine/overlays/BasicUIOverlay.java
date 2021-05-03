@@ -194,7 +194,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                                     dialog.setBackground(new SpriteDrawable(new Sprite(new Texture(pixmap2))));
                                     dialog.button("prev", 1L);
                                     dialog.button("next", 5L);
-                                    dialog.button("copy", 3L);
+                                    dialog.button("cid", 3L);
                                     dialog.button("load", 2L);
                                     dialog.button("merge", 6L);
                                     dialog.button("cancel", 4L);
