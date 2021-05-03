@@ -108,7 +108,7 @@ public class SerializeUtil {
 
     public static void save(String name, IPFSCIDListener ipfscidListener) {
         SunshineBlue.instance.batch.begin();
-        Pixmap screenshot = FrameBufferUtils.drawObjectsPix(SunshineBlue.instance.batch, SunshineBlue.instance.viewport, SunshineBlue.instance.userObjects,400*SunshineBlue.instance.viewport.getScreenWidth()/SunshineBlue.instance.viewport.getScreenHeight(),400);
+        Pixmap screenshot = FrameBufferUtils.drawObjectsPix(SunshineBlue.instance.batch, SunshineBlue.instance.viewport, SunshineBlue.instance.userObjects,400*SunshineBlue.instance.viewport.getScreenWidth()/SunshineBlue.instance.viewport.getScreenHeight(),400,true);
         SunshineBlue.instance.batch.end();
         IPFSUtils.uploadPngtoIPFS(screenshot, new IPFSCIDListener() {
             @Override
@@ -123,6 +123,7 @@ public class SerializeUtil {
                             prefs.putString(name, cid);
                             prefs.putString("current", cid);
                             prefs.flush();
+                            SunshineBlue.instance.otherCIDS.add(cid);
                             if (ipfscidListener != null) {
                                 ipfscidListener.cid(cid);
                             }

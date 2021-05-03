@@ -1,7 +1,9 @@
 package com.klemstinegroup.sunshineblue.engine.objects;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.*;
@@ -13,6 +15,7 @@ import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.overlays.Drawable;
 import com.klemstinegroup.sunshineblue.engine.overlays.Touchable;
 import com.klemstinegroup.sunshineblue.engine.util.ColorHelper;
+import com.klemstinegroup.sunshineblue.engine.util.RamerDouglasPeucker;
 import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
 import space.earlygrey.shapedrawer.JoinType;
 
@@ -74,6 +77,11 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
 
 
             setBounds();
+            Gdx.app.log("path size:",currentPath.size+"");
+            Array<Vector2> temp= RamerDouglasPeucker.douglasPeucker(currentPath,1f);
+            currentPath.clear();
+            currentPath.addAll(temp);
+            Gdx.app.log("crunch path size:",currentPath.size+"");
             touched = false;
         }
         return false;
@@ -87,9 +95,9 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
             touch.sub(sd.position.x - sd.center.x, sd.position.y - sd.center.y);
             touch.rotateDeg(-sd.rotation);
             touch.scl(1f / sd.scale);
-            if (currentPath.size > 0 && currentPath.get(currentPath.size - 1).dst(touch) >= 1f) {
+//            if (currentPath.size > 0 && currentPath.get(currentPath.size - 1).dst(touch) >= 1f) {
                 currentPath.add(touch.cpy());
-            }
+//            }
         }
         return false;
     }
@@ -114,8 +122,8 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
         );
 //        Statics.shapedrawer.setTextureRegion(new TextureRegion(((RectTextureObject)Statics.userObjects.get(0)).texture));
         boolean flag = false;
-//        int srcFunc = batch.getBlendSrcFunc();
-//        int dstFunc = batch.getBlendDstFunc();
+        int srcFunc = batch.getBlendSrcFunc();
+        int dstFunc = batch.getBlendDstFunc();
         if (sd.visible) {
 
             if (dd.path.size > 0) {
@@ -132,7 +140,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
                         if (partialPath.path.size >= 1) {
                             SunshineBlue.instance.shapedrawer.filledCircle(partialPath.path.get(0), partialPath.size / 2f);
                             if (partialPath.path.size >= 2) {
-                                SunshineBlue.instance.shapedrawer.path(partialPath.path, partialPath.size, JoinType.SMOOTH, true);
+                                SunshineBlue.instance.shapedrawer.path(partialPath.path, partialPath.size, JoinType.POINTY, true);
                             }
                             SunshineBlue.instance.shapedrawer.filledCircle(partialPath.path.get(partialPath.path.size - 1), partialPath.size / 2f);
                         }
@@ -173,7 +181,9 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
                 }
 //            drawspos1.reverse();
 //            colors.reverse();
-//                batch.setBlendFunction(GL20.GL_SRC_COLOR, GL20.GL_SRC_ALPHA);
+                batch.end();
+                batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+                batch.begin();
                 int cnt = 0;
                 for (Array<Vector2> va : drawspos1) {
                     int ss = sizeArray.get(cnt);
@@ -223,9 +233,9 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
                 }*/
 
 
-//                batch.end();
-//                batch.setBlendFunction(srcFunc, dstFunc);
-//                batch.begin();
+                batch.end();
+                batch.setBlendFunction(srcFunc, dstFunc);
+                batch.begin();
             }
         }
 

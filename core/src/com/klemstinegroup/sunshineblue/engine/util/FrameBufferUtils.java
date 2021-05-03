@@ -49,7 +49,7 @@ public class FrameBufferUtils {
         }
     }
 
-    public static Pixmap drawObjectsPix(Batch batch,Viewport viewport, Array<BaseObject> objects,int width,int height) {
+    public static Pixmap drawObjectsPix(Batch batch,Viewport viewport, Array<BaseObject> objects,int width,int height,boolean flip) {
         FrameBuffer fb = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, true);
         fb.begin();
 //        ((OrthographicCamera)viewport.getCamera()).setToOrtho(false,width,height);
@@ -63,6 +63,11 @@ public class FrameBufferUtils {
 //                pixels[y][x] = pixmap.getPixel(x, height - y - 1)>>8;
 //            }
 //        }
-        return flipPixmap(pixmap);
+        if (flip){
+            return flipPixmap(pixmap);
+        }
+        else {
+            return pixmap;
+        }
     }
 }

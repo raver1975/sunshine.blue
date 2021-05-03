@@ -66,11 +66,14 @@ public class BrushData {
 
         d1.set(width / 2f, this.height / 2f);
         d2.set(0, 0);
-        float maxdist = d1.dst(d2) / 1.5f;
+        float maxdist = d1.dst(d2);
         for (int yy = 0; yy < this.height; yy++) {
             for (int xx = 0; xx < width; xx++) {
-                grid[xx][yy] = Math.min(1, Math.max(0, 1f - d1.dst(d2.set(xx, yy)) / maxdist));
+                grid[xx][yy] = Math.min(1, Math.max(0, (1f - d1.dst(d2.set(xx, yy)) / maxdist)));
+                if (d1.dst(d2.set(xx, yy))>(.5f*n))grid[xx][yy]=0;
+                if (d1.dst(d2.set(xx, yy))<(.45f*n))grid[xx][yy]=1;
                 pixmap1.setColor(1, 1, 1, grid[xx][yy]);
+//                pixmap1.setColor(1, 1, 1, .8f);
                 pixmap1.drawPixel(xx, yy);
             }
         }

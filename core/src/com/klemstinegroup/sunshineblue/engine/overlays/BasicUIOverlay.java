@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.JsonReader;
@@ -217,6 +218,28 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                     });
 
                 }
+            }
+        });
+        randomButton.addListener(new ActorGestureListener() {
+            @Override
+            public boolean longPress(Actor actor, float x, float y) {
+                Dialog dialog = new Dialog("Erase all saved scenes?", skin, "dialog") {
+                    @Override
+                    protected void result(Object object) {
+                        if (object.equals(true)) {
+                            Preferences prefs = Gdx.app.getPreferences("scenes");
+                            prefs.clear();
+                            prefs.flush();
+                            SunshineBlue.instance.otherCIDS.clear();
+                        }
+                        hide();
+                    }
+                };
+                dialog.setModal(true);
+                dialog.button("Erase",true);
+                dialog.button("Cancel",false);
+                dialog.show(stage);
+                return true;
             }
         });
         stage.addActor(randomButton);

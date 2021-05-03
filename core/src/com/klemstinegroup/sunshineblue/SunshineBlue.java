@@ -317,7 +317,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         recHalfSec += Gdx.graphics.getDeltaTime();
         if (isRecording && recHalfSec > (1f / fps)) {
             recHalfSec = 0;
-            apng.write(FrameBufferUtils.drawObjectsPix(batch, viewport, userObjects, 600 * viewport.getScreenWidth() / viewport.getScreenHeight(), 600));
+            apng.write(FrameBufferUtils.drawObjectsPix(batch, viewport, userObjects, 600 * viewport.getScreenWidth() / viewport.getScreenHeight(), 600,false));
             if (recCounter-- <= 0) {
                 stopRecording();
             }
