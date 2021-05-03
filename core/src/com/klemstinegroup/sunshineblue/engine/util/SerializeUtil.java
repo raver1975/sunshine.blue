@@ -124,10 +124,10 @@ public class SerializeUtil {
                             prefs.putString("current", cid);
                             prefs.flush();
                             SunshineBlue.instance.otherCIDS.add(cid);
+                            SunshineBlue.nativeNet.doneSavingScene(cid);
                             if (ipfscidListener != null) {
                                 ipfscidListener.cid(cid);
                             }
-                            SunshineBlue.nativeNet.doneSavingScene(cid);
                         }
                     }
 
