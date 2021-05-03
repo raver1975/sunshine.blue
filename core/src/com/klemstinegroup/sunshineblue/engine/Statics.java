@@ -28,7 +28,7 @@ public class Statics {
 
     public static String IPFSGateway = "https://ipfs.io/ipfs/";
     public static final String CORSGateway="https://api.codetabs.com/v1/proxy?quest=";
-    public static String IPFSMediaViewer="QmV84uYberzkFFviuuPiL87BKH2oa1WYHredqgBrdY16mm";
+    public static String IPFSMediaViewer="QmZqVjSDpCnmntgWz1ENPJMGQ7mnbtxAUvhzpYmMvz5i4V";
 
     public Statics(){}
 

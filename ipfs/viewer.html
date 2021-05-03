@@ -13,7 +13,7 @@
     jscolor.trigger('input change');
 </script>
 <img src="https://sunshine.blue/favicon-32x32.png" id="image"/><br/><br/>
-<button id="change-color" value="#dc143c" data-jscolor="{value:'#dc143c',onChange:'update(this)', closeButton:true, closeText:'Close', backgroundColor:'#333', buttonColor:'#FFF'}"><a href="https://sunshine.blue" target="_blank"><img  src="https://sunshine.blue/favicon-32x32.png"/></br>sunshine.blue</a></button>
+<button id="change-color" value="#dc143c" data-jscolor="{value:'#dc143c',onChange:'update(this)', closeButton:true, closeText:'Close', backgroundColor:'#333', buttonColor:'#FFF'}"><a id='url' href="https://sunshine.blue" target="_blank"><img  src="https://sunshine.blue/favicon-32x32.png"/></br>sunshine.blue</a></button>
 <!--<button id="change-color">Click here to pick a font color</button>-->
 <!--<img id="image" src="https://ipfs.io/ipfs/QmWpTD4gjmJFhhPVwiARBUo55HEWq7v4uTv11C9pw9ZzdZ"/>-->
 </body>
@@ -31,11 +31,13 @@
         }
         console.log('Query variable %s not found', variable);
     }
-
-
-    var url = "https://ipfs.io/ipfs/" + getQueryVariable('url')
-    var image = document.getElementById("image");
-    image.src = url;
+    var urr = getQueryVariable('url');
+    if (urr) {
+        var url = "https://ipfs.io/ipfs/" + urr;
+        var image = document.getElementById("image");
+        image.src = url;
+        document.getElementById("url").href = "https://sunshine.blue?" + urr;
+    }
 
 </script>
 </html>
