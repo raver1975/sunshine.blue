@@ -246,7 +246,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         stage.addActor(randomButton);
 
 
-        Actor screenshotButton = new TextButton("PNG", skin);
+        Actor screenshotButton = new TextButton("Png", skin);
         screenshotButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 180);
         screenshotButton.addListener(new ClickListener() {
 
