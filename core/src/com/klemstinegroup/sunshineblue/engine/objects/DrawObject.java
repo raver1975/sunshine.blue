@@ -29,6 +29,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
     private Color color = Color.WHITE;
     private int size = 5;
     private boolean touched;
+    private Vector2 v=new Vector2();
 
     public DrawObject(DrawData dd) {
         this.dd = dd;
@@ -182,7 +183,9 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
 //            drawspos1.reverse();
 //            colors.reverse();
                 batch.end();
-                batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+                batch.setBlendFunction(-1, -1);
+                Gdx.gl.glBlendFuncSeparate(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA,GL20.GL_ONE, GL20.GL_ONE);
+
                 batch.begin();
                 int cnt = 0;
                 for (Array<Vector2> va : drawspos1) {
@@ -202,10 +205,10 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
                     } else if (va.size > 1) {
 //                        temp.set(va.get(0));
 //                        batch.draw(dd.BrushData.texture, temp.x - dd.BrushData.halfWidth, temp.y - dd.BrushData.halfHeight, dd.BrushData.halfWidth, dd.BrushData.halfHeight, dd.BrushData.texture.getRegionWidth(), dd.BrushData.texture.getRegionHeight(), 1, 1, 0);
-                        Vector2 v = va.get(0);
-                        batch.draw(tex, v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);
-                        v = va.get(va.size - 1);
-                        batch.draw(tex, v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);
+//                        Vector2 v = va.get(0);
+//                        batch.draw(tex, v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);
+//                        Vector2 v = va.get(va.size - 1);
+//                        batch.draw(tex, v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);
                         for (int vv = 1; vv < va.size; vv++) {
                             v = va.get(vv);
                             batch.draw(tex, v.x - hw, v.y - hh, hw, hh, w, h, 1, 1, 0);

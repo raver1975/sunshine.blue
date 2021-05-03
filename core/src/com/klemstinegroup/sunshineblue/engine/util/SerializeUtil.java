@@ -207,6 +207,10 @@ public class SerializeUtil {
         save("autosave-" + TimeUtils.millis());
     }
 
+    public static void save(IPFSCIDListener listener) {
+        save("autosave-" + TimeUtils.millis(),listener);
+    }
+
 
 
 }

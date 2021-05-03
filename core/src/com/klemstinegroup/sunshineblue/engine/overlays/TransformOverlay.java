@@ -1,5 +1,7 @@
 package com.klemstinegroup.sunshineblue.engine.overlays;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Polygon;
@@ -19,6 +21,7 @@ import com.klemstinegroup.sunshineblue.engine.objects.DrawObject;
 import com.klemstinegroup.sunshineblue.engine.objects.FontObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
 import com.klemstinegroup.sunshineblue.engine.util.ColorHelper;
+import com.klemstinegroup.sunshineblue.engine.util.IPFSCIDListener;
 import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
 
 
@@ -75,6 +78,41 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
             }
         });
         delButton.setPosition(10, 140);
+        delButton.addListener(new ActorGestureListener() {
+            @Override
+            public boolean longPress(Actor actor, float x, float y) {
+                Dialog dialog = new Dialog("New scene?", skin) {
+                    @Override
+                    protected void result(Object object) {
+                        if (object.equals(true)) {
+                            SerializeUtil.save(new IPFSCIDListener(){
+                                @Override
+                                public void cid(String cid) {
+                                    SunshineBlue.instance.selectedObjects.clear();
+                                    for (BaseObject bo:SunshineBlue.instance.userObjects){
+                                        SunshineBlue.removeUserObj(bo);
+                                    }
+                                    SunshineBlue.instance.userObjects.clear();
+                                    Overlay.setOverlay(SunshineBlue.instance.BASIC_UI_OVERLAY);
+                                }
+
+                                @Override
+                                public void uploadFailed(Throwable t) {
+
+                                }
+                            });
+
+                        }
+                        hide();
+                    }
+                };
+                dialog.setModal(true);
+                dialog.button("Erase", true);
+                dialog.button("Cancel", false);
+                dialog.show(stage);
+                return true;
+            }
+        });
         stage.addActor(delButton);
 
         TextButton downArrow = new TextButton("v", skin);

@@ -121,7 +121,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         });
         stage.addActor(apngButton);
 
-        Actor randomButton = new TextButton("load", skin);
+        Actor randomButton = new TextButton("Load", skin);
         randomButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 120);
         randomButton.addListener(new ClickListener() {
 
@@ -224,7 +224,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         randomButton.addListener(new ActorGestureListener() {
             @Override
             public boolean longPress(Actor actor, float x, float y) {
-                Dialog dialog = new Dialog("Erase all saved scenes?", skin, "dialog") {
+                Dialog dialog = new Dialog("Erase all saved scenes?", skin) {
                     @Override
                     protected void result(Object object) {
                         if (object.equals(true)) {
