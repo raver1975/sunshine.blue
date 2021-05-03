@@ -154,11 +154,10 @@ public class SerializeUtil {
 
         JsonValue array = new JsonValue(JsonValue.ValueType.array);
         val.addChild("userObjects", array);
-        int cnt = 0;
         for (BaseObject bo : SunshineBlue.instance.userObjects) {
-            if (bo instanceof ScreenObject) {
-                ((ScreenObject) bo).sd.layer = cnt++;
-            }
+//            if (bo instanceof ScreenObject) {
+//                ((ScreenObject) bo).sd.layer = cnt++;
+//            }
             Gdx.app.log("scene", "adding:" + bo.getClass());
             array.addChild(((SerialInterface) bo).serialize());
         }
