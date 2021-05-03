@@ -80,7 +80,14 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
 
             setBounds();
             Gdx.app.log("path size:", currentPath.size + "");
-            Array<Vector2> temp1= LineSmoother.smoothLine2(currentPath);
+
+            Array<Vector2> temp1=new Array<>();
+            if (currentPath.size>1) {
+                temp1 = LineSmoother.smoothLine2(currentPath);
+            }
+            else{
+                temp1.addAll(currentPath);
+            }
             Array<Vector2> temp = RamerDouglasPeucker.douglasPeucker(temp1, 1f);
             currentPath.clear();
             currentPath.addAll(temp);
