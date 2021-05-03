@@ -24,6 +24,8 @@ import com.klemstinegroup.sunshineblue.engine.util.ColorHelper;
 import com.klemstinegroup.sunshineblue.engine.util.IPFSCIDListener;
 import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
 
+import java.util.Iterator;
+
 
 public class TransformOverlay extends BaseObject implements Overlay, Touchable, Drawable ,Gestureable{
 
@@ -89,8 +91,9 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                                 @Override
                                 public void cid(String cid) {
                                     SunshineBlue.instance.selectedObjects.clear();
-                                    for (BaseObject bo:SunshineBlue.instance.userObjects){
-                                        SunshineBlue.removeUserObj(bo);
+                                    Iterator<BaseObject> i=SunshineBlue.instance.userObjects.iterator();
+                                    while (i.hasNext()){
+                                        SunshineBlue.removeUserObj(i.next());
                                     }
                                     SunshineBlue.instance.userObjects.clear();
                                     Overlay.setOverlay(SunshineBlue.instance.BASIC_UI_OVERLAY);
