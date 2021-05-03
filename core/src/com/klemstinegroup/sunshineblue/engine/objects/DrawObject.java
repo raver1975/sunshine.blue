@@ -123,8 +123,6 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
         );
 //        Statics.shapedrawer.setTextureRegion(new TextureRegion(((RectTextureObject)Statics.userObjects.get(0)).texture));
         boolean flag = false;
-        int srcFunc = batch.getBlendSrcFunc();
-        int dstFunc = batch.getBlendDstFunc();
         if (sd.visible) {
 
             if (dd.path.size > 0) {
@@ -183,7 +181,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
 //            drawspos1.reverse();
 //            colors.reverse();
                 batch.end();
-                batch.setBlendFunction(-1, -1);
+                Gdx.gl.glEnable(GL20.GL_BLEND);
                 Gdx.gl.glBlendFuncSeparate(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA,GL20.GL_ONE, GL20.GL_ONE);
 
                 batch.begin();
@@ -237,7 +235,8 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
 
 
                 batch.end();
-                batch.setBlendFunction(srcFunc, dstFunc);
+                Gdx.gl.glDisable(GL20.GL_BLEND);
+                Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
                 batch.begin();
             }
         }
