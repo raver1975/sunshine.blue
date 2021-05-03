@@ -80,42 +80,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
             }
         });
         delButton.setPosition(10, 140);
-        delButton.addListener(new ActorGestureListener() {
-            @Override
-            public boolean longPress(Actor actor, float x, float y) {
-                Dialog dialog = new Dialog("New scene?", skin) {
-                    @Override
-                    protected void result(Object object) {
-                        if (object.equals(true)) {
-                            SerializeUtil.save(new IPFSCIDListener(){
-                                @Override
-                                public void cid(String cid) {
-                                    SunshineBlue.instance.selectedObjects.clear();
-                                    Iterator<BaseObject> i=SunshineBlue.instance.userObjects.iterator();
-                                    while (i.hasNext()){
-                                        SunshineBlue.removeUserObj(i.next());
-                                    }
-                                    SunshineBlue.instance.userObjects.clear();
-                                    Overlay.setOverlay(SunshineBlue.instance.BASIC_UI_OVERLAY);
-                                }
 
-                                @Override
-                                public void uploadFailed(Throwable t) {
-
-                                }
-                            });
-
-                        }
-                        hide();
-                    }
-                };
-                dialog.setModal(true);
-                dialog.button("Erase", true);
-                dialog.button("Cancel", false);
-                dialog.show(stage);
-                return true;
-            }
-        });
         stage.addActor(delButton);
 
         TextButton downArrow = new TextButton("v", skin);
@@ -374,13 +339,6 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                 }
             });
             cb.addListener(new ActorGestureListener() {
-                /*@Override
-                public void tap(InputEvent event, float x, float y, int count, int button) {
-                    if (count>1){
-                        ((ScreenObject)ba).sd.visible=!((ScreenObject)ba).sd.visible;
-                    }
-                }
-*/
                 @Override
                 public boolean longPress(Actor actor, float x, float y) {
 //                    cb.setChecked(!cb.isChecked());

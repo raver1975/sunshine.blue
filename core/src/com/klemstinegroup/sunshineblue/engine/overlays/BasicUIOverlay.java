@@ -134,6 +134,9 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 if (SunshineBlue.instance.otherCIDS.size() > 0) {
 
                     Iterator<String> iter = SunshineBlue.instance.otherCIDS.iterator();
+                    if (otherIndex>SunshineBlue.instance.otherCIDS.size()-1){
+                        otherIndex=SunshineBlue.instance.otherCIDS.size()-1;
+                    }
                     for (int i = 0; i < otherIndex; i++) {
                         iter.next();
                     }
@@ -224,23 +227,49 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         randomButton.addListener(new ActorGestureListener() {
             @Override
             public boolean longPress(Actor actor, float x, float y) {
-                Dialog dialog = new Dialog("Erase all saved scenes?", skin) {
+                Dialog dialog = new Dialog("Erase scene?", skin) {
                     @Override
                     protected void result(Object object) {
-                        if (object.equals(true)) {
+                        if (object.equals(2)) {
                             Preferences prefs = Gdx.app.getPreferences("scenes");
                             prefs.clear();
                             prefs.flush();
                             SunshineBlue.instance.otherCIDS.clear();
                         }
+                        else if (object.equals(1)){
+                            SerializeUtil.save(new IPFSCIDListener(){
+                                @Override
+                                public void cid(String cid) {
+                                    SunshineBlue.instance.selectedObjects.clear();
+                                    Iterator<BaseObject> i=SunshineBlue.instance.userObjects.iterator();
+                                    while (i.hasNext()){
+                                        SunshineBlue.removeUserObj(i.next());
+                                    }
+                                    SunshineBlue.instance.userObjects.clear();
+                                    Overlay.setOverlay(SunshineBlue.instance.BASIC_UI_OVERLAY);
+                                    Preferences prefs = Gdx.app.getPreferences("scenes");
+                                    prefs.remove(cid);
+                                    prefs.flush();
+                                    SunshineBlue.instance.otherCIDS.remove(cid);
+                                }
+
+                                @Override
+                                public void uploadFailed(Throwable t) {
+
+                                }
+                            });
+                        }
                         hide();
                     }
                 };
                 dialog.setModal(true);
-                dialog.button("Erase", true);
-                dialog.button("Cancel", false);
+                dialog.button("Erase Scene", 1);
+                dialog.button("Erase All", 2);
+                dialog.button("Cancel", 3);
                 dialog.show(stage);
                 return true;
+
+
             }
         });
         stage.addActor(randomButton);
