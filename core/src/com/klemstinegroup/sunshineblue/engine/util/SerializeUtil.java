@@ -110,10 +110,10 @@ public class SerializeUtil {
         SunshineBlue.instance.batch.begin();
         Pixmap screenshot = FrameBufferUtils.drawObjectsPix(SunshineBlue.instance.batch, SunshineBlue.instance.viewport, SunshineBlue.instance.userObjects,400*SunshineBlue.instance.viewport.getScreenWidth()/SunshineBlue.instance.viewport.getScreenHeight(),400,true);
         SunshineBlue.instance.batch.end();
+        JsonValue val = serializeScene();
         IPFSUtils.uploadPngtoIPFS(screenshot, new IPFSCIDListener() {
             @Override
             public void cid(String cid) {
-                JsonValue val = serializeScene();
                 val.addChild("screenshot", new JsonValue(cid));
                 SunshineBlue.nativeNet.uploadIPFS(val.toJson(JsonWriter.OutputType.javascript).getBytes(StandardCharsets.UTF_8), new IPFSCIDListener() {
                     @Override

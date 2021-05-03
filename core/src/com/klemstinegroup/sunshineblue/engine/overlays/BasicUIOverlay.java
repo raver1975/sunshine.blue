@@ -72,12 +72,13 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 SerializeUtil.save();
+                SerializeUtil.save();
             }
         });
         stage.addActor(saveButton);
 
         Actor popButton = new TextButton("Pop", skin);
-        popButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 120);
+        popButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 300);
         popButton.addListener(new ClickListener() {
 
             @Override
@@ -102,7 +103,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         });
         stage.addActor(popButton);
 
-        Actor apngButton = new TextButton("REC", skin);
+        Actor apngButton = new TextButton("Rec", skin);
         apngButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 240);
         apngButton.addListener(new ClickListener() {
 
@@ -120,8 +121,8 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         });
         stage.addActor(apngButton);
 
-        Actor randomButton = new TextButton("?", skin);
-        randomButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 300);
+        Actor randomButton = new TextButton("load", skin);
+        randomButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 120);
         randomButton.addListener(new ClickListener() {
 
             @Override
@@ -236,8 +237,8 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                     }
                 };
                 dialog.setModal(true);
-                dialog.button("Erase",true);
-                dialog.button("Cancel",false);
+                dialog.button("Erase", true);
+                dialog.button("Cancel", false);
                 dialog.show(stage);
                 return true;
             }
@@ -328,7 +329,10 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 super.clicked(event, x, y);
                 Gdx.input.setOnscreenKeyboardVisible(false);
                 DrawObject doi = new DrawObject();
+                doi.setSize((int) SunshineBlue.instance.DRAW_OVERLAY.slider.getValue());
+                doi.setColor(SunshineBlue.instance.DRAW_OVERLAY.picker.getSelectedColor());
                 SunshineBlue.addUserObj(doi);
+
                 SunshineBlue.instance.DRAW_OVERLAY.setObject(doi);
                 SunshineBlue.instance.DRAW_OVERLAY.setTouchable(doi);
                 Overlay.setOverlay(SunshineBlue.instance.DRAW_OVERLAY);
@@ -433,7 +437,13 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 //            batch.draw(screenshotPixmap,50,50);
 //        }
         stage.draw();
-        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 45, SunshineBlue.instance.overlayViewport.getWorldHeight() - 280);
+        SunshineBlue.instance.font.setColor(Color.BLACK);
+        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 39, SunshineBlue.instance.overlayViewport.getWorldHeight() - 105);
+        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 40, SunshineBlue.instance.overlayViewport.getWorldHeight() - 104);
+        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 41, SunshineBlue.instance.overlayViewport.getWorldHeight() - 105);
+        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 40, SunshineBlue.instance.overlayViewport.getWorldHeight() - 106);
+        SunshineBlue.instance.font.setColor(Color.WHITE);
+        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 40, SunshineBlue.instance.overlayViewport.getWorldHeight() - 105);
 
     }
 
