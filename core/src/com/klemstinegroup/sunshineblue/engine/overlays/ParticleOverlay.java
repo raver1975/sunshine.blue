@@ -194,7 +194,14 @@ public class ParticleOverlay extends ScreenObject implements Overlay, Touchable,
                 if (index == selectBox.getItems().size - 1) {
                     index = -1;
                 }
-                selectBox.setSelectedIndex(index + 1);
+                int finalIndex = index;
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        selectBox.setSelectedIndex(finalIndex + 1);
+                    }
+                });
+
             }
         });
         downArrow.setPosition(selectBox.getX() + selectBox.getWidth() + 10, 10);
@@ -208,7 +215,14 @@ public class ParticleOverlay extends ScreenObject implements Overlay, Touchable,
                 if (index == 0) {
                     index = selectBox.getItems().size;
                 }
-                selectBox.setSelectedIndex(index - 1);
+                int finalIndex = index;
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        selectBox.setSelectedIndex(finalIndex - 1);
+                    }
+                });
+
             }
         });
         upArrow.setPosition(selectBox.getX() + selectBox.getWidth() + 10, 70);

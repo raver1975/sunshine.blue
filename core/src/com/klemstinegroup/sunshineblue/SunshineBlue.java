@@ -362,7 +362,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         }
         batch.setTransformMatrix(mx4Batch);
         if (isRecording) {
-            font.draw(batch, "" + (recCounter / 10), 10, 10);
+            font.draw(batch, "" + (recCounter / 10f), 10, 10);
         }
         batch.end();
         //------------------------------------------------------------
