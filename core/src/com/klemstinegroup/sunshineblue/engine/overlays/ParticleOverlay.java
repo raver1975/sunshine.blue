@@ -22,18 +22,20 @@ import com.klemstinegroup.sunshineblue.colorpicker.DialogColorPicker;
 import com.klemstinegroup.sunshineblue.colorpicker.Spinner;
 import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
 import com.klemstinegroup.sunshineblue.engine.objects.FontObject;
+import com.klemstinegroup.sunshineblue.engine.objects.ParticleObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
+import com.klemstinegroup.sunshineblue.engine.util.ParticleUtil;
 
-public class FontOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
+public class ParticleOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
 
     public final Stage stage;
     //    private final List<String> list;
     private final SelectBox selectBox;
-    public BaseObject fontObject;
+    public BaseObject particleObject;
     private Vector2 touchdown = new Vector2();
     Vector2 touchdrag = new Vector2();
 
-    public FontOverlay() {
+    public ParticleOverlay() {
         FileHandle[] fontList = Gdx.files.internal("fonts").list();
         new BitmapFont();
         stage = new Stage(SunshineBlue.instance.overlayViewport);
@@ -104,7 +106,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         DialogColorPicker picker = new DialogColorPicker("main", skin1, new DialogColorPicker.ColorListener() {
             @Override
             public void selected(Color color) {
-                if (fontObject != null) ((FontObject)fontObject).setColor(color);
+                if (particleObject != null) ((FontObject) particleObject).setColor(color);
             }
         }, Color.WHITE);
 //        picker.setResizable(true);
@@ -113,7 +115,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         picker.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (fontObject != null) ((FontObject)fontObject).setColor(picker.getSelectedColor());
+                if (particleObject != null) ((FontObject) particleObject).setColor(picker.getSelectedColor());
             }
         });
 //        picker.setScale(.7f);
@@ -159,9 +161,9 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
 
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (fontObject != null) {
-                    ((FontObject)fontObject).setFont((String) ((SelectBox<String>) actor).getSelected());
-                    generate(SunshineBlue.instance.assetManager, ((FontObject)fontObject));
+                if (particleObject != null) {
+//                    ((FontObject) particleObject).setFont((String) ((SelectBox<String>) actor).getSelected());
+//                    generate(SunshineBlue.instance.assetManager, ((ParticleObject) particleObject));
                 }
             }
         });
@@ -206,7 +208,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         upArrow.setPosition(selectBox.getX() + selectBox.getWidth() + 10, 70);
         stage.addActor(upArrow);
 
-        Slider slider = new Slider(1, 218, 1, true, skin);
+        /*Slider slider = new Slider(1, 218, 1, true, skin);
         slider.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 40, 80);
         slider.setSize(20, SunshineBlue.instance.overlayViewport.getWorldHeight() - 150);
         slider.setValue(50);
@@ -217,21 +219,21 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
                 if (!slider.isDragging()) {
 
 
-                    ((FontObject)fontObject).setSize((int) (slider.getValue()));
-                    generate(SunshineBlue.instance.assetManager, ((FontObject)fontObject));
+                    ((FontObject) particleObject).setSize((int) (slider.getValue()));
+//                    generate(SunshineBlue.instance.assetManager, ((ParticleObject) particleObject));
                     setBounds();
                 }
             }
-        });
+        });*/
         ;
-        stage.addActor(slider);
+//        stage.addActor(slider);
         stage.addActor(exitButton);
         stage.addActor(selectBox);
     }
 
     @Override
     public void setObject(BaseObject fontObject) {
-        this.fontObject = fontObject;
+        this.particleObject = fontObject;
     }
 
     @Override
@@ -258,7 +260,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        ((FontObject)fontObject).setBounds();
+        ((ParticleObject) particleObject).setBounds();
         return false;
     }
 
@@ -266,8 +268,8 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         SunshineBlue.instance.viewport.unproject(touchdrag.set(screenX, screenY));
 
-        ((FontObject)fontObject).sd.position.add(touchdrag.cpy().sub(touchdown));
-        ((FontObject)fontObject).setBounds();
+        ((ParticleObject) particleObject).sd.position.add(touchdrag.cpy().sub(touchdown));
+        ((ParticleObject) particleObject).setBounds();
 
         touchdown.set(touchdrag);
         return false;
@@ -287,8 +289,8 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
     @Override
     public void draw(Batch batch) {
         stage.draw();
-        if (fontObject != null) {
-            ((FontObject)fontObject).draw(batch);
+        if (particleObject != null) {
+            ((ParticleObject) particleObject).draw(batch);
         }
     }
 
@@ -310,17 +312,19 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
     @Override
     public void setInput() {
         SunshineBlue.instance.im.addProcessor(stage);
-        if (fontObject != null) {
-            SunshineBlue.instance.im.addProcessor(((FontObject) fontObject));
-            generate(SunshineBlue.instance.assetManager, ((FontObject) fontObject));
+        if (particleObject != null) {
+            SunshineBlue.instance.im.addProcessor(((ParticleObject) particleObject));
+//            generate(SunshineBlue.instance.assetManager, ((ParticleObject) particleObject));
         }
+        ParticleUtil.particleFiles.get(((ParticleObject)particleObject).particleFileName).start();
 
     }
 
     @Override
     public void removeInput() {
         SunshineBlue.instance.im.removeProcessor(stage);
-        if (fontObject != null) SunshineBlue.instance.im.removeProcessor(((FontObject)fontObject));
+        if (particleObject != null) SunshineBlue.instance.im.removeProcessor(((ParticleObject) particleObject));
+        ParticleUtil.particleFiles.get(((ParticleObject)particleObject).particleFileName).reset();
     }
 
     @Override
@@ -328,39 +332,6 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         stage.act();
     }
 
-    public static void generate(AssetManager assetManager, FontObject fontObject) {
-        FileHandle[] fontList = Gdx.files.internal("fonts").list();
-        FileHandle ff = fontList[MathUtils.random(fontList.length - 1)];
-        if (fontObject.fd.fontName == null) {
-            fontObject.fd.fontName = ff.nameWithoutExtension();
-        }
-        for (FileHandle fh : fontList) {
-            if (fh.nameWithoutExtension().equals(fontObject.fd.fontName)) {
-                ff = fh;
-            }
-        }
-//        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(ff);
-        FreetypeFontLoader.FreeTypeFontLoaderParameter parameter;
-        parameter = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
-        parameter.fontParameters.size = fontObject.fd.size;
-        parameter.fontParameters.color = Color.WHITE;
-        parameter.fontFileName = ff.path();
-        String random = ff.pathWithoutExtension() + "-" + fontObject.fd.size + ".ttf";
 
-        assetManager.load(random, BitmapFont.class, parameter);
-        assetManager.finishLoadingAsset(random);
-        fontObject.font = assetManager.get(random, BitmapFont.class);
-        fontObject.setBounds();
-//        sd.center.set(sd.bounds.x / 2f, sd.bounds.y / 2f);
-    }
-
-    public void setList() {
-        String name = ((FontObject)fontObject).fd.fontName;
-        Gdx.app.log("name", name);
-        int dotIndex = name.lastIndexOf('.');
-
-        selectBox.setSelected(dotIndex == -1 ? name : name.substring(0, dotIndex));
-        selectBox.layout();
-    }
 
 }

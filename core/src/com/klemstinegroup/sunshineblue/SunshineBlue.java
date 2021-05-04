@@ -4,6 +4,7 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.net.HttpStatus;
@@ -34,14 +36,12 @@ import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.objects.*;
 import com.klemstinegroup.sunshineblue.engine.overlays.*;
 import com.klemstinegroup.sunshineblue.engine.util.*;
+import com.klemstinegroup.sunshineblue.engine.util.UUID;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 import sun.security.provider.Sun;
 
 import java.io.ByteArrayInputStream;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 import static com.badlogic.gdx.Application.LOG_INFO;
 
@@ -56,6 +56,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public DrawOverlay DRAW_OVERLAY;
     public BasicUIOverlay BASIC_UI_OVERLAY;
     public BlankOverlay BLANK_OVERLAY;
+    public ParticleOverlay PARTICLE_OVERLAY;
     public Batch batch;
     public BitmapFont font;
     public Overlay overlay = null;
@@ -75,6 +76,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     private float recHalfSec = 0;
     private static final float fps = 10;
     public float colorFlash=0;
+
 //    private int dstFunc;
 //    private int srcFunc;
 
@@ -168,6 +170,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         DRAW_OVERLAY = new DrawOverlay();
         BASIC_UI_OVERLAY = new BasicUIOverlay();
         BLANK_OVERLAY = new BlankOverlay();
+        PARTICLE_OVERLAY = new ParticleOverlay();
         Gdx.input.setCatchKey(Input.Keys.BACK, true);
         Gdx.input.setCatchKey(Input.Keys.ESCAPE, true);
 //        VisUI.load(VisUI.SkinScale.X2);
@@ -245,7 +248,11 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         for(Map.Entry<String,?> pref:prefs.get().entrySet()){
             SunshineBlue.instance.otherCIDS.add((String)pref.getValue());
         }
+
+      ParticleUtil.getParticleFiles();
     }
+
+
 
 
     @Override

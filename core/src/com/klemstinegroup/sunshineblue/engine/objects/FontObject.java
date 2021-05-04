@@ -53,12 +53,13 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
     public void setBounds() {
         nn = new GlyphLayout();
         nn.setText(font, fd.text);
+        sd.bounds.set(nn.width, nn.height);
         polygon = new Polygon(new float[]{0, 0, sd.bounds.x, 0, sd.bounds.x, sd.bounds.y, 0, sd.bounds.y, 0, 0});
         polygon.setOrigin(sd.center.x, sd.center.y);
         polygon.setScale(sd.scale, sd.scale);
         polygon.rotate(sd.rotation);
         polygon.translate(sd.position.x - sd.center.x, sd.position.y - sd.center.y);
-        sd.bounds.set(nn.width, nn.height);
+
     }
 
     public void setText(String text) {

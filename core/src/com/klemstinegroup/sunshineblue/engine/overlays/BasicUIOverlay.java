@@ -22,10 +22,7 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
-import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
-import com.klemstinegroup.sunshineblue.engine.objects.DrawObject;
-import com.klemstinegroup.sunshineblue.engine.objects.FontObject;
-import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
+import com.klemstinegroup.sunshineblue.engine.objects.*;
 import com.klemstinegroup.sunshineblue.engine.util.*;
 
 import java.util.Collection;
@@ -348,6 +345,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 Overlay.setOverlay(SunshineBlue.instance.IMAGE_OVERLAY);
             }
         });
+        stage.addActor(imageButton);
 
         Actor drawButton = new TextButton("Draw", skin);
         drawButton.setPosition(200, 10);
@@ -369,7 +367,26 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
             }
         });
         stage.addActor(drawButton);
-        stage.addActor(imageButton);
+        Actor fxButton = new TextButton("FX", skin);
+        fxButton.setPosition(300, 10);
+        fxButton.addListener(new ClickListener() {
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                ParticleObject po = new ParticleObject();
+//                doi.setSize((int) SunshineBlue.instance.DRAW_OVERLAY.slider.getValue());
+//                doi.setColor(SunshineBlue.instance.DRAW_OVERLAY.picker.getSelectedColor());
+                SunshineBlue.addUserObj(po);
+
+                SunshineBlue.instance.PARTICLE_OVERLAY.setObject(po);
+//                SunshineBlue.instance.PARTICLE_OVERLAY.setTouchable(doi);
+                Overlay.setOverlay(SunshineBlue.instance.PARTICLE_OVERLAY);
+//                pasteButton.setVisible(true);
+            }
+        });
+        stage.addActor(fxButton);
+
     }
 
     @Override
