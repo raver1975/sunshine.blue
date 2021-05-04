@@ -1169,22 +1169,12 @@ i:ParticlePark_data/brick/Particle Park Dust Left/pp_cloud_1.png:ParticlePark_da
 b:ParticlePark_data/brick/Particle Park Dust Left/CC Attribution 4.0.license:ParticlePark_data/brick/Particle Park Dust Left/CC Attribution 4.0-6fc3500702280098d30d2cf344019798.license:15673:application/unknown:1
 b:ParticlePark_data/brick/Particle Park Dust Left/Particle Park Dust Left.p:ParticlePark_data/brick/Particle Park Dust Left/Particle Park Dust Left-d587a1fad03ec49184069e97c600239d.p:2063:application/unknown:1
 d:ParticlePark_data/portal:ParticlePark_data/portal:0:application/unknown:1
-d:ParticlePark_data/portal/Particle Park Pentagram:ParticlePark_data/portal/Particle Park Pentagram:0:application/unknown:1
-i:ParticlePark_data/portal/Particle Park Pentagram/pp_pentagram-glow.png:ParticlePark_data/portal/Particle Park Pentagram/pp_pentagram-glow-a5817b54428bd6d23712e65f8eedb629.png:9773:image/png:1
-b:ParticlePark_data/portal/Particle Park Pentagram/Particle Park Pentagram.p:ParticlePark_data/portal/Particle Park Pentagram/Particle Park Pentagram-e400e4bf2d693707a0af33ef5c3bdeff.p:1874:application/unknown:1
-b:ParticlePark_data/portal/Particle Park Pentagram/CC Attribution 4.0.license:ParticlePark_data/portal/Particle Park Pentagram/CC Attribution 4.0-6fc3500702280098d30d2cf344019798.license:15673:application/unknown:1
-t:ParticlePark_data/portal/Particle Park Pentagram/Particle Park Pentagram License.txt:ParticlePark_data/portal/Particle Park Pentagram/Particle Park Pentagram License-1a5570432aaf7489191117340d9af11d.txt:434:text/plain:1
 d:ParticlePark_data/portal/Particle Park Hallucinogen:ParticlePark_data/portal/Particle Park Hallucinogen:0:application/unknown:1
 i:ParticlePark_data/portal/Particle Park Hallucinogen/pp_neutron-full.png:ParticlePark_data/portal/Particle Park Hallucinogen/pp_neutron-full-bb8df84da8a9833c284ca01405a47bcb.png:7734:image/png:1
 i:ParticlePark_data/portal/Particle Park Hallucinogen/pp_neutron.png:ParticlePark_data/portal/Particle Park Hallucinogen/pp_neutron-d4c11efa882b277114ef61ef166ef445.png:4383:image/png:1
 b:ParticlePark_data/portal/Particle Park Hallucinogen/CC Attribution 4.0.license:ParticlePark_data/portal/Particle Park Hallucinogen/CC Attribution 4.0-6fc3500702280098d30d2cf344019798.license:15673:application/unknown:1
 t:ParticlePark_data/portal/Particle Park Hallucinogen/Particle Park Hallucinogen License.txt:ParticlePark_data/portal/Particle Park Hallucinogen/Particle Park Hallucinogen License-410b86deb268effac314428ea6b143e6.txt:440:text/plain:1
 b:ParticlePark_data/portal/Particle Park Hallucinogen/Particle Park Hallucinogen.p:ParticlePark_data/portal/Particle Park Hallucinogen/Particle Park Hallucinogen-75663af18b9771ce200560ccfa59032e.p:2543:application/unknown:1
-d:ParticlePark_data/portal/Particle Park Pentagram Glitchy:ParticlePark_data/portal/Particle Park Pentagram Glitchy:0:application/unknown:1
-t:ParticlePark_data/portal/Particle Park Pentagram Glitchy/Particle Park Pentagram Glitchy License.txt:ParticlePark_data/portal/Particle Park Pentagram Glitchy/Particle Park Pentagram Glitchy License-91dca8205ea7ce5867a1a43f9d31d08b.txt:450:text/plain:1
-b:ParticlePark_data/portal/Particle Park Pentagram Glitchy/Particle Park Pentagram Glitchy.p:ParticlePark_data/portal/Particle Park Pentagram Glitchy/Particle Park Pentagram Glitchy-aa2eccaf49d53611e5825bc90349c427.p:1869:application/unknown:1
-b:ParticlePark_data/portal/Particle Park Pentagram Glitchy/CC Attribution 4.0.license:ParticlePark_data/portal/Particle Park Pentagram Glitchy/CC Attribution 4.0-6fc3500702280098d30d2cf344019798.license:15673:application/unknown:1
-i:ParticlePark_data/portal/Particle Park Pentagram Glitchy/pp_pentagram.png:ParticlePark_data/portal/Particle Park Pentagram Glitchy/pp_pentagram-ccf6a91d75db2607a27666c7f4e8adb1.png:6352:image/png:1
 d:ParticlePark_data/portal/Particle Park Hallucinogen Full:ParticlePark_data/portal/Particle Park Hallucinogen Full:0:application/unknown:1
 i:ParticlePark_data/portal/Particle Park Hallucinogen Full/pp_neutron-full.png:ParticlePark_data/portal/Particle Park Hallucinogen Full/pp_neutron-full-bb8df84da8a9833c284ca01405a47bcb.png:7734:image/png:1
 t:ParticlePark_data/portal/Particle Park Hallucinogen Full/Particle Park Hallucinogen Full License.txt:ParticlePark_data/portal/Particle Park Hallucinogen Full/Particle Park Hallucinogen Full License-b16b64987d7d1919f0acd893dccdedba.txt:450:text/plain:1
@@ -1248,12 +1238,6 @@ t:ParticlePark_data/invaders/Particle Park Smoke/Particle Park Smoke License.txt
 b:ParticlePark_data/invaders/Particle Park Smoke/Particle Park Smoke.p:ParticlePark_data/invaders/Particle Park Smoke/Particle Park Smoke-0c403838387c47ba419bb2841f914639.p:2254:application/unknown:1
 i:ParticlePark_data/invaders/Particle Park Smoke/pp_circle2.png:ParticlePark_data/invaders/Particle Park Smoke/pp_circle2-da57d70596071fd20accaa0853ec1d5d.png:2032:image/png:1
 b:ParticlePark_data/invaders/Particle Park Smoke/CC Attribution 4.0.license:ParticlePark_data/invaders/Particle Park Smoke/CC Attribution 4.0-6fc3500702280098d30d2cf344019798.license:15673:application/unknown:1
-d:ParticlePark_data/invaders/Early Grey Ghost:ParticlePark_data/invaders/Early Grey Ghost:0:application/unknown:1
-b:ParticlePark_data/invaders/Early Grey Ghost/Early Grey Ghost.p:ParticlePark_data/invaders/Early Grey Ghost/Early Grey Ghost-4a2301e62c802c818ba8ed2e5672a377.p:8571:application/unknown:1
-t:ParticlePark_data/invaders/Early Grey Ghost/Early Grey Ghost License.txt:ParticlePark_data/invaders/Early Grey Ghost/Early Grey Ghost License-355a5dc133c402ceb98f23a35feff0fc.txt:417:text/plain:1
-i:ParticlePark_data/invaders/Early Grey Ghost/Early Grey Star.png:ParticlePark_data/invaders/Early Grey Ghost/Early Grey Star-c15cdcec6d697633ea1811fd7dc01b7b.png:441:image/png:1
-b:ParticlePark_data/invaders/Early Grey Ghost/CC Attribution 4.0.license:ParticlePark_data/invaders/Early Grey Ghost/CC Attribution 4.0-6fc3500702280098d30d2cf344019798.license:15673:application/unknown:1
-i:ParticlePark_data/invaders/Early Grey Ghost/Early Grey Ghost.png:ParticlePark_data/invaders/Early Grey Ghost/Early Grey Ghost-d578401b93c92495986f6dec23708988.png:13376:image/png:1
 d:ParticlePark_data/race-car:ParticlePark_data/race-car:0:application/unknown:1
 d:ParticlePark_data/race-car/Particle Park Dust:ParticlePark_data/race-car/Particle Park Dust:0:application/unknown:1
 i:ParticlePark_data/race-car/Particle Park Dust/pp_cloud_1.png:ParticlePark_data/race-car/Particle Park Dust/pp_cloud_1-c82b5e3179bca5837540121e46a6cc35.png:2398:image/png:1
