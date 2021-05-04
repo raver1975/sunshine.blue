@@ -252,30 +252,31 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
                 Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
                 batch.begin();
             }
-        }
-
-        setBounds();
-        if (SunshineBlue.instance.selectedObjects.contains(this, true)) {
-            SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / (float) (SunshineBlue.instance.userObjects.size - 1)).cpy().lerp(Color.WHITE, SunshineBlue.instance.colorFlash));
-            float radius = 10 + 10 * SunshineBlue.instance.colorFlash;
-            SunshineBlue.instance.shapedrawer.circle(0, 0, radius, 2);
-            angleCalc.set(0, radius);
-            angleCalc.rotateDeg(angleRotateAnimAngle += 1);
-            SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
-            angleCalc.rotateDeg(90);
-            SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
-            angleCalc.rotateDeg(90);
-            SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
-            angleCalc.rotateDeg(90);
-            SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
 
 
-            if (polygon != null) {
-                batch.end();
-                batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
-                batch.begin();
+            setBounds();
+            if (SunshineBlue.instance.selectedObjects.contains(this, true)) {
                 SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / (float) (SunshineBlue.instance.userObjects.size - 1)).cpy().lerp(Color.WHITE, SunshineBlue.instance.colorFlash));
-                SunshineBlue.instance.shapedrawer.polygon(polygon);
+                float radius = 10 + 10 * SunshineBlue.instance.colorFlash;
+                SunshineBlue.instance.shapedrawer.circle(0, 0, radius, 2);
+                angleCalc.set(0, radius);
+                angleCalc.rotateDeg(angleRotateAnimAngle += 1);
+                SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
+                angleCalc.rotateDeg(90);
+                SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
+                angleCalc.rotateDeg(90);
+                SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
+                angleCalc.rotateDeg(90);
+                SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
+
+
+                if (polygon != null) {
+                    batch.end();
+                    batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
+                    batch.begin();
+                    SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / (float) (SunshineBlue.instance.userObjects.size - 1)).cpy().lerp(Color.WHITE, SunshineBlue.instance.colorFlash));
+                    SunshineBlue.instance.shapedrawer.polygon(polygon);
+                }
             }
         }
     }

@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.objects.*;
@@ -24,7 +25,7 @@ import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
 import java.util.Iterator;
 
 
-public class TransformOverlay extends BaseObject implements Overlay, Touchable, Drawable ,Gestureable{
+public class TransformOverlay extends BaseObject implements Overlay, Touchable, Drawable, Gestureable {
 
     public final Stage stage;
     private final Group transformGroup;
@@ -267,7 +268,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
     }
 
     @Override
-    public void draw(Batch batch,float delta) {
+    public void draw(Batch batch, float delta) {
 
 //        mx4Overlay.set(mx4Overlay.idt());
 //        mx4Overlay.setToOrtho2D(0, 0, 100, 100);
@@ -320,27 +321,22 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
             cb.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-//                    super.clicked(event, x, y);
-//                        ((ScreenObject)ba).sd.visible=cb.isChecked();
-                        if (cb.isChecked()) {
-                            SunshineBlue.instance.selectedObjects.add(ba);
-                        } else {
-                            SunshineBlue.instance.selectedObjects.removeValue(ba, true);
-                        }
-                        /*
-                                            stage.getActors().removeValue(cb, true);
-                    SunshineBlue.instance.selectedObjects.removeValue(ba, true);
-                    if (SunshineBlue.instance.selectedObjects.size == 0) {
-                        Overlay.backOverlay();
-                    }
-                         */
+//                    cb.setChecked(!cb.isChecked());
+                    ((ScreenObject) ba).sd.visible = cb.isChecked();
+//                    cb.setStyle(new CheckBox.CheckBoxStyle(((TextureRegionDrawable)skin.getDrawable("switch")).tint(((ScreenObject) ba).sd.visible ? Color.WHITE : Color.GRAY), ((TextureRegionDrawable)skin.getDrawable("switch-off")).tint(((ScreenObject) ba).sd.visible ? Color.WHITE : Color.GRAY), cb.getStyle().font, ((ScreenObject) ba).sd.visible ? Color.WHITE : Color.GRAY));
                 }
             });
             cb.addListener(new ActorGestureListener() {
                 @Override
                 public boolean longPress(Actor actor, float x, float y) {
-//                    cb.setChecked(!cb.isChecked());
-                    ((ScreenObject)ba).sd.visible=!((ScreenObject)ba).sd.visible;
+//                    if (cb.isChecked()) {
+//                        SunshineBlue.instance.selectedObjects.add(ba);
+//                    } else {
+                    SunshineBlue.instance.selectedObjects.removeValue(ba, true);
+                    cb.setChecked(!cb.isChecked());
+                    cb.setVisible(false);
+//                    }
+
                     return true;
                 }
             });
@@ -383,16 +379,16 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
 
     @Override
     public boolean longPress(float x, float y) {
-        if (SunshineBlue.instance.selectedObjects.size==1){
-            if (SunshineBlue.instance.selectedObjects.get(0) instanceof FontObject){
+        if (SunshineBlue.instance.selectedObjects.size == 1) {
+            if (SunshineBlue.instance.selectedObjects.get(0) instanceof FontObject) {
                 SunshineBlue.instance.FONT_OVERLAY.setObject(SunshineBlue.instance.selectedObjects.get(0));
                 Overlay.setOverlay(SunshineBlue.instance.FONT_OVERLAY);
             }
-            if (SunshineBlue.instance.selectedObjects.get(0) instanceof DrawObject){
+            if (SunshineBlue.instance.selectedObjects.get(0) instanceof DrawObject) {
                 SunshineBlue.instance.DRAW_OVERLAY.setObject(SunshineBlue.instance.selectedObjects.get(0));
                 Overlay.setOverlay(SunshineBlue.instance.DRAW_OVERLAY);
             }
-            if (SunshineBlue.instance.selectedObjects.get(0) instanceof ParticleObject){
+            if (SunshineBlue.instance.selectedObjects.get(0) instanceof ParticleObject) {
                 SunshineBlue.instance.PARTICLE_OVERLAY.setObject(SunshineBlue.instance.selectedObjects.get(0));
                 Overlay.setOverlay(SunshineBlue.instance.PARTICLE_OVERLAY);
             }
