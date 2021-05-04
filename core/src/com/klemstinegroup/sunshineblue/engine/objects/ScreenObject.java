@@ -9,8 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.crashinvaders.vfx.VfxManager;
-import com.crashinvaders.vfx.effects.ChromaticAberrationEffect;
-import com.crashinvaders.vfx.effects.WaterDistortionEffect;
+import com.crashinvaders.vfx.effects.*;
 import com.crashinvaders.vfx.framebuffer.VfxFrameBuffer;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 
@@ -32,6 +31,7 @@ public class ScreenObject extends BaseObject {
         if (vfxManager==null) {
             vfxManager = new VfxManager(Pixmap.Format.RGBA8888);
             vfxManager.addEffect(new ChromaticAberrationEffect(10));
+            vfxManager.addEffect(new BloomEffect());
 //            vfxManager.addEffect(new WaterDistortionEffect(1,10f));
 //            vfxFrameBuffer = new VfxFrameBuffer(Pixmap.Format.RGBA8888);
 //            vfxFrameBuffer.initialize(SunshineBlue.instance.viewport.getScreenWidth(), SunshineBlue.instance.viewport.getScreenHeight());
