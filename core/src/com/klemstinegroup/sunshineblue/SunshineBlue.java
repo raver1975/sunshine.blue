@@ -235,6 +235,9 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
             if (loadCid.equals("current")) {
                 Preferences prefs = Gdx.app.getPreferences("scenes");
                 loadCid = prefs.getString("current");
+                if (loadCid==null ||loadCid.isEmpty()){
+                    loadCid=Statics.splashCID;
+                }
 
             }
             System.out.println("loading cid:" + loadCid);
