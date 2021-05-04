@@ -1,5 +1,5 @@
 buildscript {
-    
+
 
     repositories {
         mavenLocal()
@@ -13,7 +13,7 @@ buildscript {
         classpath 'org.gretty:gretty:3.0.3'
         classpath 'com.android.tools.build:gradle:4.1.3'
         classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.12'
-        
+
 
     }
 }
@@ -43,6 +43,7 @@ allprojects {
         maven { url "https://plugins.gradle.org/m2/" }
         maven { url 'https://jitpack.io' }
     }
+
 }
 
 project(":desktop") {
@@ -60,7 +61,6 @@ project(":desktop") {
 //        api "de.tomgrill.gdxdialogs:gdx-dialogs-desktop:1.2.5"
 //        api "de.golfgl.gdxgamesvcs:gdx-gamesvcs-core-gamejolt:1.0.2"
         implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-
     }
 }
 
@@ -95,6 +95,7 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-arm64-v8a"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86_64"
+
     }
 }
 
@@ -159,12 +160,17 @@ project(":html") {
 //        compile "com.kotcrab.vis:vis-ui:+:sources"
         implementation "com.github.intrigus.gdx-freetype-gwt:gdx-freetype-gwt:1.9.11-SNAPSHOT"
         implementation "com.github.intrigus.gdx-freetype-gwt:gdx-freetype-gwt:1.9.11-SNAPSHOT:sources"
+        implementation 'com.crashinvaders.vfx:gdx-vfx-core:0.5.0:sources'
+        implementation 'com.crashinvaders.vfx:gdx-vfx-gwt:0.5.0'
+        implementation 'com.crashinvaders.vfx:gdx-vfx-gwt:0.5.0:sources'
+        // Optional, in case you use "gdx-vfx-effects" module.
+        implementation 'com.crashinvaders.vfx:gdx-vfx-effects:0.5.0:sources'
+
     }
 }
 
 project(":core") {
     apply plugin: "java-library"
-
 
 
     dependencies {
@@ -187,5 +193,7 @@ project(":core") {
 //        api "de.golfgl.gdxgamesvcs:gdx-gamesvcs-core:1.0.2"
 //        implementation "com.kotcrab.vis:vis-ui:+"
         implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+        implementation 'com.crashinvaders.vfx:gdx-vfx-core:0.5.0'
+        implementation 'com.crashinvaders.vfx:gdx-vfx-effects:0.5.0'
     }
 }

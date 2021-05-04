@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Base64Coder;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
+import com.crashinvaders.vfx.effects.*;
 import com.github.tommyettinger.anim8.GifDecoder;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
@@ -22,6 +23,7 @@ import com.klemstinegroup.sunshineblue.engine.overlays.Touchable;
 import com.klemstinegroup.sunshineblue.engine.util.*;
 
 public class ImageObject extends ScreenObject implements Drawable, Touchable {
+
     public Texture texture;
     public Animation<TextureRegion> textures;
     private Polygon polygon;
@@ -29,9 +31,13 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
     private float stateTime;
     Vector2 angleCalc = new Vector2();
     float angleRotateAnimAngle = 0;
-
+    boolean dumbflag = false;
 
     public ImageObject(byte[] data, Pixmap pixmapIn, String cid) {
+//        vfxManager.addEffect(new GaussianBlurEffect());
+//        vfxManager.addEffect(new ChromaticAberrationEffect(10));
+        vfxManager.addEffect(new FilmGrainEffect());
+        setupTexture();
         Gdx.app.postRunnable(new Runnable() {
             @Override
             public void run() {
@@ -364,15 +370,11 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 
 
     @Override
-    public void draw(Batch batch,float delta) {
-        batch.setTransformMatrix(new Matrix4().idt()
-                        .translate(sd.position.x, sd.position.y, 0)
-                        .rotate(0, 0, 1, sd.rotation)
-                        .scale(sd.scale, sd.scale, 1)
-//                        .translate(-center.x, -center.y, 0)
-        );
+    public void draw(Batch batch, float delta) {
         if (sd.visible) {
-            batch.setColor(Color.WHITE);
+            batch.end();
+
+            startBatch(batch);
             if (textures != null) {
                 stateTime += delta;
                 batch.draw(textures.getKeyFrame(stateTime, true), -sd.center.x, -sd.center.y);
@@ -382,9 +384,13 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 
                 }
             }
+            endBatch(batch);
+
 
             setBounds();
-            if (SunshineBlue.instance.selectedObjects.contains(this, true)) {
+            dumbflag = SunshineBlue.instance.selectedObjects.contains(this, true);
+            if (dumbflag) {
+                batch.begin();
                 SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / (float) (SunshineBlue.instance.userObjects.size - 1)).cpy().lerp(Color.WHITE, SunshineBlue.instance.colorFlash));
                 float radius = 10 + 10 * SunshineBlue.instance.colorFlash;
                 SunshineBlue.instance.shapedrawer.circle(0, 0, radius, 2);
@@ -397,18 +403,21 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                 SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
                 angleCalc.rotateDeg(90);
                 SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
-
-                if (polygon != null) {
-                    batch.end();
-                    batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
-                    batch.begin();
-//                SunshineBlue.instance.shapedrawer.setColor(Color.WHITE);
-
-                    SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / ((float) SunshineBlue.instance.userObjects.size - 1)).cpy().lerp(Color.WHITE, SunshineBlue.instance.colorFlash));
-                    SunshineBlue.instance.shapedrawer.polygon(polygon);
-                }
-
+                batch.end();
             }
+
+            batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
+            batch.begin();
+
+            batch.draw(tr, -SunshineBlue.instance.overlayViewport.getScreenWidth() / 2f, -SunshineBlue.instance.overlayViewport.getScreenHeight() / 2f);
+
+//                SunshineBlue.instance.shapedrawer.setColor(Color.WHITE);
+            if (dumbflag && polygon != null) {
+                SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / ((float) SunshineBlue.instance.userObjects.size - 1)).cpy().lerp(Color.WHITE, SunshineBlue.instance.colorFlash));
+                SunshineBlue.instance.shapedrawer.polygon(polygon);
+            }
+
+
         }
     }
 
@@ -423,7 +432,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
     @Override
     public boolean isSelected(Polygon gon) {
         setBounds();
-        return Intersector.overlapConvexPolygons(gon,polygon);
+        return Intersector.overlapConvexPolygons(gon, polygon);
     }
 
     @Override

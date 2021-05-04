@@ -117,7 +117,6 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public void create() {
         Gdx.app.log("create", "started");
         font = new BitmapFont();
-
         overlayViewport = new StretchViewport((550f * Gdx.graphics.getWidth() / Gdx.graphics.getHeight()), 550);
        /* Net.HttpRequest req = new Net.HttpRequest("GET");
         req.setUrl(Statics.IpfsGateway2 + "QmWATWQ7fVPP2EFGu71UkfnqhYXDYH566qy47CnJDgvs8u");
@@ -213,7 +212,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
 
         viewport = new ScreenViewport();
-        mx4Batch = batch.getTransformMatrix().cpy();
+
 
 
 //--------------------------------------------------------------------------------------------------
@@ -223,8 +222,10 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
 
         //--------------------------------------------------------------------------------------------------
-        viewport.apply();
+//        viewport.apply();
         viewport.getCamera().update();
+
+        mx4Batch = viewport.getCamera().view.cpy();
 //        Statics.gifOptions = new ImageOptions();
 
 //        Statics.gifEncoderA = new AnimatedGifEncoder();
@@ -386,6 +387,12 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 //        int WORLD_HEIGHT=550;
         viewport.update(width, height);
         overlayViewport.update(width, height);
+        for (BaseObject bo:userObjects){
+            if (bo instanceof ScreenObject){
+                ((ScreenObject)bo).vfxManager.resize(width,height);
+                ((ScreenObject)bo).vfxFrameBuffer.initialize(width,height);
+            }
+        }
 //        Statics.overlayViewport.getCamera().viewportWidth = WORLD_WIDTH;
 //        Statics.overlayViewport.getCamera().viewportHeight = WORLD_HEIGHT;
 //        Statics.overlayViewport.getCamera().position.set(WORLD_WIDTH/2,WORLD_HEIGHT/2, 0);
