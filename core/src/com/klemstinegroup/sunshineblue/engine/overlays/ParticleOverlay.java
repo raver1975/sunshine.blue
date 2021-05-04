@@ -1,13 +1,10 @@
 package com.klemstinegroup.sunshineblue.engine.overlays;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -316,7 +313,6 @@ public class ParticleOverlay extends ScreenObject implements Overlay, Touchable,
             SunshineBlue.instance.im.addProcessor(((ParticleObject) particleObject));
 //            generate(SunshineBlue.instance.assetManager, ((ParticleObject) particleObject));
         }
-        ParticleUtil.particleFiles.get(((ParticleObject)particleObject).particleFileName).start();
 
     }
 
@@ -324,7 +320,6 @@ public class ParticleOverlay extends ScreenObject implements Overlay, Touchable,
     public void removeInput() {
         SunshineBlue.instance.im.removeProcessor(stage);
         if (particleObject != null) SunshineBlue.instance.im.removeProcessor(((ParticleObject) particleObject));
-        ParticleUtil.particleFiles.get(((ParticleObject)particleObject).particleFileName).reset();
     }
 
     @Override

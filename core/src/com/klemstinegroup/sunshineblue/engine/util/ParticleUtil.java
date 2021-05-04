@@ -4,18 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.PixmapPacker;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ArrayMap;
-import com.klemstinegroup.sunshineblue.engine.objects.ParticleObject;
 
 import java.util.Locale;
 
 public class ParticleUtil {
     private static PixmapPacker pixmapPacker = new PixmapPacker(2048, 2048, Pixmap.Format.RGBA8888, 3, true);;
-    private static TextureAtlas particleAtlas= new TextureAtlas();;
+    public static TextureAtlas particleAtlas= new TextureAtlas();;
 
     /*private void initializeParticles() {
         for (EventData particleEvent : particleEvents) {
@@ -56,8 +53,8 @@ public class ParticleUtil {
 
     }
 
-    public static ArrayMap<String, ParticleEffect> particleFiles= new ArrayMap<String, ParticleEffect>();
-    public static ArrayMap<String, ParticleEffect>  getParticleFiles() {
+    public static ArrayMap<String, FileHandle> particleFiles= new ArrayMap<String, FileHandle>();
+    public static ArrayMap<String, FileHandle> getParticleFiles() {
         FileHandle sceneFolder = Gdx.files.internal("ParticlePark_data");
         for (FileHandle particleFolder : sceneFolder.list()) {
 //            System.out.println("partfold:"+particleFolder.path());
@@ -67,6 +64,7 @@ public class ParticleUtil {
                     String extension = fileHandle.extension().toLowerCase(Locale.ROOT);
                     if (extension.equals("p")) {
                         loadParticleEffect(new Tuple<String, FileHandle>(fileHandle.nameWithoutExtension(), fileHandle));
+                        particleFiles.put(fileHandle.nameWithoutExtension(),fileHandle);
                         break;
                     }
                 }
@@ -77,10 +75,7 @@ public class ParticleUtil {
 //                    System.out.println("file:" + fileHandle.path());
                     String extension = fileHandle.extension().toLowerCase(Locale.ROOT);
                     if (extension.equals("p")) {
-                        ParticleEffect particleEffect = new ParticleEffect();
-                        particleEffect.setEmittersCleanUpBlendFunction(false);
-                        particleEffect.load(fileHandle, particleAtlas);
-                        particleFiles.put(fileHandle.nameWithoutExtension(),particleEffect);
+
                         System.out.println(fileHandle.path());
                         break;
                     }

@@ -1,21 +1,16 @@
 package com.klemstinegroup.sunshineblue.engine.objects;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.math.collision.BoundingBox;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.JsonValue;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.overlays.Drawable;
-import com.klemstinegroup.sunshineblue.engine.overlays.FontOverlay;
-import com.klemstinegroup.sunshineblue.engine.overlays.ParticleOverlay;
 import com.klemstinegroup.sunshineblue.engine.overlays.Touchable;
 import com.klemstinegroup.sunshineblue.engine.util.ColorHelper;
 import com.klemstinegroup.sunshineblue.engine.util.ParticleUtil;
@@ -27,16 +22,19 @@ public class ParticleObject extends ScreenObject implements Drawable, Touchable 
     float angleRotateAnimAngle = 0;
     public Polygon polygon;
     public String particleFileName=ParticleUtil.particleFiles.getKeyAt(MathUtils.random(ParticleUtil.particleFiles.size-1));
+    public ParticleEffect particleEffect;
 
     public ParticleObject() {
+         particleEffect = new ParticleEffect();
+        particleEffect.setEmittersCleanUpBlendFunction(false);
+        particleEffect.load(ParticleUtil.particleFiles.get(particleFileName), ParticleUtil.particleAtlas);
 //        sd.center.set(ParticleUtil.particleFiles.get(particleFileName).getBoundingBox().getCenterX(),ParticleUtil.particleFiles.get(particleFileName).getBoundingBox().getCenterY());
     }
 
     public void setBounds() {
 //        nn = new GlyphLayout();
 //        nn.setText(font, fd.text);
-        ParticleEffect pe=ParticleUtil.particleFiles.get(particleFileName);
-        BoundingBox bb=pe.getBoundingBox();
+        BoundingBox bb=particleEffect.getBoundingBox();
         sd.bounds.set(bb.getWidth(),bb.getHeight());
         float cx=sd.center.x+bb.getCenterX();
         float cy=sd.center.y+bb.getCenterY();
@@ -63,12 +61,12 @@ public class ParticleObject extends ScreenObject implements Drawable, Touchable 
 
         if (sd.visible) {
             batch.setColor(Color.WHITE);
-            ParticleUtil.particleFiles.get(particleFileName).setPosition(0,0);
-            ParticleUtil.particleFiles.get(particleFileName).update(Gdx.graphics.getDeltaTime());
-            if (ParticleUtil.particleFiles.get(particleFileName).isComplete()){
-                ParticleUtil.particleFiles.get(particleFileName).reset();
+            particleEffect.setPosition(0,0);
+            particleEffect.update(Gdx.graphics.getDeltaTime());
+            if (particleEffect.isComplete()){
+                particleEffect.reset();
             }
-            ParticleUtil.particleFiles.get(particleFileName).draw(batch);
+            particleEffect.draw(batch);
 //            font.draw(batch, fd.text, 0 - sd.center.x, +sd.bounds.y - sd.center.y, Float.MAX_VALUE, Align.left, true);
         }
 
