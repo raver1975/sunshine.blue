@@ -390,7 +390,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         for (BaseObject bo:userObjects){
             if (bo instanceof ScreenObject){
                 ((ScreenObject)bo).vfxManager.resize(width,height);
-                ((ScreenObject)bo).vfxFrameBuffer.initialize(width,height);
+//                ((ScreenObject)bo).vfxFrameBuffer.initialize(width,height);
             }
         }
 //        Statics.overlayViewport.getCamera().viewportWidth = WORLD_WIDTH;

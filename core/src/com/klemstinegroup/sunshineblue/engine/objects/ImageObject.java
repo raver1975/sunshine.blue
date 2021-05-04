@@ -14,8 +14,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Base64Coder;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
-import com.crashinvaders.vfx.effects.ChromaticAberrationEffect;
-import com.crashinvaders.vfx.effects.GaussianBlurEffect;
+import com.crashinvaders.vfx.effects.*;
+import com.crashinvaders.vfx.effects.util.MixEffect;
 import com.github.tommyettinger.anim8.GifDecoder;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
@@ -35,8 +35,9 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
     boolean dumbflag = false;
 
     public ImageObject(byte[] data, Pixmap pixmapIn, String cid) {
-        vfxManager.addEffect(new GaussianBlurEffect());
-        vfxManager.addEffect(new ChromaticAberrationEffect(10));
+//        vfxManager.addEffect(new MotionBlurEffect(Pixmap.Format.RGBA8888, MixEffect.Method.MAX,2));
+
+//        vfxManager.addEffect(new RadialBlurEffect(10));
         setupTexture();
         Gdx.app.postRunnable(new Runnable() {
             @Override
@@ -374,7 +375,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
         if (sd.visible) {
             batch.end();
 
-            startBatch(batch);
+            startBatch(batch,delta);
             if (textures != null) {
                 stateTime += delta;
                 batch.draw(textures.getKeyFrame(stateTime, true), -sd.center.x, -sd.center.y);
@@ -409,7 +410,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
             batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
             batch.begin();
 
-            batch.draw(tr, -SunshineBlue.instance.overlayViewport.getScreenWidth() / 2f, -SunshineBlue.instance.overlayViewport.getScreenHeight() / 2f);
+//            batch.draw(tr, -SunshineBlue.instance.overlayViewport.getScreenWidth() / 2f, -SunshineBlue.instance.overlayViewport.getScreenHeight() / 2f);
 
 //                SunshineBlue.instance.shapedrawer.setColor(Color.WHITE);
             if (dumbflag && polygon != null) {

@@ -1,20 +1,24 @@
 package com.klemstinegroup.sunshineblue.engine.objects;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.crashinvaders.vfx.VfxManager;
+import com.crashinvaders.vfx.effects.ChromaticAberrationEffect;
+import com.crashinvaders.vfx.effects.WaterDistortionEffect;
 import com.crashinvaders.vfx.framebuffer.VfxFrameBuffer;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 
 public class ScreenObject extends BaseObject {
     public ScreenData sd = new ScreenData();
-    public VfxManager vfxManager = new VfxManager(Pixmap.Format.RGBA8888);
-    public VfxFrameBuffer vfxFrameBuffer = new VfxFrameBuffer(Pixmap.Format.RGBA8888);
-    public TextureRegion tr;
+    public VfxManager vfxManager ;
+//    public VfxFrameBuffer vfxFrameBuffer;
+//    public TextureRegion tr;
 
     public void recenter(Vector2 touchdragcpy) {
         touchdragcpy.sub(sd.position.x, sd.position.y);
@@ -25,16 +29,23 @@ public class ScreenObject extends BaseObject {
     }
 
     public void setupTexture() {
-        if (!vfxFrameBuffer.isInitialized()) {
-            vfxFrameBuffer.initialize(SunshineBlue.instance.viewport.getScreenWidth(), SunshineBlue.instance.viewport.getScreenHeight());
+        if (vfxManager==null) {
+            vfxManager = new VfxManager(Pixmap.Format.RGBA8888);
+            vfxManager.addEffect(new ChromaticAberrationEffect(10));
+//            vfxManager.addEffect(new WaterDistortionEffect(1,10f));
+//            vfxFrameBuffer = new VfxFrameBuffer(Pixmap.Format.RGBA8888);
+//            vfxFrameBuffer.initialize(SunshineBlue.instance.viewport.getScreenWidth(), SunshineBlue.instance.viewport.getScreenHeight());
+            vfxManager.setBlendingEnabled(true);
+//            tr = new TextureRegion(vfxFrameBuffer.getTexture());
+//            tr.flip(false, true);
         }
-        tr = new TextureRegion(vfxFrameBuffer.getTexture());
-        tr.flip(false, true);
     }
 
-    public void startBatch(Batch batch) {
+    public void startBatch(Batch batch, float delta) {
         vfxManager.cleanUpBuffers();
+        vfxManager.update(delta);
         vfxManager.beginInputCapture();
+
         batch.setTransformMatrix(new Matrix4().idt()
                         .translate(sd.position.x, sd.position.y, 0)
                         .rotate(0, 0, 1, sd.rotation)
@@ -42,6 +53,7 @@ public class ScreenObject extends BaseObject {
 //                        .translate(-center.x, -center.y, 0)
         );
         batch.begin();
+
         batch.setColor(Color.WHITE);
     }
 
@@ -49,6 +61,6 @@ public class ScreenObject extends BaseObject {
         batch.end();
         vfxManager.endInputCapture();
         vfxManager.applyEffects();
-        vfxManager.renderToFbo(vfxFrameBuffer);
+        vfxManager.renderToScreen();
     }
 }
