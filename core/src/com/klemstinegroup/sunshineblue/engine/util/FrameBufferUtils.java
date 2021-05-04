@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.crashinvaders.vfx.framebuffer.VfxFrameBuffer;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
@@ -14,7 +15,8 @@ import com.klemstinegroup.sunshineblue.engine.overlays.Drawable;
 
 public class FrameBufferUtils {
     static public Pixmap drawObjects(Batch batch,Viewport viewport, Array<BaseObject> objects) {
-        FrameBuffer fb = new FrameBuffer(Pixmap.Format.RGBA8888, viewport.getScreenWidth(), viewport.getScreenHeight(), true);
+        VfxFrameBuffer fb = new VfxFrameBuffer(Pixmap.Format.RGBA8888);
+        fb.initialize(viewport.getScreenWidth(), viewport.getScreenHeight());
         fb.begin();
         draw(batch,viewport,objects,0);
         Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, viewport.getScreenWidth(), viewport.getScreenHeight());
