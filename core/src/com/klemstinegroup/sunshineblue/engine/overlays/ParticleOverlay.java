@@ -1,10 +1,12 @@
 package com.klemstinegroup.sunshineblue.engine.overlays;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -28,12 +30,13 @@ public class ParticleOverlay extends ScreenObject implements Overlay, Touchable,
     public final Stage stage;
     //    private final List<String> list;
     private final SelectBox selectBox;
+    private final Slider slider;
     public BaseObject particleObject;
     private Vector2 touchdown = new Vector2();
     Vector2 touchdrag = new Vector2();
 
     public ParticleOverlay() {
-        FileHandle[] fontList = Gdx.files.internal("fonts").list();
+//        FileHandle[] fontList = Gdx.files.internal("fonts").list();
         new BitmapFont();
         stage = new Stage(SunshineBlue.instance.overlayViewport);
         SunshineBlue.instance.assetManager.finishLoadingAsset("skins/orange/skin/uiskin.json");
@@ -116,7 +119,7 @@ public class ParticleOverlay extends ScreenObject implements Overlay, Touchable,
             }
         });
 //        picker.setScale(.7f);
-        TextButton colorButton = new TextButton("color", skin);
+        /*TextButton colorButton = new TextButton("color", skin);
         colorButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -130,8 +133,8 @@ public class ParticleOverlay extends ScreenObject implements Overlay, Touchable,
         });
         colorButton.setPosition(10, 70);
         stage.addActor(colorButton);
-
-        TextButton keyButton = new TextButton("key", skin);
+*/
+  /*      TextButton keyButton = new TextButton("key", skin);
         keyButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -140,7 +143,7 @@ public class ParticleOverlay extends ScreenObject implements Overlay, Touchable,
         });
         keyButton.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 120, 10);
         stage.addActor(keyButton);
-
+*/
 
 //        list = new List(skin);
 //        list.addListener(new ChangeListener() {
@@ -161,13 +164,15 @@ public class ParticleOverlay extends ScreenObject implements Overlay, Touchable,
                 if (particleObject != null) {
 //                    ((FontObject) particleObject).setFont((String) ((SelectBox<String>) actor).getSelected());
 //                    generate(SunshineBlue.instance.assetManager, ((ParticleObject) particleObject));
+                    ((ParticleObject) particleObject).particleFileName = (String) ((SelectBox<String>) actor).getSelected();
+                    ((ParticleObject) particleObject).regenerate(SunshineBlue.instance.assetManager);
                 }
             }
         });
         Array<String> fontListStr = new Array<>();
-
-        for (FileHandle fh : fontList) {
-            fontListStr.add(fh.nameWithoutExtension());
+        ParticleUtil.getParticleFiles();
+        for (String s : ParticleUtil.particleFiles.keys()) {
+            fontListStr.add(s);
         }
         fontListStr.sort();
 //        list.setItems(fontListStr);
@@ -186,8 +191,10 @@ public class ParticleOverlay extends ScreenObject implements Overlay, Touchable,
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 int index = selectBox.getSelectedIndex();
-                if (index == selectBox.getItems().size-1) {index = -1;}
-                selectBox.setSelectedIndex(index+1);
+                if (index == selectBox.getItems().size - 1) {
+                    index = -1;
+                }
+                selectBox.setSelectedIndex(index + 1);
             }
         });
         downArrow.setPosition(selectBox.getX() + selectBox.getWidth() + 10, 10);
@@ -198,32 +205,30 @@ public class ParticleOverlay extends ScreenObject implements Overlay, Touchable,
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 int index = selectBox.getSelectedIndex();
-                if (index == 0) {index = selectBox.getItems().size ;}
-                selectBox.setSelectedIndex(index-1);
+                if (index == 0) {
+                    index = selectBox.getItems().size;
+                }
+                selectBox.setSelectedIndex(index - 1);
             }
         });
         upArrow.setPosition(selectBox.getX() + selectBox.getWidth() + 10, 70);
         stage.addActor(upArrow);
 
-        /*Slider slider = new Slider(1, 218, 1, true, skin);
+        slider = new Slider(.01f, 10f, .001f, true, skin);
+
         slider.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 40, 80);
         slider.setSize(20, SunshineBlue.instance.overlayViewport.getWorldHeight() - 150);
-        slider.setValue(50);
+        slider.setValue(1);
 
         slider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (!slider.isDragging()) {
-
-
-                    ((FontObject) particleObject).setSize((int) (slider.getValue()));
-//                    generate(SunshineBlue.instance.assetManager, ((ParticleObject) particleObject));
-                    setBounds();
-                }
+//                if (!slider.isDragging()) {
+                    ((ParticleObject) particleObject).speed=slider.getValue();
+//                }
             }
-        });*/
-        ;
-//        stage.addActor(slider);
+        });
+        stage.addActor(slider);
         stage.addActor(exitButton);
         stage.addActor(selectBox);
     }
@@ -284,11 +289,12 @@ public class ParticleOverlay extends ScreenObject implements Overlay, Touchable,
     }
 
     @Override
-    public void draw(Batch batch) {
+    public void draw(Batch batch,float delta) {
+        stage.act();
         stage.draw();
-        if (particleObject != null) {
-            ((ParticleObject) particleObject).draw(batch);
-        }
+//        if (particleObject != null) {
+//            ((ParticleObject) particleObject).draw(batch);
+//        }
     }
 
     @Override
@@ -311,6 +317,8 @@ public class ParticleOverlay extends ScreenObject implements Overlay, Touchable,
         SunshineBlue.instance.im.addProcessor(stage);
         if (particleObject != null) {
             SunshineBlue.instance.im.addProcessor(((ParticleObject) particleObject));
+            selectBox.setSelected(((ParticleObject) particleObject).particleFileName);
+            slider.setValue(((ParticleObject) particleObject).speed);
 //            generate(SunshineBlue.instance.assetManager, ((ParticleObject) particleObject));
         }
 
@@ -323,10 +331,10 @@ public class ParticleOverlay extends ScreenObject implements Overlay, Touchable,
     }
 
     @Override
-    public void act() {
-        stage.act();
+    public void regenerate(AssetManager assetManager) {
+        super.regenerate(assetManager);
+        if (particleObject != null) {
+            ((ParticleObject) particleObject).regenerate(assetManager);
+        }
     }
-
-
-
 }

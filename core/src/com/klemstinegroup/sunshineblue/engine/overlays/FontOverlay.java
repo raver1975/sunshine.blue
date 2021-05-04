@@ -29,6 +29,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
     public final Stage stage;
     //    private final List<String> list;
     private final SelectBox selectBox;
+    private final Slider slider;
     public BaseObject fontObject;
     private Vector2 touchdown = new Vector2();
     Vector2 touchdrag = new Vector2();
@@ -206,7 +207,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         upArrow.setPosition(selectBox.getX() + selectBox.getWidth() + 10, 70);
         stage.addActor(upArrow);
 
-        Slider slider = new Slider(1, 218, 1, true, skin);
+         slider = new Slider(1, 218, 1, true, skin);
         slider.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 40, 80);
         slider.setSize(20, SunshineBlue.instance.overlayViewport.getWorldHeight() - 150);
         slider.setValue(50);
@@ -285,11 +286,12 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
     }
 
     @Override
-    public void draw(Batch batch) {
+    public void draw(Batch batch,float delta) {
+        stage.act();
         stage.draw();
-        if (fontObject != null) {
-            ((FontObject)fontObject).draw(batch);
-        }
+//        if (fontObject != null) {
+//            ((FontObject)fontObject).draw(batch);
+//        }
     }
 
     @Override
@@ -313,6 +315,8 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         if (fontObject != null) {
             SunshineBlue.instance.im.addProcessor(((FontObject) fontObject));
             generate(SunshineBlue.instance.assetManager, ((FontObject) fontObject));
+            selectBox.setSelected(((FontObject) fontObject).fd.fontName);
+            slider.setValue(((FontObject) fontObject).fd.size);
         }
 
     }
@@ -321,11 +325,6 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
     public void removeInput() {
         SunshineBlue.instance.im.removeProcessor(stage);
         if (fontObject != null) SunshineBlue.instance.im.removeProcessor(((FontObject)fontObject));
-    }
-
-    @Override
-    public void act() {
-        stage.act();
     }
 
     public static void generate(AssetManager assetManager, FontObject fontObject) {

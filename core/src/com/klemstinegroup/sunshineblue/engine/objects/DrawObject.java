@@ -28,7 +28,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
     float angleRotateAnimAngle = 0;
     Array<Vector2> currentPath = new Array<>();
     private Color color = Color.WHITE;
-    private int size = 5;
+    public int size = 5;
     private boolean touched;
     private Vector2 v = new Vector2();
 
@@ -124,7 +124,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
 
 
     @Override
-    public void draw(Batch batch) {
+    public void draw(Batch batch,float delta) {
         batch.setTransformMatrix(new Matrix4().idt()
                 .translate(sd.position.x, sd.position.y, 0)
                 .rotate(0, 0, 1, sd.rotation)

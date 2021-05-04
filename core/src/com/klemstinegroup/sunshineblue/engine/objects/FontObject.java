@@ -69,7 +69,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
 
 
     @Override
-    public void draw(Batch batch) {
+    public void draw(Batch batch,float delta) {
         batch.setTransformMatrix(new Matrix4().idt()
                         .translate(sd.position.x, sd.position.y, 0)
                         .rotate(0, 0, 1, sd.rotation)

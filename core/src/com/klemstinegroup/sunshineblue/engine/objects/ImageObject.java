@@ -364,7 +364,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 
 
     @Override
-    public void draw(Batch batch) {
+    public void draw(Batch batch,float delta) {
         batch.setTransformMatrix(new Matrix4().idt()
                         .translate(sd.position.x, sd.position.y, 0)
                         .rotate(0, 0, 1, sd.rotation)
@@ -374,7 +374,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
         if (sd.visible) {
             batch.setColor(Color.WHITE);
             if (textures != null) {
-                stateTime += Gdx.graphics.getDeltaTime();
+                stateTime += delta;
                 batch.draw(textures.getKeyFrame(stateTime, true), -sd.center.x, -sd.center.y);
             } else {
                 if (texture != null) {

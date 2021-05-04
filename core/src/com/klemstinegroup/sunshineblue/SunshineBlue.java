@@ -73,9 +73,9 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public static SunshineBlue instance;
     public HashSet<String> otherCIDS=new HashSet<>();
     private int recCounter;
-    private float recHalfSec = 0;
     private static final float fps = 10;
     public float colorFlash=0;
+    private float delta=1;
 
 //    private int dstFunc;
 //    private int srcFunc;
@@ -257,7 +257,8 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public void render() {
-        colorFlash+=Gdx.graphics.getDeltaTime()/3f;
+        delta=isRecording?(1f/fps):Gdx.graphics.getDeltaTime();
+        colorFlash+=delta/3f;
         if (colorFlash>.4f){colorFlash=0;}
         if (assetManager.update()) {
             // we are done loading, let's move to another screen!
@@ -322,9 +323,8 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
             });*/
 
 //        }
-        recHalfSec += Gdx.graphics.getDeltaTime();
-        if (isRecording && recHalfSec > (1f / fps)) {
-            recHalfSec = 0;
+
+        if (isRecording) {
             apng.write(FrameBufferUtils.drawObjectsPix(batch, viewport, userObjects, 600 * viewport.getScreenWidth() / viewport.getScreenHeight(), 600,false));
             if (recCounter-- <= 0) {
                 stopRecording();
@@ -350,7 +350,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
                 bo.regenerate(assetManager);
             }
             if (bo instanceof Drawable) {
-                ((Drawable) bo).draw(batch);
+                ((Drawable) bo).draw(batch,delta);
             }
             if (bo instanceof Actable) {
                 ((Actable) bo).act();
@@ -358,8 +358,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
             batch.setTransformMatrix(mx4Batch);
         }
         if (overlay != null) {
-            overlay.act();
-            ((Drawable) overlay).draw(batch);
+            ((Drawable) overlay).draw(batch,delta);
         }
         batch.setTransformMatrix(mx4Batch);
         if (isRecording) {
@@ -592,13 +591,15 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     }
 
     public void startRecording() {
+//        Gdx.graphics.setContinuousRendering(false);
         isRecording = true;
         recCounter = 300;
-        recHalfSec = 0;
         apng = new IncrementalAnimatedPNG();
         apng.setFlipY(true);
         mfh = new MemoryFileHandle();
         apng.start(mfh, (short) fps, 600 * viewport.getScreenWidth() / viewport.getScreenHeight(), 600);
+//        Gdx.graphics.requestRendering();
+
     }
 
     public void stopRecording() {
@@ -615,6 +616,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
             }
         });
+//        Gdx.graphics.setContinuousRendering(true);
     }
 
     public static void addUserObj(BaseObject b) {

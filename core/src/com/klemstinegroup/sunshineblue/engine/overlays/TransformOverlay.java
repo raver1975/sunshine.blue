@@ -16,10 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
-import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
-import com.klemstinegroup.sunshineblue.engine.objects.DrawObject;
-import com.klemstinegroup.sunshineblue.engine.objects.FontObject;
-import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
+import com.klemstinegroup.sunshineblue.engine.objects.*;
 import com.klemstinegroup.sunshineblue.engine.util.ColorHelper;
 import com.klemstinegroup.sunshineblue.engine.util.IPFSCIDListener;
 import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
@@ -270,7 +267,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
     }
 
     @Override
-    public void draw(Batch batch) {
+    public void draw(Batch batch,float delta) {
 
 //        mx4Overlay.set(mx4Overlay.idt());
 //        mx4Overlay.setToOrtho2D(0, 0, 100, 100);
@@ -285,6 +282,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
 //            cb.getImage().setColor(ColorHelper.numberToColorPercentage((float) checkBoxArray.indexOf(cb,true) / ((float) SunshineBlue.instance.userObjects.size-1)).cpy().lerp(Color.WHITE,SunshineBlue.instance.colorFlash));
 //            cb.setColor(ColorHelper.numberToColorPercentage((float) checkBoxArray.indexOf(cb,true) / ((float) SunshineBlue.instance.userObjects.size-1)).cpy().lerp(Color.WHITE,SunshineBlue.instance.colorFlash));
 //        }
+        stage.act();
         stage.draw();
     }
 
@@ -369,11 +367,6 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
     }
 
     @Override
-    public void act() {
-        stage.act();
-    }
-
-    @Override
     public void setObject(BaseObject bo) {
 
     }
@@ -398,6 +391,10 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
             if (SunshineBlue.instance.selectedObjects.get(0) instanceof DrawObject){
                 SunshineBlue.instance.DRAW_OVERLAY.setObject(SunshineBlue.instance.selectedObjects.get(0));
                 Overlay.setOverlay(SunshineBlue.instance.DRAW_OVERLAY);
+            }
+            if (SunshineBlue.instance.selectedObjects.get(0) instanceof ParticleObject){
+                SunshineBlue.instance.PARTICLE_OVERLAY.setObject(SunshineBlue.instance.selectedObjects.get(0));
+                Overlay.setOverlay(SunshineBlue.instance.PARTICLE_OVERLAY);
             }
         }
         return false;

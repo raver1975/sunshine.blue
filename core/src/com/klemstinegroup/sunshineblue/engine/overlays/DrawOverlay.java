@@ -15,6 +15,7 @@ import com.klemstinegroup.sunshineblue.colorpicker.DialogColorPicker;
 import com.klemstinegroup.sunshineblue.colorpicker.Spinner;
 import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
 import com.klemstinegroup.sunshineblue.engine.objects.DrawObject;
+import com.klemstinegroup.sunshineblue.engine.objects.FontObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
 
 
@@ -27,11 +28,11 @@ public class DrawOverlay extends ScreenObject implements Overlay, Touchable, Dra
     BaseObject drawObject;
 
 
-    public DrawOverlay( ) {
+    public DrawOverlay() {
         stage = new Stage(SunshineBlue.instance.overlayViewport);
         SunshineBlue.instance.assetManager.finishLoadingAsset("skins/orange/skin/uiskin.json");
-        Skin skin = SunshineBlue.instance.assetManager.get("skins/orange/skin/uiskin.json",Skin.class);
-        TextButton exitButton = new TextButton("X",skin);
+        Skin skin = SunshineBlue.instance.assetManager.get("skins/orange/skin/uiskin.json", Skin.class);
+        TextButton exitButton = new TextButton("X", skin);
         exitButton.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 60, 10);
         exitButton.addListener(new ClickListener() {
             @Override
@@ -56,7 +57,7 @@ public class DrawOverlay extends ScreenObject implements Overlay, Touchable, Dra
         picker = new DialogColorPicker("main", skin1, new DialogColorPicker.ColorListener() {
             @Override
             public void selected(Color color) {
-                if (drawObject != null) ((DrawObject)drawObject).setColor(color);
+                if (drawObject != null) ((DrawObject) drawObject).setColor(color);
             }
         }, Color.WHITE);
 //        picker.setResizable(true);
@@ -65,7 +66,7 @@ public class DrawOverlay extends ScreenObject implements Overlay, Touchable, Dra
         picker.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (drawObject != null) ((DrawObject)drawObject).setColor(picker.getSelectedColor());
+                if (drawObject != null) ((DrawObject) drawObject).setColor(picker.getSelectedColor());
             }
         });
         TextButton colorButton = new TextButton("color", skin);
@@ -92,7 +93,7 @@ public class DrawOverlay extends ScreenObject implements Overlay, Touchable, Dra
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (!slider.isDragging()) {
-                    ((DrawObject)drawObject).setSize((int) (slider.getValue()));
+                    ((DrawObject) drawObject).setSize((int) (slider.getValue()));
                     setBounds();
                 }
             }
@@ -146,7 +147,8 @@ public class DrawOverlay extends ScreenObject implements Overlay, Touchable, Dra
     }
 
     @Override
-    public void draw(Batch batch) {
+    public void draw(Batch batch, float delta) {
+        stage.act();
         stage.draw();
     }
 
@@ -168,22 +170,18 @@ public class DrawOverlay extends ScreenObject implements Overlay, Touchable, Dra
     @Override
     public void setInput() {
         SunshineBlue.instance.im.addProcessor(stage);
-        if (touchable!=null) SunshineBlue.instance.im.addProcessor(touchable);
+        if (touchable != null) SunshineBlue.instance.im.addProcessor(touchable);
+        slider.setValue(((DrawObject) drawObject).size);
     }
 
     @Override
     public void removeInput() {
         SunshineBlue.instance.im.removeProcessor(stage);
-        if (touchable!=null)SunshineBlue.instance.im.removeProcessor(touchable);
-    }
-
-    @Override
-    public void act() {
-        stage.act();
+        if (touchable != null) SunshineBlue.instance.im.removeProcessor(touchable);
     }
 
     @Override
     public void setObject(BaseObject doi) {
-        this.drawObject=doi;
+        this.drawObject = doi;
     }
 }

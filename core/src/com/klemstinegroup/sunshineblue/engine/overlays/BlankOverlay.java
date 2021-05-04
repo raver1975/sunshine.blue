@@ -85,16 +85,12 @@ public class BlankOverlay extends ScreenObject implements Overlay, Touchable,Dra
     }
 
     @Override
-    public void act() {
-    }
-
-    @Override
     public void setObject(BaseObject bo) {
 
     }
 
     @Override
-    public void draw(Batch batch) {
+    public void draw(Batch batch,float delta) {
 
     }
 }

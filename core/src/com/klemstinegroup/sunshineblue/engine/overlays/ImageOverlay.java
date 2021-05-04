@@ -73,7 +73,6 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
         stage.addActor(tfield);
 
 
-
         ta.addListener(new ActorGestureListener() {
             @Override
             public boolean longPress(Actor actor, float x, float y) {
@@ -151,12 +150,13 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
     }
 
     @Override
-    public void draw(Batch batch) {
+    public void draw(Batch batch, float delta) {
+        stage.act();
         stage.draw();
     }
 
     @Override
-    public boolean isSelected( Vector2 touch) {
+    public boolean isSelected(Vector2 touch) {
         return false;
     }
 
@@ -181,11 +181,6 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
     public void removeInput() {
         SunshineBlue.instance.im.removeProcessor(stage);
 //        if (touchable != null) Statics.im.removeProcessor(touchable);
-    }
-
-    @Override
-    public void act() {
-        stage.act();
     }
 
     @Override

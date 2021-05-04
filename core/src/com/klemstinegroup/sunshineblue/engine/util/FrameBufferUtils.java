@@ -16,7 +16,7 @@ public class FrameBufferUtils {
     static public Pixmap drawObjects(Batch batch,Viewport viewport, Array<BaseObject> objects) {
         FrameBuffer fb = new FrameBuffer(Pixmap.Format.RGBA8888, viewport.getScreenWidth(), viewport.getScreenHeight(), true);
         fb.begin();
-        draw(batch,viewport,objects);
+        draw(batch,viewport,objects,0);
         Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, viewport.getScreenWidth(), viewport.getScreenHeight());
         fb.end();
         fb.dispose();
@@ -37,12 +37,12 @@ public class FrameBufferUtils {
         return flipped;
     }
 
-    private static void draw(Batch batch, Viewport viewport,Array<BaseObject> objects) {
+    private static void draw(Batch batch, Viewport viewport,Array<BaseObject> objects,float delta) {
         batch.setProjectionMatrix(viewport.getCamera().combined);
         batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
         for (BaseObject bo : objects) {
             if (bo instanceof Drawable) {
-                ((Drawable) bo).draw(batch);
+                ((Drawable) bo).draw(batch,delta);
             }
             batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
 
@@ -53,7 +53,7 @@ public class FrameBufferUtils {
         FrameBuffer fb = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, true);
         fb.begin();
 //        ((OrthographicCamera)viewport.getCamera()).setToOrtho(false,width,height);
-        draw(batch,viewport,objects);
+        draw(batch,viewport,objects,0);
         Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, width, height);
         fb.end();
         fb.dispose();

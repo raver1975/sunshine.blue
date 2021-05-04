@@ -374,7 +374,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                ParticleObject po = new ParticleObject();
+                ParticleObject po = new ParticleObject(ParticleUtil.particleFiles.getKeyAt(MathUtils.random(ParticleUtil.particleFiles.size-1)));
 //                doi.setSize((int) SunshineBlue.instance.DRAW_OVERLAY.slider.getValue());
 //                doi.setColor(SunshineBlue.instance.DRAW_OVERLAY.picker.getSelectedColor());
                 SunshineBlue.addUserObj(po);
@@ -469,7 +469,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
     }
 
     @Override
-    public void draw(Batch batch) {
+    public void draw(Batch batch,float delta) {
 
 //        mx4Overlay.set(mx4Overlay.idt());
 //        mx4Overlay.setToOrtho2D(0, 0, 100, 100);
@@ -482,14 +482,15 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 //        if (screenshotPixmap!=null){
 //            batch.draw(screenshotPixmap,50,50);
 //        }
+        stage.act();
         stage.draw();
         SunshineBlue.instance.font.setColor(Color.BLACK);
-        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 39, SunshineBlue.instance.overlayViewport.getWorldHeight() - 105);
-        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 40, SunshineBlue.instance.overlayViewport.getWorldHeight() - 104);
-        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 41, SunshineBlue.instance.overlayViewport.getWorldHeight() - 105);
-        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 40, SunshineBlue.instance.overlayViewport.getWorldHeight() - 106);
-        SunshineBlue.instance.font.setColor(Color.WHITE);
-        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 40, SunshineBlue.instance.overlayViewport.getWorldHeight() - 105);
+        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 29, SunshineBlue.instance.overlayViewport.getWorldHeight() - 105);
+        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 30, SunshineBlue.instance.overlayViewport.getWorldHeight() - 104);
+        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 31, SunshineBlue.instance.overlayViewport.getWorldHeight() - 105);
+        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 30, SunshineBlue.instance.overlayViewport.getWorldHeight() - 106);
+        SunshineBlue.instance.font.setColor(Color.CYAN);
+        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 30, SunshineBlue.instance.overlayViewport.getWorldHeight() - 105);
 
     }
 
@@ -522,10 +523,6 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         SunshineBlue.instance.im.removeProcessor(stage);
     }
 
-    @Override
-    public void act() {
-        stage.act();
-    }
 
     @Override
     public void setObject(BaseObject bo) {
