@@ -14,7 +14,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Base64Coder;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
-import com.crashinvaders.vfx.effects.*;
+import com.crashinvaders.vfx.effects.ChromaticAberrationEffect;
+import com.crashinvaders.vfx.effects.GaussianBlurEffect;
 import com.github.tommyettinger.anim8.GifDecoder;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
@@ -35,9 +36,8 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 
     public ImageObject(byte[] data, Pixmap pixmapIn, String cid) {
         vfxManager.addEffect(new GaussianBlurEffect());
-//        vfxManager.addEffect(new ChromaticAberrationEffect(10));
-//        vfxManager.addEffect(new );
-
+        vfxManager.addEffect(new ChromaticAberrationEffect(10));
+        setupTexture();
         Gdx.app.postRunnable(new Runnable() {
             @Override
             public void run() {
@@ -373,29 +373,21 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
     public void draw(Batch batch, float delta) {
         if (sd.visible) {
             batch.end();
-            setBounds();
 
-            setupTexture((int)sd.bounds.x,(int)sd.bounds.y);
             startBatch(batch);
             if (textures != null) {
                 stateTime += delta;
-                batch.draw(textures.getKeyFrame(stateTime, true), 0,0);
+                batch.draw(textures.getKeyFrame(stateTime, true), -sd.center.x, -sd.center.y);
             } else {
                 if (texture != null) {
-                    batch.draw(texture, 0,0);
+                    batch.draw(texture, -sd.center.x, -sd.center.y);
 
                 }
             }
             endBatch(batch);
 
-            batch.setTransformMatrix(new Matrix4().idt()
-                    .translate(sd.position.x, sd.position.y, 0)
-                    .rotate(0, 0, 1, sd.rotation)
-                    .scale(sd.scale, sd.scale, 1));
-            batch.begin();
-            batch.draw(tr,-sd.center.x, -sd.center.y);
-            batch.end();
 
+            setBounds();
             dumbflag = SunshineBlue.instance.selectedObjects.contains(this, true);
             if (dumbflag) {
                 batch.begin();
@@ -417,7 +409,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
             batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
             batch.begin();
 
-
+            batch.draw(tr, -SunshineBlue.instance.overlayViewport.getScreenWidth() / 2f, -SunshineBlue.instance.overlayViewport.getScreenHeight() / 2f);
 
 //                SunshineBlue.instance.shapedrawer.setColor(Color.WHITE);
             if (dumbflag && polygon != null) {

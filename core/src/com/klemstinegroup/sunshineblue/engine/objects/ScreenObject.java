@@ -24,18 +24,23 @@ public class ScreenObject extends BaseObject {
         sd.center.add(touchdragcpy);
     }
 
-    public void setupTexture(int width,int height) {
-        if (!vfxFrameBuffer.isInitialized()||vfxFrameBuffer.getTexture().getHeight()!=height||vfxFrameBuffer.getTexture().getWidth()!=width) {
-            vfxFrameBuffer.initialize(width,height);
-            tr = new TextureRegion(vfxFrameBuffer.getTexture());
-            tr.flip(false, true);
+    public void setupTexture() {
+        if (!vfxFrameBuffer.isInitialized()) {
+            vfxFrameBuffer.initialize(SunshineBlue.instance.viewport.getScreenWidth(), SunshineBlue.instance.viewport.getScreenHeight());
         }
+        tr = new TextureRegion(vfxFrameBuffer.getTexture());
+        tr.flip(false, true);
     }
 
     public void startBatch(Batch batch) {
         vfxManager.cleanUpBuffers();
         vfxManager.beginInputCapture();
-        batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
+        batch.setTransformMatrix(new Matrix4().idt()
+                        .translate(sd.position.x, sd.position.y, 0)
+                        .rotate(0, 0, 1, sd.rotation)
+                        .scale(sd.scale, sd.scale, 1)
+//                        .translate(-center.x, -center.y, 0)
+        );
         batch.begin();
         batch.setColor(Color.WHITE);
     }
