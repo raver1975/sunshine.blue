@@ -2,16 +2,19 @@ package com.klemstinegroup.sunshineblue.engine.util;
 
 import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.ByteArray;
-import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.badlogic.gdx.utils.StreamUtils;
+import com.badlogic.gdx.maps.MapLayers;
+import com.badlogic.gdx.utils.*;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Writer;
 
 public class MemoryFileHandle extends FileHandle {
    public ByteArray ba = new ByteArray();
+//    public ArrayMap<String,MemoryFileHandle> siblings=new ArrayMap<>();
+    public ArrayMap<String,MemoryFileHandle> children=new ArrayMap<>();
+    MemoryFileHandle parent;
 
 //	public MemoryFileHandle(ZipFile archive, File file) {
 //		super(file, FileType.Classpath);
@@ -24,15 +27,65 @@ public class MemoryFileHandle extends FileHandle {
     }
 
     public MemoryFileHandle(String fileName) {
-        super(fileName.replace('\\', '/'), FileType.Classpath);
+        super(fileName.replace('\\', '/'), FileType.Local);
 //		this.archive = archive;
 //		this.archiveEntry = archive.getEntry(fileName.replace('\\', '/'));
     }
 
     public MemoryFileHandle() {
-        super(UUID.randomUUID().toString().replaceAll("-", ""), FileType.Classpath);
+        super(UUID.randomUUID().toString().replaceAll("-", ""), FileType.Local);
     }
 
+    @Override
+    public Writer writer(boolean append) {
+        if (!append){
+            ba.clear();
+        }
+        return new Writer() {
+            @Override
+            public void write(char[] cbuf, int off, int len) throws IOException {
+                for (int i=off;i<off+len;i++){
+                    ba.add((byte)cbuf[i]);
+                }
+            }
+
+            @Override
+            public void flush() throws IOException {
+
+            }
+
+            @Override
+            public void close() throws IOException {
+
+            }
+        };
+    }
+
+    public void setChildren(String name,MemoryFileHandle mfh){
+        children.put(name,mfh);
+    }
+
+    @Override
+    public FileHandle sibling(String name) {
+        if (children.containsKey(name)){
+            return children.get(name);
+        }else {
+            MemoryFileHandle mfh = new MemoryFileHandle(name);
+            children.put(name,mfh);
+            return mfh;
+        }
+    }
+
+    @Override
+    public FileHandle child(String name) {
+        if (children.containsKey(name)){
+            return children.get(name);
+        }else {
+            MemoryFileHandle mfh = new MemoryFileHandle(name);
+            children.put(name,mfh);
+            return mfh;
+        }
+    }
 //	@Override
 //	public FileHandle child (String name) {
 //		name = name.replace('\\', '/');

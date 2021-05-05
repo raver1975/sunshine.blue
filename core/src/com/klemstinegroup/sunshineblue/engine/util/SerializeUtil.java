@@ -2,7 +2,11 @@ package com.klemstinegroup.sunshineblue.engine.util;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.g2d.PixmapPacker;
+import com.badlogic.gdx.graphics.g2d.PixmapPackerIO;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.*;
@@ -16,6 +20,7 @@ import com.klemstinegroup.sunshineblue.engine.objects.ImageObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
 import com.klemstinegroup.sunshineblue.engine.overlays.SerialInterface;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Comparator;
 
@@ -193,7 +198,6 @@ public class SerializeUtil {
     }
 
 
-
     public static void infromGWTotherCID(String cid) {
         Gdx.app.log("infromGWTothercids", cid);
         SunshineBlue.instance.otherCIDS.add(cid);
@@ -210,6 +214,51 @@ public class SerializeUtil {
         save(null);
     }
 
+    public static TextureAtlas deserializePixmapPacker(MemoryFileHandle mfh){
+        return new TextureAtlas(new TextureAtlas.TextureAtlasData(mfh,mfh,false));
+    }
 
+    public static MemoryFileHandle serializePixmapPacker(PixmapPacker packer) {
+        MemoryFileHandle mfh = new MemoryFileHandle();
+        try {
+            new PixmapPackerIO().save(mfh, packer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        final int[] cnt = {(mfh.children.size)};
+        String[] cids = new String[cnt[0]];
+        for (int i = 0; i < mfh.children.size; i++) {
+            SunshineBlue.nativeNet.uploadIPFS(mfh.children.getValueAt(i).readBytes(), new IPFSCIDListener() {
+                @Override
+                public void cid(String cid) {
+                    cids[--cnt[0]] = cid;
+                    if (cnt[0] == 0) {
+                        SunshineBlue.nativeNet.uploadIPFS(mfh.readBytes(), new IPFSCIDListener() {
+                            @Override
+                            public void cid(String cid) {
+                                System.out.println("-----------------");
+                                System.out.println(cid + "\n");
+                                for (String s : cids) {
+                                    System.out.println(s);
+                                }
+                                System.out.println("-----------------");
+                            }
+
+                            @Override
+                            public void uploadFailed(Throwable t) {
+
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void uploadFailed(Throwable t) {
+
+                }
+            });
+        }
+        return mfh;
+    }
 
 }

@@ -5,6 +5,7 @@ import ar.com.hjg.pngj.PngReaderApng;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
@@ -17,6 +18,7 @@ import com.klemstinegroup.sunshineblue.engine.overlays.Touchable;
 import com.klemstinegroup.sunshineblue.engine.util.*;
 import sun.security.provider.Sun;
 
+import java.io.IOException;
 import java.util.Map;
 
 public class ImageObject extends ScreenObject implements Drawable, Touchable {
@@ -65,17 +67,22 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                     PixmapPacker pixmapPacker = gifDecoder.getAnimation(Animation.PlayMode.LOOP);
                     TextureAtlas animationAtlas = pixmapPacker.generateTextureAtlas(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear, false);
 //
-        for (PixmapPacker.Page page:pixmapPacker.getPages()){
-            SunshineBlue.addUserObj(new ImageObject(page.getPixmap()));
-            for(OrderedMap.Entry<String, PixmapPacker.PixmapPackerRectangle> rec:page.getRects()){
-                System.out.println(rec.value);
-            }
-
-        }
+//        for (PixmapPacker.Page page:pixmapPacker.getPages()){
+//            SunshineBlue.addUserObj(new ImageObject(page.getPixmap()));
+//            for(OrderedMap.Entry<String, PixmapPacker.PixmapPackerRectangle> rec:page.getRects()){
+//                System.out.println(rec.value);
+//            }
+//
+//        }
+                    MemoryFileHandle mfh=SerializeUtil.serializePixmapPacker(pixmapPacker);
+                    animationAtlas=SerializeUtil.deserializePixmapPacker(mfh);
+//                    TextureAtlas.TextureAtlasData tad = new TextureAtlas.TextureAtlasData();
+//                    tad.load(mfh, mfh, true);
+//                    TextureAtlas temp = new TextureAtlas(tad);
 
                     if (animationAtlas.getRegions().size > 0) {
                         try {
-                            textures = new Animation<>((float)gifDecoder.getDelay(0)/1000f, animationAtlas.getRegions(), Animation.PlayMode.LOOP);
+                            textures = new Animation<>((float) gifDecoder.getDelay(0) / 1000f, animationAtlas.getRegions(), Animation.PlayMode.LOOP);
                             setBounds();
                             return;
                         } catch (Exception e) {
@@ -138,12 +145,8 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                             den = 100;
                         }
                         TextureAtlas animationAtlas = pixmapPacker.generateTextureAtlas(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear, false);
-                        for (Texture tex:animationAtlas.getTextures()){
-                            Pixmap pixmap=FrameBufferUtils.textureToPixmap(SunshineBlue.instance.batch, tex);
-                            SunshineBlue.addUserObj(new ImageObject(pixmap));
-                        }
+                        SerializeUtil.serializePixmapPacker(pixmapPacker);
                         if (atleastone) {
-
                             textures = new Animation<>(num / den, animationAtlas.getRegions());
                             setBounds();
                             return;
