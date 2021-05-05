@@ -20,7 +20,18 @@ public class CustomTextureAtlas implements Disposable {
     private final ObjectSet<Texture> textures = new ObjectSet(4);
     private final Array<AtlasRegion> regions = new Array();
 
-    public CustomTextureAtlas(TextureAtlasData textureAtlasData,AtlasDownloadListener listener) {
+    public CustomTextureAtlas () {
+    }
+
+    public Array<AtlasRegion> getRegions() {
+        return regions;
+    }
+
+    public ObjectSet<Texture> getTextures() {
+        return textures;
+    }
+
+    public CustomTextureAtlas(TextureAtlasData textureAtlasData, AtlasDownloadListener listener) {
         load(textureAtlasData,listener);
     }
 

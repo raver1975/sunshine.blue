@@ -18,6 +18,7 @@ import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.overlays.Drawable;
 import com.klemstinegroup.sunshineblue.engine.overlays.Touchable;
 import com.klemstinegroup.sunshineblue.engine.util.*;
+import space.earlygrey.shapedrawer.JoinType;
 import sun.security.provider.Sun;
 
 import java.io.IOException;
@@ -67,7 +68,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                     GifDecoder gifDecoder = new GifDecoder();
                     gifDecoder.read(new MemoryFileHandle(data).read());
                     PixmapPacker pixmapPacker = gifDecoder.getAnimation(Animation.PlayMode.LOOP);
-                    TextureAtlas animationAtlas = pixmapPacker.generateTextureAtlas(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear, false);
+                    CustomTextureAtlas animationAtlas = pixmapPacker.generateCustomTextureAtlas(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear, false);
 //
 //        for (PixmapPacker.Page page:pixmapPacker.getPages()){
 //            SunshineBlue.addUserObj(new ImageObject(page.getPixmap()));
@@ -76,18 +77,18 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 //            }
 //
 //        }
-                    Gdx.app.log("test","here1");
-                    MemoryFileHandle mfh=SerializeUtil.serializePixmapPacker(pixmapPacker);
-                    Gdx.app.log("test","here2");
+                    Gdx.app.log("test", "here1");
+                    MemoryFileHandle mfh = SerializeUtil.serializePixmapPacker(pixmapPacker);
+                    Gdx.app.log("test", "here2");
                     SerializeUtil.deserializePixmapPacker(mfh, new AtlasDownloadListener() {
                         @Override
                         public void atlas(Array<CustomTextureAtlas.AtlasRegion> regions) {
-                            System.out.println("as:"+animationAtlas.getRegions().size);
+                            System.out.println("as:" + animationAtlas.getRegions().size);
                             if (animationAtlas.getRegions().size > 0) {
                                 try {
-                                    Gdx.app.log("test",""+1);
+                                    Gdx.app.log("test", "" + 1);
                                     textures = new Animation<CustomTextureAtlas.AtlasRegion>((float) gifDecoder.getDelay(0) / 1000f, regions, Animation.PlayMode.LOOP);
-                                    Gdx.app.log("test",""+2);
+                                    Gdx.app.log("test", "" + 2);
                                     setBounds();
                                     return;
                                 } catch (Exception e) {
@@ -101,7 +102,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 
                         }
                     });
-                    Gdx.app.log("test","here3");
+                    Gdx.app.log("test", "here3");
 //                    TextureAtlas.TextureAtlasData tad = new TextureAtlas.TextureAtlasData();
 //                    tad.load(mfh, mfh, true);
 //                    TextureAtlas temp = new TextureAtlas(tad);
@@ -120,7 +121,6 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                         int bytesperpixel = apng.getImgInfo().bytesPixel;
                         int w = apng.getImgInfo().cols;
                         int h = apng.getImgInfo().rows;
-                        boolean atleastone = false;
                         for (int i = 0; i < apng.getApngNumFrames(); i++) {
                             apng.advanceToFrame(i);
                             int channels = apng.getCurImgInfo().channels;
@@ -147,14 +147,14 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                             try {
 //                                region = new TextureRegion(new Texture(pixmap));
 //                                arrayTexture.add(region);
-                                pixmapPacker.pack(pixmap);
-                                atleastone = true;
+                                pixmapPacker.pack("f"+i,pixmap);
                             } catch (Exception e) {
                                 Gdx.app.log("textureregeion", e.toString());
                             }
                         }
                         float num = 1;
                         float den = 1;
+                        System.out.println("blend op="+apng.getFctl().getBlendOp());
                         if (apng.getFctl() != null) {
                             num = apng.getFctl().getDelayNum();
                             den = apng.getFctl().getDelayDen();
@@ -162,32 +162,34 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                         if (den == 0) {
                             den = 100;
                         }
-                        TextureAtlas animationAtlas = pixmapPacker.generateTextureAtlas(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear, false);
-                        ;
-                        boolean finalAtleastone = atleastone;
-                        float finalNum = num;
-                        float finalDen = den;
-                        CustomTextureAtlas cta=null;
-                        SerializeUtil.deserializePixmapPacker(SerializeUtil.serializePixmapPacker(pixmapPacker), new AtlasDownloadListener() {
-                            @Override
-                            public void atlas(Array<CustomTextureAtlas.AtlasRegion> regions) {
-                                if (finalAtleastone) {
+                        CustomTextureAtlas animationAtlas = pixmapPacker.generateCustomTextureAtlas(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear, false);
+                        System.out.println("xx"+animationAtlas.getRegions().size);
+
+                        if (animationAtlas.getRegions().size > 0) {
+                            float finalNum = num;
+                            float finalDen = den;
+                            /*CustomTextureAtlas cta = null;
+                            SerializeUtil.deserializePixmapPacker(SerializeUtil.serializePixmapPacker(pixmapPacker), new AtlasDownloadListener() {
+                                @Override
+                                public void atlas(Array<CustomTextureAtlas.AtlasRegion> regions) {
+                                    System.out.println("here 80");
+                                    System.out.println("regions:"+regions.size);
                                     textures = new Animation<CustomTextureAtlas.AtlasRegion>(finalNum / finalDen, regions);
                                     setBounds();
-                                    return;
                                 }
-                            }
 
-                            @Override
-                            public void failed(Throwable t) {
+                                @Override
+                                public void failed(Throwable t) {
 
-                            }
+                                }
 
-                        });
-
+                            });*/
+                            textures=new Animation<CustomTextureAtlas.AtlasRegion>(num/den,animationAtlas.getRegions());
+                        }
                     } catch (Exception e) {
                         Statics.exceptionLog("apng", e);
                     }
+
                 }
 
                 if (pixmapIn == null) {
@@ -437,8 +439,9 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                 stateTime += delta;
                 try {
                     batch.draw(textures.getKeyFrame(stateTime, true), -sd.center.x, -sd.center.y);
+                } catch (Exception e) {
                 }
-                catch (Exception e){};
+                ;
             } else {
                 if (texture != null) {
                     batch.draw(texture, -sd.center.x, -sd.center.y);
@@ -468,7 +471,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 //                SunshineBlue.instance.shapedrawer.setColor(Color.WHITE);
 
                     SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / ((float) SunshineBlue.instance.userObjects.size - 1)).cpy().lerp(Color.WHITE, SunshineBlue.instance.colorFlash));
-                    SunshineBlue.instance.shapedrawer.polygon(polygon,5);
+                    SunshineBlue.instance.shapedrawer.polygon(polygon, 5, JoinType.SMOOTH);
                 }
 
             }

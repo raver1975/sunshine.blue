@@ -275,7 +275,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
                     batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
                     batch.begin();
                     SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / (float) (SunshineBlue.instance.userObjects.size - 1)).cpy().lerp(Color.WHITE, SunshineBlue.instance.colorFlash));
-                    SunshineBlue.instance.shapedrawer.polygon(polygon,5);
+                    SunshineBlue.instance.shapedrawer.polygon(polygon,5, JoinType.SMOOTH);
                 }
             }
         }

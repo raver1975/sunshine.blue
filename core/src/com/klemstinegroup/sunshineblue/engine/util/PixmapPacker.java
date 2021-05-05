@@ -12,7 +12,6 @@ import com.badlogic.gdx.graphics.Pixmap.Blending;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.PixmapTextureData;
 import com.badlogic.gdx.math.Rectangle;
@@ -22,8 +21,8 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.OrderedMap;
 
 /** Packs {@link Pixmap pixmaps} into one or more {@link Page pages} to generate an atlas of pixmap instances. Provides means to
- * directly convert the pixmap atlas to a {@link TextureAtlas}. The packer supports padding and border pixel duplication,
- * specified during construction. The packer supports incremental inserts and updates of TextureAtlases generated with this class.
+ * directly convert the pixmap atlas to a {@link CustomTextureAtlas}. The packer supports padding and border pixel duplication,
+ * specified during construction. The packer supports incremental inserts and updates of CustomTextureAtlases generated with this class.
  * How bin packing is performed can be customized via {@link PackStrategy}.
  * <p>
  * All methods can be called from any thread unless otherwise noted.
@@ -35,7 +34,7 @@ import com.badlogic.gdx.utils.OrderedMap;
  * PixmapPacker packer = new PixmapPacker(512, 512, Format.RGB565, 2, true);
  * packer.pack(&quot;First Pixmap&quot;, pixmap1);
  * packer.pack(&quot;Second Pixmap&quot;, pixmap2);
- * TextureAtlas atlas = packer.generateTextureAtlas(TextureFilter.Nearest, TextureFilter.Nearest, false);
+ * CustomTextureAtlas atlas = packer.generateCustomTextureAtlas(TextureFilter.Nearest, TextureFilter.Nearest, false);
  * packer.dispose();
  * // ...
  * atlas.dispose();
@@ -49,17 +48,17 @@ import com.badlogic.gdx.utils.OrderedMap;
  * <pre>
  * // 512x512 pixel pages, RGB565 format, 2 pixels of padding, no border duplication
  * PixmapPacker packer = new PixmapPacker(512, 512, Format.RGB565, 2, false);
- * TextureAtlas atlas = new TextureAtlas();
+ * CustomTextureAtlas atlas = new CustomTextureAtlas();
  * 
  * // potentially on a separate thread, e.g. downloading thumbnails
  * packer.pack(&quot;thumbnail&quot;, thumbnail);
  * 
  * // on the rendering thread, every frame
- * packer.updateTextureAtlas(atlas, TextureFilter.Linear, TextureFilter.Linear, false);
+ * packer.updateCustomTextureAtlas(atlas, TextureFilter.Linear, TextureFilter.Linear, false);
  * 
  * // once the atlas is no longer needed, make sure you get the final additions. This might
  * // be more elaborate depending on your threading model.
- * packer.updateTextureAtlas(atlas, TextureFilter.Linear, TextureFilter.Linear, false);
+ * packer.updateCustomTextureAtlas(atlas, TextureFilter.Linear, TextureFilter.Linear, false);
  * // ...
  * atlas.dispose();
  * </pre>
@@ -318,35 +317,35 @@ public class PixmapPacker implements Disposable {
 		disposed = true;
 	}
 
-	/** Generates a new {@link TextureAtlas} from the pixmaps inserted so far. After calling this method, disposing the packer will
+	/** Generates a new {@link CustomTextureAtlas} from the pixmaps inserted so far. After calling this method, disposing the packer will
 	 * no longer dispose the page pixmaps. */
-	public synchronized TextureAtlas generateTextureAtlas (TextureFilter minFilter, TextureFilter magFilter, boolean useMipMaps) {
-		TextureAtlas atlas = new TextureAtlas();
-		updateTextureAtlas(atlas, minFilter, magFilter, useMipMaps);
+	public synchronized CustomTextureAtlas generateCustomTextureAtlas (TextureFilter minFilter, TextureFilter magFilter, boolean useMipMaps) {
+		CustomTextureAtlas atlas = new CustomTextureAtlas();
+		updateCustomTextureAtlas(atlas, minFilter, magFilter, useMipMaps);
 		return atlas;
 	}
 
-	/** Updates the {@link TextureAtlas}, adding any new {@link Pixmap} instances packed since the last call to this method. This
-	 * can be used to insert Pixmap instances on a separate thread via {@link #pack(String, Pixmap)} and update the TextureAtlas on
+	/** Updates the {@link CustomTextureAtlas}, adding any new {@link Pixmap} instances packed since the last call to this method. This
+	 * can be used to insert Pixmap instances on a separate thread via {@link #pack(String, Pixmap)} and update the CustomTextureAtlas on
 	 * the rendering thread. This method must be called on the rendering thread. After calling this method, disposing the packer
 	 * will no longer dispose the page pixmaps. Has useIndexes on by default so as to keep backwards compatibility*/
-	public synchronized void updateTextureAtlas (TextureAtlas atlas, TextureFilter minFilter, TextureFilter magFilter,
+	public synchronized void updateCustomTextureAtlas (CustomTextureAtlas atlas, TextureFilter minFilter, TextureFilter magFilter,
 		boolean useMipMaps) {
-		updateTextureAtlas(atlas, minFilter, magFilter, useMipMaps, true);
+		updateCustomTextureAtlas(atlas, minFilter, magFilter, useMipMaps, true);
 	}
 
-	/** Updates the {@link TextureAtlas}, adding any new {@link Pixmap} instances packed since the last call to this method. This
-	 * can be used to insert Pixmap instances on a separate thread via {@link #pack(String, Pixmap)} and update the TextureAtlas on
+	/** Updates the {@link CustomTextureAtlas}, adding any new {@link Pixmap} instances packed since the last call to this method. This
+	 * can be used to insert Pixmap instances on a separate thread via {@link #pack(String, Pixmap)} and update the CustomTextureAtlas on
 	 * the rendering thread. This method must be called on the rendering thread. After calling this method, disposing the packer
 	 * will no longer dispose the page pixmaps. */
-	public synchronized void updateTextureAtlas (TextureAtlas atlas, TextureFilter minFilter, TextureFilter magFilter,
+	public synchronized void updateCustomTextureAtlas (CustomTextureAtlas atlas, TextureFilter minFilter, TextureFilter magFilter,
 		boolean useMipMaps, boolean useIndexes) {
 		updatePageTextures(minFilter, magFilter, useMipMaps);
 		for (Page page : pages) {
 			if (page.addedRects.size > 0) {
 				for (String name : page.addedRects) {
 					PixmapPackerRectangle rect = page.rects.get(name);
-					TextureAtlas.AtlasRegion region = new TextureAtlas.AtlasRegion(page.texture, (int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height);
+					CustomTextureAtlas.AtlasRegion region = new CustomTextureAtlas.AtlasRegion(page.texture, (int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height);
 
 					if (rect.splits != null) {
 						region.names = new String[] {"split", "pad"};
