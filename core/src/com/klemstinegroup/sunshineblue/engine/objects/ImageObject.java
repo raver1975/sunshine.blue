@@ -29,6 +29,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
     public Animation<CustomTextureAtlas.AtlasRegion> textures;
     private Polygon polygon;
     private String cid;
+    private Array<String> cids;
     private float stateTime;
     Vector2 angleCalc = new Vector2();
     float angleRotateAnimAngle = 0;
@@ -132,6 +133,8 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                                 pixmap.drawPixmap(first,0,0);
                             }
                             Gdx.app.log("pixmap:", pixmap.getWidth() + "x" + pixmap.getHeight());
+//                            int trans=apng.getMetadata().getTRNS().getRGB888();
+                            int trans255=apng.getMetadata().getTRNS().getPalletteAlpha().length;
                             for (int y = 0; y < apng.getCurImgInfo().rows; y++) {
                                 ImageLineByte imageLine = apng.readRowByte();
                                 byte[] linedata = imageLine.getScanline();
@@ -140,7 +143,14 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                                     if (channels == 1) {
 
 //                                        pixmap.setColor(((linedata[j] & 0xff) << 24) | ((linedata[j] & 0xff) << 16) | ((linedata[j] & 0xff) << 8) | 0xff);
-                                        pixmap.setColor((apng.getMetadata().getPLTE().getEntry(linedata[j]&0xff)<<8)|0xff);
+//                                        System.out.println("***+"+apng.getMetadata().getPLTE().getNentries()+"\t"+apng.getMetadata().getTRNS().getPalletteAlpha().length);
+                                        int g=apng.getMetadata().getPLTE().getEntry(linedata[j]&0xff);
+                                        int a=255;
+                                        if ((linedata[j]&0xff)<trans255){
+                                            a=apng.getMetadata().getTRNS().getPalletteAlpha()[linedata[j]&0xff];
+                                        }
+                                        pixmap.setColor(g<<8|(a&0xff));
+
                                     }
                                     if (channels == 3) {
                                         pixmap.setColor(((linedata[3 * j] & 0xff) << 24) | ((linedata[3 * j + 1] & 0xff) << 16) | ((linedata[3 * j + 2] & 0xff) << 8) | 0xff);
@@ -175,7 +185,18 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                         CustomTextureAtlas cta = null;
                         float finalNum = num;
                         float finalDen = den;
-                        SerializeUtil.deserializePixmapPacker(SerializeUtil.serializePixmapPacker(pixmapPacker), new AtlasDownloadListener() {
+                        SerializeUtil.serializePixmapPacker(pixmapPacker, new AtlasUploadListener() {
+                            @Override
+                            public void atlas(Array<String> strings) {
+                                ImageObject.this.cids=strings;
+                            }
+
+                            @Override
+                            public void failed(Throwable t) {
+
+                            }
+                        });
+                  /*      SerializeUtil.deserializePixmapPacker(SerializeUtil.serializePixmapPacker(pixmapPacker,null), new AtlasDownloadListener() {
                             @Override
                             public void atlas(Array<CustomTextureAtlas.AtlasRegion> regions) {
                                 System.out.println("here 80");
@@ -190,8 +211,8 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 
                             }
 
-                        });
-//                        textures=new Animation<>(num/den,animationAtlas.getRegions());
+                        });*/
+                        textures=new Animation<>(num/den,animationAtlas.getRegions());
 
 
                     } catch (Exception e) {

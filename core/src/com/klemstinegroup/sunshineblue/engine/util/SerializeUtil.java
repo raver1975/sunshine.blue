@@ -215,7 +215,7 @@ public class SerializeUtil {
         new CustomTextureAtlas(new CustomTextureAtlas.TextureAtlasData(mfh, mfh, false),listener);
     }
 
-    public static MemoryFileHandle serializePixmapPacker(PixmapPacker packer) {
+    public static MemoryFileHandle serializePixmapPacker(PixmapPacker packer,AtlasUploadListener listener) {
         MemoryFileHandle mfh = new MemoryFileHandle("f");
         try {
             new PixmapPackerIO().save(mfh, packer);
@@ -223,20 +223,24 @@ public class SerializeUtil {
             e.printStackTrace();
         }
         final int[] cnt = {(mfh.children.size)};
-        String[] cids = new String[cnt[0]];
+        Array<String> cids = new Array<String>();
         for (int i = 0; i < mfh.children.size; i++) {
             SunshineBlue.nativeNet.uploadIPFS(mfh.children.getValueAt(i).readBytes(), new IPFSCIDListener() {
                 @Override
                 public void cid(String cid) {
-                    cids[--cnt[0]] = cid;
+                    cids.add(cid);
+                    --cnt[0];
                     if (cnt[0] == 0) {
                         SunshineBlue.nativeNet.uploadIPFS(mfh.readBytes(), new IPFSCIDListener() {
                             @Override
                             public void cid(String cid) {
                                 System.out.println("-----------------");
-                                System.out.println(cid + "\n");
+                                cids.insert(0,cid);
                                 for (String s : cids) {
                                     System.out.println(s);
+                                }
+                                if (listener!=null){
+                                    listener.atlas(cids);
                                 }
                                 System.out.println("-----------------");
                             }

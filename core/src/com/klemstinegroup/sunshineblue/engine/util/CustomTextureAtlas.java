@@ -69,7 +69,9 @@ public class CustomTextureAtlas implements Disposable {
                                         if (region.flip) atlasRegion.flip(false, true);
                                         regions.add(atlasRegion);
                                     }
-                                    listener.atlas(regions);
+                                    if (listener!=null){
+                                        listener.atlas(regions);
+                                    }
                                 }
                             }
 
