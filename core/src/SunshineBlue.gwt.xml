@@ -6,6 +6,7 @@
 	<source path="ar/com/hjg/pngj" />
 	<source path="net/sf/jazzlib" />
 	<source path="com/github/tommyettinger/anim8" />
+	<source path="com/badlogic/gdx/graphics/g2d" />
 <!--	<extend-configuration-property name="gdx.reflect.include" value="java.io." />-->
 	<extend-configuration-property name="gdx.reflect.include" value="java.lang" />
 <!--	<extend-configuration-property name="gdx.reflect.include" value="java.lang.annotation" />-->

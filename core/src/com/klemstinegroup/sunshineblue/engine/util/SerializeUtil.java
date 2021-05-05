@@ -2,12 +2,8 @@ package com.klemstinegroup.sunshineblue.engine.util;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.g2d.PixmapPacker;
-import com.badlogic.gdx.graphics.g2d.PixmapPackerIO;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
@@ -23,6 +19,7 @@ import com.klemstinegroup.sunshineblue.engine.overlays.SerialInterface;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Comparator;
+
 
 public class SerializeUtil {
     public static Json json = new Json();
@@ -214,12 +211,12 @@ public class SerializeUtil {
         save(null);
     }
 
-    public static TextureAtlas deserializePixmapPacker(MemoryFileHandle mfh){
-        return new TextureAtlas(new TextureAtlas.TextureAtlasData(mfh,mfh,false));
+    public static CustomTextureAtlas deserializePixmapPacker(MemoryFileHandle mfh) {
+        return new CustomTextureAtlas(new CustomTextureAtlas.TextureAtlasData(mfh, mfh, false));
     }
 
     public static MemoryFileHandle serializePixmapPacker(PixmapPacker packer) {
-        MemoryFileHandle mfh = new MemoryFileHandle();
+        MemoryFileHandle mfh = new MemoryFileHandle("f");
         try {
             new PixmapPackerIO().save(mfh, packer);
         } catch (IOException e) {
@@ -260,5 +257,6 @@ public class SerializeUtil {
         }
         return mfh;
     }
+
 
 }

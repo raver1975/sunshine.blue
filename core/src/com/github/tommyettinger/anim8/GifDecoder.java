@@ -10,15 +10,8 @@ import java.util.Vector;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
-import com.badlogic.gdx.graphics.g2d.PixmapPacker;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.Texture;
-import com.klemstinegroup.sunshineblue.SunshineBlue;
-import com.klemstinegroup.sunshineblue.engine.objects.ImageObject;
-import com.klemstinegroup.sunshineblue.engine.util.FrameBufferUtils;
+import com.klemstinegroup.sunshineblue.engine.util.PixmapPacker;
 
 public class GifDecoder {
     /**
@@ -692,7 +685,7 @@ public class GifDecoder {
         } while ((blockSize > 0) && !err());
     }
 
-    public PixmapPacker getAnimation(PlayMode playMode) {
+    public com.klemstinegroup.sunshineblue.engine.util.PixmapPacker getAnimation(PlayMode playMode) {
         int nrFrames = getFrameCount();
         Pixmap frame = getFrame(0);
         int width = frame.getWidth();

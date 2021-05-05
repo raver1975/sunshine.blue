@@ -4,7 +4,6 @@ import ar.com.hjg.pngj.ImageInfo;
 import ar.com.hjg.pngj.PngWriter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.net.HttpRequestBuilder;
@@ -100,7 +99,7 @@ public class IPFSUtils {
         Gdx.net.sendHttpRequest(request, listener);
     }
 
-    public static void writePng(Pixmap pixmap, FileHandle mfh, IPFSCIDListener listener) {
+    public static void writePng(Pixmap pixmap, MemoryFileHandle mfh, IPFSCIDListener listener) {
 //                MemoryFileHandle mfh = new MemoryFileHandle();
         if (mfh == null) mfh = new MemoryFileHandle();
         ImageInfo imi = new ImageInfo(pixmap.getWidth(), pixmap.getHeight(), 8, true);

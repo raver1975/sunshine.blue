@@ -1,6 +1,7 @@
 package com.klemstinegroup.sunshineblue.engine.util;
 
 import com.badlogic.gdx.Files.FileType;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.utils.*;
@@ -11,9 +12,10 @@ import java.io.OutputStream;
 import java.io.Writer;
 
 public class MemoryFileHandle extends FileHandle {
-   public ByteArray ba = new ByteArray();
-//    public ArrayMap<String,MemoryFileHandle> siblings=new ArrayMap<>();
-    public ArrayMap<String,MemoryFileHandle> children=new ArrayMap<>();
+    private String fileName = null;
+    public ByteArray ba = new ByteArray();
+    //    public ArrayMap<String,MemoryFileHandle> siblings=new ArrayMap<>();
+    public ArrayMap<String, MemoryFileHandle> children = new ArrayMap<>();
     MemoryFileHandle parent;
 
 //	public MemoryFileHandle(ZipFile archive, File file) {
@@ -22,30 +24,40 @@ public class MemoryFileHandle extends FileHandle {
 //		archiveEntry = this.archive.getEntry(file.getPath());
 //	}
 
-    public MemoryFileHandle(byte[] b){
+    public MemoryFileHandle(byte[] b) {
         ba.addAll(b);
+        this.fileName = UUID.randomUUID().toString();
     }
 
+
+
+
     public MemoryFileHandle(String fileName) {
-        super(fileName.replace('\\', '/'), FileType.Local);
+        this.fileName = fileName;
+//        super(fileName.replace('\\', '/'), FileType.Local);
 //		this.archive = archive;
 //		this.archiveEntry = archive.getEntry(fileName.replace('\\', '/'));
     }
 
     public MemoryFileHandle() {
-        super(UUID.randomUUID().toString().replaceAll("-", ""), FileType.Local);
+        this.fileName = UUID.randomUUID().toString();
+    }
+
+    @Override
+    public String name() {
+        return fileName;
     }
 
     @Override
     public Writer writer(boolean append) {
-        if (!append){
+        if (!append) {
             ba.clear();
         }
         return new Writer() {
             @Override
             public void write(char[] cbuf, int off, int len) throws IOException {
-                for (int i=off;i<off+len;i++){
-                    ba.add((byte)cbuf[i]);
+                for (int i = off; i < off + len; i++) {
+                    ba.add((byte) cbuf[i]);
                 }
             }
 
@@ -61,28 +73,30 @@ public class MemoryFileHandle extends FileHandle {
         };
     }
 
-    public void setChildren(String name,MemoryFileHandle mfh){
-        children.put(name,mfh);
+    public void setChildren(String name, MemoryFileHandle mfh) {
+        children.put(name, mfh);
     }
 
     @Override
-    public FileHandle sibling(String name) {
-        if (children.containsKey(name)){
+    public MemoryFileHandle sibling(String name) {
+        Gdx.app.log("test sib",name);
+        if (children.containsKey(name)) {
             return children.get(name);
-        }else {
+        } else {
             MemoryFileHandle mfh = new MemoryFileHandle(name);
-            children.put(name,mfh);
+            children.put(name, mfh);
             return mfh;
         }
     }
 
     @Override
-    public FileHandle child(String name) {
-        if (children.containsKey(name)){
+    public MemoryFileHandle child(String name) {
+        Gdx.app.log("test child",name);
+        if (children.containsKey(name)) {
             return children.get(name);
-        }else {
+        } else {
             MemoryFileHandle mfh = new MemoryFileHandle(name);
-            children.put(name,mfh);
+            children.put(name, mfh);
             return mfh;
         }
     }
@@ -122,7 +136,7 @@ public class MemoryFileHandle extends FileHandle {
         return new OutputStream() {
             @Override
             public void write(byte[] b, int off, int len) throws IOException {
-                ba.addAll(b,off,len);
+                ba.addAll(b, off, len);
             }
 
             @Override
@@ -184,12 +198,12 @@ public class MemoryFileHandle extends FileHandle {
 
     @Override
     public void writeBytes(byte[] bytes, boolean append) {
-        if (!append)ba.clear();
+        if (!append) ba.clear();
         ba.addAll(bytes);
     }
 
     @Override
     public String toString() {
-        return "Memory file:"+ba.size;
+        return "Memory file:" + ba.size;
     }
 }

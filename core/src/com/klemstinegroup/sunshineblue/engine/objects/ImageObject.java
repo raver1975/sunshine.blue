@@ -5,9 +5,11 @@ import ar.com.hjg.pngj.PngReaderApng;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.*;
 import com.github.tommyettinger.anim8.GifDecoder;
@@ -23,7 +25,7 @@ import java.util.Map;
 
 public class ImageObject extends ScreenObject implements Drawable, Touchable {
     public Texture texture;
-    public Animation<TextureAtlas.AtlasRegion> textures;
+    public Animation<CustomTextureAtlas.AtlasRegion> textures;
     private Polygon polygon;
     private String cid;
     private float stateTime;
@@ -70,19 +72,24 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 //        for (PixmapPacker.Page page:pixmapPacker.getPages()){
 //            SunshineBlue.addUserObj(new ImageObject(page.getPixmap()));
 //            for(OrderedMap.Entry<String, PixmapPacker.PixmapPackerRectangle> rec:page.getRects()){
-//                System.out.println(rec.value);
+//                Gdx.app.log("test",rec.value);
 //            }
 //
 //        }
+                    Gdx.app.log("test","here1");
                     MemoryFileHandle mfh=SerializeUtil.serializePixmapPacker(pixmapPacker);
-                    animationAtlas=SerializeUtil.deserializePixmapPacker(mfh);
+                    Gdx.app.log("test","here2");
+                    CustomTextureAtlas customanimationAtlas = SerializeUtil.deserializePixmapPacker(mfh);
+                    Gdx.app.log("test","here3");
 //                    TextureAtlas.TextureAtlasData tad = new TextureAtlas.TextureAtlasData();
 //                    tad.load(mfh, mfh, true);
 //                    TextureAtlas temp = new TextureAtlas(tad);
 
                     if (animationAtlas.getRegions().size > 0) {
                         try {
-                            textures = new Animation<>((float) gifDecoder.getDelay(0) / 1000f, animationAtlas.getRegions(), Animation.PlayMode.LOOP);
+                            Gdx.app.log("test",""+1);
+                            textures = new Animation<CustomTextureAtlas.AtlasRegion>((float) gifDecoder.getDelay(0) / 1000f, customanimationAtlas.getRegions1(), Animation.PlayMode.LOOP);
+                            Gdx.app.log("test",""+2);
                             setBounds();
                             return;
                         } catch (Exception e) {
@@ -145,9 +152,10 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                             den = 100;
                         }
                         TextureAtlas animationAtlas = pixmapPacker.generateTextureAtlas(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear, false);
-                        SerializeUtil.serializePixmapPacker(pixmapPacker);
+                        ;
+                        CustomTextureAtlas cta=SerializeUtil.deserializePixmapPacker(SerializeUtil.serializePixmapPacker(pixmapPacker));
                         if (atleastone) {
-                            textures = new Animation<>(num / den, animationAtlas.getRegions());
+                            textures = new Animation<CustomTextureAtlas.AtlasRegion>(num / den, cta.getRegions1());
                             setBounds();
                             return;
                         }
