@@ -33,7 +33,6 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
     Vector2 angleCalc = new Vector2();
     float angleRotateAnimAngle = 0;
 
-
     public ImageObject(byte[] data, Pixmap pixmapIn, String cid) {
         Gdx.app.postRunnable(new Runnable() {
             @Override
@@ -77,9 +76,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 //            }
 //
 //        }
-                    Gdx.app.log("test", "here1");
                     MemoryFileHandle mfh = SerializeUtil.serializePixmapPacker(pixmapPacker);
-                    Gdx.app.log("test", "here2");
                     SerializeUtil.deserializePixmapPacker(mfh, new AtlasDownloadListener() {
                         @Override
                         public void atlas(Array<CustomTextureAtlas.AtlasRegion> regions) {
@@ -102,7 +99,6 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 
                         }
                     });
-                    Gdx.app.log("test", "here3");
 //                    TextureAtlas.TextureAtlasData tad = new TextureAtlas.TextureAtlasData();
 //                    tad.load(mfh, mfh, true);
 //                    TextureAtlas temp = new TextureAtlas(tad);
@@ -115,15 +111,18 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                         PngReaderApng apng = new PngReaderApng(new MemoryFileHandle(data));
 //                        Array<TextureRegion> arrayTexture = new Array<>();
                         PixmapPacker pixmapPacker = new PixmapPacker(2048, 2048, Pixmap.Format.RGBA8888, 3, true);
-                        ;
+                        pixmapPacker.setPackToTexture(false);
 
-                        int bitdepth = apng.getImgInfo().bitDepth;
-                        int bytesperpixel = apng.getImgInfo().bytesPixel;
                         int w = apng.getImgInfo().cols;
                         int h = apng.getImgInfo().rows;
                         for (int i = 0; i < apng.getApngNumFrames(); i++) {
                             apng.advanceToFrame(i);
                             int channels = apng.getCurImgInfo().channels;
+                            int bitdepth = apng.getCurImgInfo().bitDepth;
+                            int bitsperpixel = apng.getCurImgInfo().bitspPixel;
+                            int bytesperpixel = apng.getCurImgInfo().bytesPixel;
+
+
                             int offx = apng.getFctl().getxOff();
                             int offy = apng.getFctl().getyOff();
 
@@ -132,8 +131,13 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                             for (int y = 0; y < apng.getCurImgInfo().rows; y++) {
                                 ImageLineByte imageLine = apng.readRowByte();
                                 byte[] linedata = imageLine.getScanline();
-//                                  Gdx.app.log("bits:",linedata.length+"\t"+bitdepth+"\t"+bytesperpixel+"\t"+channels);
+                                Gdx.app.log("bits:", linedata.length + "\t" + bitdepth + "\t" + bitsperpixel + "\t" + bytesperpixel + "\t" + channels);
                                 for (int j = 0; j < imageLine.getImageInfo().cols; j++) {
+                                    if (channels == 1) {
+
+//                                        pixmap.setColor(((linedata[j] & 0xff) << 24) | ((linedata[j] & 0xff) << 16) | ((linedata[j] & 0xff) << 8) | 0xff);
+                                        pixmap.setColor((apng.getMetadata().getPLTE().getEntry(linedata[j]&0xff)<<8)|0xff);
+                                    }
                                     if (channels == 3) {
                                         pixmap.setColor(((linedata[3 * j] & 0xff) << 24) | ((linedata[3 * j + 1] & 0xff) << 16) | ((linedata[3 * j + 2] & 0xff) << 8) | 0xff);
                                     } else if (channels == 4) {
@@ -143,18 +147,11 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                                 }
                             }
 //                            TextureRegion region = null;
-
-                            try {
-//                                region = new TextureRegion(new Texture(pixmap));
-//                                arrayTexture.add(region);
-                                pixmapPacker.pack("f"+i,pixmap);
-                            } catch (Exception e) {
-                                Gdx.app.log("textureregeion", e.toString());
-                            }
+                            pixmapPacker.pack("f" + i, pixmap);
                         }
                         float num = 1;
                         float den = 1;
-                        System.out.println("blend op="+apng.getFctl().getBlendOp());
+                        System.out.println("blend op=" + apng.getFctl().getBlendOp());
                         if (apng.getFctl() != null) {
                             num = apng.getFctl().getDelayNum();
                             den = apng.getFctl().getDelayDen();
@@ -163,29 +160,32 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                             den = 100;
                         }
                         CustomTextureAtlas animationAtlas = pixmapPacker.generateCustomTextureAtlas(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear, false);
-                        System.out.println("xx"+animationAtlas.getRegions().size);
 
-                        if (animationAtlas.getRegions().size > 0) {
-                            float finalNum = num;
-                            float finalDen = den;
-                            /*CustomTextureAtlas cta = null;
-                            SerializeUtil.deserializePixmapPacker(SerializeUtil.serializePixmapPacker(pixmapPacker), new AtlasDownloadListener() {
-                                @Override
-                                public void atlas(Array<CustomTextureAtlas.AtlasRegion> regions) {
-                                    System.out.println("here 80");
-                                    System.out.println("regions:"+regions.size);
-                                    textures = new Animation<CustomTextureAtlas.AtlasRegion>(finalNum / finalDen, regions);
-                                    setBounds();
-                                }
+                        System.out.println("xx" + animationAtlas.getRegions().size);
+//                        if (animationAtlas.getRegions().size > 0) {
 
-                                @Override
-                                public void failed(Throwable t) {
+                        CustomTextureAtlas cta = null;
+                        float finalNum = num;
+                        float finalDen = den;
+                        SerializeUtil.deserializePixmapPacker(SerializeUtil.serializePixmapPacker(pixmapPacker), new AtlasDownloadListener() {
+                            @Override
+                            public void atlas(Array<CustomTextureAtlas.AtlasRegion> regions) {
+                                System.out.println("here 80");
+                                System.out.println("regions:" + regions.size);
+                                textures = new Animation<CustomTextureAtlas.AtlasRegion>(finalNum / finalDen, regions, Animation.PlayMode.LOOP);
+                                System.out.println("textures set:" + textures.getKeyFrame(0));
+                                setBounds();
+                            }
 
-                                }
+                            @Override
+                            public void failed(Throwable t) {
 
-                            });*/
-                            textures=new Animation<CustomTextureAtlas.AtlasRegion>(num/den,animationAtlas.getRegions());
-                        }
+                            }
+
+                        });
+//                        textures=new Animation<>(num/den,animationAtlas.getRegions());
+
+
                     } catch (Exception e) {
                         Statics.exceptionLog("apng", e);
                     }
@@ -206,10 +206,12 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                         setBounds();
                     }
                 } else {
-                    Gdx.app.log("image", "non-animated");
-                    texture = new Texture(pixmapIn);
-                    textures = null;
-                    setBounds();
+                    if (textures == null) {
+                        Gdx.app.log("image", "non-animated");
+                        texture = new Texture(pixmapIn);
+                        setBounds();
+                    }
+//                    textures = null;
                 }
             }
         });
@@ -435,11 +437,14 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
         );
         if (sd.visible) {
             batch.setColor(Color.WHITE);
+
             if (textures != null) {
                 stateTime += delta;
                 try {
                     batch.draw(textures.getKeyFrame(stateTime, true), -sd.center.x, -sd.center.y);
+//                    System.out.println("draw:"+textures.getKeyFrame(stateTime, true));
                 } catch (Exception e) {
+                    Statics.exceptionLog("err", e);
                 }
                 ;
             } else {

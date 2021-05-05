@@ -86,7 +86,6 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
 
 //        stage.addActor(colorPicker);
 */
-        Gdx.app.log("color-picker", "here");
 //        "default": {
 //            "buttonMinusStyle": "spinner-minus-h",
 //                    "buttonPlusStyle": "spinner-plus-h",

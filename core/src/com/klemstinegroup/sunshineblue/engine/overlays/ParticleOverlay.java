@@ -87,7 +87,6 @@ public class ParticleOverlay extends ScreenObject implements Overlay, Touchable,
 
 //        stage.addActor(colorPicker);
 */
-        Gdx.app.log("color-picker", "here");
 //        "default": {
 //            "buttonMinusStyle": "spinner-minus-h",
 //                    "buttonPlusStyle": "spinner-plus-h",

@@ -3,9 +3,6 @@ package com.klemstinegroup.sunshineblue.engine.util;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-//import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-//import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.*;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
@@ -36,12 +33,9 @@ public class CustomTextureAtlas implements Disposable {
     }
 
     public void load (TextureAtlasData data, AtlasDownloadListener listener) {
-        Gdx.app.log("here","1");
         textures.ensureCapacity(data.getPages().size);
-        Gdx.app.log("here","2");
         final int[] cnt = {data.getPages().size};
         for (TextureAtlasData.Page page : data.getPages()) {
-            Gdx.app.log("here", "3");
             if (page.texture == null) {
                 SunshineBlue.nativeNet.uploadIPFS(page.textureFile.readBytes(), new IPFSCIDListener() {
                     @Override
@@ -50,53 +44,31 @@ public class CustomTextureAtlas implements Disposable {
                             @Override
                             public void downloadComplete(Pixmap pixmap) {
                                 page.texture = new Texture(pixmap);
-                                Gdx.app.log("here", "4");
                                 page.texture.setFilter(page.minFilter, page.magFilter);
-                                Gdx.app.log("here", "5");
                                 page.texture.setWrap(page.uWrap, page.vWrap);
-                                Gdx.app.log("here", "6");
                                 textures.add(page.texture);
-                                Gdx.app.log("here", "7");
                                 cnt[0]--;
                                 if (cnt[0]==0){
-                                    Gdx.app.log("here","8");
 
                                     regions.ensureCapacity(data.getRegions().size);
-                                    Gdx.app.log("here","8");
                                     Array<TextureAtlasData.Region> dd = data.getRegions();
-                                    Gdx.app.log("here","10");
                                     for (TextureAtlasData.Region region : dd) {
-                                        Gdx.app.log("here","11");
                                         AtlasRegion atlasRegion = new AtlasRegion(region.page.texture, region.left, region.top, //
                                                 region.rotate ? region.height : region.width, //
                                                 region.rotate ? region.width : region.height);
-                                        Gdx.app.log("here","12");
                                         atlasRegion.index = region.index;
-                                        Gdx.app.log("here","13");
                                         atlasRegion.name = region.name;
-                                        Gdx.app.log("here","14");
                                         atlasRegion.offsetX = region.offsetX;
-                                        Gdx.app.log("here","15");
                                         atlasRegion.offsetY = region.offsetY;
-                                        Gdx.app.log("here","16");
                                         atlasRegion.originalHeight = region.originalHeight;
-                                        Gdx.app.log("here","17");
                                         atlasRegion.originalWidth = region.originalWidth;
-                                        Gdx.app.log("here","18");
                                         atlasRegion.rotate = region.rotate;
-                                        Gdx.app.log("here","19");
                                         atlasRegion.degrees = region.degrees;
-                                        Gdx.app.log("here","20");
                                         atlasRegion.names = region.names;
-                                        Gdx.app.log("here","21");
                                         atlasRegion.values = region.values;
-                                        Gdx.app.log("here","22");
                                         if (region.flip) atlasRegion.flip(false, true);
-                                        Gdx.app.log("here","23");
                                         regions.add(atlasRegion);
-                                        Gdx.app.log("here","29");
                                     }
-                                    Gdx.app.log("here","30");
                                     listener.atlas(regions);
                                 }
                             }
@@ -393,7 +365,7 @@ public class CustomTextureAtlas implements Disposable {
          * <br>
          * When sprites are packed, if the original file name ends with a number, it is stored as the index and is not considered as
          * part of the sprite's name. This is useful for keeping animation frames in order.
-         * @see TextureAtlas#findRegions(String) */
+         * @see CustomTextureAtlas#findRegions(String) */
         public int index = -1;
 
         /** The name of the original image file, without the file's extension.<br>
