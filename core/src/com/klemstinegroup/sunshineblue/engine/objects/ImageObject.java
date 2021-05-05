@@ -79,23 +79,34 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                     Gdx.app.log("test","here1");
                     MemoryFileHandle mfh=SerializeUtil.serializePixmapPacker(pixmapPacker);
                     Gdx.app.log("test","here2");
-                    CustomTextureAtlas customanimationAtlas = SerializeUtil.deserializePixmapPacker(mfh);
+                    SerializeUtil.deserializePixmapPacker(mfh, new AtlasDownloadListener() {
+                        @Override
+                        public void atlas(Array<CustomTextureAtlas.AtlasRegion> regions) {
+                            System.out.println("as:"+animationAtlas.getRegions().size);
+                            if (animationAtlas.getRegions().size > 0) {
+                                try {
+                                    Gdx.app.log("test",""+1);
+                                    textures = new Animation<CustomTextureAtlas.AtlasRegion>((float) gifDecoder.getDelay(0) / 1000f, regions, Animation.PlayMode.LOOP);
+                                    Gdx.app.log("test",""+2);
+                                    setBounds();
+                                    return;
+                                } catch (Exception e) {
+                                    Statics.exceptionLog("error2", e);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void failed(Throwable t) {
+
+                        }
+                    });
                     Gdx.app.log("test","here3");
 //                    TextureAtlas.TextureAtlasData tad = new TextureAtlas.TextureAtlasData();
 //                    tad.load(mfh, mfh, true);
 //                    TextureAtlas temp = new TextureAtlas(tad);
 
-                    if (animationAtlas.getRegions().size > 0) {
-                        try {
-                            Gdx.app.log("test",""+1);
-                            textures = new Animation<CustomTextureAtlas.AtlasRegion>((float) gifDecoder.getDelay(0) / 1000f, customanimationAtlas.getRegions1(), Animation.PlayMode.LOOP);
-                            Gdx.app.log("test",""+2);
-                            setBounds();
-                            return;
-                        } catch (Exception e) {
-                            Statics.exceptionLog("error2", e);
-                        }
-                    }
+
                 }
                 if ((data[0] & 0xff) == 137 && (data[1] & 0xff) == 80 && (data[2] & 0xff) == 78 && (data[3] & 0xff) == 71) {
                     Gdx.app.log("type", "png!");
@@ -153,12 +164,27 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                         }
                         TextureAtlas animationAtlas = pixmapPacker.generateTextureAtlas(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear, false);
                         ;
-                        CustomTextureAtlas cta=SerializeUtil.deserializePixmapPacker(SerializeUtil.serializePixmapPacker(pixmapPacker));
-                        if (atleastone) {
-                            textures = new Animation<CustomTextureAtlas.AtlasRegion>(num / den, cta.getRegions1());
-                            setBounds();
-                            return;
-                        }
+                        boolean finalAtleastone = atleastone;
+                        float finalNum = num;
+                        float finalDen = den;
+                        CustomTextureAtlas cta=null;
+                        SerializeUtil.deserializePixmapPacker(SerializeUtil.serializePixmapPacker(pixmapPacker), new AtlasDownloadListener() {
+                            @Override
+                            public void atlas(Array<CustomTextureAtlas.AtlasRegion> regions) {
+                                if (finalAtleastone) {
+                                    textures = new Animation<CustomTextureAtlas.AtlasRegion>(finalNum / finalDen, regions);
+                                    setBounds();
+                                    return;
+                                }
+                            }
+
+                            @Override
+                            public void failed(Throwable t) {
+
+                            }
+
+                        });
+
                     } catch (Exception e) {
                         Statics.exceptionLog("apng", e);
                     }
@@ -383,14 +409,14 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
         }
         try {
             if (textures != null) {
-                TextureRegion frame = textures.getKeyFrame(.01f);
+                TextureRegion frame = textures.getKeyFrame(0);
                 sd.bounds.set(new Vector2(frame.getRegionWidth(), frame.getRegionHeight()));
                 texture = null;
             } else {
                 textures = null;
             }
         } catch (Exception e) {
-            textures = null;
+//            textures = null;
             Statics.exceptionLog("tex", e);
         }
 
@@ -409,7 +435,10 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
             batch.setColor(Color.WHITE);
             if (textures != null) {
                 stateTime += delta;
-                batch.draw(textures.getKeyFrame(stateTime, true), -sd.center.x, -sd.center.y);
+                try {
+                    batch.draw(textures.getKeyFrame(stateTime, true), -sd.center.x, -sd.center.y);
+                }
+                catch (Exception e){};
             } else {
                 if (texture != null) {
                     batch.draw(texture, -sd.center.x, -sd.center.y);
@@ -439,7 +468,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 //                SunshineBlue.instance.shapedrawer.setColor(Color.WHITE);
 
                     SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / ((float) SunshineBlue.instance.userObjects.size - 1)).cpy().lerp(Color.WHITE, SunshineBlue.instance.colorFlash));
-                    SunshineBlue.instance.shapedrawer.polygon(polygon);
+                    SunshineBlue.instance.shapedrawer.polygon(polygon,5);
                 }
 
             }

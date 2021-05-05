@@ -211,8 +211,8 @@ public class SerializeUtil {
         save(null);
     }
 
-    public static CustomTextureAtlas deserializePixmapPacker(MemoryFileHandle mfh) {
-        return new CustomTextureAtlas(new CustomTextureAtlas.TextureAtlasData(mfh, mfh, false));
+    public static void deserializePixmapPacker(MemoryFileHandle mfh,AtlasDownloadListener listener) {
+        new CustomTextureAtlas(new CustomTextureAtlas.TextureAtlasData(mfh, mfh, false),listener);
     }
 
     public static MemoryFileHandle serializePixmapPacker(PixmapPacker packer) {

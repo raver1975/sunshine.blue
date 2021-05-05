@@ -8,59 +8,112 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.*;
+import com.klemstinegroup.sunshineblue.SunshineBlue;
+import com.klemstinegroup.sunshineblue.engine.Statics;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Comparator;
 
-public class CustomTextureAtlas extends TextureAtlas {
+public class CustomTextureAtlas implements Disposable {
     private final ObjectSet<Texture> textures = new ObjectSet(4);
     private final Array<AtlasRegion> regions = new Array();
 
-    public Array<AtlasRegion> getRegions1 () {
-        return regions;
-    }
-    public CustomTextureAtlas(TextureAtlasData textureAtlasData) {
-        load(textureAtlasData);
+    public CustomTextureAtlas(TextureAtlasData textureAtlasData,AtlasDownloadListener listener) {
+        load(textureAtlasData,listener);
     }
 
-    public void load (TextureAtlasData data) {
+    public void load (TextureAtlasData data, AtlasDownloadListener listener) {
         Gdx.app.log("here","1");
         textures.ensureCapacity(data.getPages().size);
         Gdx.app.log("here","2");
+        final int[] cnt = {data.getPages().size};
         for (TextureAtlasData.Page page : data.getPages()) {
-            Gdx.app.log("here","3");
-            if (page.texture == null) page.texture = new Texture(new Pixmap(page.textureFile));//, page.format, page.useMipMaps);
-            Gdx.app.log("here","4");
-            page.texture.setFilter(page.minFilter, page.magFilter);
-            Gdx.app.log("here","5");
-            page.texture.setWrap(page.uWrap, page.vWrap);
-            Gdx.app.log("here","6");
-            textures.add(page.texture);
-            Gdx.app.log("here","7");
-        }
-        Gdx.app.log("here","8");
+            Gdx.app.log("here", "3");
+            if (page.texture == null) {
+                SunshineBlue.nativeNet.uploadIPFS(page.textureFile.readBytes(), new IPFSCIDListener() {
+                    @Override
+                    public void cid(String cid) {
+                        SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway+cid, new Pixmap.DownloadPixmapResponseListener() {
+                            @Override
+                            public void downloadComplete(Pixmap pixmap) {
+                                page.texture = new Texture(pixmap);
+                                Gdx.app.log("here", "4");
+                                page.texture.setFilter(page.minFilter, page.magFilter);
+                                Gdx.app.log("here", "5");
+                                page.texture.setWrap(page.uWrap, page.vWrap);
+                                Gdx.app.log("here", "6");
+                                textures.add(page.texture);
+                                Gdx.app.log("here", "7");
+                                cnt[0]--;
+                                if (cnt[0]==0){
+                                    Gdx.app.log("here","8");
 
-        regions.ensureCapacity(data.getRegions().size);
-        for (TextureAtlasData.Region region : data.getRegions()) {
-            AtlasRegion atlasRegion = new AtlasRegion(region.page.texture, region.left, region.top, //
-                    region.rotate ? region.height : region.width, //
-                    region.rotate ? region.width : region.height);
-            atlasRegion.index = region.index;
-            atlasRegion.name = region.name;
-            atlasRegion.offsetX = region.offsetX;
-            atlasRegion.offsetY = region.offsetY;
-            atlasRegion.originalHeight = region.originalHeight;
-            atlasRegion.originalWidth = region.originalWidth;
-            atlasRegion.rotate = region.rotate;
-            atlasRegion.degrees = region.degrees;
-            atlasRegion.names = region.names;
-            atlasRegion.values = region.values;
-            if (region.flip) atlasRegion.flip(false, true);
-            regions.add(atlasRegion);
+                                    regions.ensureCapacity(data.getRegions().size);
+                                    Gdx.app.log("here","8");
+                                    Array<TextureAtlasData.Region> dd = data.getRegions();
+                                    Gdx.app.log("here","10");
+                                    for (TextureAtlasData.Region region : dd) {
+                                        Gdx.app.log("here","11");
+                                        AtlasRegion atlasRegion = new AtlasRegion(region.page.texture, region.left, region.top, //
+                                                region.rotate ? region.height : region.width, //
+                                                region.rotate ? region.width : region.height);
+                                        Gdx.app.log("here","12");
+                                        atlasRegion.index = region.index;
+                                        Gdx.app.log("here","13");
+                                        atlasRegion.name = region.name;
+                                        Gdx.app.log("here","14");
+                                        atlasRegion.offsetX = region.offsetX;
+                                        Gdx.app.log("here","15");
+                                        atlasRegion.offsetY = region.offsetY;
+                                        Gdx.app.log("here","16");
+                                        atlasRegion.originalHeight = region.originalHeight;
+                                        Gdx.app.log("here","17");
+                                        atlasRegion.originalWidth = region.originalWidth;
+                                        Gdx.app.log("here","18");
+                                        atlasRegion.rotate = region.rotate;
+                                        Gdx.app.log("here","19");
+                                        atlasRegion.degrees = region.degrees;
+                                        Gdx.app.log("here","20");
+                                        atlasRegion.names = region.names;
+                                        Gdx.app.log("here","21");
+                                        atlasRegion.values = region.values;
+                                        Gdx.app.log("here","22");
+                                        if (region.flip) atlasRegion.flip(false, true);
+                                        Gdx.app.log("here","23");
+                                        regions.add(atlasRegion);
+                                        Gdx.app.log("here","29");
+                                    }
+                                    Gdx.app.log("here","30");
+                                    listener.atlas(regions);
+                                }
+                            }
+
+                            @Override
+                            public void downloadFailed(Throwable t) {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void uploadFailed(Throwable t) {
+
+                    }
+                });
+
+            }
         }
-        Gdx.app.log("here","30");
+
+
+    }
+
+    @Override
+    public void dispose() {
+        for (Texture texture : textures)
+            texture.dispose();
+        textures.clear(0);
     }
 
     static public class TextureAtlasData  {
