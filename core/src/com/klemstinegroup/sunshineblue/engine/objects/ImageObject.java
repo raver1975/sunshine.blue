@@ -76,7 +76,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 //            }
 //
 //        }
-                    MemoryFileHandle mfh = SerializeUtil.serializePixmapPacker(pixmapPacker);
+                    /*MemoryFileHandle mfh = SerializeUtil.serializePixmapPacker(pixmapPacker);
                     SerializeUtil.deserializePixmapPacker(mfh, new AtlasDownloadListener() {
                         @Override
                         public void atlas(Array<CustomTextureAtlas.AtlasRegion> regions) {
@@ -98,12 +98,12 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                         public void failed(Throwable t) {
 
                         }
-                    });
+                    });*/
 //                    TextureAtlas.TextureAtlasData tad = new TextureAtlas.TextureAtlasData();
 //                    tad.load(mfh, mfh, true);
 //                    TextureAtlas temp = new TextureAtlas(tad);
 
-
+                    textures = new Animation<CustomTextureAtlas.AtlasRegion>((float) gifDecoder.getDelay(0) / 1000f, animationAtlas.getRegions(), Animation.PlayMode.LOOP);
                 }
                 if ((data[0] & 0xff) == 137 && (data[1] & 0xff) == 80 && (data[2] & 0xff) == 78 && (data[3] & 0xff) == 71) {
                     Gdx.app.log("type", "png!");
@@ -115,6 +115,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 
                         int w = apng.getImgInfo().cols;
                         int h = apng.getImgInfo().rows;
+                        Pixmap first=null;
                         for (int i = 0; i < apng.getApngNumFrames(); i++) {
                             apng.advanceToFrame(i);
                             int channels = apng.getCurImgInfo().channels;
@@ -127,6 +128,9 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                             int offy = apng.getFctl().getyOff();
 
                             Pixmap pixmap = new Pixmap(w, h, Pixmap.Format.RGBA8888);
+                            if (apng.getFctl().getBlendOp()>0&&first!=null){
+                                pixmap.drawPixmap(first,0,0);
+                            }
                             Gdx.app.log("pixmap:", pixmap.getWidth() + "x" + pixmap.getHeight());
                             for (int y = 0; y < apng.getCurImgInfo().rows; y++) {
                                 ImageLineByte imageLine = apng.readRowByte();
@@ -147,6 +151,10 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                                 }
                             }
 //                            TextureRegion region = null;
+                            if (first==null){
+                                first=pixmap;
+                            }
+
                             pixmapPacker.pack("f" + i, pixmap);
                         }
                         float num = 1;
