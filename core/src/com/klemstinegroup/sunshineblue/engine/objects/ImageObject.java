@@ -6,24 +6,22 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Base64Coder;
-import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.JsonWriter;
+import com.badlogic.gdx.utils.*;
 import com.github.tommyettinger.anim8.GifDecoder;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.overlays.Drawable;
 import com.klemstinegroup.sunshineblue.engine.overlays.Touchable;
 import com.klemstinegroup.sunshineblue.engine.util.*;
+import sun.security.provider.Sun;
+
+import java.util.Map;
 
 public class ImageObject extends ScreenObject implements Drawable, Touchable {
     public Texture texture;
-    public Animation<TextureRegion> textures;
+    public Animation<TextureAtlas.AtlasRegion> textures;
     private Polygon polygon;
     private String cid;
     private float stateTime;
@@ -35,7 +33,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
         Gdx.app.postRunnable(new Runnable() {
             @Override
             public void run() {
-                if (data == null | data.length == 0) {
+                if (data == null || data.length == 0) {
                     return;
                 }
                 if (cid == null || cid.isEmpty()) {
@@ -64,29 +62,40 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                     Gdx.app.log("type", "gif!");
                     GifDecoder gifDecoder = new GifDecoder();
                     gifDecoder.read(new MemoryFileHandle(data).read());
-                    textures = gifDecoder.getAnimation(Animation.PlayMode.LOOP);
-                    try {
-                        if (textures != null) {
+                    PixmapPacker pixmapPacker = gifDecoder.getAnimation(Animation.PlayMode.LOOP);
+                    TextureAtlas animationAtlas = pixmapPacker.generateTextureAtlas(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear, false);
+//
+        for (PixmapPacker.Page page:pixmapPacker.getPages()){
+            SunshineBlue.addUserObj(new ImageObject(page.getPixmap()));
+            for(OrderedMap.Entry<String, PixmapPacker.PixmapPackerRectangle> rec:page.getRects()){
+                System.out.println(rec.value);
+            }
+
+        }
+
+                    if (animationAtlas.getRegions().size > 0) {
+                        try {
+                            textures = new Animation<>((float)gifDecoder.getDelay(0)/1000f, animationAtlas.getRegions(), Animation.PlayMode.LOOP);
                             setBounds();
                             return;
+                        } catch (Exception e) {
+                            Statics.exceptionLog("error2", e);
                         }
-                    } catch (Exception e) {
-                        Statics.exceptionLog("error2", e);
                     }
-                }
-                for (int i = 0; i < 4; i++) {
-
-                    System.out.println(i + "\t" + data[i]);
                 }
                 if ((data[0] & 0xff) == 137 && (data[1] & 0xff) == 80 && (data[2] & 0xff) == 78 && (data[3] & 0xff) == 71) {
                     Gdx.app.log("type", "png!");
                     try {
                         PngReaderApng apng = new PngReaderApng(new MemoryFileHandle(data));
-                        Array<TextureRegion> arrayTexture = new Array<>();
+//                        Array<TextureRegion> arrayTexture = new Array<>();
+                        PixmapPacker pixmapPacker = new PixmapPacker(2048, 2048, Pixmap.Format.RGBA8888, 3, true);
+                        ;
+
                         int bitdepth = apng.getImgInfo().bitDepth;
                         int bytesperpixel = apng.getImgInfo().bytesPixel;
                         int w = apng.getImgInfo().cols;
                         int h = apng.getImgInfo().rows;
+                        boolean atleastone = false;
                         for (int i = 0; i < apng.getApngNumFrames(); i++) {
                             apng.advanceToFrame(i);
                             int channels = apng.getCurImgInfo().channels;
@@ -108,10 +117,13 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                                     pixmap.drawPixel(j + offx, y + offy);
                                 }
                             }
-                            TextureRegion region = null;
+//                            TextureRegion region = null;
+
                             try {
-                                region = new TextureRegion(new Texture(pixmap));
-                                arrayTexture.add(region);
+//                                region = new TextureRegion(new Texture(pixmap));
+//                                arrayTexture.add(region);
+                                pixmapPacker.pack(pixmap);
+                                atleastone = true;
                             } catch (Exception e) {
                                 Gdx.app.log("textureregeion", e.toString());
                             }
@@ -125,8 +137,14 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                         if (den == 0) {
                             den = 100;
                         }
-                        if (arrayTexture.size > 0) {
-                            textures = new Animation<>(num / den, arrayTexture);
+                        TextureAtlas animationAtlas = pixmapPacker.generateTextureAtlas(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear, false);
+                        for (Texture tex:animationAtlas.getTextures()){
+                            Pixmap pixmap=FrameBufferUtils.textureToPixmap(SunshineBlue.instance.batch, tex);
+                            SunshineBlue.addUserObj(new ImageObject(pixmap));
+                        }
+                        if (atleastone) {
+
+                            textures = new Animation<>(num / den, animationAtlas.getRegions());
                             setBounds();
                             return;
                         }
@@ -157,6 +175,11 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
             }
         });
 
+    }
+
+    public ImageObject(Pixmap pixmap) {
+        texture = new Texture(pixmap);
+        setBounds();
     }
 
     public static void load(String url) {
@@ -349,7 +372,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
         }
         try {
             if (textures != null) {
-                TextureRegion frame = textures.getKeyFrame(0);
+                TextureRegion frame = textures.getKeyFrame(.01f);
                 sd.bounds.set(new Vector2(frame.getRegionWidth(), frame.getRegionHeight()));
                 texture = null;
             } else {
@@ -364,7 +387,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 
 
     @Override
-    public void draw(Batch batch,float delta) {
+    public void draw(Batch batch, float delta) {
         batch.setTransformMatrix(new Matrix4().idt()
                         .translate(sd.position.x, sd.position.y, 0)
                         .rotate(0, 0, 1, sd.rotation)
@@ -423,7 +446,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
     @Override
     public boolean isSelected(Polygon gon) {
         setBounds();
-        return Intersector.overlapConvexPolygons(gon,polygon);
+        return Intersector.overlapConvexPolygons(gon, polygon);
     }
 
     @Override

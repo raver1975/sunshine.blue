@@ -12,9 +12,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
+import com.badlogic.gdx.graphics.g2d.PixmapPacker;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.utils.Array;
+import com.klemstinegroup.sunshineblue.SunshineBlue;
+import com.klemstinegroup.sunshineblue.engine.objects.ImageObject;
+import com.klemstinegroup.sunshineblue.engine.util.FrameBufferUtils;
 
 public class GifDecoder {
     /**
@@ -29,7 +33,9 @@ public class GifDecoder {
      * File read status: Unable to open source.
      */
     public static final int STATUS_OPEN_ERROR = 2;
-    /** max decoder pixel stack size */
+    /**
+     * max decoder pixel stack size
+     */
     protected static final int MAX_STACK_SIZE = 4096;
     protected InputStream in;
     protected int status;
@@ -77,8 +83,8 @@ public class GifDecoder {
 
             int x, y;
 
-            for(y = 0; y < h; y++) {
-                for(x = 0; x < w; x++) {
+            for (y = 0; y < h; y++) {
+                for (x = 0; x < w; x++) {
                     int pxl_ARGB8888 = data[x + y * w];
                     int pxl_RGBA8888 =
                             ((pxl_ARGB8888 >> 24) & 0x000000ff) | ((pxl_ARGB8888 << 8) & 0xffffff00);
@@ -93,10 +99,10 @@ public class GifDecoder {
 
             int k, l;
 
-            for(k = y;  k < y + height; k++) {
+            for (k = y; k < y + height; k++) {
                 int _offset = offset;
-                for(l = x; l < x + width; l++) {
-                    int pxl = getPixel(l,k);
+                for (l = x; l < x + width; l++) {
+                    int pxl = getPixel(l, k);
 
                     // convert RGBA8888 > ARGB8888
                     pixels[_offset++] = ((pxl >> 8) & 0x00ffffff) | ((pxl << 24) & 0xff000000);
@@ -119,8 +125,7 @@ public class GifDecoder {
     /**
      * Gets display duration for specified frame.
      *
-     * @param n
-     *          int index of frame
+     * @param n int index of frame
      * @return delay in milliseconds
      */
     public int getDelay(int n) {
@@ -261,8 +266,7 @@ public class GifDecoder {
     /**
      * Reads GIF image from stream
      *
-     * @param is
-     *          containing GIF file.
+     * @param is containing GIF file.
      * @return read status code (0 = no errors)
      */
     public int read(InputStream is) {
@@ -282,7 +286,7 @@ public class GifDecoder {
         try {
             is.close();
         } catch (Exception e) {
-            Gdx.app.log("error",e.toString());
+            Gdx.app.log("error", e.toString());
         }
         return status;
     }
@@ -320,7 +324,7 @@ public class GifDecoder {
         }
         // Decode GIF pixel stream.
         datum = bits = count = first = top = pi = bi = 0;
-        for (i = 0; i < npix;) {
+        for (i = 0; i < npix; ) {
             if (top == 0) {
                 if (bits < code_size) {
                     // Load bytes until there are enough bits for a code.
@@ -456,8 +460,7 @@ public class GifDecoder {
     /**
      * Reads color table as 256 RGB integer values
      *
-     * @param ncolors
-     *          int number of colors to read
+     * @param ncolors int number of colors to read
      * @return int array containing 256 colors (packed ARGB with full alpha)
      */
     protected int[] readColorTable(int ncolors) {
@@ -689,52 +692,60 @@ public class GifDecoder {
         } while ((blockSize > 0) && !err());
     }
 
-    public Animation<TextureRegion> getAnimation(PlayMode playMode) {
+    public PixmapPacker getAnimation(PlayMode playMode) {
         int nrFrames = getFrameCount();
         Pixmap frame = getFrame(0);
         int width = frame.getWidth();
         int height = frame.getHeight();
-        int vzones = (int)Math.sqrt((double)nrFrames);
+        int vzones = (int) Math.sqrt((double) nrFrames);
         int hzones = vzones;
 
-        while(vzones * hzones < nrFrames) vzones++;
+        while (vzones * hzones < nrFrames) vzones++;
 
         int v, h;
-
-        Pixmap target = new Pixmap(width * hzones, height * vzones, Pixmap.Format.RGBA8888);
-
-        for(h = 0; h < hzones; h++) {
-            for(v = 0; v < vzones; v++) {
+        PixmapPacker pixmapPacker = new PixmapPacker(2048, 2048, Pixmap.Format.RGBA8888, 3, true);
+//        Pixmap target = new Pixmap(width * hzones, height * vzones, Pixmap.Format.RGBA8888);
+        boolean doatleastone = false;
+        for (h = 0; h < hzones; h++) {
+            for (v = 0; v < vzones; v++) {
                 int frameID = v + h * vzones;
-                if(frameID < nrFrames) {
+                if (frameID < nrFrames) {
                     frame = getFrame(frameID);
-                    target.drawPixmap(frame, h * width, v * height);
+//                    target.drawPixmap(frame, h * width, v * height);
+                    pixmapPacker.pack("f" + frameID, frame);
+                    doatleastone = true;
                 }
             }
         }
 
-        Texture texture = new Texture(target);
-        Array<TextureRegion> texReg = new Array<TextureRegion>();
+//        Texture texture = new Texture(target);
+//        Array<TextureRegion> texReg = new Array<TextureRegion>();
 
-        for(h = 0; h < hzones; h++) {
-            for(v = 0; v < vzones; v++) {
-                int frameID = v + h * vzones;
-                if(frameID < nrFrames) {
-                    TextureRegion tr = new TextureRegion(texture, h * width, v * height, width, height);
-                    texReg.add(tr);
-                }
-            }
-        }
-        float frameDuration = (float)getDelay(0);
-        frameDuration /= 1000; // convert milliseconds into seconds
-        Animation<TextureRegion> result = new Animation<>(frameDuration, texReg, playMode);
+//        for(h = 0; h < hzones; h++) {
+//            for(v = 0; v < vzones; v++) {
+//                int frameID = v + h * vzones;
+//                if(frameID < nrFrames) {
+//                    TextureRegion tr = new TextureRegion(texture, h * width, v * height, width, height);
+//                    texReg.add(tr);
+//                }
+//            }
+//        }
+//        float frameDuration = (float)getDelay(0);
+//        frameDuration /= 1000; // convert milliseconds into seconds
+//        Animation<TextureRegion> result = new Animation<>(frameDuration, texReg, playMode);
+//        TextureAtlas animationAtlas = pixmapPacker.generateTextureAtlas(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear, false);
+//
+//        for (PixmapPacker.Page page:pixmapPacker.getPages()){
+//            SunshineBlue.addUserObj(new ImageObject(page.getPixmap()));
+//        }
 
-        return result;
+        return (doatleastone ? pixmapPacker : null);
     }
 
-    public static Animation<TextureRegion> loadGIFAnimation(Animation.PlayMode playMode, InputStream is) {
-        GifDecoder gdec = new GifDecoder();
-        gdec.read(is);
-        return gdec.getAnimation(playMode);
-    }
-} 
+
+//    public static Animation<TextureRegion> loadGIFAnimation(Animation.PlayMode playMode, InputStream is) {
+//        GifDecoder gdec = new GifDecoder();
+//        gdec.read(is);
+//        return gdec.getAnimation(playMode);
+//    }
+}

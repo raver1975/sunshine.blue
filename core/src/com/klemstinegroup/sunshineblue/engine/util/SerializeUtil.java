@@ -108,7 +108,7 @@ public class SerializeUtil {
         });
     }
 
-    public static void save(String name, IPFSCIDListener ipfscidListener) {
+    public static void save(IPFSCIDListener ipfscidListener) {
         SunshineBlue.instance.batch.begin();
         Pixmap screenshot = FrameBufferUtils.drawObjectsPix(SunshineBlue.instance.batch, SunshineBlue.instance.viewport, SunshineBlue.instance.userObjects, 400 * SunshineBlue.instance.viewport.getScreenWidth() / SunshineBlue.instance.viewport.getScreenHeight(), 400, true);
         SunshineBlue.instance.batch.end();
@@ -122,11 +122,12 @@ public class SerializeUtil {
                     public void cid(String cid) {
                         if (cid != null && !cid.isEmpty()) {
                             Preferences prefs = Gdx.app.getPreferences("scenes");
-                            prefs.remove("current");
-                            if (!prefs.get().values().contains(cid)) {
-                                prefs.putString(name, cid);
-                            }
+//                            prefs.remove("current");
+//                            if (!prefs.get().values().contains(cid)) {
+//                                prefs.putString(name, cid);
+//                            }
                             prefs.putString("current", cid);
+                            prefs.putString(cid, cid);
                             prefs.flush();
 
                             SunshineBlue.instance.otherCIDS.add(cid);
@@ -191,9 +192,6 @@ public class SerializeUtil {
         }
     }
 
-    public static void save(String name) {
-        save(name, null);
-    }
 
 
     public static void infromGWTotherCID(String cid) {
@@ -209,12 +207,9 @@ public class SerializeUtil {
     }
 
     public static void save() {
-        save("autosave-" + TimeUtils.millis());
+        save(null);
     }
 
-    public static void save(IPFSCIDListener listener) {
-        save("autosave-" + TimeUtils.millis(), listener);
-    }
 
 
 }

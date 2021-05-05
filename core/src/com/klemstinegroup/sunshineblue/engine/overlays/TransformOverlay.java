@@ -322,20 +322,21 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
 //                    cb.setChecked(!cb.isChecked());
-                    ((ScreenObject) ba).sd.visible = cb.isChecked();
+                    if (cb.isChecked()) {
+                        SunshineBlue.instance.selectedObjects.add(ba);
+                    } else {
+                        SunshineBlue.instance.selectedObjects.removeValue(ba, true);
+                    }
+
 //                    cb.setStyle(new CheckBox.CheckBoxStyle(((TextureRegionDrawable)skin.getDrawable("switch")).tint(((ScreenObject) ba).sd.visible ? Color.WHITE : Color.GRAY), ((TextureRegionDrawable)skin.getDrawable("switch-off")).tint(((ScreenObject) ba).sd.visible ? Color.WHITE : Color.GRAY), cb.getStyle().font, ((ScreenObject) ba).sd.visible ? Color.WHITE : Color.GRAY));
                 }
             });
             cb.addListener(new ActorGestureListener() {
                 @Override
                 public boolean longPress(Actor actor, float x, float y) {
-//                    if (cb.isChecked()) {
-//                        SunshineBlue.instance.selectedObjects.add(ba);
-//                    } else {
-                    SunshineBlue.instance.selectedObjects.removeValue(ba, true);
                     cb.setChecked(!cb.isChecked());
-                    cb.setVisible(false);
-//                    }
+                    ((ScreenObject) ba).sd.visible = !((ScreenObject) ba).sd.visible;
+//                        cb.setVisible(false);
 
                     return true;
                 }

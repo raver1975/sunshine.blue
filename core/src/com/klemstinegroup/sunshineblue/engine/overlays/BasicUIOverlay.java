@@ -80,7 +80,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                SerializeUtil.save("pop", new IPFSCIDListener() {
+                SerializeUtil.save(new IPFSCIDListener() {
                     @Override
                     public void cid(String cid) {
                         if (Gdx.app.getType() == Application.ApplicationType.Desktop) {
@@ -166,7 +166,9 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                                             } else if (object.equals(6L)) {
                                                 SerializeUtil.load(cid, true);
                                             } else if (object.equals(3L)) {
-                                                Gdx.app.getClipboard().setContents(cid);
+                                                String uri="https://sunshine.blue/?"+cid;
+                                                Gdx.app.getClipboard().setContents(uri);
+                                                Gdx.net.openURI(uri);
                                             } else if (object.equals(4L)) {
 
                                             } else if (object.equals(5L)) {
@@ -194,7 +196,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                                     dialog.setBackground(new SpriteDrawable(new Sprite(new Texture(pixmap2))));
                                     dialog.button("prev", 1L);
                                     dialog.button("next", 5L);
-                                    dialog.button("cid", 3L);
+                                    dialog.button("pop", 3L);
                                     dialog.button("load", 2L);
                                     dialog.button("merge", 6L);
                                     dialog.button("cancel", 4L);

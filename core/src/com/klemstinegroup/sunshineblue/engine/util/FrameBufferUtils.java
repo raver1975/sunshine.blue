@@ -1,11 +1,14 @@
 package com.klemstinegroup.sunshineblue.engine.util;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
@@ -49,12 +52,31 @@ public class FrameBufferUtils {
         }
     }
 
+    public static Pixmap textureToPixmap(Batch batch, Texture texture){
+        FrameBuffer fb = new FrameBuffer(Pixmap.Format.RGBA8888, texture.getWidth(), texture.getHeight(), true);
+        fb.begin();
+//        batch.setProjectionMatrix(SunshineBlue.instance.viewport.getCamera().combined);
+        batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
+        batch.setProjectionMatrix(SunshineBlue.instance.mx4Batch);
+        ScreenUtils.getFrameBufferPixels(true);
+        batch.begin();
+//        batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
+//        batch.setProjectionMatrix(SunshineBlue.instance.mx4Batch);
+        batch.setColor(Color.WHITE);
+        batch.draw(texture,0,0,texture.getWidth(),texture.getHeight());
+        batch.end();
+        Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, texture.getWidth(), texture.getHeight());
+        fb.end();
+        fb.dispose();
+        return pixmap;
+    }
+
     public static Pixmap drawObjectsPix(Batch batch,Viewport viewport, Array<BaseObject> objects,int width,int height,boolean flip) {
         FrameBuffer fb = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, true);
         fb.begin();
 //        ((OrthographicCamera)viewport.getCamera()).setToOrtho(false,width,height);
         draw(batch,viewport,objects,0);
-        Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, width, height);
+        Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, width,height);
         fb.end();
         fb.dispose();
 //        int[][] pixels = new int[height][width];

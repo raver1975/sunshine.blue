@@ -544,7 +544,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public void pause() {
-        SerializeUtil.save("autosave-" + UUID.randomUUID(), new IPFSCIDListener() {
+        SerializeUtil.save( new IPFSCIDListener() {
             @Override
             public void cid(String cid) {
                 Gdx.app.log("saved", "saved at " + cid);
