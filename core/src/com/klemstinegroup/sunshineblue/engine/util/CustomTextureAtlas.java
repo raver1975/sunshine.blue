@@ -20,7 +20,7 @@ public class CustomTextureAtlas implements Disposable {
     public CustomTextureAtlas() {
     }
 
-    public CustomTextureAtlas(MemoryFileHandle packFile, Pixmap[] pixmaps, boolean flip) throws Exception {
+    public CustomTextureAtlas(MemoryFileHandle packFile, Pixmap[] pixmaps, boolean flip) {
         TextureAtlasData tad=new TextureAtlasData();
         tad.load(packFile,flip);
         int cnt = 0;
@@ -672,30 +672,6 @@ public class CustomTextureAtlas implements Disposable {
             packedHeight = height;
         }
 
-        public AtlasRegion(AtlasRegion region) {
-            setRegion(region);
-            index = region.index;
-            name = region.name;
-            offsetX = region.offsetX;
-            offsetY = region.offsetY;
-            packedWidth = region.packedWidth;
-            packedHeight = region.packedHeight;
-            originalWidth = region.originalWidth;
-            originalHeight = region.originalHeight;
-            rotate = region.rotate;
-            degrees = region.degrees;
-            names = region.names;
-            values = region.values;
-        }
-
-        public AtlasRegion(TextureRegion region) {
-            setRegion(region);
-            packedWidth = region.getRegionWidth();
-            packedHeight = region.getRegionHeight();
-            originalWidth = packedWidth;
-            originalHeight = packedHeight;
-        }
-
         @Override
         /** Flips the region, adjusting the offset so the image appears to be flipped as if no whitespace has been removed for
          * packing. */
@@ -719,15 +695,6 @@ public class CustomTextureAtlas implements Disposable {
          */
         public float getRotatedPackedHeight() {
             return rotate ? packedWidth : packedHeight;
-        }
-
-        public @Null
-        int[] findValue(String name) {
-            if (names != null) {
-                for (int i = 0, n = names.length; i < n; i++)
-                    if (name.equals(names[i])) return values[i];
-            }
-            return null;
         }
 
         public String toString() {

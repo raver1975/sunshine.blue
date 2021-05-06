@@ -16,7 +16,7 @@ import java.io.ByteArrayInputStream;
 
 public class IPFSUtils {
 
-    public static void pinFile(String cid) {
+    /*public static void pinFile(String cid) {
         String url = "https://api.pinata.cloud/pinning/pinByHash";
         String authorization = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI5NjMyZTdmMC1lODRiLTRjNzYtYTU2Yy0xZGE2YjgwNGI0YzAiLCJlbWFpbCI6InBhdWxrbGVtc3RpbmVAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBpbl9wb2xpY3kiOnsicmVnaW9ucyI6W3siaWQiOiJOWUMxIiwiZGVzaXJlZFJlcGxpY2F0aW9uQ291bnQiOjF9XSwidmVyc2lvbiI6MX0sIm1mYV9lbmFibGVkIjpmYWxzZX0sImF1dGhlbnRpY2F0aW9uVHlwZSI6InNjb3BlZEtleSIsInNjb3BlZEtleUtleSI6ImI5MTJhMjE1MTJlMDYzNmZhZjRkIiwic2NvcGVkS2V5U2VjcmV0IjoiNWYwZGYwODIwOTQzM2NiY2ZmNjU0MDg4MzMxMDI3OWZlYjYxYWU0ODk4NzAyMWQ5ZTVhODNiMTU1MWQ5NTQxZiIsImlhdCI6MTYxNzk3NTEyNX0.1Mpg1X9X8XTxoLuiEdvcNW3Z7iMEkkhsSJn7hyexXvM";
 
@@ -47,7 +47,7 @@ public class IPFSUtils {
             }
         };
         Gdx.net.sendHttpRequest(request, listener);
-    }
+    }*/
 
     public static void uploadFile(byte[] data, IPFSCIDListener listen) {
         Gdx.app.log("upload", data.length + " bytes uploading");

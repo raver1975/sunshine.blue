@@ -224,24 +224,25 @@ public class SerializeUtil {
             e.printStackTrace();
         }
         final int[] cnt = {(mfh.children.size)};
-        Array<String> cids = new Array<String>();
+        String[] cids = new String[mfh.children.size + 1];
         for (int i = 0; i < mfh.children.size; i++) {
+            int finalI = i;
             SunshineBlue.nativeNet.uploadIPFS(mfh.children.getValueAt(i).readBytes(), new IPFSCIDListener() {
                 @Override
                 public void cid(String cid) {
-                    cids.add(cid);
+                    cids[finalI + 1] = cid;
                     --cnt[0];
                     if (cnt[0] == 0) {
                         SunshineBlue.nativeNet.uploadIPFS(mfh.readBytes(), new IPFSCIDListener() {
                             @Override
                             public void cid(String cid) {
                                 System.out.println("-----------------");
-                                cids.insert(0, cid);
+                                cids[0] = cid;
                                 for (String s : cids) {
                                     System.out.println(s);
                                 }
                                 if (listener != null) {
-                                    listener.atlas(cids);
+                                    listener.atlas(new Array<String>(cids));
                                 }
                                 System.out.println("-----------------");
                             }
@@ -264,23 +265,23 @@ public class SerializeUtil {
     }
 
 
-    public static void deserializePixmapPacker(String[] jsoncids,AtlasDownloadListener listener) {
-        Pixmap[] pixmaps = new Pixmap[jsoncids.length];
+    public static void deserializePixmapPacker(String[] jsoncids, AtlasDownloadListener listener) {
+        Pixmap[] pixmaps = new Pixmap[jsoncids.length - 1];
         System.out.println(Arrays.toString(jsoncids));
         SunshineBlue.nativeNet.downloadIPFS(jsoncids[0], new IPFSFileListener() {
             @Override
             public void downloaded(byte[] file) {
                 final int[] cnt = {jsoncids.length - 1};
-                for (int i = 1; i < jsoncids.length; i++) {
+                for (int i = 1; i < jsoncids.length + 1; i++) {
                     int finalI = i;
-                    SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway+jsoncids[i], new Pixmap.DownloadPixmapResponseListener() {
+                    SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + jsoncids[i], new Pixmap.DownloadPixmapResponseListener() {
                         @Override
                         public void downloadComplete(Pixmap pixmap) {
-                            pixmaps[finalI-1] = pixmap;
+                            pixmaps[finalI - 1] = pixmap;
                             cnt[0]--;
-                            if (cnt[0] ==0){
+                            if (cnt[0] == 0) {
                                 try {
-                                    listener.atlas(new CustomTextureAtlas(new MemoryFileHandle(file),pixmaps,false).getRegions());
+                                    listener.atlas(new CustomTextureAtlas(new MemoryFileHandle(file), pixmaps, false).getRegions());
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }

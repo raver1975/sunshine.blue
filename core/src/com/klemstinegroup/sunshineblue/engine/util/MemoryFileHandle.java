@@ -4,6 +4,7 @@ import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.maps.MapLayers;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.*;
 
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class MemoryFileHandle extends FileHandle {
 
     public MemoryFileHandle(byte[] b) {
         ba.addAll(b);
-        this.fileName = UUID.randomUUID().toString();
+        this.fileName = MathUtils.random.nextInt()+"";
     }
 
 
@@ -40,7 +41,7 @@ public class MemoryFileHandle extends FileHandle {
     }
 
     public MemoryFileHandle() {
-        this.fileName = UUID.randomUUID().toString();
+        this.fileName = MathUtils.random.nextInt()+"";;
     }
 
     @Override
@@ -71,10 +72,6 @@ public class MemoryFileHandle extends FileHandle {
 
             }
         };
-    }
-
-    public void setChildren(String name, MemoryFileHandle mfh) {
-        children.put(name, mfh);
     }
 
     @Override

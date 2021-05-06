@@ -117,6 +117,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                         int w = apng.getImgInfo().cols;
                         int h = apng.getImgInfo().rows;
                         Pixmap first = null;
+                        Pixmap last=null;
                         for (int i = 0; i < apng.getApngNumFrames(); i++) {
                             apng.advanceToFrame(i);
                             int channels = apng.getCurImgInfo().channels;
@@ -129,8 +130,11 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                             int offy = apng.getFctl().getyOff();
 
                             Pixmap pixmap = new Pixmap(w, h, Pixmap.Format.RGBA8888);
-                            if (apng.getFctl().getBlendOp() > 0 && first != null) {
+                            if (apng.getFctl().getBlendOp() == 1 && first != null) {
                                 pixmap.drawPixmap(first, 0, 0);
+                            }
+                            if (apng.getFctl().getBlendOp() == 2 && last!=null) {
+                                pixmap.drawPixmap(last, 0, 0);
                             }
                             Gdx.app.log("pixmap:", pixmap.getWidth() + "x" + pixmap.getHeight());
 //                            int trans=apng.getMetadata().getTRNS().getRGB888();
@@ -177,6 +181,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                             if (first == null) {
                                 first = pixmap;
                             }
+                            last=pixmap;
 
                             pixmapPacker.pack("f" + i, pixmap);
                         }
@@ -626,7 +631,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                 }
             });
 
-        } else if (cid == null) {
+        } else if (cid != null) {
             Gdx.app.log("cidd:", cid);
             SunshineBlue.nativeNet.downloadIPFS(cid, new IPFSFileListener() {
                 @Override

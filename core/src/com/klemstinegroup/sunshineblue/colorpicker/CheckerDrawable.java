@@ -57,42 +57,6 @@ public class CheckerDrawable extends BaseDrawable {
         calcDimensions();
     }
 
-    public Drawable getDrawable1() {
-        return drawable1;
-    }
-
-    public void setDrawable1(Drawable drawable1) {
-        this.drawable1 = drawable1;
-        calcDimensions();
-    }
-
-    public Drawable getDrawable2() {
-        return drawable2;
-    }
-
-    public void setDrawable2(Drawable drawable2) {
-        this.drawable2 = drawable2;
-        calcDimensions();
-    }
-
-    public float getCellWidth() {
-        return cellWidth;
-    }
-
-    public void setCellWidth(float cellWidth) {
-        this.cellWidth = cellWidth;
-        calcDimensions();
-    }
-
-    public float getCellHeight() {
-        return cellHeight;
-    }
-
-    public void setCellHeight(float cellHeight) {
-        this.cellHeight = cellHeight;
-        calcDimensions();
-    }
-    
     private void calcDimensions() {
         w = Math.max(drawable1.getMinWidth(), drawable2.getMinWidth());
         w = Math.max(w, cellWidth);

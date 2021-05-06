@@ -34,4 +34,9 @@
 	<extend-configuration-property name="gdx.reflect.include" value="com.klemstinegroup.sunshineblue.SunshineBlue" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.klemstinegroup.sunshineblue.engine.Statics" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.badlogic.gdx.Application" />
+
+	<extend-configuration-property name="gdx.reflect.exclude" value="com.igormaznitsa.jjjvm" />
+	<extend-configuration-property name="gdx.reflect.exclude" value="ar.com.hjg.pngj" />
+	<extend-configuration-property name="gdx.reflect.exclude" value="net.sf.jazzlib" />
+	<extend-configuration-property name="gdx.reflect.exclude" value="com.github.tommyettinger.anim8" />
 </module>

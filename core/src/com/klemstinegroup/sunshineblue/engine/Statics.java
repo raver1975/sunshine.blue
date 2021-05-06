@@ -1,27 +1,6 @@
 package com.klemstinegroup.sunshineblue.engine;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ArrayMap;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.igormaznitsa.jjjvm.impl.jse.JSEProviderImpl;
-import com.igormaznitsa.jjjvm.model.JJJVMProvider;
-import com.klemstinegroup.sunshineblue.engine.objects.*;
-import com.klemstinegroup.sunshineblue.engine.overlays.*;
-import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
-import com.klemstinegroup.sunshineblue.engine.util.UUID;
-import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public class Statics {
 
