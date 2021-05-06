@@ -29,7 +29,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
     public Animation<CustomTextureAtlas.AtlasRegion> textures;
     private Polygon polygon;
     private String cid;
-    private Array<String> cids;
+    private Array<String> cids=new Array<>();
     private float stateTime;
     Vector2 angleCalc = new Vector2();
     float angleRotateAnimAngle = 0;
@@ -263,6 +263,14 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
     public ImageObject(Pixmap pixmap) {
         texture = new Texture(pixmap);
         setBounds();
+    }
+
+    public ImageObject(Array<CustomTextureAtlas.AtlasRegion> regions, String[] jsoncids,float speed) {
+        System.out.println("regions size="+regions.size);
+        textures = new Animation<CustomTextureAtlas.AtlasRegion>(speed, regions, Animation.PlayMode.LOOP);
+
+        this.cids.addAll(jsoncids);
+        Gdx.app.log("success","Image animation loaded!");
     }
 
     public static void load(String url) {
@@ -583,10 +591,16 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
     public JsonValue serialize() {
         JsonValue val = new JsonValue(JsonValue.ValueType.object);
         val.addChild("screenData", SerializeUtil.serialize(sd));
-//        MemoryFileHandle mfh=new MemoryFileHandle();
-//        IPFSUtils.writePng(pixmap, mfh, null);
-//        String data="data:image/png;base64,"+new String(Base64Coder.encode(mfh.ba.toArray()));
         val.addChild("CID", new JsonValue(cid));
+        if (cids != null) {
+            JsonValue cidarray = new JsonValue(JsonValue.ValueType.array);
+            for (String s : cids) {
+                cidarray.addChild(new JsonValue(s));
+            }
+            val.addChild("CIDS", cidarray);
+            val.addChild("speed",new JsonValue(textures.getFrameDuration()));
+
+        }
         val.addChild("class", new JsonValue(ImageObject.class.getName()));
         return val;
     }
@@ -595,32 +609,51 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
         Gdx.app.log("deserialize", json.toJson(JsonWriter.OutputType.minimal));
         ScreenData sd1 = SerializeUtil.deserialize(json.get("screenData"), ScreenData.class);
         String cid = json.getString("CID");
-        Gdx.app.log("cidd:", cid);
-        SunshineBlue.nativeNet.downloadIPFS(cid, new IPFSFileListener() {
-            @Override
-            public void downloaded(byte[] file) {
-                SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + cid, new Pixmap.DownloadPixmapResponseListener() {
-                    @Override
-                    public void downloadComplete(Pixmap pixmap) {
-                        ImageObject io = new ImageObject(file, pixmap, cid);
-                        io.sd = sd1;
-                        SunshineBlue.addUserObj(io);
-                    }
+        if (json.get("CIDS") != null) {
+            float speed=json.getFloat("speed");
+            String[] jsoncids = json.get("CIDS").asStringArray();
+            SerializeUtil.deserializePixmapPacker(jsoncids, new AtlasDownloadListener() {
+                @Override
+                public void atlas(Array<CustomTextureAtlas.AtlasRegion> regions) {
+                    ImageObject io = new ImageObject(regions,jsoncids,speed);
+                    io.sd = sd1;
+                    SunshineBlue.addUserObj(io);
+                }
 
-                    @Override
-                    public void downloadFailed(Throwable t) {
-                        ImageObject io = new ImageObject(file, null, cid);
-                        io.sd = sd1;
-                        SunshineBlue.addUserObj(io);
-                    }
-                });
+                @Override
+                public void failed(Throwable t) {
 
-            }
+                }
+            });
 
-            @Override
-            public void downloadFailed(Throwable t) {
-                Statics.exceptionLog("deserialize", t);
-            }
-        });
+        } else if (cid == null) {
+            Gdx.app.log("cidd:", cid);
+            SunshineBlue.nativeNet.downloadIPFS(cid, new IPFSFileListener() {
+                @Override
+                public void downloaded(byte[] file) {
+                    SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + cid, new Pixmap.DownloadPixmapResponseListener() {
+                        @Override
+                        public void downloadComplete(Pixmap pixmap) {
+                            ImageObject io = new ImageObject(file, pixmap, cid);
+                            io.sd = sd1;
+                            SunshineBlue.addUserObj(io);
+                        }
+
+                        @Override
+                        public void downloadFailed(Throwable t) {
+                            ImageObject io = new ImageObject(file, null, cid);
+                            io.sd = sd1;
+                            SunshineBlue.addUserObj(io);
+                        }
+                    });
+
+                }
+
+                @Override
+                public void downloadFailed(Throwable t) {
+                    Statics.exceptionLog("deserialize", t);
+                }
+            });
+        }
     }
 }

@@ -18,6 +18,7 @@ import com.klemstinegroup.sunshineblue.engine.overlays.SerialInterface;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Comparator;
 
 
@@ -211,11 +212,11 @@ public class SerializeUtil {
         save(null);
     }
 
-    public static void deserializePixmapPacker(MemoryFileHandle mfh,AtlasDownloadListener listener) {
-        new CustomTextureAtlas(new CustomTextureAtlas.TextureAtlasData(mfh, mfh, false),listener);
+    public static void deserializePixmapPacker(MemoryFileHandle mfh, AtlasDownloadListener listener) {
+        new CustomTextureAtlas(new CustomTextureAtlas.TextureAtlasData(mfh, mfh, false), listener);
     }
 
-    public static MemoryFileHandle serializePixmapPacker(PixmapPacker packer,AtlasUploadListener listener) {
+    public static MemoryFileHandle serializePixmapPacker(PixmapPacker packer, AtlasUploadListener listener) {
         MemoryFileHandle mfh = new MemoryFileHandle("f");
         try {
             new PixmapPackerIO().save(mfh, packer);
@@ -235,11 +236,11 @@ public class SerializeUtil {
                             @Override
                             public void cid(String cid) {
                                 System.out.println("-----------------");
-                                cids.insert(0,cid);
+                                cids.insert(0, cid);
                                 for (String s : cids) {
                                     System.out.println(s);
                                 }
-                                if (listener!=null){
+                                if (listener != null) {
                                     listener.atlas(cids);
                                 }
                                 System.out.println("-----------------");
@@ -263,4 +264,41 @@ public class SerializeUtil {
     }
 
 
+    public static void deserializePixmapPacker(String[] jsoncids,AtlasDownloadListener listener) {
+        Pixmap[] pixmaps = new Pixmap[jsoncids.length];
+        System.out.println(Arrays.toString(jsoncids));
+        SunshineBlue.nativeNet.downloadIPFS(jsoncids[0], new IPFSFileListener() {
+            @Override
+            public void downloaded(byte[] file) {
+                final int[] cnt = {jsoncids.length - 1};
+                for (int i = 1; i < jsoncids.length; i++) {
+                    int finalI = i;
+                    SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway+jsoncids[i], new Pixmap.DownloadPixmapResponseListener() {
+                        @Override
+                        public void downloadComplete(Pixmap pixmap) {
+                            pixmaps[finalI-1] = pixmap;
+                            cnt[0]--;
+                            if (cnt[0] ==0){
+                                try {
+                                    listener.atlas(new CustomTextureAtlas(new MemoryFileHandle(file),pixmaps,false).getRegions());
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void downloadFailed(Throwable t) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void downloadFailed(Throwable t) {
+
+            }
+        });
+    }
 }

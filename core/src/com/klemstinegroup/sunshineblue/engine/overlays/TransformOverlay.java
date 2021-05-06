@@ -61,7 +61,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                 }
             }
         });
-        cpyButton.setPosition(70, 140);
+        cpyButton.setPosition(10, 140);
         stage.addActor(cpyButton);
 
         TextButton delButton = new TextButton("Del", skin);
@@ -77,7 +77,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                 Overlay.backOverlay();
             }
         });
-        delButton.setPosition(10, 140);
+        delButton.setPosition(10, 200);
 
         stage.addActor(delButton);
 
@@ -93,7 +93,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                 }
             }
         });
-        downArrow.setPosition(10, 200);
+        downArrow.setPosition(10, 260);
         stage.addActor(downArrow);
 
         TextButton upArrow = new TextButton("^", skin);
@@ -108,7 +108,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                 }
             }
         });
-        upArrow.setPosition(10, 260);
+        upArrow.setPosition(10, 320);
         stage.addActor(upArrow);
 
         transformButtons = new ButtonGroup();
