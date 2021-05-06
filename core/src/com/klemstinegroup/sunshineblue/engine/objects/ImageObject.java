@@ -116,7 +116,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 
                         int w = apng.getImgInfo().cols;
                         int h = apng.getImgInfo().rows;
-                        Pixmap first=null;
+                        Pixmap first = null;
                         for (int i = 0; i < apng.getApngNumFrames(); i++) {
                             apng.advanceToFrame(i);
                             int channels = apng.getCurImgInfo().channels;
@@ -129,12 +129,21 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                             int offy = apng.getFctl().getyOff();
 
                             Pixmap pixmap = new Pixmap(w, h, Pixmap.Format.RGBA8888);
-                            if (apng.getFctl().getBlendOp()>0&&first!=null){
-                                pixmap.drawPixmap(first,0,0);
+                            if (apng.getFctl().getBlendOp() > 0 && first != null) {
+                                pixmap.drawPixmap(first, 0, 0);
                             }
                             Gdx.app.log("pixmap:", pixmap.getWidth() + "x" + pixmap.getHeight());
 //                            int trans=apng.getMetadata().getTRNS().getRGB888();
-                            int trans255=apng.getMetadata().getTRNS().getPalletteAlpha().length;
+                            int trans255 = -1;
+                            try {
+                                trans255 = apng.getMetadata().getTRNS().getPalletteAlpha().length;
+                            } catch (Exception e) {
+                            }
+                            int trans888 = -1;
+                            try {
+                                trans888 = apng.getMetadata().getTRNS().getRGB888();
+                            } catch (Exception e) {
+                            }
                             for (int y = 0; y < apng.getCurImgInfo().rows; y++) {
                                 ImageLineByte imageLine = apng.readRowByte();
                                 byte[] linedata = imageLine.getScanline();
@@ -144,16 +153,20 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 
 //                                        pixmap.setColor(((linedata[j] & 0xff) << 24) | ((linedata[j] & 0xff) << 16) | ((linedata[j] & 0xff) << 8) | 0xff);
 //                                        System.out.println("***+"+apng.getMetadata().getPLTE().getNentries()+"\t"+apng.getMetadata().getTRNS().getPalletteAlpha().length);
-                                        int g=apng.getMetadata().getPLTE().getEntry(linedata[j]&0xff);
-                                        int a=255;
-                                        if ((linedata[j]&0xff)<trans255){
-                                            a=apng.getMetadata().getTRNS().getPalletteAlpha()[linedata[j]&0xff];
+                                        int g = apng.getMetadata().getPLTE().getEntry(linedata[j] & 0xff);
+                                        int a = 255;
+                                        if ((linedata[j] & 0xff) < trans255) {
+                                            a = apng.getMetadata().getTRNS().getPalletteAlpha()[linedata[j] & 0xff];
                                         }
-                                        pixmap.setColor(g<<8|(a&0xff));
+                                        pixmap.setColor(g << 8 | (a & 0xff));
 
                                     }
                                     if (channels == 3) {
-                                        pixmap.setColor(((linedata[3 * j] & 0xff) << 24) | ((linedata[3 * j + 1] & 0xff) << 16) | ((linedata[3 * j + 2] & 0xff) << 8) | 0xff);
+                                        int r = (linedata[3 * j] & 0xff);
+                                        int g = (linedata[3 * j + 1] & 0xff);
+                                        int b = (linedata[3 * j + 2] & 0xff);
+                                        int c = (r << 16) | (g << 8) | (b << 0);
+                                        pixmap.setColor((c << 8) | ((c == trans888) ? 0x00 : 0xff));
                                     } else if (channels == 4) {
                                         pixmap.setColor(((linedata[4 * j] & 0xff) << 24) | ((linedata[4 * j + 1] & 0xff) << 16) | ((linedata[4 * j + 2] & 0xff) << 8) | linedata[4 * j + 3] & 0xff);
                                     }
@@ -161,8 +174,8 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                                 }
                             }
 //                            TextureRegion region = null;
-                            if (first==null){
-                                first=pixmap;
+                            if (first == null) {
+                                first = pixmap;
                             }
 
                             pixmapPacker.pack("f" + i, pixmap);
@@ -188,7 +201,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                         SerializeUtil.serializePixmapPacker(pixmapPacker, new AtlasUploadListener() {
                             @Override
                             public void atlas(Array<String> strings) {
-                                ImageObject.this.cids=strings;
+                                ImageObject.this.cids = strings;
                             }
 
                             @Override
@@ -212,7 +225,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                             }
 
                         });*/
-                        textures=new Animation<>(num/den,animationAtlas.getRegions());
+                        textures = new Animation<>(num / den, animationAtlas.getRegions());
 
 
                     } catch (Exception e) {
