@@ -271,28 +271,35 @@ public class SerializeUtil {
         SunshineBlue.nativeNet.downloadIPFS(jsoncids[0], new IPFSFileListener() {
             @Override
             public void downloaded(byte[] file) {
-                final int[] cnt = {jsoncids.length - 1};
-                for (int i = 1; i < jsoncids.length + 1; i++) {
+                final int[] cnt = {jsoncids.length-1};
+                for (int i = 1; i < jsoncids.length; i++) {
                     int finalI = i;
-                    SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + jsoncids[i], new Pixmap.DownloadPixmapResponseListener() {
+                    Timer.instance().scheduleTask(new Timer.Task(){
                         @Override
-                        public void downloadComplete(Pixmap pixmap) {
-                            pixmaps[finalI - 1] = pixmap;
-                            cnt[0]--;
-                            if (cnt[0] == 0) {
-                                try {
-                                    listener.atlas(new CustomTextureAtlas(new MemoryFileHandle(file), pixmaps, false).getRegions());
-                                } catch (Exception e) {
-                                    e.printStackTrace();
+                        public void run() {
+                            SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + jsoncids[finalI], new Pixmap.DownloadPixmapResponseListener() {
+                                @Override
+                                public void downloadComplete(Pixmap pixmap) {
+                                    pixmaps[finalI - 1] = pixmap;
+                                    cnt[0]--;
+                                    System.out.println("loaded pixmap "+(finalI-1));
+                                    if (cnt[0] == 0) {
+                                        try {
+                                            listener.atlas(new CustomTextureAtlas(new MemoryFileHandle(file), pixmaps, false).getRegions());
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
                                 }
-                            }
-                        }
 
-                        @Override
-                        public void downloadFailed(Throwable t) {
+                                @Override
+                                public void downloadFailed(Throwable t) {
 
+                                    Statics.exceptionLog("su",t);
+                                }
+                            });
                         }
-                    });
+                    },1*i);
                 }
             }
 
