@@ -110,20 +110,25 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                     Gdx.app.log("type", "png!");
                     try {
                         PngReaderApng apng = new PngReaderApng(new MemoryFileHandle(data));
-//                        Array<TextureRegion> arrayTexture = new Array<>();
-                        PixmapPacker pixmapPacker = new PixmapPacker(2048, 2048, Pixmap.Format.RGBA8888, 3, true);
+                        PixmapPacker pixmapPacker = new PixmapPacker(2048, 2048, Pixmap.Format.RGBA8888, 3, true); //2048
                         pixmapPacker.setPackToTexture(false);
 
                         int w = apng.getImgInfo().cols;
                         int h = apng.getImgInfo().rows;
 //                        Pixmap first = null;
                         Pixmap last = null;
+//                        Pixmap secondlast = null;
+                        int lastoffx = 0;
+                        int lastoffy = 0;
+                        int lastwidth = 0;
+                        int lastheight = 0;
+                        int lastdisposeop = 0;
                         for (int i = 0; i < apng.getApngNumFrames(); i++) {
                             apng.advanceToFrame(i);
                             int channels = apng.getCurImgInfo().channels;
-                            int bitdepth = apng.getCurImgInfo().bitDepth;
-                            int bitsperpixel = apng.getCurImgInfo().bitspPixel;
-                            int bytesperpixel = apng.getCurImgInfo().bytesPixel;
+//                            int bitdepth = apng.getCurImgInfo().bitDepth;
+//                            int bitsperpixel = apng.getCurImgInfo().bitspPixel;
+//                            int bytesperpixel = apng.getCurImgInfo().bytesPixel;
 
 
                             int offx = apng.getFctl().getxOff();
@@ -134,9 +139,15 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 //                            if (apng.getFctl().getBlendOp() == 1 && first != null) {
 //                                pixmap.drawPixmap(first, 0, 0);
 //                            }
-                            if (apng.getFctl().getDisposeOp() != 1 && last != null) {
-                                pixmap.drawPixmap(last, 0, 0);
+//                            if (apng.getFctl().getDisposeOp() == 0 && last != null) {
+                            if (last != null) pixmap.drawPixmap(last, 0, 0);
+//                            }
+
+                            if (lastdisposeop == 1) {
+                                Pixmap clear = new Pixmap(lastwidth, lastheight, Pixmap.Format.RGBA8888);
+                                pixmap.drawPixmap(clear, lastoffx, lastoffy);
                             }
+
                             int trans255 = -1;
                             try {
                                 trans255 = apng.getMetadata().getTRNS().getPalletteAlpha().length;
@@ -151,7 +162,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                             for (int y = 0; y < apng.getCurImgInfo().rows; y++) {
                                 ImageLineByte imageLine = apng.readRowByte();
                                 byte[] linedata = imageLine.getScanline();
-                                Gdx.app.log("bits:", linedata.length + "\t" + bitdepth + "\t" + bitsperpixel + "\t" + bytesperpixel + "\t" + channels);
+//                                Gdx.app.log("bits:", linedata.length + "\t" + bitdepth + "\t" + bitsperpixel + "\t" + bytesperpixel + "\t" + channels);
                                 for (int j = 0; j < imageLine.getImageInfo().cols; j++) {
 
                                     if (channels == 1) {
@@ -193,13 +204,19 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                                 }
                             }
 //                            TextureRegion region = null;
-                            last = pixmap;
-
+//                            secondlast=last;
+                            lastdisposeop = apng.getFctl().getDisposeOp();
+                            if (lastdisposeop != 2) {
+                                last = pixmap;
+                            }
+                            lastoffx = offx;
+                            lastoffy = offy;
+                            lastwidth = apng.getFctl().getWidth();
+                            lastheight = apng.getFctl().getHeight();
                             pixmapPacker.pack("f" + i, pixmap);
                         }
                         float num = 1;
                         float den = 1;
-                        System.out.println("blend op=" + apng.getFctl().getBlendOp());
                         if (apng.getFctl() != null) {
                             num = apng.getFctl().getDelayNum();
                             den = apng.getFctl().getDelayDen();
@@ -227,22 +244,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                             }
                         });
 
-                  /*      SerializeUtil.deserializePixmapPacker(SerializeUtil.serializePixmapPacker(pixmapPacker,null), new AtlasDownloadListener() {
-                            @Override
-                            public void atlas(Array<CustomTextureAtlas.AtlasRegion> regions) {
-                                System.out.println("here 80");
-                                System.out.println("regions:" + regions.size);
-                                textures = new Animation<CustomTextureAtlas.AtlasRegion>(finalNum / finalDen, regions, Animation.PlayMode.LOOP);
-                                System.out.println("textures set:" + textures.getKeyFrame(0));
-                                setBounds();
-                            }
 
-                            @Override
-                            public void failed(Throwable t) {
-
-                            }
-
-                        });*/
                         textures = new Animation<>(num / den, animationAtlas.getRegions());
 
 

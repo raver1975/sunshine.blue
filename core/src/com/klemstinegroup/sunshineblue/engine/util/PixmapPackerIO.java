@@ -64,14 +64,24 @@ public class PixmapPackerIO {
 		for (PixmapPacker.Page page : packer.pages) {
 			if (page.getRects().size > 0) {
 				MemoryFileHandle pageFile = file.sibling("f" + (++index) + parameters.format.getExtension());
-				Gdx.app.log("line2",pageFile.name());
+
 				switch (parameters.format) {
 					case CIM:{
 //						PixmapIO.writeCIM(pageFile, page.image);
 						break;
 					}
 					case PNG: {
-						IPFSUtils.writePng(page.image,pageFile,null);
+						IPFSUtils.writePng(page.image, pageFile, new IPFSCIDListener() {
+							@Override
+							public void cid(String cid) {
+								Gdx.app.log("upload spritesheet",cid);
+							}
+
+							@Override
+							public void uploadFailed(Throwable t) {
+
+							}
+						});
 //						PixmapIO.writePNG(pageFile, page.image);
 						break;
 					}

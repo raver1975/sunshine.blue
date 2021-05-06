@@ -76,7 +76,6 @@ public class MemoryFileHandle extends FileHandle {
 
     @Override
     public MemoryFileHandle sibling(String name) {
-        Gdx.app.log("test sib",name);
         if (children.containsKey(name)) {
             return children.get(name);
         } else {
@@ -88,7 +87,6 @@ public class MemoryFileHandle extends FileHandle {
 
     @Override
     public MemoryFileHandle child(String name) {
-        Gdx.app.log("test child",name);
         if (children.containsKey(name)) {
             return children.get(name);
         } else {
