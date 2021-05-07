@@ -17,6 +17,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ArrayMap;
@@ -46,6 +47,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public BasicUIOverlay BASIC_UI_OVERLAY;
     public BlankOverlay BLANK_OVERLAY;
     public ParticleOverlay PARTICLE_OVERLAY;
+    public BackgroundOverlay BACKGROUND_OVERLAY;
     public Batch batch;
     public BitmapFont font;
     public Overlay overlay = null;
@@ -60,11 +62,13 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public ShapeDrawer shapedrawer;
     public JSEProviderImpl JJVMprovider = new JSEProviderImpl();
     public static SunshineBlue instance;
-    public HashMap<String,String> otherCIDS=new HashMap<>();
+    public HashMap<String, String> otherCIDS = new HashMap<>();
+//    public Rectangle recordRect;
     private int recCounter;
     private static final float fps = 10;
-    public float colorFlash=0;
-    private float delta=1;
+    public float colorFlash = 0;
+    private float delta = 1;
+    public Color bgColor = Color.CLEAR;
 
 //    private int dstFunc;
 //    private int srcFunc;
@@ -160,6 +164,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         BASIC_UI_OVERLAY = new BasicUIOverlay();
         BLANK_OVERLAY = new BlankOverlay();
         PARTICLE_OVERLAY = new ParticleOverlay();
+        BACKGROUND_OVERLAY = new BackgroundOverlay();
         Gdx.input.setCatchKey(Input.Keys.BACK, true);
         Gdx.input.setCatchKey(Input.Keys.ESCAPE, true);
 //        VisUI.load(VisUI.SkinScale.X2);
@@ -202,6 +207,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
 
         viewport = new ScreenViewport();
+
         mx4Batch = batch.getTransformMatrix().cpy();
 
 
@@ -214,6 +220,8 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         //--------------------------------------------------------------------------------------------------
         viewport.apply();
         viewport.getCamera().update();
+
+//        System.out.println("recordrect"+"\t"+recordRect);
 //        Statics.gifOptions = new ImageOptions();
 
 //        Statics.gifEncoderA = new AnimatedGifEncoder();
@@ -224,40 +232,40 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
             if (loadCid.equals("current")) {
                 Preferences prefs = Gdx.app.getPreferences("scenes");
                 loadCid = prefs.getString("current");
-                if (loadCid==null ||loadCid.isEmpty()){
-                    loadCid=Statics.splashCID;
+                if (loadCid == null || loadCid.isEmpty()) {
+                    loadCid = Statics.splashCID;
                 }
 
             }
             System.out.println("loading cid:" + loadCid);
-            SerializeUtil.load(loadCid,false);
+            SerializeUtil.load(loadCid, false);
         }
         // remember SpriteBatch's current functions
 
         batch.enableBlending();
         SunshineBlue.instance.shapedrawer.setDefaultLineWidth(2);
-       // Preferences prefs = Gdx.app.getPreferences("scenes");
+        // Preferences prefs = Gdx.app.getPreferences("scenes");
 //        for(Map.Entry<String,?> pref:prefs.get().entrySet()){
 //            SunshineBlue.instance.otherCIDS.add((String)pref.getValue());
 //        }
 
-      ParticleUtil.getParticleFiles();
+        ParticleUtil.getParticleFiles();
     }
-
-
 
 
     @Override
     public void render() {
-        delta=isRecording?(1f/fps):Gdx.graphics.getDeltaTime();
-        colorFlash+=delta/3f;
-        if (colorFlash>.4f){colorFlash=0;}
+        delta = isRecording ? (1f / fps) : Gdx.graphics.getDeltaTime();
+        colorFlash += delta / 3f;
+        if (colorFlash > .4f) {
+            colorFlash = 0;
+        }
         if (assetManager.update()) {
             // we are done loading, let's move to another screen!
         }
-        Gdx.gl.glClearColor(0, 0, 0, 0);
+        Gdx.gl.glClearColor(bgColor.r, bgColor.g, bgColor.b, bgColor.a);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);
+//        Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);
         viewport.apply();
 
 
@@ -317,7 +325,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 //        }
 
         if (isRecording) {
-            apng.write(FrameBufferUtils.drawObjectsPix(batch, viewport, userObjects, 600 * viewport.getScreenWidth() / viewport.getScreenHeight(), 600,false));
+            apng.write(FrameBufferUtils.drawObjectsPix(batch, viewport, userObjects, 600 * viewport.getScreenWidth() / viewport.getScreenHeight(), 600, false));
             if (recCounter-- <= 0) {
                 stopRecording();
             }
@@ -342,7 +350,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
                 bo.regenerate(assetManager);
             }
             if (bo instanceof Drawable) {
-                ((Drawable) bo).draw(batch,delta);
+                ((Drawable) bo).draw(batch, delta);
             }
             if (bo instanceof Actable) {
                 ((Actable) bo).act();
@@ -350,7 +358,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
             batch.setTransformMatrix(mx4Batch);
         }
         if (overlay != null) {
-            ((Drawable) overlay).draw(batch,delta);
+            ((Drawable) overlay).draw(batch, delta);
         }
         batch.setTransformMatrix(mx4Batch);
         if (isRecording) {
@@ -375,6 +383,8 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 //        int WORLD_HEIGHT=550;
         viewport.update(width, height);
         overlayViewport.update(width, height);
+//        SunshineBlue.instance.recordRect = new Rectangle(SunshineBlue.instance.viewport.getScreenX(), SunshineBlue.instance.viewport.getScreenY(), SunshineBlue.instance.viewport.getScreenWidth(), SunshineBlue.instance.viewport.getScreenHeight());
+
 //        Statics.overlayViewport.getCamera().viewportWidth = WORLD_WIDTH;
 //        Statics.overlayViewport.getCamera().viewportHeight = WORLD_HEIGHT;
 //        Statics.overlayViewport.getCamera().position.set(WORLD_WIDTH/2,WORLD_HEIGHT/2, 0);
@@ -533,7 +543,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public void pause() {
-        SerializeUtil.save( new IPFSCIDListener() {
+        SerializeUtil.save(new IPFSCIDListener() {
             @Override
             public void cid(String cid) {
                 Gdx.app.log("saved", "saved at " + cid);

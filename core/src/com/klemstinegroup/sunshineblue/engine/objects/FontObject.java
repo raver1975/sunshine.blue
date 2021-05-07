@@ -117,7 +117,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
                     batch.begin();
 //                SunshineBlue.instance.shapedrawer.setColor(Color.WHITE);
                     SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / ((float) SunshineBlue.instance.userObjects.size - 1)).cpy().lerp(Color.WHITE, SunshineBlue.instance.colorFlash));
-                    SunshineBlue.instance.shapedrawer.polygon(polygon,5, JoinType.SMOOTH);
+                    SunshineBlue.instance.shapedrawer.polygon(polygon,5, JoinType.NONE);
                 }
             }
         }

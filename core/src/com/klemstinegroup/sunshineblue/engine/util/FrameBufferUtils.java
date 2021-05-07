@@ -19,6 +19,8 @@ public class FrameBufferUtils {
     static public Pixmap drawObjects(Batch batch,Viewport viewport, Array<BaseObject> objects) {
         FrameBuffer fb = new FrameBuffer(Pixmap.Format.RGBA8888, viewport.getScreenWidth(), viewport.getScreenHeight(), true);
         fb.begin();
+        Gdx.gl.glClearColor(SunshineBlue.instance.bgColor.r,SunshineBlue.instance.bgColor.g,SunshineBlue.instance.bgColor.b,SunshineBlue.instance.bgColor.a);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         draw(batch,viewport,objects,0);
         Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, viewport.getScreenWidth(), viewport.getScreenHeight());
         fb.end();
@@ -74,6 +76,8 @@ public class FrameBufferUtils {
     public static Pixmap drawObjectsPix(Batch batch,Viewport viewport, Array<BaseObject> objects,int width,int height,boolean flip) {
         FrameBuffer fb = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, true);
         fb.begin();
+        Gdx.gl.glClearColor(SunshineBlue.instance.bgColor.r,SunshineBlue.instance.bgColor.g,SunshineBlue.instance.bgColor.b,SunshineBlue.instance.bgColor.a);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 //        ((OrthographicCamera)viewport.getCamera()).setToOrtho(false,width,height);
         draw(batch,viewport,objects,0);
         Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, width,height);

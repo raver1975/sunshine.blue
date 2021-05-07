@@ -2,6 +2,8 @@ package com.klemstinegroup.sunshineblue.engine.util;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -100,7 +102,16 @@ public class SerializeUtil {
                 JsonValue val = reader.parse(new String(file));
                 if (val != null) {
                     Gdx.app.log("val", val.toJson(JsonWriter.OutputType.minimal));
-                    SunshineBlue.nativeNet.doneSavingScene(cid,val.getString("screenshot"));
+                    SunshineBlue.nativeNet.doneSavingScene(cid, val.getString("screenshot"));
+                    try {
+                        SunshineBlue.instance.bgColor.set(val.getInt("bgColor"));
+                    } catch (Exception e) {
+                    }
+                    try {
+                        SunshineBlue.instance.viewport.getCamera().position.set(val.getFloat("cam_position_x"),val.getFloat("cam_position_y"),val.getFloat("cam_position_z"));
+                        ((OrthographicCamera)SunshineBlue.instance.viewport.getCamera()).zoom=val.getFloat("cam_zoom");
+                    } catch (Exception e) {
+                    }
                     deserializeScene(val, merge);
                 }
             }
@@ -121,6 +132,14 @@ public class SerializeUtil {
             @Override
             public void cid(String cid) {
                 val.addChild("screenshot", new JsonValue(cid));
+                val.addChild("bgColor", new JsonValue(Color.rgb888(SunshineBlue.instance.bgColor)));
+                val.addChild("cam_zoom",new JsonValue(((OrthographicCamera)SunshineBlue.instance.viewport.getCamera()).zoom));
+                val.addChild("cam_position_x",new JsonValue(SunshineBlue.instance.viewport.getCamera().position.x));
+                val.addChild("cam_position_y",new JsonValue(SunshineBlue.instance.viewport.getCamera().position.y));
+                val.addChild("cam_position_z",new JsonValue(SunshineBlue.instance.viewport.getCamera().position.z));
+
+                SunshineBlue.instance.viewport.getCamera().position.set(val.getFloat("cam_position_x"),val.getFloat("cam_position_y"),val.getFloat("cam_position_z"));
+                ((OrthographicCamera)SunshineBlue.instance.viewport.getCamera()).zoom=val.getFloat("cam_zoom");
                 SunshineBlue.nativeNet.uploadIPFS(val.toJson(JsonWriter.OutputType.javascript).getBytes(StandardCharsets.UTF_8), new IPFSCIDListener() {
                     @Override
                     public void cid(String cid) {
@@ -134,8 +153,8 @@ public class SerializeUtil {
                             prefs.putString(cid, cid);
                             prefs.flush();
 
-                            SunshineBlue.instance.otherCIDS.put(cid,val.getString("screenshot"));
-                            SunshineBlue.nativeNet.doneSavingScene(cid,val.getString("screenshot"));
+                            SunshineBlue.instance.otherCIDS.put(cid, val.getString("screenshot"));
+                            SunshineBlue.nativeNet.doneSavingScene(cid, val.getString("screenshot"));
                             if (ipfscidListener != null) {
                                 ipfscidListener.cid(cid);
                             }
@@ -198,7 +217,7 @@ public class SerializeUtil {
 
 
     public static void infromGWTotherCID(String cids) {
-        if (cids!=null && !cids.isEmpty()&cids.indexOf(',')>1) {
+        if (cids != null && !cids.isEmpty() & cids.indexOf(',') > 1) {
             String[] cidsplit = cids.split(",");
             Gdx.app.log("infromGWTothercids", cids);
             SunshineBlue.instance.otherCIDS.put(cidsplit[0], cidsplit[1]);
@@ -275,10 +294,10 @@ public class SerializeUtil {
         SunshineBlue.nativeNet.downloadIPFS(jsoncids[0], new IPFSFileListener() {
             @Override
             public void downloaded(byte[] file) {
-                final int[] cnt = {jsoncids.length-1};
+                final int[] cnt = {jsoncids.length - 1};
                 for (int i = 1; i < jsoncids.length; i++) {
                     int finalI = i;
-                    Timer.instance().scheduleTask(new Timer.Task(){
+                    Timer.instance().scheduleTask(new Timer.Task() {
                         @Override
                         public void run() {
                             SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + jsoncids[finalI], new Pixmap.DownloadPixmapResponseListener() {
@@ -286,7 +305,7 @@ public class SerializeUtil {
                                 public void downloadComplete(Pixmap pixmap) {
                                     pixmaps[finalI - 1] = pixmap;
                                     cnt[0]--;
-                                    System.out.println("loaded pixmap "+(finalI-1));
+                                    System.out.println("loaded pixmap " + (finalI - 1));
                                     if (cnt[0] == 0) {
                                         try {
                                             listener.atlas(new CustomTextureAtlas(new MemoryFileHandle(file), pixmaps, false).getRegions());
@@ -299,11 +318,11 @@ public class SerializeUtil {
                                 @Override
                                 public void downloadFailed(Throwable t) {
 
-                                    Statics.exceptionLog("su",t);
+                                    Statics.exceptionLog("su", t);
                                 }
                             });
                         }
-                    },1*i);
+                    }, 1 * i);
                 }
             }
 

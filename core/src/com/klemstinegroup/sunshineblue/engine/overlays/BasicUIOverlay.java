@@ -326,7 +326,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
 
         Actor imageButton = new TextButton("Image", skin);
-        imageButton.setPosition(100, 10);
+        imageButton.setPosition(70, 10);
 //        fontButton.setColor(Color.WHITE);
 
 
@@ -343,7 +343,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         stage.addActor(imageButton);
 
         Actor drawButton = new TextButton("Draw", skin);
-        drawButton.setPosition(200, 10);
+        drawButton.setPosition(135, 10);
         drawButton.addListener(new ClickListener() {
 
             @Override
@@ -363,7 +363,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         });
         stage.addActor(drawButton);
         Actor fxButton = new TextButton("FX", skin);
-        fxButton.setPosition(300, 10);
+        fxButton.setPosition(195, 10);
         fxButton.addListener(new ClickListener() {
 
             @Override
@@ -381,6 +381,17 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
             }
         });
         stage.addActor(fxButton);
+        Actor backgroundButton = new TextButton("BG", skin);
+        backgroundButton.setPosition(10, 70);
+        backgroundButton.addListener(new ClickListener() {
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                Overlay.setOverlay(SunshineBlue.instance.BACKGROUND_OVERLAY);
+            }
+        });
+        stage.addActor(backgroundButton);
 
     }
 
