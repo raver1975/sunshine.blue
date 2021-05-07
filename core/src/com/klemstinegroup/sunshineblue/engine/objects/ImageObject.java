@@ -69,6 +69,23 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                     gifDecoder.read(new MemoryFileHandle(data).read());
                     PixmapPacker pixmapPacker = gifDecoder.getAnimation(Animation.PlayMode.LOOP);
                     CustomTextureAtlas animationAtlas = pixmapPacker.generateCustomTextureAtlas(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear, false);
+                    Gdx.app.postRunnable(new Runnable() {
+                        @Override
+                        public void run() {
+                            SerializeUtil.serializePixmapPacker(pixmapPacker, new AtlasUploadListener() {
+                                @Override
+                                public void atlas(Array<String> strings) {
+                                    ImageObject.this.cids = strings;
+                                }
+
+                                @Override
+                                public void failed(Throwable t) {
+
+                                }
+                            });
+                        }
+                    });
+
 //
 //        for (PixmapPacker.Page page:pixmapPacker.getPages()){
 //            SunshineBlue.addUserObj(new ImageObject(page.getPixmap()));
@@ -225,8 +242,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                             den = 100;
                         }
                         CustomTextureAtlas animationAtlas = pixmapPacker.generateCustomTextureAtlas(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear, false);
-
-                        System.out.println("xx" + animationAtlas.getRegions().size);
+                        System.out.println("animation frames:" + animationAtlas.getRegions().size);
                         Gdx.app.postRunnable(new Runnable() {
                             @Override
                             public void run() {
