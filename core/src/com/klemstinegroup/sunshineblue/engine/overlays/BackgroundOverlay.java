@@ -194,7 +194,7 @@ public class BackgroundOverlay extends ScreenObject implements Overlay, Touchabl
     public void setInput() {
         SunshineBlue.instance.im.addProcessor(stage);
         if (touchable != null) SunshineBlue.instance.im.addProcessor(touchable);
-//        slider.setValue(((DrawObject) drawObject).size);
+        slider.setValue(((OrthographicCamera)SunshineBlue.instance.viewport.getCamera()).zoom);
     }
 
     @Override
