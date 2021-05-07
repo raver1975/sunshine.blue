@@ -612,7 +612,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
         JsonValue val = new JsonValue(JsonValue.ValueType.object);
         val.addChild("screenData", SerializeUtil.serialize(sd));
         val.addChild("CID", new JsonValue(cid));
-        if (cids != null) {
+        if (cids != null&& cids.size>0) {
             JsonValue cidarray = new JsonValue(JsonValue.ValueType.array);
             for (String s : cids) {
                 cidarray.addChild(new JsonValue(s));
