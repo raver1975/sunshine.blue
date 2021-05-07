@@ -124,94 +124,82 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Preferences prefs = Gdx.app.getPreferences("scenes");
-                for (Map.Entry<String, ?> pref : prefs.get().entrySet()) {
-                    SunshineBlue.instance.otherCIDS.add((String) pref.getValue());
-                }
+            //    Preferences prefs = Gdx.app.getPreferences("scenes");
+//                for (Map.Entry<String, ?> pref : prefs.get().entrySet()) {
+//                    SunshineBlue.instance.otherCIDS.add((String) pref.getValue());
+//                }
                 if (SunshineBlue.instance.otherCIDS.size() > 0) {
 
-                    Iterator<String> iter = SunshineBlue.instance.otherCIDS.iterator();
+                    Iterator<Map.Entry<String,String>> iter = SunshineBlue.instance.otherCIDS.entrySet().iterator();
                     if (otherIndex>SunshineBlue.instance.otherCIDS.size()-1){
                         otherIndex=SunshineBlue.instance.otherCIDS.size()-1;
                     }
                     for (int i = 0; i < otherIndex; i++) {
                         iter.next();
                     }
-                    String cid = iter.next();
-                    SunshineBlue.nativeNet.downloadIPFS(cid, new IPFSFileListener() {
+                    Map.Entry<String,String> entry = iter.next();
+                    String screenshotCID = entry.getValue();
+                    SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + screenshotCID, new Pixmap.DownloadPixmapResponseListener() {
                         @Override
-                        public void downloaded(byte[] file) {
-                            JsonReader reader = new JsonReader();
-                            JsonValue val = reader.parse(new String(file));
-                            String screenshotCID = val.getString("screenshot");
-                            SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + screenshotCID, new Pixmap.DownloadPixmapResponseListener() {
+                        public void downloadComplete(Pixmap pixmap) {
+                            Dialog dialog = new Dialog((otherIndex + 1) + " / " + (SunshineBlue.instance.otherCIDS.size()) + " : " + entry.getKey(), skin) {
                                 @Override
-                                public void downloadComplete(Pixmap pixmap) {
-                                    Dialog dialog = new Dialog((otherIndex + 1) + " / " + (SunshineBlue.instance.otherCIDS.size()) + " : " + cid, skin) {
-                                        @Override
-                                        protected void result(Object object) {
-                                            if (object.equals(1L)) {
-                                                if (--otherIndex < 0) {
-                                                    otherIndex = SunshineBlue.instance.otherCIDS.size() - 1;
-                                                }
-                                                InputEvent event1 = new InputEvent();
-                                                event1.setType(InputEvent.Type.touchDown);
-                                                randomButton.fire(event1);
-
-                                                InputEvent event2 = new InputEvent();
-                                                event2.setType(InputEvent.Type.touchUp);
-                                                randomButton.fire(event2);
-                                            } else if (object.equals(2L)) {
-                                                SerializeUtil.load(cid, false);
-                                            } else if (object.equals(6L)) {
-                                                SerializeUtil.load(cid, true);
-                                            } else if (object.equals(3L)) {
-                                                String uri="https://sunshine.blue/?"+cid;
-                                                Gdx.app.getClipboard().setContents(uri);
-                                                Gdx.net.openURI(uri);
-                                            } else if (object.equals(4L)) {
-
-                                            } else if (object.equals(5L)) {
-                                                if (++otherIndex > SunshineBlue.instance.otherCIDS.size() - 1) {
-                                                    otherIndex = 0;
-                                                }
-                                                InputEvent event1 = new InputEvent();
-                                                event1.setType(InputEvent.Type.touchDown);
-                                                randomButton.fire(event1);
-
-                                                InputEvent event2 = new InputEvent();
-                                                event2.setType(InputEvent.Type.touchUp);
-                                                randomButton.fire(event2);
-                                            }
-
-                                            this.hide();
+                                protected void result(Object object) {
+                                    if (object.equals(1L)) {
+                                        if (--otherIndex < 0) {
+                                            otherIndex = SunshineBlue.instance.otherCIDS.size() - 1;
                                         }
-                                    };
-                                    Pixmap pixmap2 = new Pixmap(pixmap.getWidth(), pixmap.getHeight(), pixmap.getFormat());
-                                    pixmap2.setColor(new Color(0xbb6500ff));
-                                    pixmap2.fill();
-                                    pixmap2.drawPixmap(pixmap, 0, 0);
+                                        InputEvent event1 = new InputEvent();
+                                        event1.setType(InputEvent.Type.touchDown);
+                                        randomButton.fire(event1);
 
-                                    pixmap.dispose();
-                                    dialog.setBackground(new SpriteDrawable(new Sprite(new Texture(pixmap2))));
-                                    dialog.button("prev", 1L);
-                                    dialog.button("next", 5L);
-                                    dialog.button("pop", 3L);
-                                    dialog.button("load", 2L);
-                                    dialog.button("merge", 6L);
-                                    dialog.button("cancel", 4L);
+                                        InputEvent event2 = new InputEvent();
+                                        event2.setType(InputEvent.Type.touchUp);
+                                        randomButton.fire(event2);
+                                    } else if (object.equals(2L)) {
+                                        SerializeUtil.load(cid, false);
+                                    } else if (object.equals(6L)) {
+                                        SerializeUtil.load(cid, true);
+                                    } else if (object.equals(3L)) {
+                                        String uri="https://sunshine.blue/?"+cid;
+                                        Gdx.app.getClipboard().setContents(uri);
+                                        Gdx.net.openURI(uri);
+                                    } else if (object.equals(4L)) {
+
+                                    } else if (object.equals(5L)) {
+                                        if (++otherIndex > SunshineBlue.instance.otherCIDS.size() - 1) {
+                                            otherIndex = 0;
+                                        }
+                                        InputEvent event1 = new InputEvent();
+                                        event1.setType(InputEvent.Type.touchDown);
+                                        randomButton.fire(event1);
+
+                                        InputEvent event2 = new InputEvent();
+                                        event2.setType(InputEvent.Type.touchUp);
+                                        randomButton.fire(event2);
+                                    }
+
+                                    this.hide();
+                                }
+                            };
+                            Pixmap pixmap2 = new Pixmap(pixmap.getWidth(), pixmap.getHeight(), pixmap.getFormat());
+                            pixmap2.setColor(new Color(0xbb6500ff));
+                            pixmap2.fill();
+                            pixmap2.drawPixmap(pixmap, 0, 0);
+
+                            pixmap.dispose();
+                            dialog.setBackground(new SpriteDrawable(new Sprite(new Texture(pixmap2))));
+                            dialog.button("prev", 1L);
+                            dialog.button("next", 5L);
+                            dialog.button("pop", 3L);
+                            dialog.button("load", 2L);
+                            dialog.button("merge", 6L);
+                            dialog.button("cancel", 4L);
 
 
-                                    dialog.setModal(true);
-                                    dialog.show(stage);
+                            dialog.setModal(true);
+                            dialog.show(stage);
 //                                    BasicUIOverlay.this.screenshotPixmap=new Texture(pixmap);
-                                }
-
-                                @Override
-                                public void downloadFailed(Throwable t) {
-
-                                }
-                            });
                         }
 
                         @Override
@@ -246,9 +234,9 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                                     }
                                     SunshineBlue.instance.userObjects.clear();
                                     Overlay.setOverlay(SunshineBlue.instance.BASIC_UI_OVERLAY);
-                                    Preferences prefs = Gdx.app.getPreferences("scenes");
-                                    prefs.remove(cid);
-                                    prefs.flush();
+//                                    Preferences prefs = Gdx.app.getPreferences("scenes");
+//                                    prefs.remove(cid);
+//                                    prefs.flush();
                                     SunshineBlue.instance.otherCIDS.remove(cid);
                                 }
 

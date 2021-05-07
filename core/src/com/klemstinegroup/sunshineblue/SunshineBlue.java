@@ -60,7 +60,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public ShapeDrawer shapedrawer;
     public JSEProviderImpl JJVMprovider = new JSEProviderImpl();
     public static SunshineBlue instance;
-    public HashSet<String> otherCIDS=new HashSet<>();
+    public HashMap<String,String> otherCIDS=new HashMap<>();
     private int recCounter;
     private static final float fps = 10;
     public float colorFlash=0;
@@ -236,10 +236,10 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
         batch.enableBlending();
         SunshineBlue.instance.shapedrawer.setDefaultLineWidth(2);
-        Preferences prefs = Gdx.app.getPreferences("scenes");
-        for(Map.Entry<String,?> pref:prefs.get().entrySet()){
-            SunshineBlue.instance.otherCIDS.add((String)pref.getValue());
-        }
+       // Preferences prefs = Gdx.app.getPreferences("scenes");
+//        for(Map.Entry<String,?> pref:prefs.get().entrySet()){
+//            SunshineBlue.instance.otherCIDS.add((String)pref.getValue());
+//        }
 
       ParticleUtil.getParticleFiles();
     }

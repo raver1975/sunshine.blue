@@ -91,7 +91,7 @@ public class SerializeUtil {
         if (cid == null || cid.isEmpty() || !cid.startsWith("Q")) {
             return;
         }
-        SunshineBlue.nativeNet.doneSavingScene(cid);
+
         Gdx.app.log("name:", cid + "\t" + cid);
         SunshineBlue.nativeNet.downloadIPFS(cid, new IPFSFileListener() {
             @Override
@@ -100,6 +100,7 @@ public class SerializeUtil {
                 JsonValue val = reader.parse(new String(file));
                 if (val != null) {
                     Gdx.app.log("val", val.toJson(JsonWriter.OutputType.minimal));
+                    SunshineBlue.nativeNet.doneSavingScene(cid,val.getString("screenshot"));
                     deserializeScene(val, merge);
                 }
             }
@@ -133,8 +134,8 @@ public class SerializeUtil {
                             prefs.putString(cid, cid);
                             prefs.flush();
 
-                            SunshineBlue.instance.otherCIDS.add(cid);
-                            SunshineBlue.nativeNet.doneSavingScene(cid);
+                            SunshineBlue.instance.otherCIDS.put(cid,val.getString("screenshot"));
+                            SunshineBlue.nativeNet.doneSavingScene(cid,val.getString("screenshot"));
                             if (ipfscidListener != null) {
                                 ipfscidListener.cid(cid);
                             }
@@ -196,9 +197,12 @@ public class SerializeUtil {
     }
 
 
-    public static void infromGWTotherCID(String cid) {
-        Gdx.app.log("infromGWTothercids", cid);
-        SunshineBlue.instance.otherCIDS.add(cid);
+    public static void infromGWTotherCID(String cids) {
+        if (cids!=null && !cids.isEmpty()&cids.indexOf(',')>1) {
+            String[] cidsplit = cids.split(",");
+            Gdx.app.log("infromGWTothercids", cids);
+            SunshineBlue.instance.otherCIDS.put(cidsplit[0], cidsplit[1]);
+        }
     }
 
     public static void infromGWT(String cid) {

@@ -46,8 +46,8 @@ public class NativeJava implements NativeInterface {
     }
 
     @Override
-    public void doneSavingScene(String cid) {
+    public void doneSavingScene(String cid,String screenshot) {
         Gdx.app.log("scene saved",cid);
-        SunshineBlue.instance.otherCIDS.add(cid);
+//        SunshineBlue.instance.otherCIDS.add(cid);
     }
 }

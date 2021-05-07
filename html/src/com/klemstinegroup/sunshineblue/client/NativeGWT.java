@@ -123,12 +123,12 @@ public class NativeGWT implements NativeInterface {
     }
 
     @Override
-    public void doneSavingScene(String cid) {
+    public void doneSavingScene(String cid,String screenshot) {
         Gdx.app.log("done", "done saving scene");
-        doneSavingSceneJS(cid);
+        doneSavingSceneJS(cid,screenshot);
     }
 
-    native void doneSavingSceneJS(String cid) /*-{
+    native void doneSavingSceneJS(String cid,String screenshot) /*-{
         $wnd.onpopstate=function(event){
             var currentState = event.state;
             console.log("onpopstate:"+currentState.cid);
@@ -138,14 +138,14 @@ public class NativeGWT implements NativeInterface {
         }
         console.log("changing url:"+cid);
 //        var stateObj = { url: settings.url, innerhtml: document.body.innerHTML,cid:cid };
-        var stateObj = {cid:cid };
+        var stateObj = {cid:cid,screenshot:screenshot };
         $wnd.history.pushState( stateObj, 'sunshine.blue', '/?'+cid );
 
 
              function run(){
         try{
           console.log("publishing:"+cid);
-          $wnd.node.pubsub.publish("sunshine.blue", cid).then();
+          $wnd.node.pubsub.publish("sunshine.blue", cid+","+screenshot).then();
         }
         catch (e){
          setTimeout(run,1000);
