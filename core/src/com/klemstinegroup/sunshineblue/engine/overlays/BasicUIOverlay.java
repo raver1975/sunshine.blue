@@ -139,6 +139,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                     }
                     Map.Entry<String,String> entry = iter.next();
                     String screenshotCID = entry.getValue();
+                    String cid=entry.getKey();
                     SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + screenshotCID, new Pixmap.DownloadPixmapResponseListener() {
                         @Override
                         public void downloadComplete(Pixmap pixmap) {
@@ -160,6 +161,8 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                                         SerializeUtil.load(cid, false);
                                     } else if (object.equals(6L)) {
                                         SerializeUtil.load(cid, true);
+                                    } else if (object.equals(7L)) {
+                                        SunshineBlue.instance.otherCIDS.remove(cid);
                                     } else if (object.equals(3L)) {
                                         String uri="https://sunshine.blue/?"+cid;
                                         Gdx.app.getClipboard().setContents(uri);
@@ -194,6 +197,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                             dialog.button("pop", 3L);
                             dialog.button("load", 2L);
                             dialog.button("merge", 6L);
+                            dialog.button("delete", 7L);
                             dialog.button("cancel", 4L);
 
 
