@@ -140,6 +140,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                     Map.Entry<String,String> entry = iter.next();
                     String screenshotCID = entry.getValue();
                     String cid=entry.getKey();
+                    Gdx.app.log("load",cid+"\t"+screenshotCID);
                     SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + screenshotCID, new Pixmap.DownloadPixmapResponseListener() {
                         @Override
                         public void downloadComplete(Pixmap pixmap) {
