@@ -16,10 +16,12 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.objects.*;
@@ -63,7 +65,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 //        fontButton.setColor(Color.WHITE);
 
         Actor saveButton = new TextButton("Save", skin);
-        saveButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 60);
+        saveButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 120);
         saveButton.addListener(new ClickListener() {
 
             @Override
@@ -119,7 +121,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         stage.addActor(apngButton);
 
         Actor randomButton = new TextButton("Load", skin);
-        randomButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 120);
+        randomButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 60);
         randomButton.addListener(new ClickListener() {
 
             @Override
@@ -325,6 +327,17 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         stage.addActor(fontButton);
 
 
+        CheckBox autoload=new CheckBox("Autoload",skin,"switch");
+        autoload.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                SunshineBlue.instance.autoload=true;
+                SunshineBlue.instance.autoloadtime= TimeUtils.millis();
+            }
+        });
+        autoload.setPosition(65,SunshineBlue.instance.overlayViewport.getWorldHeight() - 30);
+        stage.addActor(autoload);
+
         Actor imageButton = new TextButton("Image", skin);
         imageButton.setPosition(70, 10);
 //        fontButton.setColor(Color.WHITE);
@@ -491,12 +504,12 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         stage.act();
         stage.draw();
         SunshineBlue.instance.font.setColor(Color.BLACK);
-        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 29, SunshineBlue.instance.overlayViewport.getWorldHeight() - 105);
-        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 30, SunshineBlue.instance.overlayViewport.getWorldHeight() - 104);
-        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 31, SunshineBlue.instance.overlayViewport.getWorldHeight() - 105);
-        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 30, SunshineBlue.instance.overlayViewport.getWorldHeight() - 106);
+        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 29, SunshineBlue.instance.overlayViewport.getWorldHeight() - 45);
+        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 30, SunshineBlue.instance.overlayViewport.getWorldHeight() - 44);
+        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 31, SunshineBlue.instance.overlayViewport.getWorldHeight() - 45);
+        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 30, SunshineBlue.instance.overlayViewport.getWorldHeight() - 46);
         SunshineBlue.instance.font.setColor(Color.CYAN);
-        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 30, SunshineBlue.instance.overlayViewport.getWorldHeight() - 105);
+        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 30, SunshineBlue.instance.overlayViewport.getWorldHeight() - 45);
 
     }
 

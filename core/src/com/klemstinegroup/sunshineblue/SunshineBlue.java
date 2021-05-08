@@ -16,11 +16,13 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ArrayMap;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.github.tommyettinger.anim8.IncrementalAnimatedPNG;
@@ -63,7 +65,10 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public JSEProviderImpl JJVMprovider = new JSEProviderImpl();
     public static SunshineBlue instance;
     public HashMap<String, String> otherCIDS = new HashMap<>();
+    public Array<String> autoloaded = new Array<>();
     public boolean takingScreenshot;
+    public boolean autoload;
+    public long autoloadtime;
     //    public Rectangle recordRect;
     private int recCounter;
     private static final float fps = 10;
@@ -235,6 +240,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
                 loadCid = prefs.getString("current");
                 if (loadCid == null || loadCid.isEmpty()) {
                     loadCid = Statics.splashCID;
+                    autoload=true;
                 }
 
             }
@@ -256,6 +262,30 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public void render() {
+        if (autoload && TimeUtils.millis() > autoloadtime) {
+            Gdx.app.log("autoload","");
+            autoloadtime = TimeUtils.millis() + 10000;
+            if (otherCIDS.size() > 0) {
+                if (otherCIDS.size() == autoloaded.size) {
+                    autoloaded.clear();
+                }
+                while(true) {
+                    int otherIndex = MathUtils.random(otherCIDS.size() - 1);
+                    Iterator<Map.Entry<String, String>> iter = otherCIDS.entrySet().iterator();
+                    for (int i = 0; i < otherIndex; i++) {
+                        iter.next();
+                    }
+                    Map.Entry<String, String> entry = iter.next();
+                    if (!autoloaded.contains(entry.getKey(),false)){
+                        autoloaded.add(entry.getKey());
+                        SerializeUtil.load(entry.getKey(),false);
+                        break;
+                    }
+                }
+
+            }
+        }
+
         delta = isRecording ? (1f / fps) : Gdx.graphics.getDeltaTime();
         colorFlash += delta / 3f;
         if (colorFlash > .4f) {
