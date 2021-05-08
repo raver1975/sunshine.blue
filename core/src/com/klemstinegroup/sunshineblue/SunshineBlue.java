@@ -63,7 +63,8 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public JSEProviderImpl JJVMprovider = new JSEProviderImpl();
     public static SunshineBlue instance;
     public HashMap<String, String> otherCIDS = new HashMap<>();
-//    public Rectangle recordRect;
+    public boolean takingScreenshot;
+    //    public Rectangle recordRect;
     private int recCounter;
     private static final float fps = 10;
     public float colorFlash = 0;

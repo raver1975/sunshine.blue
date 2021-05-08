@@ -125,7 +125,9 @@ public class SerializeUtil {
 
     public static void save(IPFSCIDListener ipfscidListener) {
         SunshineBlue.instance.batch.begin();
+        SunshineBlue.instance.takingScreenshot=true;
         Pixmap screenshot = FrameBufferUtils.drawObjectsPix(SunshineBlue.instance.batch, SunshineBlue.instance.viewport, SunshineBlue.instance.userObjects, 400 * SunshineBlue.instance.viewport.getScreenWidth() / SunshineBlue.instance.viewport.getScreenHeight(), 400, true);
+        SunshineBlue.instance.takingScreenshot=false;
         SunshineBlue.instance.batch.end();
         JsonValue val = serializeScene();
         IPFSUtils.uploadPngtoIPFS(screenshot, new IPFSCIDListener() {

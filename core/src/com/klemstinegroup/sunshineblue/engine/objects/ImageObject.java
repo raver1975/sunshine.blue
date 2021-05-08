@@ -527,7 +527,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
             if (textures != null) {
                 stateTime += delta;
                 try {
-                    batch.draw(textures.getKeyFrame(stateTime, true), -sd.center.x, -sd.center.y);
+                    batch.draw(textures.getKeyFrame(SunshineBlue.instance.takingScreenshot?0:stateTime, true), -sd.center.x, -sd.center.y);
 //                    System.out.println("draw:"+textures.getKeyFrame(stateTime, true));
                 } catch (Exception e) {
                     Statics.exceptionLog("err", e);
