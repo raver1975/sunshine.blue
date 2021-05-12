@@ -18,7 +18,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ArrayMap;
@@ -27,6 +26,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.github.tommyettinger.anim8.IncrementalAnimatedPNG;
 import com.igormaznitsa.jjjvm.impl.jse.JSEProviderImpl;
+import com.klemstinegroup.sunshineblue.engine.commands.Command;
 import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.objects.*;
 import com.klemstinegroup.sunshineblue.engine.overlays.*;
@@ -75,6 +75,10 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public float colorFlash = 0;
     private float delta = 1;
     public Color bgColor = Color.CLEAR;
+    public HashMap<Integer,Array<Command>> commands=new HashMap<>();
+    public int frameCount;
+    public int lastframeCount;
+    private long startTime;
 
 //    private int dstFunc;
 //    private int srcFunc;
@@ -257,6 +261,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 //        }
 
         ParticleUtil.getParticleFiles();
+        startTime=TimeUtils.millis();
     }
 
 
@@ -284,9 +289,20 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
                 }
 
             }
+
         }
 
         delta = isRecording ? (1f / fps) : Gdx.graphics.getDeltaTime();
+        frameCount= (int) ((TimeUtils.millis()-startTime)/(1000/fps));
+        if (frameCount!=lastframeCount){
+            System.out.println(frameCount/fps);
+            Array<Command> commandstoexec=commands.get(frameCount);
+            if(commandstoexec!=null) {
+                for (Command c : commandstoexec) {
+                    c.execute();
+                }
+            }
+        }
         colorFlash += delta / 3f;
         if (colorFlash > .4f) {
             colorFlash = 0;

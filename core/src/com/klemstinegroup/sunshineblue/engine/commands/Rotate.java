@@ -1,4 +1,4 @@
-package com.klemstinegroup.sunshineblue.commands;
+package com.klemstinegroup.sunshineblue.engine.commands;
 
 public class Rotate implements Command{
     @Override
@@ -7,7 +7,7 @@ public class Rotate implements Command{
     }
 
     @Override
-    public void deexecute() {
+    public void undo() {
 
     }
 }
