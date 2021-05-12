@@ -1,4 +1,4 @@
-package com.klemstinegroup.sunshineblue.engine.objects;
+package com.klemstinegroup.sunshineblue.engine.data;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -53,7 +53,7 @@ public class BrushData {
         generate(width);
     }
 
-    void generate(int n) {
+    public void generate(int n) {
         this.width=n;
         this.height =n;
         this.halfWidth=width/2;

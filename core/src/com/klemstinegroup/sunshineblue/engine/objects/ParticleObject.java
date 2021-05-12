@@ -1,8 +1,6 @@
 package com.klemstinegroup.sunshineblue.engine.objects;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
@@ -10,6 +8,7 @@ import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.JsonValue;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
+import com.klemstinegroup.sunshineblue.engine.data.ScreenData;
 import com.klemstinegroup.sunshineblue.engine.overlays.Drawable;
 import com.klemstinegroup.sunshineblue.engine.overlays.Touchable;
 import com.klemstinegroup.sunshineblue.engine.util.ColorHelper;
@@ -183,7 +182,9 @@ public class ParticleObject extends ScreenObject implements Drawable, Touchable 
         String particle = json.getString("particle");
         float speed = json.getFloat("speed");
         ScreenData sd1 = SerializeUtil.deserialize(json.get("screenData"), ScreenData.class);
-        SunshineBlue.addUserObj(new ParticleObject(particle, sd1,speed));
+        ParticleObject ptemp=new ParticleObject(particle, sd1,speed);
+        ptemp.uuid=json.getString("UUID", ptemp.uuid);
+        SunshineBlue.addUserObj(ptemp);
     }
 
     @Override

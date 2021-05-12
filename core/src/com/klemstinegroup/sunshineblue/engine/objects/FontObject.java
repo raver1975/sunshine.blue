@@ -13,6 +13,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.JsonValue;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
+import com.klemstinegroup.sunshineblue.engine.data.FontData;
+import com.klemstinegroup.sunshineblue.engine.data.ScreenData;
 import com.klemstinegroup.sunshineblue.engine.overlays.Drawable;
 import com.klemstinegroup.sunshineblue.engine.overlays.FontOverlay;
 import com.klemstinegroup.sunshineblue.engine.overlays.Touchable;
@@ -219,7 +221,9 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
     public static void deserialize(JsonValue json) {
         FontData fd1 = SerializeUtil.deserialize(json.get("fontData"), FontData.class);
         ScreenData sd1 = SerializeUtil.deserialize(json.get("screenData"), ScreenData.class);
-        SunshineBlue.addUserObj(new FontObject(fd1, sd1));
+        FontObject ftemp=new FontObject(fd1, sd1);
+        ftemp.uuid=json.getString("UUID", ftemp.uuid);
+        SunshineBlue.addUserObj(ftemp);
     }
 
     @Override

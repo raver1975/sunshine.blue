@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.JsonValue;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
+import com.klemstinegroup.sunshineblue.engine.data.DrawData;
 import com.klemstinegroup.sunshineblue.engine.overlays.Drawable;
 import com.klemstinegroup.sunshineblue.engine.overlays.Touchable;
 import com.klemstinegroup.sunshineblue.engine.util.ColorHelper;
@@ -362,7 +363,9 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
             PathObject vecAr = SerializeUtil.deserialize(subarray, PathObject.class);
             dd.path.add(vecAr);
         }
-        SunshineBlue.addUserObj(new DrawObject(dd));
+        DrawObject temp=new DrawObject(dd);
+        temp.uuid=json.getString("uuid", temp.uuid);
+        SunshineBlue.addUserObj(temp);
     }
 
     public void setColor(Color color) {

@@ -1,6 +1,7 @@
 package com.klemstinegroup.sunshineblue.engine.objects;
 
 import com.badlogic.gdx.math.Vector2;
+import com.klemstinegroup.sunshineblue.engine.data.ScreenData;
 
 public class ScreenObject extends BaseObject {
     public ScreenData sd=new ScreenData();

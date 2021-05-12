@@ -1,4 +1,4 @@
-package com.klemstinegroup.sunshineblue.engine.objects;
+package com.klemstinegroup.sunshineblue.engine.data;
 
 import com.badlogic.gdx.math.Vector2;
 

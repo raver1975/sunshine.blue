@@ -8,21 +8,17 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.*;
 import com.github.tommyettinger.anim8.GifDecoder;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
+import com.klemstinegroup.sunshineblue.engine.data.ScreenData;
 import com.klemstinegroup.sunshineblue.engine.overlays.Drawable;
 import com.klemstinegroup.sunshineblue.engine.overlays.Touchable;
 import com.klemstinegroup.sunshineblue.engine.util.*;
 import space.earlygrey.shapedrawer.JoinType;
-import sun.security.provider.Sun;
-
-import java.io.IOException;
-import java.util.Map;
 
 public class ImageObject extends ScreenObject implements Drawable, Touchable {
     public Texture texture;
@@ -653,6 +649,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                 public void atlas(Array<CustomTextureAtlas.AtlasRegion> regions) {
                     ImageObject io = new ImageObject(regions, jsoncids, speed);
                     io.sd = sd1;
+                    io.uuid=json.getString("UUID",io.uuid);
                     SunshineBlue.addUserObj(io);
                 }
 

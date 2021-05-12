@@ -3,7 +3,7 @@ package com.klemstinegroup.sunshineblue.plugins;
 import com.badlogic.gdx.Gdx;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
-import com.klemstinegroup.sunshineblue.engine.objects.ScreenData;
+import com.klemstinegroup.sunshineblue.engine.data.ScreenData;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
 
 public class BounceLastObject {
