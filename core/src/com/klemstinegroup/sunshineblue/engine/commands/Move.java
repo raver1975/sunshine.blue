@@ -1,6 +1,7 @@
 package com.klemstinegroup.sunshineblue.engine.commands;
 
 import com.badlogic.gdx.math.Vector2;
+import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
 
 import java.util.Objects;
@@ -10,6 +11,8 @@ public class Move extends Command {
     Vector2 newPosition = new Vector2();
 //    boolean relative;
 
+    public Move(){}
+
     public Move(Vector2 newPosition, String uuid) {
         this.oldPosition.set(((ScreenObject) Command.getBaseObject(uuid)).sd.position);
         this.newPosition = newPosition;
@@ -18,12 +21,18 @@ public class Move extends Command {
 
     @Override
     public void execute() {
-        ((ScreenObject) Command.getBaseObject(actionOnUUID)).sd.position.set(this.newPosition);
+        BaseObject bo=Command.getBaseObject(actionOnUUID);
+        if (bo!=null) {
+            ((ScreenObject) bo).sd.position.set(this.newPosition);
+        }
     }
 
     @Override
     public void undo() {
-        ((ScreenObject) Command.getBaseObject(actionOnUUID)).sd.position.set(this.oldPosition);
+        BaseObject bo=Command.getBaseObject(actionOnUUID);
+        if (bo!=null) {
+            ((ScreenObject) bo).sd.position.set(this.oldPosition);
+        }
     }
 
     @Override

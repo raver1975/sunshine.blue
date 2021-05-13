@@ -6,6 +6,10 @@ import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
 
 public abstract class Command {
     public String actionOnUUID;
+    public int framePos=0;
+    public int arrayPos=0;
+
+    public Command(){}
 
     public abstract void execute();
 
@@ -21,7 +25,9 @@ public abstract class Command {
     }
 
     public static void insert(int frameAt, Command command, BaseObject bo) {
-        command.actionOnUUID = bo.uuid;
+        if (bo!=null){
+            command.actionOnUUID = bo.uuid;
+        }
         if (!SunshineBlue.instance.commands.containsKey(frameAt)) {
             SunshineBlue.instance.commands.put(frameAt, new Array<Command>());
         }

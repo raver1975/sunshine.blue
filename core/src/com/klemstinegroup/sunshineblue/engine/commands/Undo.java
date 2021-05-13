@@ -6,6 +6,7 @@ public class Undo extends Command{
 
     Command command;
 
+    public Undo(){}
     public Undo(Command command){
         this.command=command;
     }

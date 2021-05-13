@@ -13,15 +13,19 @@ import com.badlogic.gdx.utils.reflect.Method;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
+import com.klemstinegroup.sunshineblue.engine.commands.Command;
 import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ImageObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
 import com.klemstinegroup.sunshineblue.engine.overlays.SerialInterface;
+import sun.security.provider.Sun;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class SerializeUtil {
@@ -102,14 +106,52 @@ public class SerializeUtil {
                 JsonValue val = reader.parse(new String(file));
                 if (val != null) {
                     Gdx.app.log("val", val.toJson(JsonWriter.OutputType.minimal));
+                    JsonValue commandArray = val.get("commands");
+                    if (!merge) {
+                        SunshineBlue.instance.commands.clear();
+                    } /*else {
+                        HashMap<String, String> replaceUUID = new HashMap<>();
+                        for (BaseObject bo : SunshineBlue.instance.userObjects) {
+                            String newuuid = UUID.randomUUID().toString();
+                            bo.uuid = newuuid;
+                            replaceUUID.put(bo.uuid, newuuid);
+                        }
+                        for (Map.Entry<Integer, Array<Command>> entry : SunshineBlue.instance.commands.entrySet()) {
+                            for (Command c : entry.getValue()) {
+                                if (replaceUUID.containsKey(c.actionOnUUID)) {
+                                    c.actionOnUUID = replaceUUID.get(c.actionOnUUID);
+                                }
+                            }
+                        }
+                    }*/
+                    Array<Command> unpacked = new Array<>();
+                    if (commandArray != null) {
+                        for (int i = 0; i < commandArray.size; i++) {
+                            Command command = deserialize(commandArray.get(i), Command.class);
+                            unpacked.add(command);
+                        }
+                    }
+                    unpacked.sort(new Comparator<Command>() {
+                        @Override
+                        public int compare(Command o1, Command o2) {
+                            if (o1.framePos < o2.framePos) {
+                                return -1;
+                            } else if (o1.framePos == o2.framePos && o1.arrayPos < o2.arrayPos) {
+                                return -1;
+                            } else return 1;
+                        }
+                    });
+                    for (Command c : unpacked) {
+                        Command.insert(c.framePos, c, Command.getBaseObject(c.actionOnUUID));
+                    }
                     SunshineBlue.nativeNet.doneSavingScene(cid, val.getString("screenshot"));
                     try {
                         SunshineBlue.instance.bgColor.set(val.getInt("bgColor"));
                     } catch (Exception e) {
                     }
                     try {
-                        SunshineBlue.instance.viewport.getCamera().position.set(val.getFloat("cam_position_x"),val.getFloat("cam_position_y"),val.getFloat("cam_position_z"));
-                        ((OrthographicCamera)SunshineBlue.instance.viewport.getCamera()).zoom=val.getFloat("cam_zoom");
+                        SunshineBlue.instance.viewport.getCamera().position.set(val.getFloat("cam_position_x"), val.getFloat("cam_position_y"), val.getFloat("cam_position_z"));
+                        ((OrthographicCamera) SunshineBlue.instance.viewport.getCamera()).zoom = val.getFloat("cam_zoom");
                     } catch (Exception e) {
                     }
                     deserializeScene(val, merge);
@@ -125,23 +167,34 @@ public class SerializeUtil {
 
     public static void save(IPFSCIDListener ipfscidListener) {
         SunshineBlue.instance.batch.begin();
-        SunshineBlue.instance.takingScreenshot=true;
+        SunshineBlue.instance.takingScreenshot = true;
         Pixmap screenshot = FrameBufferUtils.drawObjectsPix(SunshineBlue.instance.batch, SunshineBlue.instance.viewport, SunshineBlue.instance.userObjects, 400 * SunshineBlue.instance.viewport.getScreenWidth() / SunshineBlue.instance.viewport.getScreenHeight(), 400, true);
-        SunshineBlue.instance.takingScreenshot=false;
+        SunshineBlue.instance.takingScreenshot = false;
         SunshineBlue.instance.batch.end();
         JsonValue val = serializeScene();
+
+        Array<Command> packed = new Array<>();
+        for (Map.Entry<Integer, Array<Command>> entry : SunshineBlue.instance.commands.entrySet()) {
+            int cnt = 0;
+            for (Command c : entry.getValue()) {
+                c.framePos = entry.getKey();
+                c.arrayPos = cnt++;
+                packed.add(c);
+            }
+        }
+        val.addChild("commands", jsonReader.parse(json.toJson(packed)));
         IPFSUtils.uploadPngtoIPFS(screenshot, new IPFSCIDListener() {
             @Override
             public void cid(String cid) {
                 val.addChild("screenshot", new JsonValue(cid));
                 val.addChild("bgColor", new JsonValue(Color.rgb888(SunshineBlue.instance.bgColor)));
-                val.addChild("cam_zoom",new JsonValue(((OrthographicCamera)SunshineBlue.instance.viewport.getCamera()).zoom));
-                val.addChild("cam_position_x",new JsonValue(SunshineBlue.instance.viewport.getCamera().position.x));
-                val.addChild("cam_position_y",new JsonValue(SunshineBlue.instance.viewport.getCamera().position.y));
-                val.addChild("cam_position_z",new JsonValue(SunshineBlue.instance.viewport.getCamera().position.z));
+                val.addChild("cam_zoom", new JsonValue(((OrthographicCamera) SunshineBlue.instance.viewport.getCamera()).zoom));
+                val.addChild("cam_position_x", new JsonValue(SunshineBlue.instance.viewport.getCamera().position.x));
+                val.addChild("cam_position_y", new JsonValue(SunshineBlue.instance.viewport.getCamera().position.y));
+                val.addChild("cam_position_z", new JsonValue(SunshineBlue.instance.viewport.getCamera().position.z));
 
-                SunshineBlue.instance.viewport.getCamera().position.set(val.getFloat("cam_position_x"),val.getFloat("cam_position_y"),val.getFloat("cam_position_z"));
-                ((OrthographicCamera)SunshineBlue.instance.viewport.getCamera()).zoom=val.getFloat("cam_zoom");
+                SunshineBlue.instance.viewport.getCamera().position.set(val.getFloat("cam_position_x"), val.getFloat("cam_position_y"), val.getFloat("cam_position_z"));
+                ((OrthographicCamera) SunshineBlue.instance.viewport.getCamera()).zoom = val.getFloat("cam_zoom");
                 SunshineBlue.nativeNet.uploadIPFS(val.toJson(JsonWriter.OutputType.javascript).getBytes(StandardCharsets.UTF_8), new IPFSCIDListener() {
                     @Override
                     public void cid(String cid) {
@@ -186,15 +239,20 @@ public class SerializeUtil {
 
         JsonValue array = new JsonValue(JsonValue.ValueType.array);
         val.addChild("userObjects", array);
+
         for (BaseObject bo : SunshineBlue.instance.userObjects) {
 //            if (bo instanceof ScreenObject) {
 //                ((ScreenObject) bo).sd.layer = cnt++;
 //            }
             Gdx.app.log("scene", "adding:" + bo.getClass());
             JsonValue temp = ((SerialInterface) bo).serialize();
-            temp.addChild("UUID",new JsonValue(bo.uuid));
+            String newuuid = UUID.randomUUID().toString();
+            temp.addChild("UUID", new JsonValue(newuuid));
+            bo.uuid = newuuid;
             array.addChild(temp);
         }
+
+
         Gdx.app.log("scene", "serialized");
         return val;
     }

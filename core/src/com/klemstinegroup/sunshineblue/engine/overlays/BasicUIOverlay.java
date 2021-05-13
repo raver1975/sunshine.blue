@@ -71,7 +71,6 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 SerializeUtil.save();
-                SerializeUtil.save();
             }
         });
         stage.addActor(saveButton);
