@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 public class Statics {
 
 
+    public static int RECMAXFRAMES = 600;
     public static String IPFSGateway = "https://ipfs.io/ipfs/";
     public static final String CORSGateway="https://api.codetabs.com/v1/proxy?quest=";
     public static String IPFSMediaViewer="Qmd98X8gq4j722Zvy6Hmx4UEzCmyQP4pdREggjiF2dYZMQ";

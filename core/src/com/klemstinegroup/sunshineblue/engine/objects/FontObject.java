@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.commands.Command;
 import com.klemstinegroup.sunshineblue.engine.commands.Move;
+import com.klemstinegroup.sunshineblue.engine.commands.Undo;
 import com.klemstinegroup.sunshineblue.engine.data.FontData;
 import com.klemstinegroup.sunshineblue.engine.data.ScreenData;
 import com.klemstinegroup.sunshineblue.engine.overlays.Drawable;
@@ -227,8 +228,9 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
         ftemp.uuid=json.getString("UUID", ftemp.uuid);
         SunshineBlue.addUserObj(ftemp);
         for (int i=0;i<100;i++){
-            Command.insert(i*10,new Move(new Vector2(0,0),ftemp.uuid));
-            Command.insert(5+i*10,new Move(new Vector2(100,100),ftemp.uuid));
+            Command move=new Move(new Vector2(0,0),ftemp.uuid);
+            Command.insert(i*10,move,ftemp);
+            Command.insert(5+i*10,new Undo(move),ftemp);
         }
     }
 

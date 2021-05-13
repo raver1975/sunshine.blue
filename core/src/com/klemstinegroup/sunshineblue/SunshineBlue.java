@@ -8,10 +8,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
@@ -75,10 +72,11 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public float colorFlash = 0;
     private float delta = 1;
     public Color bgColor = Color.CLEAR;
-    public HashMap<Integer,Array<Command>> commands=new HashMap<>();
+    public HashMap<Integer, Array<Command>> commands = new HashMap<>();
     public int frameCount;
     public int lastframeCount;
     private long startTime;
+    private GlyphLayout glyphLayout;
 
 //    private int dstFunc;
 //    private int srcFunc;
@@ -120,6 +118,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public void create() {
         Gdx.app.log("create", "started");
         font = new BitmapFont();
+        glyphLayout = new GlyphLayout();
 
         overlayViewport = new StretchViewport((550f * Gdx.graphics.getWidth() / Gdx.graphics.getHeight()), 550);
        /* Net.HttpRequest req = new Net.HttpRequest("GET");
@@ -244,7 +243,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
                 loadCid = prefs.getString("current");
                 if (loadCid == null || loadCid.isEmpty()) {
                     loadCid = Statics.splashCID;
-                    autoload=true;
+                    autoload = true;
                 }
 
             }
@@ -261,29 +260,29 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 //        }
 
         ParticleUtil.getParticleFiles();
-        startTime=TimeUtils.millis();
+        startTime = TimeUtils.millis();
     }
 
 
     @Override
     public void render() {
         if (autoload && TimeUtils.millis() > autoloadtime) {
-            Gdx.app.log("autoload","");
+            Gdx.app.log("autoload", "");
             autoloadtime = TimeUtils.millis() + 10000;
             if (otherCIDS.size() > 0) {
                 if (otherCIDS.size() == autoloaded.size) {
                     autoloaded.clear();
                 }
-                while(true) {
+                while (true) {
                     int otherIndex = MathUtils.random(otherCIDS.size() - 1);
                     Iterator<Map.Entry<String, String>> iter = otherCIDS.entrySet().iterator();
                     for (int i = 0; i < otherIndex; i++) {
                         iter.next();
                     }
                     Map.Entry<String, String> entry = iter.next();
-                    if (!autoloaded.contains(entry.getKey(),false)){
+                    if (!autoloaded.contains(entry.getKey(), false)) {
                         autoloaded.add(entry.getKey());
-                        SerializeUtil.load(entry.getKey(),false);
+                        SerializeUtil.load(entry.getKey(), false);
                         break;
                     }
                 }
@@ -293,11 +292,11 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         }
 
         delta = isRecording ? (1f / fps) : Gdx.graphics.getDeltaTime();
-        frameCount= (int) ((TimeUtils.millis()-startTime)/(1000/fps));
-        if (frameCount!=lastframeCount){
-            System.out.println(frameCount/fps);
-            Array<Command> commandstoexec=commands.get(frameCount);
-            if(commandstoexec!=null) {
+        frameCount = (int) ((TimeUtils.millis() - startTime) / (1000 / fps));
+        if (frameCount != lastframeCount) {
+            System.out.println(frameCount / fps);
+            Array<Command> commandstoexec = commands.get(frameCount);
+            if (commandstoexec != null) {
                 for (Command c : commandstoexec) {
                     c.execute();
                 }
@@ -407,11 +406,15 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         if (overlay != null) {
             ((Drawable) overlay).draw(batch, delta);
         }
+        String text = "" + frameCount + " / " + Statics.RECMAXFRAMES;
+        glyphLayout.setText(font, text);
+        font.draw(batch, text, SunshineBlue.instance.overlayViewport.getWorldWidth() - glyphLayout.width - 10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 10);
         batch.setTransformMatrix(mx4Batch);
         if (isRecording) {
-            font.draw(batch, "" + (recCounter / 10f), 10, 10);
+            font.draw(batch,""+(recCounter/10f),0,0);
         }
         batch.end();
+
         //------------------------------------------------------------
 
         //------------------------------------------------------------
@@ -642,7 +645,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public void startRecording() {
 //        Gdx.graphics.setContinuousRendering(false);
         isRecording = true;
-        recCounter = 300;
+        recCounter = Statics.RECMAXFRAMES;
         apng = new IncrementalAnimatedPNG();
         apng.setFlipY(true);
         mfh = new MemoryFileHandle();
