@@ -5,26 +5,25 @@ import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
 
 import java.util.Objects;
 
-public class Move implements Command {
+public class Move extends Command {
     Vector2 oldPosition = new Vector2();
     Vector2 newPosition = new Vector2();
-    String uuid;
 //    boolean relative;
 
     public Move(Vector2 newPosition, String uuid) {
         this.oldPosition.set(((ScreenObject) Command.getBaseObject(uuid)).sd.position);
         this.newPosition = newPosition;
-        this.uuid = uuid;
+        this.actionOnUUID = uuid;
     }
 
     @Override
     public void execute() {
-        ((ScreenObject) Command.getBaseObject(uuid)).sd.position.set(this.newPosition);
+        ((ScreenObject) Command.getBaseObject(actionOnUUID)).sd.position.set(this.newPosition);
     }
 
     @Override
     public void undo() {
-        ((ScreenObject) Command.getBaseObject(uuid)).sd.position.set(this.oldPosition);
+        ((ScreenObject) Command.getBaseObject(actionOnUUID)).sd.position.set(this.oldPosition);
     }
 
     @Override
@@ -32,11 +31,11 @@ public class Move implements Command {
         if (this == o) return true;
         if (!(o instanceof Move)) return false;
         Move move = (Move) o;
-        return newPosition.equals(move.newPosition) && uuid.equals(move.uuid);
+        return newPosition.equals(move.newPosition) && actionOnUUID.equals(move.actionOnUUID);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(newPosition, uuid);
+        return Objects.hash(newPosition, actionOnUUID);
     }
 }

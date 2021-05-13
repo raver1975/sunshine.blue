@@ -2,7 +2,7 @@ package com.klemstinegroup.sunshineblue.engine.commands;
 
 import java.util.Objects;
 
-public class Undo implements Command{
+public class Undo extends Command{
 
     Command command;
 

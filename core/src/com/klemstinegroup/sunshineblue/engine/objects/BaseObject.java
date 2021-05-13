@@ -12,7 +12,6 @@ public class BaseObject implements SerialInterface {
   public boolean regen=true;
   protected String cid;
   public String uuid= UUID.randomUUID().toString();
-  public Array<Command> commands=new Array<Command>();
 
   @Override
   public JsonValue serialize() {

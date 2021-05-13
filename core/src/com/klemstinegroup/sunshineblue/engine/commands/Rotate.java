@@ -1,6 +1,6 @@
 package com.klemstinegroup.sunshineblue.engine.commands;
 
-public class Rotate implements Command{
+public class Rotate extends Command{
     @Override
     public void execute() {
 

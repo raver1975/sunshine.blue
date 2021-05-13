@@ -2,7 +2,7 @@ package com.klemstinegroup.sunshineblue.engine.commands;
 
 import java.util.Objects;
 
-public class Redo implements Command{
+public class Redo extends Command{
 
     Command command;
 
