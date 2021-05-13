@@ -195,7 +195,14 @@ public class SerializeUtil {
 
                 SunshineBlue.instance.viewport.getCamera().position.set(val.getFloat("cam_position_x"), val.getFloat("cam_position_y"), val.getFloat("cam_position_z"));
                 ((OrthographicCamera) SunshineBlue.instance.viewport.getCamera()).zoom = val.getFloat("cam_zoom");
-                SunshineBlue.nativeNet.uploadIPFS(val.toJson(JsonWriter.OutputType.javascript).getBytes(StandardCharsets.UTF_8), new IPFSCIDListener() {
+                //replace uuids
+                String out=val.toJson(JsonWriter.OutputType.javascript);
+                for (BaseObject bo:SunshineBlue.instance.userObjects){
+                    String nuuid=UUID.randomUUID().toString();
+                    out=out.replaceAll(bo.uuid,nuuid);
+                }
+
+                SunshineBlue.nativeNet.uploadIPFS(out.getBytes(StandardCharsets.UTF_8), new IPFSCIDListener() {
                     @Override
                     public void cid(String cid) {
                         if (cid != null && !cid.isEmpty()) {
@@ -246,9 +253,7 @@ public class SerializeUtil {
 //            }
             Gdx.app.log("scene", "adding:" + bo.getClass());
             JsonValue temp = ((SerialInterface) bo).serialize();
-            String newuuid = UUID.randomUUID().toString();
-            temp.addChild("UUID", new JsonValue(newuuid));
-            bo.uuid = newuuid;
+            temp.addChild("UUID", new JsonValue(bo.uuid));
             array.addChild(temp);
         }
 
