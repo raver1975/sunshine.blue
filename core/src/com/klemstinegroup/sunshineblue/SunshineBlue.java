@@ -75,11 +75,12 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public Color bgColor = Color.CLEAR;
     public HashMap<Integer, Array<Command>> commands = new HashMap<>();
     public int frameCount;
-    public int loopStart=0;
-    public int loopEnd=Statics.RECMAXFRAMES;
+    public int loopStart = 0;
+    public int loopEnd = Statics.RECMAXFRAMES;
     public int lastframeCount;
     private long startTime;
     private GlyphLayout glyphLayout;
+//    public Stack<Command> commandStack = new Stack<>();
 
 //    private int dstFunc;
 //    private int srcFunc;
@@ -296,8 +297,22 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         }
 
         delta = isRecording ? (1f / fps) : Gdx.graphics.getDeltaTime();
-        frameCount = ((int) ((TimeUtils.millis() - startTime) / (1000 / fps)))%Statics.RECMAXFRAMES;
+        frameCount = ((int) ((TimeUtils.millis() - startTime) / (1000f / fps)));
         if (frameCount != lastframeCount) {
+            if (frameCount > loopEnd) {
+                for (int i = frameCount; i >= loopStart; i--) {
+                    Array<Command> subcomms = commands.get(i);
+                    if (subcomms != null) {
+                        for (int j = subcomms.size - 1; j >= 0; j--) {
+                            subcomms.get(j).undo();
+                        }
+                    }
+                }
+                frameCount = loopStart;
+                startTime = TimeUtils.millis() - (long) ((frameCount * 1000f) / fps);
+                System.out.println("Framecnt:" + frameCount + "\t" + startTime);
+            }
+
             System.out.println(frameCount / fps);
             Array<Command> commandstoexec = commands.get(frameCount);
             if (commandstoexec != null) {
@@ -306,6 +321,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
                 }
             }
         }
+        lastframeCount = frameCount;
         colorFlash += delta / 3f;
         if (colorFlash > .4f) {
             colorFlash = 0;
@@ -410,12 +426,21 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         if (overlay != null) {
             ((Drawable) overlay).draw(batch, delta);
         }
-        String text = "" + frameCount + " / " + Statics.RECMAXFRAMES;
+        String text = loopStart + " / " + frameCount + " / " + loopEnd;
         glyphLayout.setText(font, text);
+        batch.setColor(Color.WHITE);
+//        shapedrawer.setDefaultLineWidth(8);
+//        shapedrawer.line(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 5, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20), SunshineBlue.instance.overlayViewport.getWorldHeight() - 5);
+        shapedrawer.setColor(Color.RED);
+        shapedrawer.setDefaultLineWidth(4);
+        shapedrawer.line(10+(SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (loopStart) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 5, 10+(SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (loopEnd) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 5);
+        shapedrawer.setColor(Color.WHITE);
+        shapedrawer.setDefaultLineWidth(2);
+        shapedrawer.line(10+(SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (frameCount) / (float) (Statics.RECMAXFRAMES)),SunshineBlue.instance.overlayViewport.getWorldHeight()-2,10+(SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (frameCount) / (float) (Statics.RECMAXFRAMES)),SunshineBlue.instance.overlayViewport.getWorldHeight() - 10);
         font.draw(batch, text, SunshineBlue.instance.overlayViewport.getWorldWidth() - glyphLayout.width - 10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 10);
         batch.setTransformMatrix(mx4Batch);
         if (isRecording) {
-            font.draw(batch,""+(recCounter/10f),0,0);
+            font.draw(batch, "" + (recCounter / 10f), 0, 0);
         }
         batch.end();
 

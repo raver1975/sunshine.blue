@@ -6,16 +6,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.JsonValue;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.commands.Command;
 import com.klemstinegroup.sunshineblue.engine.commands.MoveCommand;
-import com.klemstinegroup.sunshineblue.engine.commands.Undo;
+import com.klemstinegroup.sunshineblue.engine.commands.UndoCommand;
 import com.klemstinegroup.sunshineblue.engine.data.FontData;
 import com.klemstinegroup.sunshineblue.engine.data.ScreenData;
 import com.klemstinegroup.sunshineblue.engine.overlays.Drawable;
@@ -227,11 +224,11 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
         FontObject ftemp=new FontObject(fd1, sd1);
         ftemp.uuid=json.getString("UUID", ftemp.uuid);
         SunshineBlue.addUserObj(ftemp);
-//        for (int i=0;i<100;i++){
-//            Command move=new MoveCommand(new Vector2(10,10),ftemp.uuid);
-//            Command.insert(i*10,move,ftemp);
-//            Command.insert(5+i*10,new Undo(move),ftemp);
-//        }
+        for (int i=0;i<100;i++){
+            Command move1=new MoveCommand(new Vector2(10,10),ftemp.uuid);
+            Command.insert(i*10,move1,ftemp);
+//            Command.insert(MathUtils.random(30) +i*10,new UndoCommand(move1),ftemp);
+        }
     }
 
     @Override

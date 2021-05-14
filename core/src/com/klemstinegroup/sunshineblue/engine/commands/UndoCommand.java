@@ -2,12 +2,12 @@ package com.klemstinegroup.sunshineblue.engine.commands;
 
 import java.util.Objects;
 
-public class Undo extends Command{
+public class UndoCommand extends Command{
 
     Command command;
 
-    public Undo(){}
-    public Undo(Command command){
+    public UndoCommand(){}
+    public UndoCommand(Command command){
         this.command=command;
     }
 
@@ -24,8 +24,8 @@ public class Undo extends Command{
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Undo)) return false;
-        Undo undo = (Undo) o;
+        if (!(o instanceof UndoCommand)) return false;
+        UndoCommand undo = (UndoCommand) o;
         return command.equals(undo.command);
     }
 
