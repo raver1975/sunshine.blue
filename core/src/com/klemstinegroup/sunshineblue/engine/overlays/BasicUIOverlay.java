@@ -101,7 +101,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         });
         stage.addActor(popButton);
 
-        Actor apngButton = new TextButton("Rec", skin);
+        Actor apngButton = new TextButton("GIF", skin);
         apngButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 240);
         apngButton.addListener(new ClickListener() {
 
@@ -239,6 +239,8 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                                         SunshineBlue.removeUserObj(i.next());
                                     }
                                     SunshineBlue.instance.userObjects.clear();
+                                    SunshineBlue.instance.selectedObjects.clear();
+                                    SunshineBlue.instance.commands.clear();
                                     Overlay.setOverlay(SunshineBlue.instance.BASIC_UI_OVERLAY);
 //                                    Preferences prefs = Gdx.app.getPreferences("scenes");
 //                                    prefs.remove(cid);

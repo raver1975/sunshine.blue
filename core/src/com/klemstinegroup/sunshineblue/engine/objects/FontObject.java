@@ -224,11 +224,10 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
         FontObject ftemp=new FontObject(fd1, sd1);
         ftemp.uuid=json.getString("UUID", ftemp.uuid);
         SunshineBlue.addUserObj(ftemp);
-        for (int i=0;i<100;i++){
-            Command move1=new MoveCommand(new Vector2(10,10),ftemp.uuid);
-            Command.insert(i*10,move1,ftemp);
-//            Command.insert(MathUtils.random(30) +i*10,new UndoCommand(move1),ftemp);
-        }
+//        for (int i=0;i<100;i++){
+//            Command move1=new MoveCommand(new Vector2(10,10),ftemp.uuid);
+//            Command.insert(i*10,move1,ftemp);
+//        }
     }
 
     @Override

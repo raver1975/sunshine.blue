@@ -15,6 +15,7 @@ public class MoveCommand extends Command {
 //        this.oldPosition.set(((ScreenObject) Command.getBaseObject(uuid)).sd.position);
         this.delta = delta;
         this.actionOnUUID = uuid;
+        System.out.println(delta+"/t"+actionOnUUID);
     }
 
     @Override
@@ -24,6 +25,7 @@ public class MoveCommand extends Command {
         if (bo!=null) {
             ((ScreenObject) bo).sd.position.add(this.delta);
         }
+        System.out.println("move:"+this.delta.x+","+this.delta.y);
     }
 
     @Override

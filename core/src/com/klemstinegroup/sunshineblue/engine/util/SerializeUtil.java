@@ -154,6 +154,14 @@ public class SerializeUtil {
                         ((OrthographicCamera) SunshineBlue.instance.viewport.getCamera()).zoom = val.getFloat("cam_zoom");
                     } catch (Exception e) {
                     }
+                    if (!merge) {
+                        try {
+                            Statics.RECMAXFRAMES = val.getInt("looplength");
+                            SunshineBlue.instance.loopEnd = Statics.RECMAXFRAMES;
+                        } catch (Exception e) {
+
+                        }
+                    }
                     deserializeScene(val, merge);
                 }
             }
@@ -192,14 +200,15 @@ public class SerializeUtil {
                 val.addChild("cam_position_x", new JsonValue(SunshineBlue.instance.viewport.getCamera().position.x));
                 val.addChild("cam_position_y", new JsonValue(SunshineBlue.instance.viewport.getCamera().position.y));
                 val.addChild("cam_position_z", new JsonValue(SunshineBlue.instance.viewport.getCamera().position.z));
+                val.addChild("loopLength", new JsonValue(Statics.RECMAXFRAMES));
 
                 SunshineBlue.instance.viewport.getCamera().position.set(val.getFloat("cam_position_x"), val.getFloat("cam_position_y"), val.getFloat("cam_position_z"));
                 ((OrthographicCamera) SunshineBlue.instance.viewport.getCamera()).zoom = val.getFloat("cam_zoom");
                 //replace uuids
-                String out=val.toJson(JsonWriter.OutputType.javascript);
-                for (BaseObject bo:SunshineBlue.instance.userObjects){
-                    String nuuid=UUID.randomUUID().toString();
-                    out=out.replaceAll(bo.uuid,nuuid);
+                String out = val.toJson(JsonWriter.OutputType.javascript);
+                for (BaseObject bo : SunshineBlue.instance.userObjects) {
+                    String nuuid = UUID.randomUUID().toString();
+                    out = out.replaceAll(bo.uuid, nuuid);
                 }
 
                 SunshineBlue.nativeNet.uploadIPFS(out.getBytes(StandardCharsets.UTF_8), new IPFSCIDListener() {

@@ -17,6 +17,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
+import com.klemstinegroup.sunshineblue.engine.commands.Command;
+import com.klemstinegroup.sunshineblue.engine.commands.MoveCommand;
 import com.klemstinegroup.sunshineblue.engine.objects.*;
 import com.klemstinegroup.sunshineblue.engine.util.ColorHelper;
 import com.klemstinegroup.sunshineblue.engine.util.IPFSCIDListener;
@@ -30,9 +32,11 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
     public final Stage stage;
     private final Group transformGroup;
     private final ButtonGroup<CheckBox> transformButtons;
+    private final CheckBox recButton;
     public int transformButton;
     Vector2 touchdrag = new Vector2();
     Vector2 touchdown = new Vector2();
+    Vector2 tempVec=new Vector2();
     Array<CheckBox> checkBoxArray = new Array<>();
 
     public TransformOverlay() {
@@ -95,6 +99,18 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
         });
         downArrow.setPosition(10, 260);
         stage.addActor(downArrow);
+
+        recButton = new CheckBox("Rec", skin, "switch");
+        recButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (recButton.isChecked()) {
+                } else {
+                }
+            }
+        });
+        recButton.setPosition(10, 380);
+        stage.addActor(recButton);
 
         TextButton upArrow = new TextButton("^", skin);
         upArrow.addListener(new ChangeListener() {
@@ -235,7 +251,11 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                 ScreenObject so = ((ScreenObject) bo);
                 switch (transformButton) {
                     case 0:
-                        so.sd.position.add(touchdrag.cpy().sub(touchdown));
+                        tempVec.set(touchdrag.cpy().sub(touchdown));
+                        if (recButton.isChecked()){
+                            Command.insert(new MoveCommand(tempVec.cpy(),bo.uuid),bo);
+                        }
+                        so.sd.position.add(tempVec);
                         break;
                     case 1:
                         so.sd.rotation += touchdrag.x - touchdown.x;

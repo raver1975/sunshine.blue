@@ -306,14 +306,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
         if (frameCount != lastframeCount) {
             if (frameCount > loopEnd) {
-                for (int i = frameCount; i >= loopStart; i--) {
-                    Array<Command> subcomms = commands.get(i);
-                    if (subcomms != null) {
-                        for (int j = subcomms.size - 1; j >= 0; j--) {
-                            subcomms.get(j).undo();
-                        }
-                    }
-                }
+                Command.setToFrame(loopStart);
                 frameCount = loopStart;
                 startTime = TimeUtils.millis() - (long) ((frameCount * 1000f) / fps);
                 System.out.println("Framecnt:" + frameCount + "\t" + startTime);
@@ -679,7 +672,12 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
     public void startRecording() {
 //        Gdx.graphics.setContinuousRendering(false);
+        loopStart=0;
+        loopEnd=Statics.RECMAXFRAMES;
+        pauseLoop=false;
+        Command.setToFrame(0);
         isRecording = true;
+
         recCounter = Statics.RECMAXFRAMES;
         apng = new IncrementalAnimatedPNG();
         apng.setFlipY(true);
