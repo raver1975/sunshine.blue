@@ -19,6 +19,8 @@ import com.badlogic.gdx.utils.Array;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.commands.Command;
 import com.klemstinegroup.sunshineblue.engine.commands.MoveCommand;
+import com.klemstinegroup.sunshineblue.engine.commands.RotateCommand;
+import com.klemstinegroup.sunshineblue.engine.commands.ScaleCommand;
 import com.klemstinegroup.sunshineblue.engine.objects.*;
 import com.klemstinegroup.sunshineblue.engine.util.ColorHelper;
 import com.klemstinegroup.sunshineblue.engine.util.IPFSCIDListener;
@@ -258,10 +260,18 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                         so.sd.position.add(tempVec);
                         break;
                     case 1:
-                        so.sd.rotation += touchdrag.x - touchdown.x;
+                        float rot=touchdrag.x - touchdown.x;
+                        if (recButton.isChecked()){
+                            Command.insert(new RotateCommand(rot,bo.uuid),bo);
+                        }
+                        so.sd.rotation +=rot;
                         break;
                     case 2:
-                        so.sd.scale += (touchdrag.x - touchdown.x) / 200f;
+                        float scal=(touchdrag.x - touchdown.x) / 200f;
+                        if (recButton.isChecked()){
+                            Command.insert(new ScaleCommand(scal,bo.uuid),bo);
+                        }
+                        so.sd.scale += scal;
                         break;
                     case 3:
                         so.recenter(touchdown.cpy());

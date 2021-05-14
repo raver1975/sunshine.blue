@@ -313,6 +313,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
             }
 
             System.out.println(frameCount / fps);
+            Command.compress(frameCount);
             Array<Command> commandstoexec = commands.get(frameCount);
             if (commandstoexec != null) {
                 for (Command c : commandstoexec) {

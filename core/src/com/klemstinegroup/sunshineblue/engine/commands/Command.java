@@ -3,14 +3,52 @@ package com.klemstinegroup.sunshineblue.engine.commands;
 import com.badlogic.gdx.utils.Array;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
-import sun.security.provider.Sun;
+import com.klemstinegroup.sunshineblue.engine.util.UUID;
+
+import java.util.Objects;
 
 public abstract class Command {
     public String actionOnUUID;
+    transient String uuid= UUID.randomUUID().toString();
     public int framePos = 0;
     public int arrayPos = 0;
 
     public Command() {
+    }
+
+    public abstract void execute();
+
+    public abstract void undo();
+
+    public abstract boolean compress(Command command);
+
+    public static void compress(int frame) {
+        Array<Command> subcom = SunshineBlue.instance.commands.get(frame);
+        if (subcom!=null) {
+            int s = subcom.size;
+            int kk=0;
+
+            while  (kk<subcom.size) {
+                Command c1=subcom.get(kk);
+                Array<Command> remove = new Array<>();
+                for (int i=kk+1;i<subcom.size;i++) {
+                    Command c2=subcom.get(i);
+                    if (!c1.actionOnUUID.equals(c2.actionOnUUID)) {
+                        continue;
+                    }
+                    if (c1.getClass().toString().equals(c2.getClass().toString())) {
+                        if (c1.compress(c2)) {
+                            remove.add(c2);
+                        }
+                    }
+                }
+//                kk-=remove.size;
+                subcom.removeAll(remove, false);
+                kk++;
+            }
+
+            System.out.println("size old:" + s + "\tnew:" + subcom.size);
+        }
     }
 
     public static void insert(Command command, BaseObject bo) {
@@ -40,10 +78,6 @@ public abstract class Command {
             }
         }
     }
-
-    public abstract void execute();
-
-    public abstract void undo();
 
     public static BaseObject getBaseObject(String uuid) {
         for (BaseObject bo : SunshineBlue.instance.userObjects) {
@@ -79,5 +113,18 @@ public abstract class Command {
             }
         }
         array.removeAll(remove, false);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Command)) return false;
+        Command command = (Command) o;
+        return uuid.equals(command.uuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid);
     }
 }

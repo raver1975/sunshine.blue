@@ -22,15 +22,7 @@ public class UndoCommand extends Command{
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof UndoCommand)) return false;
-        UndoCommand undo = (UndoCommand) o;
-        return command.equals(undo.command);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(command);
+    public boolean compress(Command command) {
+        return false;
     }
 }
