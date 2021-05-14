@@ -80,6 +80,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public int lastframeCount;
     private long startTime;
     private GlyphLayout glyphLayout;
+    public boolean pauseLoop = false;
 //    public Stack<Command> commandStack = new Stack<>();
 
 //    private int dstFunc;
@@ -297,7 +298,12 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         }
 
         delta = isRecording ? (1f / fps) : Gdx.graphics.getDeltaTime();
-        frameCount = ((int) ((TimeUtils.millis() - startTime) / (1000f / fps)));
+        if (!pauseLoop) {
+            frameCount = ((int) ((TimeUtils.millis() - startTime) / (1000f / fps)));
+        } else {
+            startTime = TimeUtils.millis() - (long) ((frameCount * 1000f) / fps);
+        }
+
         if (frameCount != lastframeCount) {
             if (frameCount > loopEnd) {
                 for (int i = frameCount; i >= loopStart; i--) {
@@ -433,10 +439,10 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 //        shapedrawer.line(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 5, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20), SunshineBlue.instance.overlayViewport.getWorldHeight() - 5);
         shapedrawer.setColor(Color.RED);
         shapedrawer.setDefaultLineWidth(4);
-        shapedrawer.line(10+(SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (loopStart) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 5, 10+(SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (loopEnd) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 5);
+        shapedrawer.line(10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (loopStart) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 5, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (loopEnd) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 5);
         shapedrawer.setColor(Color.WHITE);
         shapedrawer.setDefaultLineWidth(2);
-        shapedrawer.line(10+(SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (frameCount) / (float) (Statics.RECMAXFRAMES)),SunshineBlue.instance.overlayViewport.getWorldHeight()-2,10+(SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (frameCount) / (float) (Statics.RECMAXFRAMES)),SunshineBlue.instance.overlayViewport.getWorldHeight() - 10);
+        shapedrawer.line(10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (frameCount) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 2, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (frameCount) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 10);
         font.draw(batch, text, SunshineBlue.instance.overlayViewport.getWorldWidth() - glyphLayout.width - 10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 10);
         batch.setTransformMatrix(mx4Batch);
         if (isRecording) {

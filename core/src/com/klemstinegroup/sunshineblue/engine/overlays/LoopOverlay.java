@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.colorpicker.DialogColorPicker;
 import com.klemstinegroup.sunshineblue.colorpicker.Spinner;
@@ -48,6 +49,17 @@ public class LoopOverlay extends ScreenObject implements Overlay, Touchable, Dra
         });
         stage.addActor(exitButton);
 
+        CheckBox pauseCB=new CheckBox("Pause",skin,"switch");
+        pauseCB.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                SunshineBlue.instance.pauseLoop=pauseCB.isChecked();
+//                SunshineBlue.instance.autoloadtime= TimeUtils.millis();
+            }
+        });
+        pauseCB.setPosition(10,10);
+        pauseCB.setChecked(SunshineBlue.instance.pauseLoop);
+        stage.addActor(pauseCB);
 
         SunshineBlue.instance.assetManager.finishLoadingAsset("skin-composer-ui/skin-composer-ui.json");
         Skin skin1 = SunshineBlue.instance.assetManager.get("skin-composer-ui/skin-composer-ui.json", Skin.class);
@@ -99,7 +111,7 @@ public class LoopOverlay extends ScreenObject implements Overlay, Touchable, Dra
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (sliderLoopStart.getValue()>= sliderLoopEnd.getValue()){
-                    sliderLoopStart.setValue(sliderLoopEnd.getValue()-1);
+                    sliderLoopStart.setValue(sliderLoopEnd.getValue());
                 }
                 SunshineBlue.instance.loopStart= (int) sliderLoopStart.getValue();
             }
@@ -115,7 +127,7 @@ public class LoopOverlay extends ScreenObject implements Overlay, Touchable, Dra
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (sliderLoopStart.getValue()>= sliderLoopEnd.getValue()){
-                    sliderLoopEnd.setValue(sliderLoopStart.getValue()+1);
+                    sliderLoopEnd.setValue(sliderLoopStart.getValue());
                 }
                 SunshineBlue.instance.loopEnd= (int) sliderLoopEnd.getValue();
             }
