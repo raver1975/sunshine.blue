@@ -393,6 +393,18 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
             }
         });
         stage.addActor(fxButton);
+        Actor loopButton = new TextButton("Loop", skin);
+        loopButton.setPosition(70, 70);
+        loopButton.addListener(new ClickListener() {
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                Overlay.setOverlay(SunshineBlue.instance.LOOP_OVERLAY);
+            }
+        });
+        stage.addActor(loopButton);
+
         Actor backgroundButton = new TextButton("BG", skin);
         backgroundButton.setPosition(10, 70);
         backgroundButton.addListener(new ClickListener() {

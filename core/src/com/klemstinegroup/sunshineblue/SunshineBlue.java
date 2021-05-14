@@ -47,6 +47,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public BlankOverlay BLANK_OVERLAY;
     public ParticleOverlay PARTICLE_OVERLAY;
     public BackgroundOverlay BACKGROUND_OVERLAY;
+    public LoopOverlay LOOP_OVERLAY;
     public Batch batch;
     public BitmapFont font;
     public Overlay overlay = null;
@@ -74,6 +75,8 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public Color bgColor = Color.CLEAR;
     public HashMap<Integer, Array<Command>> commands = new HashMap<>();
     public int frameCount;
+    public int loopStart=0;
+    public int loopEnd=Statics.RECMAXFRAMES;
     public int lastframeCount;
     private long startTime;
     private GlyphLayout glyphLayout;
@@ -174,6 +177,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         BLANK_OVERLAY = new BlankOverlay();
         PARTICLE_OVERLAY = new ParticleOverlay();
         BACKGROUND_OVERLAY = new BackgroundOverlay();
+        LOOP_OVERLAY = new LoopOverlay();
         Gdx.input.setCatchKey(Input.Keys.BACK, true);
         Gdx.input.setCatchKey(Input.Keys.ESCAPE, true);
 //        VisUI.load(VisUI.SkinScale.X2);
