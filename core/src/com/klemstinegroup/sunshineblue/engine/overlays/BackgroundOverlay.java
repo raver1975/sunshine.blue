@@ -2,6 +2,7 @@ package com.klemstinegroup.sunshineblue.engine.overlays;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
@@ -10,8 +11,16 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.TimeUtils;
+import com.crashinvaders.vfx.effects.*;
+import com.crashinvaders.vfx.effects.util.CopyEffect;
+import com.crashinvaders.vfx.effects.util.GammaThresholdEffect;
+import com.crashinvaders.vfx.effects.util.MixEffect;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.colorpicker.DialogColorPicker;
 import com.klemstinegroup.sunshineblue.colorpicker.Spinner;
@@ -19,7 +28,6 @@ import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
 import com.klemstinegroup.sunshineblue.engine.objects.DrawObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
 import com.klemstinegroup.sunshineblue.engine.util.ColorHelper;
-
 
 public class BackgroundOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
 
@@ -91,7 +99,7 @@ public class BackgroundOverlay extends ScreenObject implements Overlay, Touchabl
         slider = new Slider(.01f, 10, .01f, true, skin);
         slider.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 40, 80);
         slider.setSize(20, SunshineBlue.instance.overlayViewport.getWorldHeight() - 150);
-        slider.setValue(1);
+        slider.setValue(9);
 //slider.setWidth(100);
         slider.addListener(new ChangeListener() {
             @Override
@@ -100,11 +108,49 @@ public class BackgroundOverlay extends ScreenObject implements Overlay, Touchabl
                     ((DrawObject) drawObject).setSize((int) (slider.getValue()));
                     setBounds();
                 }*/
-                ((OrthographicCamera)SunshineBlue.instance.viewport.getCamera()).zoom=slider.getValue();
+                ((OrthographicCamera)SunshineBlue.instance.viewport.getCamera()).zoom=10f-slider.getValue();
             }
         });
-        ;
+
         stage.addActor(slider);
+
+        Array<ChainVfxEffect> effects=new Array<>();
+        effects.add(new BloomEffect());
+        effects.add(new NfaaEffect(true));
+        effects.add(new FxaaEffect());
+        effects.add(new CrtEffect());
+//        effects.add(new LensFlareEffect());
+//        effects.add(new RadialBlurEffect(1));
+//        effects.add(new RadialDistortionEffect());
+        effects.add(new OldTvEffect());
+        effects.add(new FisheyeEffect());
+//        effects.add(new FilmGrainEffect());
+        effects.add(new ChromaticAberrationEffect(10));
+        effects.add(new GaussianBlurEffect());
+//        effects.add(new LevelsEffect());
+        effects.add(new WaterDistortionEffect(2,1));
+//        effects.add(new MotionBlurEffect(Pixmap.Format.RGBA8888,MixEffect.Method.MIX,.5f));
+//        effects.add(new GammaThresholdEffect(GammaThresholdEffect.Type.RGBA));
+        for (ChainVfxEffect fx:effects){
+            SunshineBlue.instance.vfxManager.addEffect(fx);
+            fx.setDisabled(true);
+        }
+        effects.get(0).setDisabled(false);
+        effects.get(1).setDisabled(false);
+        for (int i=0;i<effects.size;i++){
+            CheckBox cb=new CheckBox(" "+effects.get(i).getClass().getSimpleName().replaceAll("Effect",""),skin,"switch");
+            cb.setPosition(10,70+i*30);
+            cb.setChecked(!effects.get(i).isDisabled());
+            stage.addActor(cb);
+            int finalI = i;
+            cb.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    effects.get(finalI).setDisabled(!cb.isChecked());
+                }
+            });
+
+        }
     }
 
     public void setTouchable(Touchable touchable) {
@@ -194,7 +240,7 @@ public class BackgroundOverlay extends ScreenObject implements Overlay, Touchabl
     public void setInput() {
         SunshineBlue.instance.im.addProcessor(stage);
         if (touchable != null) SunshineBlue.instance.im.addProcessor(touchable);
-        slider.setValue(((OrthographicCamera)SunshineBlue.instance.viewport.getCamera()).zoom);
+        slider.setValue(10f-((OrthographicCamera)SunshineBlue.instance.viewport.getCamera()).zoom);
     }
 
     @Override

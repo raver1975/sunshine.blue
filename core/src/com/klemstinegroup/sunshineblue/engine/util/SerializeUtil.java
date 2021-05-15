@@ -93,20 +93,30 @@ public class SerializeUtil {
         });
     }
 
-    public static String lastLoaded="";
+    public static String lastLoaded = "";
+
     public static void load(String cid, boolean merge) {
         if (cid == null || cid.isEmpty() || !cid.startsWith("Q")) {
             return;
         }
-        if (cid.equals(lastLoaded)){return;}
-        lastLoaded=cid;
+        if (SunshineBlue.instance.autoload && cid.equals(lastLoaded)) {
+            return;
+        }
+        Command.setToFrame(0);
+        lastLoaded = cid;
 
         Gdx.app.log("name:", cid + "\t" + cid);
         SunshineBlue.nativeNet.downloadIPFS(cid, new IPFSFileListener() {
             @Override
             public void downloaded(byte[] file) {
                 JsonReader reader = new JsonReader();
-                JsonValue val = reader.parse(new String(file));
+                String st = new String(file);
+
+                for (BaseObject bo : SunshineBlue.instance.userObjects) {
+                    String nuuid = UUID.randomUUID().toString();
+                    st = st.replaceAll(bo.uuid, nuuid);
+                }
+                JsonValue val = reader.parse(new String(st));
                 if (val != null) {
                     Gdx.app.log("val", val.toJson(JsonWriter.OutputType.minimal));
                     JsonValue commandArray = val.get("commands");
@@ -133,8 +143,9 @@ public class SerializeUtil {
                             try {
                                 Command command = deserialize(commandArray.get(i), Command.class);
                                 unpacked.add(command);
+                            } catch (Exception e) {
+                                Statics.exceptionLog("command error", e);
                             }
-                            catch(Exception e){Statics.exceptionLog("command error",e);}
                         }
                     }
                     unpacked.sort(new Comparator<Command>() {
@@ -181,11 +192,11 @@ public class SerializeUtil {
 
     public static void save(IPFSCIDListener ipfscidListener) {
         Command.setToFrame(0);
-        SunshineBlue.instance.batch.begin();
+//        SunshineBlue.instance.batch.begin();
         SunshineBlue.instance.takingScreenshot = true;
         Pixmap screenshot = FrameBufferUtils.drawObjectsPix(SunshineBlue.instance.batch, SunshineBlue.instance.viewport, SunshineBlue.instance.userObjects, 400 * SunshineBlue.instance.viewport.getScreenWidth() / SunshineBlue.instance.viewport.getScreenHeight(), 400, true);
         SunshineBlue.instance.takingScreenshot = false;
-        SunshineBlue.instance.batch.end();
+//        SunshineBlue.instance.batch.end();
         JsonValue val = serializeScene();
         Command.setToFrame(SunshineBlue.instance.frameCount);
 
@@ -214,10 +225,6 @@ public class SerializeUtil {
                 ((OrthographicCamera) SunshineBlue.instance.viewport.getCamera()).zoom = val.getFloat("cam_zoom");
                 //replace uuids
                 String out = val.toJson(JsonWriter.OutputType.javascript);
-                for (BaseObject bo : SunshineBlue.instance.userObjects) {
-                    String nuuid = UUID.randomUUID().toString();
-                    out = out.replaceAll(bo.uuid, nuuid);
-                }
 
                 SunshineBlue.nativeNet.uploadIPFS(out.getBytes(StandardCharsets.UTF_8), new IPFSCIDListener() {
                     @Override
@@ -229,10 +236,13 @@ public class SerializeUtil {
 //                                prefs.putString(name, cid);
 //                            }
                             prefs.putString("current", cid);
-                            prefs.putString(cid, cid);
+                            if (!prefs.get().keySet().contains(cid)) {
+                                prefs.putString(cid, val.getString("screenshot"));
+                            }
                             prefs.flush();
-
-                            SunshineBlue.instance.otherCIDS.put(cid, val.getString("screenshot"));
+                            if (!SunshineBlue.instance.otherCIDS.containsKey(cid)) {
+                                SunshineBlue.instance.otherCIDS.put(cid, val.getString("screenshot"));
+                            }
                             SunshineBlue.nativeNet.doneSavingScene(cid, val.getString("screenshot"));
                             if (ipfscidListener != null) {
                                 ipfscidListener.cid(cid);

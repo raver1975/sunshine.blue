@@ -71,7 +71,12 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
+//                Gdx.app.postRunnable(new Runnable() {
+//                    @Override
+//                    public void run() {
                 SerializeUtil.save();
+//                    }
+//                });
             }
         });
         stage.addActor(saveButton);
@@ -166,6 +171,9 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                                         SerializeUtil.load(cid, true);
                                     } else if (object.equals(7L)) {
                                         SunshineBlue.instance.otherCIDS.remove(cid);
+                                        Preferences prefs = Gdx.app.getPreferences("scenes");
+                                        prefs.remove(cid);
+                                        prefs.flush();
                                     } else if (object.equals(3L)) {
                                         String uri = "https://sunshine.blue/?" + cid;
                                         Gdx.app.getClipboard().setContents(uri);
@@ -276,9 +284,9 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                SunshineBlue.instance.batch.begin();
-                Pixmap screenshot = FrameBufferUtils.drawObjects(SunshineBlue.instance.batch, SunshineBlue.instance.viewport, SunshineBlue.instance.userObjects);
-                SunshineBlue.instance.batch.end();
+//                SunshineBlue.instance.batch.begin();
+                Pixmap screenshot = FrameBufferUtils.drawObjectsPix(SunshineBlue.instance.batch, SunshineBlue.instance.viewport, SunshineBlue.instance.userObjects, SunshineBlue.instance.overlayViewport.getScreenWidth(), SunshineBlue.instance.overlayViewport.getScreenHeight(), true);
+//                SunshineBlue.instance.batch.end();
                 IPFSUtils.uploadPngtoIPFS(screenshot, new IPFSCIDListener() {
                     @Override
                     public void cid(String cid) {
