@@ -46,8 +46,6 @@ public abstract class Command {
                 subcom.removeAll(remove, false);
                 kk++;
             }
-
-            System.out.println("size old:" + s + "\tnew:" + subcom.size);
         }
     }
 
