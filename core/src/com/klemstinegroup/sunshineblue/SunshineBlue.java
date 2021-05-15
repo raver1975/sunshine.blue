@@ -250,6 +250,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
                 if (loadCid == null || loadCid.isEmpty()) {
                     loadCid = Statics.splashCID;
                     autoload = true;
+                    BASIC_UI_OVERLAY.autoload.setChecked(true);
                 }
 
             }
@@ -297,11 +298,12 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
         }
 
-        delta = isRecording ? (1f / fps) : Gdx.graphics.getDeltaTime();
         if (!pauseLoop) {
             frameCount = ((int) ((TimeUtils.millis() - startTime) / (1000f / fps)));
+            delta = isRecording ? (1f / fps) : Gdx.graphics.getDeltaTime();
         } else {
             startTime = TimeUtils.millis() - (long) ((frameCount * 1000f) / fps);
+            delta=0;
         }
 
         if (frameCount != lastframeCount) {
@@ -428,6 +430,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         batch.setColor(Color.WHITE);
 //        shapedrawer.setDefaultLineWidth(8);
 //        shapedrawer.line(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 5, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20), SunshineBlue.instance.overlayViewport.getWorldHeight() - 5);
+        shapedrawer.update();
         shapedrawer.setColor(Color.RED);
         shapedrawer.setDefaultLineWidth(4);
         shapedrawer.line(10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (loopStart) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 5, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (loopEnd) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 5);

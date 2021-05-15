@@ -35,6 +35,7 @@ import java.util.Map;
 public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
 
     public final Stage stage;
+    public final CheckBox autoload;
     Vector2 touchdown = new Vector2();
     Vector2 oldtouch = new Vector2();
     Vector2 touchdownre = new Vector2();
@@ -125,23 +126,23 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-            //    Preferences prefs = Gdx.app.getPreferences("scenes");
+                //    Preferences prefs = Gdx.app.getPreferences("scenes");
 //                for (Map.Entry<String, ?> pref : prefs.get().entrySet()) {
 //                    SunshineBlue.instance.otherCIDS.add((String) pref.getValue());
 //                }
                 if (SunshineBlue.instance.otherCIDS.size() > 0) {
 
-                    Iterator<Map.Entry<String,String>> iter = SunshineBlue.instance.otherCIDS.entrySet().iterator();
-                    if (otherIndex>SunshineBlue.instance.otherCIDS.size()-1){
-                        otherIndex=SunshineBlue.instance.otherCIDS.size()-1;
+                    Iterator<Map.Entry<String, String>> iter = SunshineBlue.instance.otherCIDS.entrySet().iterator();
+                    if (otherIndex > SunshineBlue.instance.otherCIDS.size() - 1) {
+                        otherIndex = SunshineBlue.instance.otherCIDS.size() - 1;
                     }
                     for (int i = 0; i < otherIndex; i++) {
                         iter.next();
                     }
-                    Map.Entry<String,String> entry = iter.next();
+                    Map.Entry<String, String> entry = iter.next();
                     String screenshotCID = entry.getValue();
-                    String cid=entry.getKey();
-                    Gdx.app.log("load",cid+"\t"+screenshotCID);
+                    String cid = entry.getKey();
+                    Gdx.app.log("load", cid + "\t" + screenshotCID);
                     SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + screenshotCID, new Pixmap.DownloadPixmapResponseListener() {
                         @Override
                         public void downloadComplete(Pixmap pixmap) {
@@ -166,7 +167,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                                     } else if (object.equals(7L)) {
                                         SunshineBlue.instance.otherCIDS.remove(cid);
                                     } else if (object.equals(3L)) {
-                                        String uri="https://sunshine.blue/?"+cid;
+                                        String uri = "https://sunshine.blue/?" + cid;
                                         Gdx.app.getClipboard().setContents(uri);
                                         Gdx.net.openURI(uri);
                                     } else if (object.equals(4L)) {
@@ -228,14 +229,13 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                             prefs.clear();
                             prefs.flush();
                             SunshineBlue.instance.otherCIDS.clear();
-                        }
-                        else if (object.equals(1)){
-                            SerializeUtil.save(new IPFSCIDListener(){
+                        } else if (object.equals(1)) {
+                            SerializeUtil.save(new IPFSCIDListener() {
                                 @Override
                                 public void cid(String cid) {
                                     SunshineBlue.instance.selectedObjects.clear();
-                                    Iterator<BaseObject> i=SunshineBlue.instance.userObjects.iterator();
-                                    while (i.hasNext()){
+                                    Iterator<BaseObject> i = SunshineBlue.instance.userObjects.iterator();
+                                    while (i.hasNext()) {
                                         SunshineBlue.removeUserObj(i.next());
                                     }
                                     SunshineBlue.instance.userObjects.clear();
@@ -328,24 +328,20 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         stage.addActor(fontButton);
 
 
-        CheckBox autoload=new CheckBox("Autoload",skin,"switch");
+        autoload = new CheckBox("Autoload", skin, "switch");
         autoload.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                SunshineBlue.instance.autoload=true;
-                SunshineBlue.instance.autoloadtime= TimeUtils.millis();
+                SunshineBlue.instance.autoload = autoload.isChecked();
+                SunshineBlue.instance.autoloadtime = TimeUtils.millis();
             }
         });
-        autoload.setPosition(65,SunshineBlue.instance.overlayViewport.getWorldHeight() - 30);
+        autoload.setPosition(65, SunshineBlue.instance.overlayViewport.getWorldHeight() - 30);
+        autoload.setChecked(SunshineBlue.instance.autoload);
         stage.addActor(autoload);
 
         Actor imageButton = new TextButton("Image", skin);
         imageButton.setPosition(70, 10);
-//        fontButton.setColor(Color.WHITE);
-
-
-        //                    pasteButton.setVisible(false);
-
 
         imageButton.addListener(new ClickListener() {
             @Override
@@ -383,7 +379,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                ParticleObject po = new ParticleObject(ParticleUtil.particleFiles.getKeyAt(MathUtils.random(ParticleUtil.particleFiles.size-1)));
+                ParticleObject po = new ParticleObject(ParticleUtil.particleFiles.getKeyAt(MathUtils.random(ParticleUtil.particleFiles.size - 1)));
 //                doi.setSize((int) SunshineBlue.instance.DRAW_OVERLAY.slider.getValue());
 //                doi.setColor(SunshineBlue.instance.DRAW_OVERLAY.picker.getSelectedColor());
                 SunshineBlue.addUserObj(po);
@@ -501,7 +497,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
     }
 
     @Override
-    public void draw(Batch batch,float delta) {
+    public void draw(Batch batch, float delta) {
 
 //        mx4Overlay.set(mx4Overlay.idt());
 //        mx4Overlay.setToOrtho2D(0, 0, 100, 100);

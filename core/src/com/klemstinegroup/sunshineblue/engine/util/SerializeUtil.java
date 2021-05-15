@@ -93,10 +93,13 @@ public class SerializeUtil {
         });
     }
 
+    public static String lastLoaded="";
     public static void load(String cid, boolean merge) {
         if (cid == null || cid.isEmpty() || !cid.startsWith("Q")) {
             return;
         }
+        if (cid.equals(lastLoaded)){return;}
+        lastLoaded=cid;
 
         Gdx.app.log("name:", cid + "\t" + cid);
         SunshineBlue.nativeNet.downloadIPFS(cid, new IPFSFileListener() {
