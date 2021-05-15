@@ -366,7 +366,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                 public boolean longPress(Actor actor, float x, float y) {
                     cb.setChecked(!cb.isChecked());
                     ((ScreenObject) ba).sd.visible = !((ScreenObject) ba).sd.visible;
-                    Command.insert(new VisibleCommand(!((ScreenObject) ba).sd.visible, ba.uuid), ba);
+                    Command.insert(new VisibleCommand(((ScreenObject) ba).sd.visible, ba.uuid), ba);
 //                        cb.setVisible(false);
 
                     return true;
