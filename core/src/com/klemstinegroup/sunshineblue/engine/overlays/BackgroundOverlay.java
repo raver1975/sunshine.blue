@@ -119,7 +119,7 @@ public class BackgroundOverlay extends ScreenObject implements Overlay, Touchabl
         effects.add(new NfaaEffect(true));
         effects.add(new FxaaEffect());
         effects.add(new CrtEffect());
-        effects.add(new LensFlareEffect());
+//        effects.add(new LensFlareEffect());
 //        effects.add(new RadialBlurEffect(1));
 //        effects.add(new RadialDistortionEffect());
         effects.add(new OldTvEffect());
@@ -128,8 +128,8 @@ public class BackgroundOverlay extends ScreenObject implements Overlay, Touchabl
         effects.add(new ChromaticAberrationEffect(10));
         effects.add(new GaussianBlurEffect());
 //        effects.add(new LevelsEffect());
-        effects.add(new WaterDistortionEffect(5,1));
-        effects.add(new MotionBlurEffect(Pixmap.Format.RGBA8888,MixEffect.Method.MIX,.9f));
+        effects.add(new WaterDistortionEffect(2,1));
+//        effects.add(new MotionBlurEffect(Pixmap.Format.RGBA8888,MixEffect.Method.MIX,.5f));
 //        effects.add(new GammaThresholdEffect(GammaThresholdEffect.Type.RGBA));
         for (ChainVfxEffect fx:effects){
             SunshineBlue.instance.vfxManager.addEffect(fx);
