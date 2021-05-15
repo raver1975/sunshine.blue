@@ -10,7 +10,7 @@ import java.util.Objects;
 
 public abstract class Command {
     public String actionOnUUID;
-    transient String uuid= UUID.randomUUID().toString();
+    transient String uuid = UUID.randomUUID().toString();
     public int framePos = 0;
     public int arrayPos = 0;
 
@@ -25,15 +25,15 @@ public abstract class Command {
 
     public static void compress(int frame) {
         Array<Command> subcom = SunshineBlue.instance.commands.get(frame);
-        if (subcom!=null) {
+        if (subcom != null) {
             int s = subcom.size;
-            int kk=0;
+            int kk = 0;
 
-            while  (kk<subcom.size) {
-                Command c1=subcom.get(kk);
+            while (kk < subcom.size) {
+                Command c1 = subcom.get(kk);
                 Array<Command> remove = new Array<>();
-                for (int i=kk+1;i<subcom.size;i++) {
-                    Command c2=subcom.get(i);
+                for (int i = kk + 1; i < subcom.size; i++) {
+                    Command c2 = subcom.get(i);
                     if (!c1.actionOnUUID.equals(c2.actionOnUUID)) {
                         continue;
                     }
@@ -55,23 +55,21 @@ public abstract class Command {
     }
 
     public static void setToFrame(int frame) {
-        System.out.println(frame+" frame: framecnt "+SunshineBlue.instance.frameCount);
+        System.out.println(frame + " frame: framecnt " + SunshineBlue.instance.frameCount);
         if (frame == SunshineBlue.instance.frameCount) {
             return;
         } else if (frame < SunshineBlue.instance.frameCount) {
             for (int i = SunshineBlue.instance.frameCount; i > frame; i--) {
                 Array<Command> subcom = SunshineBlue.instance.commands.get(i);
-                System.out.print(" undo "+i);
                 if (subcom != null) {
-                    for (int j = subcom.size - 1; j >-1; j--) {
+                    for (int j = subcom.size - 1; j > -1; j--) {
                         subcom.get(j).undo();
                     }
                 }
             }
         } else {
-            for (int i = SunshineBlue.instance.frameCount+1; i <= frame; i++) {
+            for (int i = SunshineBlue.instance.frameCount + 1; i <= frame; i++) {
                 Array<Command> subcom = SunshineBlue.instance.commands.get(i);
-                System.out.print(" do "+i);
                 if (subcom != null) {
                     for (Command c : subcom) {
                         c.execute();
@@ -81,7 +79,7 @@ public abstract class Command {
         }
         System.out.println();
         SunshineBlue.instance.startTime = TimeUtils.millis() - (long) ((frame * 1000f) / SunshineBlue.instance.fps);
-        SunshineBlue.instance.frameCount=frame;
+        SunshineBlue.instance.frameCount = frame;
     }
 
     public static BaseObject getBaseObject(String uuid) {

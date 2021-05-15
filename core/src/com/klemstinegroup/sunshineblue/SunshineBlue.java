@@ -129,8 +129,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         Gdx.app.log("create", "started");
         this.instance = this;
         vfxManager = new VfxManager(Pixmap.Format.RGBA8888);
-        vfxManager.addEffect(new BloomEffect());
-        vfxManager.addEffect(new NfaaEffect(true));
+
         font = new BitmapFont();
         glyphLayout = new GlyphLayout();
 
@@ -353,6 +352,15 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
             batch.setTransformMatrix(mx4Batch);
         }
 
+
+
+
+        batch.end();
+        vfxManager.endInputCapture();
+        vfxManager.applyEffects();
+        vfxManager.renderToScreen();
+
+        batch.begin();
         if (overlay != null) {
             ((Drawable) overlay).draw(batch, delta);
         }
@@ -373,13 +381,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         if (isRecording) {
             font.draw(batch, "" + (recCounter / 10f), 0, 0);
         }
-
-
         batch.end();
-        vfxManager.endInputCapture();
-        vfxManager.applyEffects();
-        vfxManager.renderToScreen();
-
 
         //------------------------------------------------------------
 

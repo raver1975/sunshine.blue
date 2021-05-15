@@ -21,7 +21,7 @@ import com.klemstinegroup.sunshineblue.engine.util.*;
 import space.earlygrey.shapedrawer.JoinType;
 
 public class ImageObject extends ScreenObject implements Drawable, Touchable {
-    public Texture texture;
+    public TextureRegion texture;
     public Animation<CustomTextureAtlas.AtlasRegion> textures;
     private Polygon polygon;
     private String cid;
@@ -276,13 +276,13 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                         Statics.exceptionLog("not", e1);
                     }
                     if (staticPixmap != null) {
-                        texture = new Texture(staticPixmap);
+                        texture = new TextureRegion(new Texture(staticPixmap));
                         setBounds();
                     }
                 } else {
                     if (textures == null) {
                         Gdx.app.log("image", "non-animated");
-                        texture = new Texture(pixmapIn);
+                        texture = new TextureRegion(new Texture(pixmapIn));
                         setBounds();
                     }
 //                    textures = null;
@@ -293,7 +293,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
     }
 
     public ImageObject(Pixmap pixmap) {
-        texture = new Texture(pixmap);
+        texture = new TextureRegion(new Texture(pixmap));
         setBounds();
     }
 
@@ -491,7 +491,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
         polygon.translate(sd.position.x - sd.center.x, sd.position.y - sd.center.y);
 //        sd.position.add(-sd.center.x, -sd.center.y);
         if (texture != null) {
-            sd.bounds.set(new Vector2(texture.getWidth(), texture.getHeight()));
+            sd.bounds.set(new Vector2(texture.getRegionWidth(), texture.getRegionHeight()));
         }
         try {
             if (textures != null) {

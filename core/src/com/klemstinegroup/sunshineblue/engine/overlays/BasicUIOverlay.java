@@ -171,6 +171,9 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                                         SerializeUtil.load(cid, true);
                                     } else if (object.equals(7L)) {
                                         SunshineBlue.instance.otherCIDS.remove(cid);
+                                        Preferences prefs = Gdx.app.getPreferences("scenes");
+                                        prefs.remove(cid);
+                                        prefs.flush();
                                     } else if (object.equals(3L)) {
                                         String uri = "https://sunshine.blue/?" + cid;
                                         Gdx.app.getClipboard().setContents(uri);
