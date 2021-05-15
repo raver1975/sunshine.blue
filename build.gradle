@@ -159,6 +159,10 @@ project(":html") {
 //        compile "com.kotcrab.vis:vis-ui:+:sources"
         implementation "com.github.intrigus.gdx-freetype-gwt:gdx-freetype-gwt:1.9.11-SNAPSHOT"
         implementation "com.github.intrigus.gdx-freetype-gwt:gdx-freetype-gwt:1.9.11-SNAPSHOT:sources"
+        implementation 'com.crashinvaders.vfx:gdx-vfx-core:0.5.0:sources'
+        implementation 'com.crashinvaders.vfx:gdx-vfx-gwt:0.5.0'
+        implementation 'com.crashinvaders.vfx:gdx-vfx-gwt:0.5.0:sources'
+        implementation 'com.crashinvaders.vfx:gdx-vfx-effects:0.5.0:sources'
     }
 }
 
@@ -187,5 +191,7 @@ project(":core") {
 //        api "de.golfgl.gdxgamesvcs:gdx-gamesvcs-core:1.0.2"
 //        implementation "com.kotcrab.vis:vis-ui:+"
         implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+        implementation 'com.crashinvaders.vfx:gdx-vfx-core:0.5.0'
+        implementation 'com.crashinvaders.vfx:gdx-vfx-effects:0.5.0'
     }
 }

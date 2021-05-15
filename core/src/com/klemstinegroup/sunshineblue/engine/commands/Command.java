@@ -1,6 +1,7 @@
 package com.klemstinegroup.sunshineblue.engine.commands;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
 import com.klemstinegroup.sunshineblue.engine.util.UUID;
@@ -54,10 +55,11 @@ public abstract class Command {
     }
 
     public static void setToFrame(int frame) {
+
         if (frame == SunshineBlue.instance.frameCount) {
             return;
         } else if (frame < SunshineBlue.instance.frameCount) {
-            for (int i = SunshineBlue.instance.frameCount; i >= frame; i--) {
+            for (int i = SunshineBlue.instance.frameCount; i > frame; i--) {
                 Array<Command> subcom = SunshineBlue.instance.commands.get(i);
                 if (subcom != null) {
                     for (int j = subcom.size - 1; j >= 0; j--) {
@@ -66,7 +68,7 @@ public abstract class Command {
                 }
             }
         } else {
-            for (int i = frame; i < SunshineBlue.instance.frameCount; i++) {
+            for (int i = SunshineBlue.instance.frameCount+1; i <= frame; i++) {
                 Array<Command> subcom = SunshineBlue.instance.commands.get(i);
                 if (subcom != null) {
                     for (Command c : subcom) {
@@ -75,6 +77,8 @@ public abstract class Command {
                 }
             }
         }
+        SunshineBlue.instance.startTime = TimeUtils.millis() - (long) ((frame * 1000f) / SunshineBlue.instance.fps);
+        SunshineBlue.instance.frameCount=frame;
     }
 
     public static BaseObject getBaseObject(String uuid) {

@@ -97,14 +97,14 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
         stage.addActor(downArrow);
 
         recButton = new CheckBox("Rec", skin, "switch");
-        recButton.addListener(new ClickListener() {
+       /* recButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (recButton.isChecked()) {
                 } else {
                 }
             }
-        });
+        });*/
         recButton.setPosition(10, 380);
         stage.addActor(recButton);
 

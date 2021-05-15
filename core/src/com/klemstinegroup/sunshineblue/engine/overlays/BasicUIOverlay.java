@@ -276,9 +276,9 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                SunshineBlue.instance.batch.begin();
-                Pixmap screenshot = FrameBufferUtils.drawObjects(SunshineBlue.instance.batch, SunshineBlue.instance.viewport, SunshineBlue.instance.userObjects);
-                SunshineBlue.instance.batch.end();
+//                SunshineBlue.instance.batch.begin();
+                Pixmap screenshot = FrameBufferUtils.drawObjectsPix(SunshineBlue.instance.batch, SunshineBlue.instance.viewport, SunshineBlue.instance.userObjects,SunshineBlue.instance.overlayViewport.getScreenWidth(),SunshineBlue.instance.overlayViewport.getScreenHeight(),true);
+//                SunshineBlue.instance.batch.end();
                 IPFSUtils.uploadPngtoIPFS(screenshot, new IPFSCIDListener() {
                     @Override
                     public void cid(String cid) {
