@@ -1,3 +1,16 @@
+<!--
+*** Thanks for checking out the Best-README-Template. If you have a suggestion
+*** that would make this better, please fork the repo and create a pull request
+*** or simply open an issue with the tag "enhancement".
+*** Thanks again! Now go create something AMAZING! :D
+***
+***
+***
+*** To avoid retyping too much info. Do a search and replace for the following:
+*** raver1975, sunshinelab, raver1975, paulklemstine@gmail.com, sunshinelabs, Shine On
+-->
+
+
 
 <!-- PROJECT SHIELDS -->
 <!--
@@ -23,21 +36,21 @@
     <img src="android/ic_launcher-web.png" alt="Logo" width="80" height="80">
   </a>
 
-<h3 align="center">sunshinelab</h3>
+<h3 align="center">sunshinelabs</h3>
 
   <p align="center">
-    Shine Bright
+    Shine On
     <br />
     <a href="https://github.com/raver1975/sunshinelab"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="sunshine.blue">View Demo</a>
+    <a href="https://github.com/raver1975/sunshinelab">View Demo</a>
     ·
     <a href="https://github.com/raver1975/sunshinelab/issues">Report Bug</a>
     ·
     <a href="https://github.com/raver1975/sunshinelab/issues">Request Feature</a>
   </p>
-
+</p>
 
 
 
@@ -76,7 +89,7 @@
 
 Here's a blank template to get started:
 **To avoid retyping too much info. Do a search and replace with your text editor for the following:**
-`raver1975`, `sunshinelab`, `raver1975`, `paulklemstine@gmail.com`, `sunshinelab`, `Shine Bright`
+`raver1975`, `sunshinelab`, `raver1975`, `paulklemstine@gmail.com`, `sunshinelabs`, `Shine On`
 
 
 ### Built With
@@ -171,15 +184,15 @@ Project Link: [https://github.com/raver1975/sunshinelab](https://github.com/rave
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/raver1975/repo.svg?style=for-the-badge
-[contributors-url]: https://github.com/raver1975/repo/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/raver1975/repo.svg?style=for-the-badge
-[forks-url]: https://github.com/raver1975/repo/network/members
-[stars-shield]: https://img.shields.io/github/stars/raver1975/repo.svg?style=for-the-badge
-[stars-url]: https://github.com/raver1975/repo/stargazers
-[issues-shield]: https://img.shields.io/github/issues/raver1975/repo.svg?style=for-the-badge
-[issues-url]: https://github.com/raver1975/repo/issues
-[license-shield]: https://img.shields.io/github/license/raver1975/repo.svg?style=for-the-badge
-[license-url]: https://github.com/raver1975/repo/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/raver1975/sunshinelab.svg?style=for-the-badge
+[contributors-url]: https://github.com/raver1975/sunshinelab/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/raver1975/sunshinelab.svg?style=for-the-badge
+[forks-url]: https://github.com/raver1975/sunshinelab/network/members
+[stars-shield]: https://img.shields.io/github/stars/raver1975/sunshinelab.svg?style=for-the-badge
+[stars-url]: https://github.com/raver1975/sunshinelab/stargazers
+[issues-shield]: https://img.shields.io/github/issues/raver1975/sunshinelab.svg?style=for-the-badge
+[issues-url]: https://github.com/raver1975/sunshinelab/issues
+[license-shield]: https://img.shields.io/github/license/raver1975/sunshinelab.svg?style=for-the-badge
+[license-url]: https://github.com/raver1975/sunshinelab/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/raver1975
+[linkedin-url]: https://linkedin.com/in/paulklemstine
