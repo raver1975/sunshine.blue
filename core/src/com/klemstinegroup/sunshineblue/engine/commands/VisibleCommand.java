@@ -1,26 +1,25 @@
 package com.klemstinegroup.sunshineblue.engine.commands;
 
+import com.badlogic.gdx.math.Vector2;
 import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
 
-public class ScaleCommand extends Command {
-    float delta = 0;
+public class VisibleCommand extends Command {
+    boolean visible = true;
 
-
-    public ScaleCommand() {
+    public VisibleCommand() {
     }
 
-    public ScaleCommand(float delta, String uuid) {
-        this.delta=delta;
+    public VisibleCommand(boolean visible, String uuid) {
+        this.visible = visible;
         this.actionOnUUID = uuid;
     }
 
     @Override
     public void execute() {
         BaseObject bo = Command.getBaseObject(actionOnUUID);
-//        this.oldPosition.set(((ScreenObject) Command.getBaseObject(actionOnUUID)).sd.position);
         if (bo != null) {
-            ((ScreenObject) bo).sd.scale+=this.delta;
+            ((ScreenObject) bo).sd.visible = visible;
         }
     }
 
@@ -28,13 +27,13 @@ public class ScaleCommand extends Command {
     public void undo() {
         BaseObject bo = Command.getBaseObject(actionOnUUID);
         if (bo != null) {
-            ((ScreenObject) bo).sd.scale-=this.delta;
+            ((ScreenObject) bo).sd.visible = !visible;
         }
     }
 
     @Override
     public boolean compress(Command command) {
-        this.delta+=((ScaleCommand) command).delta;
+        this.visible = ((VisibleCommand) command).visible;
         return true;
     }
 }

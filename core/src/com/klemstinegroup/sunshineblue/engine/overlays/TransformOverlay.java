@@ -1,7 +1,5 @@
 package com.klemstinegroup.sunshineblue.engine.overlays;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Polygon;
@@ -14,19 +12,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
+import com.klemstinegroup.sunshineblue.engine.commands.CenterCommand;
 import com.klemstinegroup.sunshineblue.engine.commands.Command;
-import com.klemstinegroup.sunshineblue.engine.commands.MoveCommand;
-import com.klemstinegroup.sunshineblue.engine.commands.RotateCommand;
-import com.klemstinegroup.sunshineblue.engine.commands.ScaleCommand;
+import com.klemstinegroup.sunshineblue.engine.commands.TransformCommand;
+import com.klemstinegroup.sunshineblue.engine.commands.VisibleCommand;
 import com.klemstinegroup.sunshineblue.engine.objects.*;
 import com.klemstinegroup.sunshineblue.engine.util.ColorHelper;
-import com.klemstinegroup.sunshineblue.engine.util.IPFSCIDListener;
 import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
-
-import java.util.Iterator;
 
 
 public class TransformOverlay extends BaseObject implements Overlay, Touchable, Drawable, Gestureable {
@@ -38,7 +32,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
     public int transformButton;
     Vector2 touchdrag = new Vector2();
     Vector2 touchdown = new Vector2();
-    Vector2 tempVec=new Vector2();
+    Vector2 tempVec = new Vector2();
     Array<CheckBox> checkBoxArray = new Array<>();
 
     public TransformOverlay() {
@@ -222,6 +216,9 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                     case 2:
                         break;
                     case 3:
+                        if (recButton.isChecked()) {
+                            Command.insert(new CenterCommand(touchdown, bo.uuid), bo);
+                        }
                         so.recenter(touchdown.cpy());
                         break;
                 }
@@ -254,26 +251,29 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                 switch (transformButton) {
                     case 0:
                         tempVec.set(touchdrag.cpy().sub(touchdown));
-                        if (recButton.isChecked()){
-                            Command.insert(new MoveCommand(tempVec.cpy(),bo.uuid),bo);
+                        if (recButton.isChecked()) {
+                            Command.insert(new TransformCommand(tempVec, 0, 0, bo.uuid), bo);
                         }
                         so.sd.position.add(tempVec);
                         break;
                     case 1:
-                        float rot=touchdrag.x - touchdown.x;
-                        if (recButton.isChecked()){
-                            Command.insert(new RotateCommand(rot,bo.uuid),bo);
+                        float rot = touchdrag.x - touchdown.x;
+                        if (recButton.isChecked()) {
+                            Command.insert(new TransformCommand(new Vector2(), rot, 0, bo.uuid), bo);
                         }
-                        so.sd.rotation +=rot;
+                        so.sd.rotation += rot;
                         break;
                     case 2:
-                        float scal=(touchdrag.x - touchdown.x) / 200f;
-                        if (recButton.isChecked()){
-                            Command.insert(new ScaleCommand(scal,bo.uuid),bo);
+                        float scal = (touchdrag.x - touchdown.x) / 200f;
+                        if (recButton.isChecked()) {
+                            Command.insert(new TransformCommand(new Vector2(), 0, scal, bo.uuid), bo);
                         }
                         so.sd.scale += scal;
                         break;
                     case 3:
+                        if (recButton.isChecked()) {
+                            Command.insert(new CenterCommand(touchdown, bo.uuid), bo);
+                        }
                         so.recenter(touchdown.cpy());
                         break;
                 }
@@ -366,6 +366,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                 public boolean longPress(Actor actor, float x, float y) {
                     cb.setChecked(!cb.isChecked());
                     ((ScreenObject) ba).sd.visible = !((ScreenObject) ba).sd.visible;
+                    Command.insert(new VisibleCommand(!((ScreenObject) ba).sd.visible, ba.uuid), ba);
 //                        cb.setVisible(false);
 
                     return true;

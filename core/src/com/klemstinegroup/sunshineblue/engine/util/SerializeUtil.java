@@ -127,8 +127,11 @@ public class SerializeUtil {
                     Array<Command> unpacked = new Array<>();
                     if (commandArray != null) {
                         for (int i = 0; i < commandArray.size; i++) {
-                            Command command = deserialize(commandArray.get(i), Command.class);
-                            unpacked.add(command);
+                            try {
+                                Command command = deserialize(commandArray.get(i), Command.class);
+                                unpacked.add(command);
+                            }
+                            catch(Exception e){Statics.exceptionLog("command error",e);}
                         }
                     }
                     unpacked.sort(new Comparator<Command>() {

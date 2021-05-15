@@ -3,42 +3,42 @@ package com.klemstinegroup.sunshineblue.engine.commands;
 import com.badlogic.gdx.math.Vector2;
 import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
-import com.klemstinegroup.sunshineblue.engine.util.UUID;
 
-import java.util.Objects;
-
-public class MoveCommand extends Command {
-    Vector2 delta = new Vector2();
+public class CenterCommand extends Command {
+    Vector2 center = new Vector2();
+    Vector2 oldcenter = new Vector2();
 
 
-    public MoveCommand() {
+    public CenterCommand() {
     }
 
-    public MoveCommand(Vector2 delta, String uuid) {
-        this.delta.set(delta);
+    public CenterCommand(Vector2 center, String uuid) {
+        this.center.set(center);
+        this.oldcenter.set(((ScreenObject)getBaseObject(uuid)).sd.center);
         this.actionOnUUID = uuid;
     }
 
     @Override
     public void execute() {
+        System.out.println(center+"\t"+oldcenter);
         BaseObject bo = Command.getBaseObject(actionOnUUID);
         if (bo != null) {
-            ((ScreenObject) bo).sd.position.add(this.delta);
+            ((ScreenObject) bo).sd.center.set(this.center);
         }
-        System.out.println("move:" + this.delta.x + "," + this.delta.y);
     }
 
     @Override
     public void undo() {
         BaseObject bo = Command.getBaseObject(actionOnUUID);
         if (bo != null) {
-            ((ScreenObject) bo).sd.position.sub(this.delta);
+            ((ScreenObject) bo).sd.center.set(this.oldcenter);
         }
     }
 
     @Override
     public boolean compress(Command command) {
-        this.delta.add(((MoveCommand) command).delta);
+        this.center.set(((CenterCommand)command).center);
+        this.oldcenter.set(((CenterCommand)command).oldcenter);
         return true;
     }
 }
