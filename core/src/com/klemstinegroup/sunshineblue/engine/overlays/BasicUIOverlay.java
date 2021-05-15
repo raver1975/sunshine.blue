@@ -131,10 +131,12 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //    Preferences prefs = Gdx.app.getPreferences("scenes");
-//                for (Map.Entry<String, ?> pref : prefs.get().entrySet()) {
-//                    SunshineBlue.instance.otherCIDS.add((String) pref.getValue());
-//                }
+                Preferences prefs = Gdx.app.getPreferences("scenes");
+                for (Map.Entry<String, ?> pref : prefs.get().entrySet()) {
+                    if (!pref.getKey().equals("current")) {
+                        SunshineBlue.instance.otherCIDS.put(pref.getKey(), (String) pref.getValue());
+                    }
+                }
                 if (SunshineBlue.instance.otherCIDS.size() > 0) {
 
                     Iterator<Map.Entry<String, String>> iter = SunshineBlue.instance.otherCIDS.entrySet().iterator();
