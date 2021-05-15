@@ -131,7 +131,6 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         vfxManager = new VfxManager(Pixmap.Format.RGBA8888);
         vfxManager.addEffect(new BloomEffect());
         vfxManager.addEffect(new NfaaEffect(true));
-        vfxManager.addEffect(new WaterDistortionEffect(10f,.5f));
         font = new BitmapFont();
         glyphLayout = new GlyphLayout();
 
@@ -239,10 +238,12 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
         batch.enableBlending();
         SunshineBlue.instance.shapedrawer.setDefaultLineWidth(2);
-        // Preferences prefs = Gdx.app.getPreferences("scenes");
-//        for(Map.Entry<String,?> pref:prefs.get().entrySet()){
-//            SunshineBlue.instance.otherCIDS.add((String)pref.getValue());
-//        }
+         Preferences prefs = Gdx.app.getPreferences("scenes");
+        for(Map.Entry<String,?> pref:prefs.get().entrySet()){
+            if (!pref.getKey().equals("current")) {
+                SunshineBlue.instance.otherCIDS.put(pref.getKey(), (String) pref.getValue());
+            }
+        }
 
         ParticleUtil.getParticleFiles();
         startTime = TimeUtils.millis();

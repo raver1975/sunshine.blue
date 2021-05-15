@@ -55,14 +55,15 @@ public abstract class Command {
     }
 
     public static void setToFrame(int frame) {
-
+        System.out.println(frame+" frame: framecnt "+SunshineBlue.instance.frameCount);
         if (frame == SunshineBlue.instance.frameCount) {
             return;
         } else if (frame < SunshineBlue.instance.frameCount) {
             for (int i = SunshineBlue.instance.frameCount; i > frame; i--) {
                 Array<Command> subcom = SunshineBlue.instance.commands.get(i);
+                System.out.print(" undo "+i);
                 if (subcom != null) {
-                    for (int j = subcom.size - 1; j >= 0; j--) {
+                    for (int j = subcom.size - 1; j >-1; j--) {
                         subcom.get(j).undo();
                     }
                 }
@@ -70,6 +71,7 @@ public abstract class Command {
         } else {
             for (int i = SunshineBlue.instance.frameCount+1; i <= frame; i++) {
                 Array<Command> subcom = SunshineBlue.instance.commands.get(i);
+                System.out.print(" do "+i);
                 if (subcom != null) {
                     for (Command c : subcom) {
                         c.execute();
@@ -77,6 +79,7 @@ public abstract class Command {
                 }
             }
         }
+        System.out.println();
         SunshineBlue.instance.startTime = TimeUtils.millis() - (long) ((frame * 1000f) / SunshineBlue.instance.fps);
         SunshineBlue.instance.frameCount=frame;
     }

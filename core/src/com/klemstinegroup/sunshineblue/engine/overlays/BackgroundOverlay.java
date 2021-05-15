@@ -91,7 +91,7 @@ public class BackgroundOverlay extends ScreenObject implements Overlay, Touchabl
         slider = new Slider(.01f, 10, .01f, true, skin);
         slider.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 40, 80);
         slider.setSize(20, SunshineBlue.instance.overlayViewport.getWorldHeight() - 150);
-        slider.setValue(1);
+        slider.setValue(9);
 //slider.setWidth(100);
         slider.addListener(new ChangeListener() {
             @Override
@@ -100,7 +100,7 @@ public class BackgroundOverlay extends ScreenObject implements Overlay, Touchabl
                     ((DrawObject) drawObject).setSize((int) (slider.getValue()));
                     setBounds();
                 }*/
-                ((OrthographicCamera)SunshineBlue.instance.viewport.getCamera()).zoom=slider.getValue();
+                ((OrthographicCamera)SunshineBlue.instance.viewport.getCamera()).zoom=10f-slider.getValue();
             }
         });
         ;
@@ -194,7 +194,7 @@ public class BackgroundOverlay extends ScreenObject implements Overlay, Touchabl
     public void setInput() {
         SunshineBlue.instance.im.addProcessor(stage);
         if (touchable != null) SunshineBlue.instance.im.addProcessor(touchable);
-        slider.setValue(((OrthographicCamera)SunshineBlue.instance.viewport.getCamera()).zoom);
+        slider.setValue(10f-((OrthographicCamera)SunshineBlue.instance.viewport.getCamera()).zoom);
     }
 
     @Override
