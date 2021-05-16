@@ -11,14 +11,13 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.TimeUtils;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.colorpicker.DialogColorPicker;
 import com.klemstinegroup.sunshineblue.colorpicker.Spinner;
 import com.klemstinegroup.sunshineblue.engine.Statics;
+import com.klemstinegroup.sunshineblue.engine.commands.Command;
 import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
-import sun.security.provider.Sun;
 
 
 public class LoopOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
@@ -26,7 +25,7 @@ public class LoopOverlay extends ScreenObject implements Overlay, Touchable, Dra
     public final Stage stage;
     public final Slider sliderLoopLength;
     public final Slider sliderLoopStart;
-    public final Slider sliderLoopEnd;
+    public final Slider sliderLoopWidth;
     public final DialogColorPicker picker;
     Touchable touchable;
     BaseObject drawObject;
@@ -95,9 +94,12 @@ public class LoopOverlay extends ScreenObject implements Overlay, Touchable, Dra
         sliderLoopLength.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                System.out.println(sliderLoopLength.getValue()+"\t"+sliderLoopStart.getValue()+"\t"+sliderLoopWidth.getValue());
                 Statics.RECMAXFRAMES= (int) sliderLoopLength.getValue();
-                sliderLoopStart.setRange(0,sliderLoopLength.getValue());
-                sliderLoopEnd.setRange(0,sliderLoopLength.getValue());
+                float g = Math.max(0, Statics.RECMAXFRAMES - sliderLoopWidth.getValue());
+                System.out.println("range:"+g);
+                sliderLoopStart.setRange(0,g);
+                sliderLoopWidth.setRange(0,sliderLoopLength.getValue());
             }
         });
         ;
@@ -110,30 +112,35 @@ public class LoopOverlay extends ScreenObject implements Overlay, Touchable, Dra
         sliderLoopStart.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (sliderLoopStart.getValue()>= sliderLoopEnd.getValue()){
-                    sliderLoopStart.setValue(sliderLoopEnd.getValue());
-                }
+//                if (sliderLoopStart.getValue()>= sliderLoopWidth.getValue()){
+//                    sliderLoopStart.setValue(sliderLoopWidth.getValue());
+//                }
                 SunshineBlue.instance.loopStart= (int) sliderLoopStart.getValue();
+                SunshineBlue.instance.loopEnd= (int) (sliderLoopStart.getValue()+sliderLoopWidth.getValue());
+                if (SunshineBlue.instance.frameCount<SunshineBlue.instance.loopStart||SunshineBlue.instance.frameCount>SunshineBlue.instance.loopEnd){
+                    Command.setToFrame(SunshineBlue.instance.loopStart);
+                }
             }
         });
         ;
         stage.addActor(sliderLoopStart);
 
-        sliderLoopEnd = new Slider(0, 600, 1, true, skin);
-        sliderLoopEnd.setPosition(40, 80);
-        sliderLoopEnd.setSize(20, SunshineBlue.instance.overlayViewport.getWorldHeight() - 150);
-        sliderLoopEnd.setValue(Statics.RECMAXFRAMES);
-        sliderLoopEnd.addListener(new ChangeListener() {
+        sliderLoopWidth = new Slider(0, 600, 1, true, skin);
+        sliderLoopWidth.setPosition(40, 80);
+        sliderLoopWidth.setSize(20, SunshineBlue.instance.overlayViewport.getWorldHeight() - 150);
+        sliderLoopWidth.setValue(SunshineBlue.instance.loopEnd-SunshineBlue.instance.loopStart);
+        sliderLoopWidth.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (sliderLoopStart.getValue()>= sliderLoopEnd.getValue()){
-                    sliderLoopEnd.setValue(sliderLoopStart.getValue());
-                }
-                SunshineBlue.instance.loopEnd= (int) sliderLoopEnd.getValue();
+//                if (sliderLoopStart.getValue()>= sliderLoopWidth.getValue()){
+//                    sliderLoopWidth.setValue(sliderLoopStart.getValue());
+//                }
+                sliderLoopStart.setRange(0,Statics.RECMAXFRAMES-sliderLoopWidth.getValue());
+                SunshineBlue.instance.loopEnd= (int) (sliderLoopStart.getValue()+sliderLoopWidth.getValue());
             }
         });
         ;
-        stage.addActor(sliderLoopEnd);
+        stage.addActor(sliderLoopWidth);
 
     }
 
@@ -226,7 +233,7 @@ public class LoopOverlay extends ScreenObject implements Overlay, Touchable, Dra
         if (touchable != null) SunshineBlue.instance.im.addProcessor(touchable);
         sliderLoopLength.setValue(Statics.RECMAXFRAMES);
         sliderLoopStart.setValue(SunshineBlue.instance.loopStart);
-        sliderLoopEnd.setValue(SunshineBlue.instance.loopEnd);
+        sliderLoopWidth.setValue(SunshineBlue.instance.loopEnd-SunshineBlue.instance.loopStart);
     }
 
     @Override
