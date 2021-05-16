@@ -21,7 +21,7 @@
     Shine On!
     <br />
     <br />
-    <a href="https://github.com/raver1975/sunshine.blue">View Demo</a>
+    <a href="https://sunshine.blue">View Demo</a>
     ·
     <a href="https://github.com/raver1975/sunshine.blue/issues">Report Bug</a>
     ·
