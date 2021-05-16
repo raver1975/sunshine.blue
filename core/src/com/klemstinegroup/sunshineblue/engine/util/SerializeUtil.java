@@ -116,7 +116,7 @@ public class SerializeUtil {
                     String nuuid = UUID.randomUUID().toString();
                     st = st.replaceAll(bo.uuid, nuuid);
                 }
-                JsonValue val = reader.parse(new String(st));
+                JsonValue val = reader.parse(st);
                 if (val != null) {
                     Gdx.app.log("val", val.toJson(JsonWriter.OutputType.minimal));
                     JsonValue commandArray = val.get("commands");
