@@ -1,25 +1,5 @@
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Thanks again! Now go create something AMAZING! :D
-***
-***
-***
-*** To avoid retyping too much info. Do a search and replace for the following:
-*** raver1975, sunshinelab, raver1975, paulklemstine@gmail.com, sunshinelabs, Shine On
--->
-
-
-
 <!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
+
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
@@ -32,25 +12,22 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/raver1975/sunshinelab">
+  <a href="https://sunshine.blue">
     <img src="android/ic_launcher-web.png" alt="Logo" width="80" height="80">
   </a>
 
-<h3 align="center">sunshinelabs</h3>
+<h3 align="center">sunshine.blues</h3>
 
   <p align="center">
-    Shine On
-    <br />
-    <a href="https://github.com/raver1975/sunshinelab"><strong>Explore the docs »</strong></a>
+    Shine On!
     <br />
     <br />
-    <a href="https://github.com/raver1975/sunshinelab">View Demo</a>
+    <a href="https://github.com/raver1975/sunshine.blue">View Demo</a>
     ·
-    <a href="https://github.com/raver1975/sunshinelab/issues">Report Bug</a>
+    <a href="https://github.com/raver1975/sunshine.blue/issues">Report Bug</a>
     ·
-    <a href="https://github.com/raver1975/sunshinelab/issues">Request Feature</a>
+    <a href="https://github.com/raver1975/sunshine.blue/issues">Request Feature</a>
   </p>
-</p>
 
 
 
@@ -83,69 +60,92 @@
 
 
 <!-- ABOUT THE PROJECT -->
+
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+<a ref="sunshine.blue"><img src="android/ic_launcher-web.png" alt="Logo" width="80" height="80"></a>
+<br/>
 
-Here's a blank template to get started:
-**To avoid retyping too much info. Do a search and replace with your text editor for the following:**
-`raver1975`, `sunshinelab`, `raver1975`, `paulklemstine@gmail.com`, `sunshinelabs`, `Shine On`
+### Features
+
+* [Libgdx](https://libgdx.com)
+
+  Compiles to Android, IOS, desktop and web app.
+  
+
+* [IPFS](https://ipfs.io/)
+
+   Interplanetary Filesystem
 
 
-### Built With
-
-* []()
-* []()
-* []()
+* Java VM scripting engine<br/>
+  Load and run arbitrary Java classes from the web. 
+  Suprisingly this survives the transpilation from Java to Javascript, which is *mind blowing*. The javascript in the web app is running java bytecode that is able to interact and modify it's own code, but it's running Javascript!     
 
 
 
+
+  
 <!-- GETTING STARTED -->
+
 ## Getting Started
 
 To get a local copy up and running follow these simple steps.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+1. Java 1.8
+2. Gradle
 
 ### Installation
 
-1. Clone the repo
    ```sh
-   git clone https://github.com/raver1975/sunshinelab.git
+   git clone https://github.com/raver1975/sunshine.blue.git
    ```
-2. Install NPM packages
-   ```sh
-   npm install
-   ```
-
-
 
 <!-- USAGE EXAMPLES -->
+
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+desktop:
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+```sh
+   ./gradlew desktop:run
+   ```
 
+HTML  (browse to [localhost:8080](localhost:8080)):
 
+```sh
+   ./gradlew html:superDev
+   ```
+
+Android
+
+```sh
+./gradlew android:installDebug android:run
+```
+
+IOS
+
+```sh
+./gradlew ios:launchIPhoneSimulator
+```
 
 <!-- ROADMAP -->
+
 ## Roadmap
 
-See the [open issues](https://github.com/raver1975/sunshinelab/issues) for a list of proposed features (and known issues).
+See the [open issues](https://github.com/raver1975/sunshine.blue/issues) for a list of proposed features (and known
+issues).
 
 
 
 <!-- CONTRIBUTING -->
+
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any
+contributions you make are **greatly appreciated**.
 
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
@@ -153,46 +153,45 @@ Contributions are what make the open source community such an amazing place to b
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-
-
 <!-- LICENSE -->
+
 ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+See `LICENSE` for more information.
 
 
 
 <!-- CONTACT -->
+
 ## Contact
 
-Your Name - [@raver1975](https://twitter.com/raver1975) - paulklemstine@gmail.com
+Paul Klemstine - [@raver1975](https://twitter.com/raver1975) - paulklemstine@gmail.com
 
-Project Link: [https://github.com/raver1975/sunshinelab](https://github.com/raver1975/sunshinelab)
-
-
-
-<!-- ACKNOWLEDGEMENTS -->
-## Acknowledgements
-
-* []()
-* []()
-* []()
-
-
-
-
+Project Link: [https://github.com/raver1975/sunshine.blue](https://github.com/raver1975/sunshine.blue)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/raver1975/sunshinelab.svg?style=for-the-badge
-[contributors-url]: https://github.com/raver1975/sunshinelab/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/raver1975/sunshinelab.svg?style=for-the-badge
-[forks-url]: https://github.com/raver1975/sunshinelab/network/members
-[stars-shield]: https://img.shields.io/github/stars/raver1975/sunshinelab.svg?style=for-the-badge
-[stars-url]: https://github.com/raver1975/sunshinelab/stargazers
-[issues-shield]: https://img.shields.io/github/issues/raver1975/sunshinelab.svg?style=for-the-badge
-[issues-url]: https://github.com/raver1975/sunshinelab/issues
-[license-shield]: https://img.shields.io/github/license/raver1975/sunshinelab.svg?style=for-the-badge
-[license-url]: https://github.com/raver1975/sunshinelab/blob/master/LICENSE.txt
+
+[contributors-shield]: https://img.shields.io/github/contributors/raver1975/sunshine.blue.svg?style=for-the-badge
+
+[contributors-url]: https://github.com/raver1975/sunshine.blue/graphs/contributors
+
+[forks-shield]: https://img.shields.io/github/forks/raver1975/sunshine.blue.svg?style=for-the-badge
+
+[forks-url]: https://github.com/raver1975/sunshine.blue/network/members
+
+[stars-shield]: https://img.shields.io/github/stars/raver1975/sunshine.blue.svg?style=for-the-badge
+
+[stars-url]: https://github.com/raver1975/sunshine.blue/stargazers
+
+[issues-shield]: https://img.shields.io/github/issues/raver1975/sunshine.blue.svg?style=for-the-badge
+
+[issues-url]: https://github.com/raver1975/sunshine.blue/issues
+
+[license-shield]: https://img.shields.io/github/license/raver1975/sunshine.blue.svg?style=for-the-badge
+
+[license-url]: https://github.com/raver1975/sunshine.blue/blob/master/LICENSE.txt
+
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+
 [linkedin-url]: https://linkedin.com/in/paulklemstine
