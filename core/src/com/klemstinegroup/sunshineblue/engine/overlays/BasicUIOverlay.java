@@ -238,9 +238,8 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                             Preferences prefs = Gdx.app.getPreferences("scenes");
                             for (String s:prefs.get().keySet()){
                                 prefs.remove(s);
+                                prefs.flush();
                             }
-                            prefs.clear();
-                            prefs.flush();
                             SunshineBlue.instance.otherCIDS.clear();
                         } else if (object.equals(1)) {
                             SerializeUtil.save(new IPFSCIDListener() {
