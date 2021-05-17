@@ -191,12 +191,13 @@ public class SerializeUtil {
     }
 
     public static void save(IPFSCIDListener ipfscidListener) {
+        int framePos=SunshineBlue.instance.frameCount;
         Command.setToFrame(0);
 //        SunshineBlue.instance.batch.begin();
         Pixmap screenshot = FrameBufferUtils.drawObjectsPix(SunshineBlue.instance.batch, SunshineBlue.instance.viewport, SunshineBlue.instance.userObjects, 400 * SunshineBlue.instance.viewport.getScreenWidth() / SunshineBlue.instance.viewport.getScreenHeight(), 400, true);
 //        SunshineBlue.instance.batch.end();
         JsonValue val = serializeScene();
-        Command.setToFrame(SunshineBlue.instance.frameCount);
+        Command.setToFrame(framePos);
 
         Array<Command> packed = new Array<>();
         for (Map.Entry<Integer, Array<Command>> entry : SunshineBlue.instance.commands.entrySet()) {
