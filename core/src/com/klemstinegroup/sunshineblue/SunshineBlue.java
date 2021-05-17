@@ -67,7 +67,6 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public static SunshineBlue instance;
     public HashMap<String, String> otherCIDS = new HashMap<>();
     public Array<String> autoloaded = new Array<>();
-    public boolean takingScreenshot;
     public boolean autoload;
     public long autoloadtime;
     //    public Rectangle recordRect;
@@ -287,6 +286,9 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
         if (frameCount != lastframeCount) {
             if (frameCount > loopEnd) {
+                if (isRecording){
+                    stopRecording();
+                }
                 Command.setToFrame(loopStart);
                 frameCount = loopStart;
                 startTime = TimeUtils.millis() - (long) ((frameCount * 1000f) / fps);
@@ -299,6 +301,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
                 }
             }
             if (isRecording) {
+                System.out.println("rec frame");
                 apng.write(FrameBufferUtils.drawObjectsPix(batch, viewport, userObjects, 600 * viewport.getScreenWidth() / viewport.getScreenHeight(), 600, false));
                 if (recCounter-- <= 0) {
                     stopRecording();
@@ -367,8 +370,6 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         String text = loopStart + " / " + frameCount + " / " + loopEnd;
         glyphLayout.setText(font, text);
         batch.setColor(Color.WHITE);
-//        shapedrawer.setDefaultLineWidth(8);
-//        shapedrawer.line(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 5, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20), SunshineBlue.instance.overlayViewport.getWorldHeight() - 5);
         shapedrawer.update();
         shapedrawer.setColor(Color.RED);
         shapedrawer.setDefaultLineWidth(4);
@@ -389,48 +390,19 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     }
 
 
-    @Override
+    /*@Override
     public void dispose() {
-//        batch.dispose();
-    }
+        batch.dispose();
+        vfxManager.dispose();
+        assetManager.dispose();
+    }*/
 
     @Override
     public void resize(int width, int height) {
         Gdx.app.log("resize", width + "\t" + height);
-//        int WORLD_WIDTH=(550*width)/height;
-//        int WORLD_HEIGHT=550;
         viewport.update(width, height);
         overlayViewport.update(width, height);
         vfxManager.resize(width,height);
-//        SunshineBlue.instance.recordRect = new Rectangle(SunshineBlue.instance.viewport.getScreenX(), SunshineBlue.instance.viewport.getScreenY(), SunshineBlue.instance.viewport.getScreenWidth(), SunshineBlue.instance.viewport.getScreenHeight());
-
-//        Statics.overlayViewport.getCamera().viewportWidth = WORLD_WIDTH;
-//        Statics.overlayViewport.getCamera().viewportHeight = WORLD_HEIGHT;
-//        Statics.overlayViewport.getCamera().position.set(WORLD_WIDTH/2,WORLD_HEIGHT/2, 0);
-//        Statics.overlayViewport.getCamera().update();
-
-        /*Statics stat=new Statics();
-        Field[] fields = ClassReflection.getFields(Statics.class);
-        for (Field f:fields){
-            if (Overlay.class.isAssignableFrom(f.getType())){
-                if (f.getType().isInterface()){continue;}
-                try {
-                    Object o=f.get(stat);
-                    System.out.println(f.getType().getName());
-                    Field stageField=ClassReflection.getField(f.getType(),"stage");
-                    Stage st=(Stage) stageField.get(o);
-                    st.getViewport().update(width,height);
-//                    st.getCamera().viewportWidth = WORLD_WIDTH;
-//                    st.getCamera().viewportHeight = WORLD_HEIGHT;
-//                    st.getCamera().position.set(st.getCamera().viewportWidth / 2, st.getCamera().viewportHeight / 2, 0);
-                    st.getCamera().update();
-//                    st.setViewport(Statics.overlayViewport);
-//                    st.getViewport().apply(true);
-                } catch (ReflectionException e) {
-                    e.printStackTrace();
-                }
-            }
-        }*/
     }
 
     @Override
@@ -478,126 +450,23 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         return false;
     }
 
-    /*@Override
-    public boolean keyDown(int keycode) {
-        for (BaseObject bo : Statics.userObjects) {
-            if (bo instanceof Touchable) {
-                ((Touchable) bo).keyDown(keycode);
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        for (BaseObject bo : Statics.userObjects) {
-            if (bo instanceof Touchable) {
-                ((Touchable) bo).keyDown(keycode);
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        for (BaseObject bo : Statics.userObjects) {
-            if (bo instanceof Touchable) {
-                ((Touchable) bo).keyTyped(character);
-            }
-        }
-        return false;
-    }
-
-//
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        for (BaseObject bo : Statics.userObjects) {
-            if (bo instanceof Touchable) {
-                ((Touchable) bo).touchUp(screenX, screenY, pointer, button);
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        viewport.unproject(touchdrag.set(screenX, screenY, 0));
-        for (BaseObject bo : Statics.userObjects) {
-            if (bo instanceof Touchable) {
-                ((Touchable) bo).touchDragged(screenX, screenY, pointer);
-            }
-        }
-        for (BaseObject bo : Statics.selectedObjects) {
-            if (bo instanceof ScreenObject) {
-                switch (Statics.transformButton) {
-                    case 0:
-                        ((ScreenObject) bo).position.add(touchdrag.cpy().sub(touchdown));
-                        break;
-                    case 1:
-                        ((ScreenObject) bo).rotation += touchdrag.x - touchdown.x;
-                        break;
-                    case 2:
-                        ((ScreenObject) bo).scale += (touchdrag.x - touchdown.x) / 200f;
-                        break;
-                }
-
-            }
-        }
-        touchdown.set(touchdrag);
-
-
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(float amountX, float amountY) {
-        return false;
-    }*/
-
     @Override
     public void pause() {
         SerializeUtil.save(new IPFSCIDListener() {
             @Override
             public void cid(String cid) {
                 Gdx.app.log("saved", "saved at " + cid);
-//                Gdx.app.exit();
-//                SunshineBlue.super.pause();
-//                Gdx.app.exit();
             }
 
             @Override
             public void uploadFailed(Throwable t) {
                 Gdx.app.log("saved", "failed");
                 Statics.exceptionLog("not saved", t);
-//                Gdx.app.exit();
-//                SunshineBlue.super.pause();
             }
         });
         super.pause();
     }
 
-    /*//    @Override
-    public void resume() {
-        *//*super.resume();
-        Pixmap pixmap = getWhitePixel();
-        TextureRegion whitePixel = new TextureRegion(new Texture(pixmap));
-        shapedrawer = new ShapeDrawer(batch, whitePixel);
-        TRANSFORM_OVERLAY = new TransformOverlay();
-        FONT_OVERLAY = new FontOverlay();
-        IMAGE_OVERLAY = new ImageOverlay();
-        DRAW_OVERLAY = new DrawOverlay();
-        BASIC_UI_OVERLAY = new BasicUIOverlay();
-        for (BaseObject bo:SunshineBlue.instance.userObjects){
-                bo.regenerate(assetManager);
-        }*//*
-
-    }*/
 
     private Pixmap getWhitePixel() {
         Pixmap pixmap = new Pixmap(10, 10, Pixmap.Format.RGB888);
@@ -613,20 +482,20 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
     public void startRecording() {
 //        Gdx.graphics.setContinuousRendering(false);
-        Command.setToFrame(0);
-        loopStart = 0;
-        loopEnd = Statics.RECMAXFRAMES;
+
+//        loopStart = 0;
+//        loopEnd = Statics.RECMAXFRAMES;
         pauseLoop = false;
         isRecording = true;
 
-        recCounter = Statics.RECMAXFRAMES;
+        recCounter = 1+loopEnd-loopStart;
         apng = new IncrementalAnimatedPNG();
         apng.setFlipY(true);
         mfh = new MemoryFileHandle();
         int w = 600 * viewport.getScreenWidth() / viewport.getScreenHeight();
         int h = 600;
         apng.start(mfh, (short) fps, w, h);
-
+        Command.setToFrame(SunshineBlue.instance.loopStart);
     }
 
     public void stopRecording() {

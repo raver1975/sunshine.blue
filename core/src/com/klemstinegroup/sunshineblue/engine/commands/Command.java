@@ -54,8 +54,12 @@ public abstract class Command {
         insert(SunshineBlue.instance.frameCount, command, bo);
     }
 
+
+    public static float getStateTime(){
+        return SunshineBlue.instance.frameCount/SunshineBlue.fps;
+    }
+
     public static void setToFrame(int frame) {
-        System.out.println(frame + " frame: framecnt " + SunshineBlue.instance.frameCount);
         if (frame == SunshineBlue.instance.frameCount) {
             return;
         } else if (frame < SunshineBlue.instance.frameCount) {
@@ -77,7 +81,6 @@ public abstract class Command {
                 }
             }
         }
-        System.out.println();
         SunshineBlue.instance.startTime = TimeUtils.millis() - (long) ((frame * 1000f) / SunshineBlue.instance.fps);
         SunshineBlue.instance.frameCount = frame;
     }

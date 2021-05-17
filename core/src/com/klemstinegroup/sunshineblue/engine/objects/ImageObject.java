@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.*;
 import com.github.tommyettinger.anim8.GifDecoder;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
+import com.klemstinegroup.sunshineblue.engine.commands.Command;
 import com.klemstinegroup.sunshineblue.engine.data.ScreenData;
 import com.klemstinegroup.sunshineblue.engine.overlays.Drawable;
 import com.klemstinegroup.sunshineblue.engine.overlays.Touchable;
@@ -26,7 +27,6 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
     private Polygon polygon;
     private String cid;
     private Array<String> cids = new Array<>();
-    private float stateTime;
     Vector2 angleCalc = new Vector2();
     float angleRotateAnimAngle = 0;
 
@@ -521,9 +521,8 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
             batch.setColor(Color.WHITE);
 
             if (textures != null) {
-                stateTime += delta;
                 try {
-                    batch.draw(textures.getKeyFrame(SunshineBlue.instance.takingScreenshot?0:stateTime, true), -sd.center.x, -sd.center.y);
+                    batch.draw(textures.getKeyFrame(Command.getStateTime(), true), -sd.center.x, -sd.center.y);
 //                    System.out.println("draw:"+textures.getKeyFrame(stateTime, true));
                 } catch (Exception e) {
                     Statics.exceptionLog("err", e);

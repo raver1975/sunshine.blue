@@ -20,17 +20,12 @@ import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
 
 
-public class LoopOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
+public class LoopOverlay extends ScreenObject implements Overlay, Drawable {
 
     public final Stage stage;
     public final Slider sliderLoopLength;
     public final Slider sliderLoopStart;
     public final Slider sliderLoopWidth;
-    public final DialogColorPicker picker;
-    Touchable touchable;
-    BaseObject drawObject;
-    Vector2 touchdrag = new Vector2();
-    Vector2 touchdown = new Vector2();
 
 
     public LoopOverlay() {
@@ -60,31 +55,9 @@ public class LoopOverlay extends ScreenObject implements Overlay, Touchable, Dra
         pauseCB.setChecked(SunshineBlue.instance.pauseLoop);
         stage.addActor(pauseCB);
 
-        SunshineBlue.instance.assetManager.finishLoadingAsset("skin-composer-ui/skin-composer-ui.json");
-        Skin skin1 = SunshineBlue.instance.assetManager.get("skin-composer-ui/skin-composer-ui.json", Skin.class);
+//        SunshineBlue.instance.assetManager.finishLoadingAsset("skin-composer-ui/skin-composer-ui.json");
+//        Skin skin1 = SunshineBlue.instance.assetManager.get("skin-composer-ui/skin-composer-ui.json", Skin.class);
 //        Skin skin1=new Skin(Gdx.files.internal("skin-composer-ui/skin-composer-ui.json"));
-
-        Button.ButtonStyle buttonMinusStyle = skin1.get("spinner-minus-h", Button.ButtonStyle.class);
-        Button.ButtonStyle buttonPlusStyle = skin1.get("spinner-plus-h", Button.ButtonStyle.class);
-        TextField.TextFieldStyle textFieldStyle = skin1.get("spinner", TextField.TextFieldStyle.class);
-        Spinner.SpinnerStyle style = new Spinner.SpinnerStyle(buttonMinusStyle, buttonPlusStyle, textFieldStyle);
-
-        skin1.add("default", style);
-        picker = new DialogColorPicker("main", skin1, new DialogColorPicker.ColorListener() {
-            @Override
-            public void selected(Color color) {
-                SunshineBlue.instance.bgColor = color.cpy();
-            }
-        }, SunshineBlue.instance.bgColor);
-//        picker.setResizable(true);
-//        picker.setScale(.9f);
-
-        picker.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                SunshineBlue.instance.bgColor = picker.getSelectedColor().cpy();
-            }
-        });
 
 
         sliderLoopLength = new Slider(1, 600, 1, true, skin);
@@ -145,56 +118,7 @@ public class LoopOverlay extends ScreenObject implements Overlay, Touchable, Dra
     }
 
     public void setTouchable(Touchable touchable) {
-        this.touchable = touchable;
-    }
 
-    @Override
-    public boolean keyDown(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        touchdown.set(screenX, -screenY);
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        for (BaseObject bo : SunshineBlue.instance.selectedObjects) {
-            if (bo instanceof Touchable) {
-                ((Touchable) bo).setBounds();
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        touchdrag.set(screenX, -screenY);
-        ((OrthographicCamera)SunshineBlue.instance.viewport.getCamera()).translate(touchdown.sub(touchdrag));
-        touchdown.set(touchdrag);
-        return true;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(float amountX, float amountY) {
-        return false;
     }
 
     float cflash=0;
@@ -212,25 +136,11 @@ public class LoopOverlay extends ScreenObject implements Overlay, Touchable, Dra
 
     }
 
-    @Override
-    public boolean isSelected(Vector2 touch) {
-        return false;
-    }
 
-    @Override
-    public boolean isSelected(Polygon gon) {
-        return false;
-    }
-
-    @Override
-    public void setBounds() {
-
-    }
 
     @Override
     public void setInput() {
         SunshineBlue.instance.im.addProcessor(stage);
-        if (touchable != null) SunshineBlue.instance.im.addProcessor(touchable);
         sliderLoopLength.setValue(Statics.RECMAXFRAMES);
         sliderLoopStart.setValue(SunshineBlue.instance.loopStart);
         sliderLoopWidth.setValue(SunshineBlue.instance.loopEnd-SunshineBlue.instance.loopStart);
@@ -239,11 +149,11 @@ public class LoopOverlay extends ScreenObject implements Overlay, Touchable, Dra
     @Override
     public void removeInput() {
         SunshineBlue.instance.im.removeProcessor(stage);
-        if (touchable != null) SunshineBlue.instance.im.removeProcessor(touchable);
     }
 
     @Override
-    public void setObject(BaseObject doi) {
-        this.drawObject = doi;
+    public void setObject(BaseObject bo) {
+
     }
+
 }
