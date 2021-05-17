@@ -2,10 +2,8 @@ package com.klemstinegroup.sunshineblue.engine.overlays;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -16,18 +14,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.TimeUtils;
 import com.crashinvaders.vfx.effects.*;
-import com.crashinvaders.vfx.effects.util.CopyEffect;
-import com.crashinvaders.vfx.effects.util.GammaThresholdEffect;
-import com.crashinvaders.vfx.effects.util.MixEffect;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.colorpicker.DialogColorPicker;
 import com.klemstinegroup.sunshineblue.colorpicker.Spinner;
 import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
-import com.klemstinegroup.sunshineblue.engine.objects.DrawObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
-import com.klemstinegroup.sunshineblue.engine.util.ColorHelper;
 
 public class BackgroundOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
 

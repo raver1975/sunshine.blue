@@ -19,7 +19,7 @@ import com.klemstinegroup.sunshineblue.engine.commands.Command;
 import com.klemstinegroup.sunshineblue.engine.commands.TransformCommand;
 import com.klemstinegroup.sunshineblue.engine.commands.VisibleCommand;
 import com.klemstinegroup.sunshineblue.engine.objects.*;
-import com.klemstinegroup.sunshineblue.engine.util.ColorHelper;
+import com.klemstinegroup.sunshineblue.engine.util.ColorUtil;
 import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
 
 
@@ -219,7 +219,9 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                         if (recButton.isChecked()) {
                             Command.insert(new CenterCommand(touchdown, bo.uuid), bo);
                         }
-                        so.recenter(touchdown.cpy());
+                        else{
+                            so.recenter(touchdown.cpy());
+                        }
                         break;
                 }
 
@@ -254,27 +256,35 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                         if (recButton.isChecked()) {
                             Command.insert(new TransformCommand(tempVec, 0, 0, bo.uuid), bo);
                         }
-                        so.sd.position.add(tempVec);
+                        else{
+                            so.sd.position.add(tempVec);
+                        }
                         break;
                     case 1:
                         float rot = touchdrag.x - touchdown.x;
                         if (recButton.isChecked()) {
                             Command.insert(new TransformCommand(new Vector2(), rot, 0, bo.uuid), bo);
                         }
-                        so.sd.rotation += rot;
+                        else{
+                            so.sd.rotation += rot;
+                        }
                         break;
                     case 2:
                         float scal = (touchdrag.x - touchdown.x) / 200f;
                         if (recButton.isChecked()) {
                             Command.insert(new TransformCommand(new Vector2(), 0, scal, bo.uuid), bo);
                         }
-                        so.sd.scale += scal;
+                        else{
+                            so.sd.scale += scal;
+                        }
                         break;
                     case 3:
                         if (recButton.isChecked()) {
                             Command.insert(new CenterCommand(touchdown, bo.uuid), bo);
                         }
-                        so.recenter(touchdown.cpy());
+                        else{
+                            so.recenter(touchdown.cpy());
+                        }
                         break;
                 }
                 if (bo instanceof Touchable) {
@@ -345,7 +355,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
             CheckBox cb = new CheckBox("", skin, "switch");
             cb.setUserObject(ba);
 //            ((TextureRegionDrawable)cb.getImage().getDrawable()).tint(Color.BLACK);
-            cb.getImage().setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(ba, true) / ((float) SunshineBlue.instance.userObjects.size - 1)).cpy().lerp(Color.WHITE, .3f));
+            cb.getImage().setColor(ColorUtil.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(ba, true) / ((float) SunshineBlue.instance.userObjects.size - 1)).cpy().lerp(Color.WHITE, .1f));
 //            cb.setColor(Color.BLACK);
             cb.setChecked(((ScreenObject) ba).sd.visible);
             cb.addListener(new ClickListener() {

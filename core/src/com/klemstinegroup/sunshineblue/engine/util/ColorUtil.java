@@ -16,7 +16,7 @@ import java.util.Map;
  *
  * @author timaschew
  */
-public class ColorHelper {
+public class ColorUtil {
 
     private final static int LOW = 0;
     private final static int HIGH = 255;

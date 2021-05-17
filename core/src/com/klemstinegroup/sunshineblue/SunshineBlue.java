@@ -72,7 +72,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     //    public Rectangle recordRect;
     private int recCounter;
     public static final float fps = 10;
-    public float colorFlash = 0;
+//    public float colorFlash = 0;
     private float delta = 1;
     public Color bgColor = Color.CLEAR;
     public HashMap<Integer, Array<Command>> commands = new HashMap<>();
@@ -314,10 +314,10 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
             }
         }
         lastframeCount = frameCount1;
-        colorFlash += delta / 3f;
-        if (colorFlash > .4f) {
-            colorFlash = 0;
-        }
+//        colorFlash += delta / 10f;
+//        if (colorFlash > .2f) {
+//            colorFlash = 0;
+//        }
         if (assetManager.update()) {
             // we are done loading, let's move to another screen!
         }

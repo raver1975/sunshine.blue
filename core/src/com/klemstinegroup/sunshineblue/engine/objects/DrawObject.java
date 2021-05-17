@@ -15,7 +15,7 @@ import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.data.DrawData;
 import com.klemstinegroup.sunshineblue.engine.overlays.Drawable;
 import com.klemstinegroup.sunshineblue.engine.overlays.Touchable;
-import com.klemstinegroup.sunshineblue.engine.util.ColorHelper;
+import com.klemstinegroup.sunshineblue.engine.util.ColorUtil;
 import com.klemstinegroup.sunshineblue.engine.util.LineSmoother;
 import com.klemstinegroup.sunshineblue.engine.util.RamerDouglasPeucker;
 import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
@@ -257,10 +257,10 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
 
             setBounds();
             if (SunshineBlue.instance.selectedObjects.contains(this, true)) {
-                SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / (float) (SunshineBlue.instance.userObjects.size - 1)).cpy().lerp(Color.WHITE, SunshineBlue.instance.colorFlash));
-                float radius = 10 + 10 * SunshineBlue.instance.colorFlash;
-                SunshineBlue.instance.shapedrawer.circle(0, 0, radius, 2);
-                angleCalc.set(0, radius);
+                SunshineBlue.instance.shapedrawer.setColor(ColorUtil.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / (float) (SunshineBlue.instance.userObjects.size - 1)).cpy().lerp(Color.WHITE, .1f));
+//                float radius = 10 + 10 * SunshineBlue.instance.colorFlash;
+                SunshineBlue.instance.shapedrawer.circle(0, 0, 10, 2);
+                angleCalc.set(0, 10);
                 angleCalc.rotateDeg(angleRotateAnimAngle += 1);
                 SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
                 angleCalc.rotateDeg(90);
@@ -275,7 +275,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
                     batch.end();
                     batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
                     batch.begin();
-                    SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / (float) (SunshineBlue.instance.userObjects.size - 1)).cpy().lerp(Color.WHITE, SunshineBlue.instance.colorFlash));
+                    SunshineBlue.instance.shapedrawer.setColor(ColorUtil.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / (float) (SunshineBlue.instance.userObjects.size - 1)).cpy().lerp(Color.WHITE,.1f));
                     SunshineBlue.instance.shapedrawer.polygon(polygon,5, JoinType.NONE);
                 }
             }

@@ -28,7 +28,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
     private String cid;
     private Array<String> cids = new Array<>();
     Vector2 angleCalc = new Vector2();
-    float angleRotateAnimAngle = 0;
+    private float angleRotateAnimAngle;
 
     public ImageObject(byte[] data, Pixmap pixmapIn, String cid) {
         Gdx.app.postRunnable(new Runnable() {
@@ -537,10 +537,9 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 
             setBounds();
             if (SunshineBlue.instance.selectedObjects.contains(this, true)) {
-                SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / (float) (SunshineBlue.instance.userObjects.size - 1)).cpy().lerp(Color.WHITE, SunshineBlue.instance.colorFlash));
-                float radius = 10 + 10 * SunshineBlue.instance.colorFlash;
-                SunshineBlue.instance.shapedrawer.circle(0, 0, radius, 2);
-                angleCalc.set(0, radius);
+                SunshineBlue.instance.shapedrawer.setColor(ColorUtil.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / (float) (SunshineBlue.instance.userObjects.size - 1)).cpy().lerp(Color.WHITE, .1f));
+                SunshineBlue.instance.shapedrawer.circle(0, 0, 10, 2);
+                angleCalc.set(0, 10);
                 angleCalc.rotateDeg(angleRotateAnimAngle += 1);
                 SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
                 angleCalc.rotateDeg(90);
@@ -556,7 +555,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                     batch.begin();
 //                SunshineBlue.instance.shapedrawer.setColor(Color.WHITE);
 
-                    SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / ((float) SunshineBlue.instance.userObjects.size - 1)).cpy().lerp(Color.WHITE, SunshineBlue.instance.colorFlash));
+                    SunshineBlue.instance.shapedrawer.setColor(ColorUtil.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / ((float) SunshineBlue.instance.userObjects.size - 1)).cpy().lerp(Color.WHITE, .1f));
                     SunshineBlue.instance.shapedrawer.polygon(polygon, 5, JoinType.NONE);
                 }
 
