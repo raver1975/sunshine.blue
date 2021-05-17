@@ -251,30 +251,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public void render() {
-        if (autoload && TimeUtils.millis() > autoloadtime) {
-            Gdx.app.log("autoload", "");
-            autoloadtime = TimeUtils.millis() + 10000;
-            if (otherCIDS.size() > 0) {
-                if (otherCIDS.size() == autoloaded.size) {
-                    autoloaded.clear();
-                }
-                while (true) {
-                    int otherIndex = MathUtils.random(otherCIDS.size() - 1);
-                    Iterator<Map.Entry<String, String>> iter = otherCIDS.entrySet().iterator();
-                    for (int i = 0; i < otherIndex; i++) {
-                        iter.next();
-                    }
-                    Map.Entry<String, String> entry = iter.next();
-                    if (!autoloaded.contains(entry.getKey(), false)) {
-                        autoloaded.add(entry.getKey());
-                        SerializeUtil.load(entry.getKey(), false);
-                        break;
-                    }
-                }
 
-            }
-
-        }
 
         int frameCount1=frameCount;
         if (!pauseLoop) {
@@ -290,6 +267,29 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
             Command.compress(frameCount1);
 
             if (frameCount1 > loopEnd) {
+                if (autoload && TimeUtils.millis() > autoloadtime) {
+                    Gdx.app.log("autoload", "");
+                    autoloadtime = TimeUtils.millis() + Statics.AUTOLOADTIME;
+                    if (otherCIDS.size() > 0) {
+                        if (otherCIDS.size() == autoloaded.size) {
+                            autoloaded.clear();
+                        }
+                        while (true) {
+                            int otherIndex = MathUtils.random(otherCIDS.size() - 1);
+                            Iterator<Map.Entry<String, String>> iter = otherCIDS.entrySet().iterator();
+                            for (int i = 0; i < otherIndex; i++) {
+                                iter.next();
+                            }
+                            Map.Entry<String, String> entry = iter.next();
+                            if (!autoloaded.contains(entry.getKey(), false)) {
+                                autoloaded.add(entry.getKey());
+                                SerializeUtil.load(entry.getKey(), false);
+                                break;
+                            }
+                        }
+
+                    }
+                }
                 if (isRecording) {
                     stopRecording();
                 }
