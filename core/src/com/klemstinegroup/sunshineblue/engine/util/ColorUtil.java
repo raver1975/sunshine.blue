@@ -72,7 +72,7 @@ public class ColorUtil {
         // 1276 steps
         while (true) {
 
-            localMap.put(count++, new Color((float)r/255f, (float)g/255f, (float)b/255f, 1.0f));
+            localMap.put(count++, new Color((float)r/255f, (float)g/255f, (float)b/255f, 1.0f).lerp(Color.WHITE,.1f));
             if (b == HIGH) {
                 gF = 1; // increment green
             }
@@ -136,13 +136,13 @@ public class ColorUtil {
 
 //    public static Color rainbowDark() {
 //        Color rain=rainbow().cpy();
-//        rain=rain.lerp(Color.BLACK,.8f);
+//        rain=rain.
 //        return rain;
 //    }
 //
 //    public static Color rainbowLight() {
 //        Color rain=rainbowInverse().cpy();
-//        rain=rain.lerp(Color.WHITE,.6f);
+//        rain=rain.
 //        return rain;
 //    }
 

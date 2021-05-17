@@ -49,6 +49,7 @@ public abstract class Command {
                 kk++;
             }
         }
+
     }
 
     public static void insert(Command command, BaseObject bo) {

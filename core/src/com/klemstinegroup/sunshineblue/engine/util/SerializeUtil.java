@@ -303,7 +303,7 @@ public class SerializeUtil {
             Gdx.app.log("method", method.getName());
             method.invoke(null, temp);
         } catch (ReflectionException e) {
-            e.printStackTrace();
+            Statics.exceptionLog("copy error",e);
         }
     }
 

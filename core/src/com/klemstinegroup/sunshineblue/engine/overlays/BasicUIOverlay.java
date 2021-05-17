@@ -66,7 +66,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 //        fontButton.setColor(Color.WHITE);
 
         Actor saveButton = new TextButton("Save", skin);
-        saveButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 120);
+        saveButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 135);
         saveButton.addListener(new ClickListener() {
 
             @Override
@@ -82,7 +82,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         stage.addActor(saveButton);
 
         Actor popButton = new TextButton("Pop", skin);
-        popButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 300);
+        popButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 315);
         popButton.addListener(new ClickListener() {
 
             @Override
@@ -108,7 +108,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         stage.addActor(popButton);
 
         Actor apngButton = new TextButton("GIF", skin);
-        apngButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 240);
+        apngButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 255);
         apngButton.addListener(new ClickListener() {
 
             @Override
@@ -125,9 +125,9 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         });
         stage.addActor(apngButton);
 
-        Actor randomButton = new TextButton("Load", skin);
-        randomButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 60);
-        randomButton.addListener(new ClickListener() {
+        Actor loadButton = new TextButton("Load", skin);
+        loadButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 75);
+        loadButton.addListener(new ClickListener() {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -162,11 +162,11 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                                         }
                                         InputEvent event1 = new InputEvent();
                                         event1.setType(InputEvent.Type.touchDown);
-                                        randomButton.fire(event1);
+                                        loadButton.fire(event1);
 
                                         InputEvent event2 = new InputEvent();
                                         event2.setType(InputEvent.Type.touchUp);
-                                        randomButton.fire(event2);
+                                        loadButton.fire(event2);
                                     } else if (object.equals(2L)) {
                                         SerializeUtil.load(cid, false);
                                     } else if (object.equals(6L)) {
@@ -188,11 +188,11 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                                         }
                                         InputEvent event1 = new InputEvent();
                                         event1.setType(InputEvent.Type.touchDown);
-                                        randomButton.fire(event1);
+                                        loadButton.fire(event1);
 
                                         InputEvent event2 = new InputEvent();
                                         event2.setType(InputEvent.Type.touchUp);
-                                        randomButton.fire(event2);
+                                        loadButton.fire(event2);
                                     }
 
                                     this.hide();
@@ -228,7 +228,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 }
             }
         });
-        randomButton.addListener(new ActorGestureListener() {
+        loadButton.addListener(new ActorGestureListener() {
             @Override
             public boolean longPress(Actor actor, float x, float y) {
                 Dialog dialog = new Dialog("Erase scene?", skin) {
@@ -283,11 +283,11 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
             }
         });
-        stage.addActor(randomButton);
+        stage.addActor(loadButton);
 
 
         Actor screenshotButton = new TextButton("Png", skin);
-        screenshotButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 180);
+        screenshotButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 195);
         screenshotButton.addListener(new ClickListener() {
 
             @Override
@@ -352,7 +352,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 SunshineBlue.instance.autoloadtime = TimeUtils.millis();
             }
         });
-        autoload.setPosition(65, SunshineBlue.instance.overlayViewport.getWorldHeight() - 30);
+        autoload.setPosition(65, SunshineBlue.instance.overlayViewport.getWorldHeight() - 45);
         autoload.setChecked(SunshineBlue.instance.autoload);
         stage.addActor(autoload);
 
@@ -529,12 +529,12 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         stage.act();
         stage.draw();
         SunshineBlue.instance.font.setColor(Color.BLACK);
-        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 29, SunshineBlue.instance.overlayViewport.getWorldHeight() - 45);
-        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 30, SunshineBlue.instance.overlayViewport.getWorldHeight() - 44);
-        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 31, SunshineBlue.instance.overlayViewport.getWorldHeight() - 45);
-        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 30, SunshineBlue.instance.overlayViewport.getWorldHeight() - 46);
+        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 29, SunshineBlue.instance.overlayViewport.getWorldHeight() - 60);
+        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 30, SunshineBlue.instance.overlayViewport.getWorldHeight() - 59);
+        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 31, SunshineBlue.instance.overlayViewport.getWorldHeight() - 60);
+        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 30, SunshineBlue.instance.overlayViewport.getWorldHeight() - 61);
         SunshineBlue.instance.font.setColor(Color.CYAN);
-        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 30, SunshineBlue.instance.overlayViewport.getWorldHeight() - 45);
+        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 30, SunshineBlue.instance.overlayViewport.getWorldHeight() - 60);
 
     }
 

@@ -96,6 +96,20 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
         downArrow.setPosition(10, 260);
         stage.addActor(downArrow);
 
+        TextButton clearCommandsButton = new TextButton("Clr", skin);
+        clearCommandsButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                for (int i=SunshineBlue.instance.loopStart;i<=SunshineBlue.instance.loopEnd;i++){
+                    for (BaseObject so:SunshineBlue.instance.selectedObjects) {
+                        Command.remove(i,so.uuid);
+                    }
+                }
+            }
+        });
+        clearCommandsButton.setPosition(10, 410);
+        stage.addActor(clearCommandsButton);
+
         recButton = new CheckBox("Rec", skin, "switch");
        /* recButton.addListener(new ClickListener() {
             @Override
@@ -316,12 +330,12 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
 
 //        Statics.batch.setProjectionMatrix(mx4Overlay.idt());
 //        for (int i = 0; i < SunshineBlue.instance.selectedObjects.size; i++) {
-//            SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(SunshineBlue.instance.selectedObjects.get(i), true) / ((float) SunshineBlue.instance.userObjects.size-1)).cpy().lerp(Color.WHITE,SunshineBlue.instance.colorFlash));
+//            SunshineBlue.instance.shapedrawer.setColor(ColorHelper.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(SunshineBlue.instance.selectedObjects.get(i), true) / ((float) SunshineBlue.instance.userObjects.size-1)).cpy().
 //            SunshineBlue.instance.shapedrawer.filledCircle(170 + 30 * i, 20, 10);
 //        }
 //        for (CheckBox cb:checkBoxArray){
-//            cb.getImage().setColor(ColorHelper.numberToColorPercentage((float) checkBoxArray.indexOf(cb,true) / ((float) SunshineBlue.instance.userObjects.size-1)).cpy().lerp(Color.WHITE,SunshineBlue.instance.colorFlash));
-//            cb.setColor(ColorHelper.numberToColorPercentage((float) checkBoxArray.indexOf(cb,true) / ((float) SunshineBlue.instance.userObjects.size-1)).cpy().lerp(Color.WHITE,SunshineBlue.instance.colorFlash));
+//            cb.getImage().setColor(ColorHelper.numberToColorPercentage((float) checkBoxArray.indexOf(cb,true) / ((float) SunshineBlue.instance.userObjects.size-1)).cpy().
+//            cb.setColor(ColorHelper.numberToColorPercentage((float) checkBoxArray.indexOf(cb,true) / ((float) SunshineBlue.instance.userObjects.size-1)).cpy().
 //        }
         stage.act();
         stage.draw();
@@ -355,7 +369,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
             CheckBox cb = new CheckBox("", skin, "switch");
             cb.setUserObject(ba);
 //            ((TextureRegionDrawable)cb.getImage().getDrawable()).tint(Color.BLACK);
-            cb.getImage().setColor(ColorUtil.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(ba, true) / ((float) SunshineBlue.instance.userObjects.size - 1)).cpy().lerp(Color.WHITE, .1f));
+            cb.getImage().setColor(ColorUtil.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(ba, true) / ((float) SunshineBlue.instance.userObjects.size - 1)).cpy());
 //            cb.setColor(Color.BLACK);
             cb.setChecked(((ScreenObject) ba).sd.visible);
             cb.addListener(new ClickListener() {

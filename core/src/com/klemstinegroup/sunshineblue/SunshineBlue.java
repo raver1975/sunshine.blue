@@ -32,6 +32,7 @@ import com.klemstinegroup.sunshineblue.engine.objects.*;
 import com.klemstinegroup.sunshineblue.engine.overlays.*;
 import com.klemstinegroup.sunshineblue.engine.util.*;
 import space.earlygrey.shapedrawer.ShapeDrawer;
+import sun.security.provider.Sun;
 
 import java.util.*;
 
@@ -72,7 +73,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     //    public Rectangle recordRect;
     private int recCounter;
     public static final float fps = 10;
-//    public float colorFlash = 0;
+    //    public float colorFlash = 0;
     private float delta = 1;
     public Color bgColor = Color.CLEAR;
     public HashMap<Integer, Array<Command>> commands = new HashMap<>();
@@ -253,7 +254,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public void render() {
 
 
-        int frameCount1=frameCount;
+        int frameCount1 = frameCount;
         if (!pauseLoop) {
             frameCount1 = ((int) ((TimeUtils.millis() - startTime) / (1000f / fps)));
             delta = isRecording ? (1f / fps) : Gdx.graphics.getDeltaTime();
@@ -300,7 +301,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 //                        c.execute();
 //                    }
 //                }
-                frameCount1=loopStart;
+                frameCount1 = loopStart;
 
             }
             Command.setToFrame(frameCount1);
@@ -366,6 +367,27 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         vfxManager.applyEffects();
         vfxManager.renderToScreen();
 
+        Array<BaseObject> temp=SunshineBlue.instance.selectedObjects.size==0?SunshineBlue.instance.userObjects:SunshineBlue.instance.selectedObjects;
+        int[][] b = new int[temp.size][Statics.RECMAXFRAMES];
+        int max = 0;
+        for (int i = 0; i < Statics.RECMAXFRAMES; i++) {
+            Array<Command> subarray = SunshineBlue.instance.commands.get(i);
+            if (subarray != null) {
+                for (int j = 0; j < temp.size; j++) {
+                    BaseObject bo = temp.get(j);
+                    for (Command c : subarray) {
+                        if (c.actionOnUUID.equals(bo.uuid)) {
+                            b[j][i]++;
+                            if (b[j][i] > max) {
+                                max = b[j][i];
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
         batch.begin();
         if (overlay != null) {
             ((Drawable) overlay).draw(batch, delta);
@@ -374,13 +396,23 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         glyphLayout.setText(font, text);
         batch.setColor(Color.WHITE);
         shapedrawer.update();
-        shapedrawer.setColor(Color.RED);
-        shapedrawer.setDefaultLineWidth(4);
-        shapedrawer.line(10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (loopStart) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 5, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (loopEnd) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 5);
-        shapedrawer.setColor(Color.WHITE);
+        shapedrawer.setColor(Color.GRAY);
+        shapedrawer.setDefaultLineWidth(10);
+        shapedrawer.line(10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (loopStart) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 10, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (loopEnd) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 10);
         shapedrawer.setDefaultLineWidth(2);
-        shapedrawer.line(10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (frameCount) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 2, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (frameCount) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 10);
-        font.draw(batch, text, SunshineBlue.instance.overlayViewport.getWorldWidth() - glyphLayout.width - 10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 10);
+
+        for (int i = 0; i < temp.size; i++) {
+            shapedrawer.setColor(ColorUtil.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(temp.get(i), true) / (float) (SunshineBlue.instance.userObjects.size - 1)));
+            for (int j = 0; j < Statics.RECMAXFRAMES; j++) {
+                if (b[i][j] > 0) {
+                    shapedrawer.line(10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (j) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 5, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (j) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 15);
+                }
+            }
+
+        }
+        shapedrawer.setColor(Color.WHITE);
+        shapedrawer.line(10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (frameCount) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 3, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (frameCount) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 18);
+        font.draw(batch, text, SunshineBlue.instance.overlayViewport.getWorldWidth() - glyphLayout.width - 10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 17);
         batch.setTransformMatrix(mx4Batch);
         if (isRecording) {
             font.draw(batch, "" + (recCounter / 10f), 0, 0);

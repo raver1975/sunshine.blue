@@ -96,7 +96,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
 
             setBounds();
             if (SunshineBlue.instance.selectedObjects.contains(this, true)) {
-                SunshineBlue.instance.shapedrawer.setColor(ColorUtil.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / (float) (SunshineBlue.instance.userObjects.size - 1)).cpy().lerp(Color.WHITE, .1f));
+                SunshineBlue.instance.shapedrawer.setColor(ColorUtil.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / (float) (SunshineBlue.instance.userObjects.size - 1)).cpy());
                 SunshineBlue.instance.shapedrawer.circle(0, 0, 10, 2);
                 angleCalc.set(0, 10);
                 angleCalc.rotateDeg(angleRotateAnimAngle += 1);
@@ -113,7 +113,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
                     batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
                     batch.begin();
 //                SunshineBlue.instance.shapedrawer.setColor(Color.WHITE);
-                    SunshineBlue.instance.shapedrawer.setColor(ColorUtil.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / ((float) SunshineBlue.instance.userObjects.size - 1)).cpy().lerp(Color.WHITE,.1f));
+                    SunshineBlue.instance.shapedrawer.setColor(ColorUtil.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / ((float) SunshineBlue.instance.userObjects.size - 1)));
                     SunshineBlue.instance.shapedrawer.polygon(polygon,5, JoinType.NONE);
                 }
             }
