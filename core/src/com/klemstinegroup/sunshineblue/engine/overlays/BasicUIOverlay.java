@@ -349,6 +349,9 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 SunshineBlue.instance.autoload = autoload.isChecked();
+                if (autoload.isChecked()){
+                    Overlay.backOverlay();
+                }
                 SunshineBlue.instance.autoloadtime = TimeUtils.millis();
             }
         });
