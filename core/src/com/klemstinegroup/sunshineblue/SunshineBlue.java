@@ -85,6 +85,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public boolean pauseLoop = false;
     public VfxManager vfxManager;
 
+
 //    public Stack<Command> commandStack = new Stack<>();
 
 //    private int dstFunc;
@@ -236,8 +237,8 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
         batch.enableBlending();
         SunshineBlue.instance.shapedrawer.setDefaultLineWidth(2);
-         Preferences prefs = Gdx.app.getPreferences("scenes");
-        for(Map.Entry<String,?> pref:prefs.get().entrySet()){
+        Preferences prefs = Gdx.app.getPreferences("scenes");
+        for (Map.Entry<String, ?> pref : prefs.get().entrySet()) {
             if (!pref.getKey().equals("current")) {
                 SunshineBlue.instance.otherCIDS.put(pref.getKey(), (String) pref.getValue());
             }
@@ -275,8 +276,9 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
         }
 
+        int frameCount1=frameCount;
         if (!pauseLoop) {
-            frameCount = ((int) ((TimeUtils.millis() - startTime) / (1000f / fps)));
+            frameCount1 = ((int) ((TimeUtils.millis() - startTime) / (1000f / fps)));
             delta = isRecording ? (1f / fps) : Gdx.graphics.getDeltaTime();
         } else {
             startTime = TimeUtils.millis() - (long) ((frameCount * 1000f) / fps);
@@ -284,22 +286,25 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         }
         vfxManager.update(delta);
 
-        if (frameCount != lastframeCount) {
-            if (frameCount > loopEnd) {
-                if (isRecording){
+        if (frameCount1 != lastframeCount) {
+            Command.compress(frameCount1);
+
+            if (frameCount1 > loopEnd) {
+                if (isRecording) {
                     stopRecording();
                 }
-                Command.setToFrame(loopStart);
-                frameCount = loopStart;
-                startTime = TimeUtils.millis() - (long) ((frameCount * 1000f) / fps);
+//                Array<Command> commandstoexec = commands.get(frameCount);
+//                System.out.println("executiring:" + frameCount);
+//                if (commandstoexec != null) {
+//                    for (Command c : commandstoexec) {
+//                        c.execute();
+//                    }
+//                }
+                frameCount1=loopStart;
+
             }
-            Command.compress(frameCount);
-            Array<Command> commandstoexec = commands.get(frameCount);
-            if (commandstoexec != null) {
-                for (Command c : commandstoexec) {
-                    c.execute();
-                }
-            }
+            Command.setToFrame(frameCount1);
+
             if (isRecording) {
                 System.out.println("rec frame");
                 apng.write(FrameBufferUtils.drawObjectsPix(batch, viewport, userObjects, 600 * viewport.getScreenWidth() / viewport.getScreenHeight(), 600, false));
@@ -308,7 +313,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
                 }
             }
         }
-        lastframeCount = frameCount;
+        lastframeCount = frameCount1;
         colorFlash += delta / 3f;
         if (colorFlash > .4f) {
             colorFlash = 0;
@@ -356,8 +361,6 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         }
 
 
-
-
         batch.end();
         vfxManager.endInputCapture();
         vfxManager.applyEffects();
@@ -402,7 +405,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         Gdx.app.log("resize", width + "\t" + height);
         viewport.update(width, height);
         overlayViewport.update(width, height);
-        vfxManager.resize(width,height);
+        vfxManager.resize(width, height);
     }
 
     @Override
@@ -488,7 +491,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         pauseLoop = false;
         isRecording = true;
 
-        recCounter = 1+loopEnd-loopStart;
+        recCounter = 1 + loopEnd - loopStart;
         apng = new IncrementalAnimatedPNG();
         apng.setFlipY(true);
         mfh = new MemoryFileHandle();

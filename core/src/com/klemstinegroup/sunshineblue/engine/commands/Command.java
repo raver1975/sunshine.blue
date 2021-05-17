@@ -3,6 +3,7 @@ package com.klemstinegroup.sunshineblue.engine.commands;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
+import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
 import com.klemstinegroup.sunshineblue.engine.util.UUID;
 
@@ -13,7 +14,7 @@ public abstract class Command {
     transient String uuid = UUID.randomUUID().toString();
     public int framePos = 0;
     public int arrayPos = 0;
-
+    transient static boolean[] doneundun=new boolean[Statics.RECMAXFRAMES+1];
     public Command() {
     }
 
@@ -60,10 +61,19 @@ public abstract class Command {
     }
 
     public static void setToFrame(int frame) {
-        if (frame == SunshineBlue.instance.frameCount) {
+//        System.out.println("frame:"+frame+"\tframeCount"+SunshineBlue.instance.frameCount);
+       /* if (frame == SunshineBlue.instance.frameCount) {
+            if (!doneundun[frame]){
+
+            }
             return;
-        } else if (frame < SunshineBlue.instance.frameCount) {
+        } else*/
+            if (frame < SunshineBlue.instance.frameCount) {
             for (int i = SunshineBlue.instance.frameCount; i > frame; i--) {
+                if (!doneundun[i]){
+                    continue;
+                }
+                doneundun[i]=false;
                 Array<Command> subcom = SunshineBlue.instance.commands.get(i);
                 if (subcom != null) {
                     for (int j = subcom.size - 1; j > -1; j--) {
@@ -72,7 +82,11 @@ public abstract class Command {
                 }
             }
         } else {
-            for (int i = SunshineBlue.instance.frameCount + 1; i <= frame; i++) {
+            for (int i = SunshineBlue.instance.frameCount; i < frame; i++) {
+                if (doneundun[i]){
+                    continue;
+                }
+                doneundun[i]=true;
                 Array<Command> subcom = SunshineBlue.instance.commands.get(i);
                 if (subcom != null) {
                     for (Command c : subcom) {
@@ -81,7 +95,7 @@ public abstract class Command {
                 }
             }
         }
-        SunshineBlue.instance.startTime = TimeUtils.millis() - (long) ((frame * 1000f) / SunshineBlue.instance.fps);
+        SunshineBlue.instance.startTime = TimeUtils.millis() - (long) ((frame * 1000f) / SunshineBlue.fps);
         SunshineBlue.instance.frameCount = frame;
     }
 
