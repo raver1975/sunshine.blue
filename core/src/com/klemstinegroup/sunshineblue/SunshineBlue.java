@@ -271,7 +271,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
                     Gdx.app.log("autoload", "");
                     autoloadtime = TimeUtils.millis() + Statics.AUTOLOADTIME;
                     if (otherCIDS.size() > 0) {
-                        if (otherCIDS.size() == autoloaded.size) {
+                        if (otherCIDS.size() <= autoloaded.size) {
                             autoloaded.clear();
                         }
                         while (true) {
