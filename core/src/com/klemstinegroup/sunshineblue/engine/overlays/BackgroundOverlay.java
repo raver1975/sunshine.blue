@@ -96,7 +96,7 @@ public class BackgroundOverlay extends ScreenObject implements Overlay, Touchabl
         colorButton.setPosition(10, 10);
         stage.addActor(colorButton);
 
-        slider = new Slider(.01f, 10, .01f, true, skin);
+        slider = new Slider(0f, 9.99f, .01f, true, skin);
         slider.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 40, 80);
         slider.setSize(20, SunshineBlue.instance.overlayViewport.getWorldHeight() - 150);
         slider.setValue(9);
