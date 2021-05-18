@@ -29,11 +29,12 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
     private final Group transformGroup;
     private final ButtonGroup<CheckBox> transformButtons;
     private final CheckBox recButton;
+    private final CheckBox reloadCB;
     public int transformButton;
     Vector2 touchdrag = new Vector2();
     Vector2 touchdown = new Vector2();
     Vector2 tempVec = new Vector2();
-    Array<CheckBox> checkBoxArray = new Array<>();
+    public Array<CheckBox> checkBoxArray = new Array<>();
 
     public TransformOverlay() {
         stage = new Stage(SunshineBlue.instance.overlayViewport);
@@ -51,6 +52,28 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
             }
         });
         stage.addActor(exitButton);
+
+        reloadCB = new CheckBox("", skin,"switch");
+        reloadCB.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 120, 10);
+        reloadCB.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+
+                Array<BaseObject> newselected=new Array<>();
+                for (int i=0;i<checkBoxArray.size;i++){
+                    if (checkBoxArray.get(i).isChecked()){
+                        newselected.add((BaseObject) checkBoxArray.get(i).getUserObject());
+                    }
+                }
+                Overlay.backOverlay();
+                SunshineBlue.instance.selectedObjects.clear();
+                SunshineBlue.instance.selectedObjects.addAll(newselected);
+                Overlay.setOverlay(SunshineBlue.instance.TRANSFORM_OVERLAY);
+            }
+        });
+        stage.addActor(reloadCB);
+
 
         TextButton cpyButton = new TextButton("Cpy", skin);
         cpyButton.addListener(new ChangeListener() {
@@ -406,6 +429,8 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
             }
 
         }
+        reloadCB.setChecked(reloadCB.isChecked());
+
 //        transformGroup.setVisible(Statics.selectedObjects.size>0);
     }
 
@@ -416,6 +441,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
             stage.getActors().removeValue(cb, true);
         }
         checkBoxArray.clear();
+        recButton.setChecked(false);
     }
 
     @Override

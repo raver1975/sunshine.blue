@@ -346,18 +346,28 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         batch.begin();
 
 
-        for (BaseObject bo : userObjects) {
+        for (int i = 0; i < userObjects.size; i++) {
+            BaseObject bo = SunshineBlue.instance.userObjects.get(i);
+
+//            if (SunshineBlue.instance.overlay != SunshineBlue.instance.TRANSFORM_OVERLAY || (SunshineBlue.instance.TRANSFORM_OVERLAY.checkBoxArray.size > i && SunshineBlue.instance.TRANSFORM_OVERLAY.checkBoxArray.get(i).isChecked())) {
+
+
             if (bo.regen) {
                 bo.regen = false;
                 bo.regenerate(assetManager);
             }
             if (bo instanceof Drawable) {
+
                 ((Drawable) bo).draw(batch, delta);
             }
+            batch.setTransformMatrix(mx4Batch);
+//            }
+
             if (bo instanceof Actable) {
                 ((Actable) bo).act();
             }
-            batch.setTransformMatrix(mx4Batch);
+
+
         }
 
 
@@ -366,7 +376,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         vfxManager.applyEffects();
         vfxManager.renderToScreen();
 
-        Array<BaseObject> temp=SunshineBlue.instance.selectedObjects.size==0?SunshineBlue.instance.userObjects:SunshineBlue.instance.selectedObjects;
+        Array<BaseObject> temp = SunshineBlue.instance.selectedObjects.size == 0 ? SunshineBlue.instance.userObjects : SunshineBlue.instance.selectedObjects;
         int[][] b = new int[temp.size][Statics.RECMAXFRAMES];
         int max = 0;
         for (int i = 0; i < Statics.RECMAXFRAMES; i++) {
