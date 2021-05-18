@@ -227,7 +227,6 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
                 if (loadCid == null || loadCid.isEmpty()) {
                     loadCid = Statics.splashCID;
                     autoload = true;
-                    BASIC_UI_OVERLAY.autoload.setChecked(true);
                 }
 
             }

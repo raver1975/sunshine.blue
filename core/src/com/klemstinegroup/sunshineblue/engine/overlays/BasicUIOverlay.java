@@ -16,18 +16,14 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.objects.*;
 import com.klemstinegroup.sunshineblue.engine.util.*;
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -35,14 +31,13 @@ import java.util.Map;
 public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, Drawable {
 
     public final Stage stage;
-    public final CheckBox autoload;
+    public final TextButton autoloadButton;
     Vector2 touchdown = new Vector2();
     Vector2 oldtouch = new Vector2();
     Vector2 touchdownre = new Vector2();
     Vector2 oldtouchre = new Vector2();
     boolean touched = false;
     private int otherIndex = 0;
-//    private Texture screenshotPixmap;
 
 
     public BasicUIOverlay() {
@@ -344,20 +339,20 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         stage.addActor(fontButton);
 
 
-        autoload = new CheckBox("Autoload", skin, "switch");
-        autoload.addListener(new ChangeListener() {
+        autoloadButton = new TextButton("See", skin);
+        autoloadButton.addListener(new ClickListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                SunshineBlue.instance.autoload = autoload.isChecked();
-                if (autoload.isChecked()){
+            public void clicked(InputEvent event, float x, float y) {
+                SunshineBlue.instance.autoload = autoloadButton.isChecked();
+                if (autoloadButton.isChecked()){
                     Overlay.backOverlay();
                 }
                 SunshineBlue.instance.autoloadtime = TimeUtils.millis();
             }
         });
-        autoload.setPosition(65, SunshineBlue.instance.overlayViewport.getWorldHeight() - 45);
-        autoload.setChecked(SunshineBlue.instance.autoload);
-        stage.addActor(autoload);
+        autoloadButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 375);
+        autoloadButton.setChecked(SunshineBlue.instance.autoload);
+        stage.addActor(autoloadButton);
 
         Actor imageButton = new TextButton("Image", skin);
         imageButton.setPosition(70, 10);
