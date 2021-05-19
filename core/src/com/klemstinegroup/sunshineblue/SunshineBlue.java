@@ -400,8 +400,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
             batch.begin();
             ((Drawable) overlay).draw(batch, delta);
             if (overlay != SunshineBlue.instance.BLANK_OVERLAY) {
-                String text = loopStart + " / " + frameCount + " / " + loopEnd;
-                glyphLayout.setText(font, text);
+
                 batch.setColor(Color.WHITE);
                 shapedrawer.update();
                 shapedrawer.setColor(Color.GRAY);
@@ -424,13 +423,16 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
                 shapedrawer.setColor(Color.RED);
                 shapedrawer.line(10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (frameCount) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 5, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (frameCount) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 21);
 
+                String text = loopStart + " / " + frameCount + " / " + loopEnd;
+                glyphLayout.setText(font, text);
                 font.draw(batch, text, SunshineBlue.instance.overlayViewport.getWorldWidth() - glyphLayout.width - 10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 23);
-                batch.setTransformMatrix(mx4Batch);
-                if (isRecording) {
-                    font.draw(batch, "" + (recCounter / 10f), 0, 0);
-                }
-
             }
+            batch.setTransformMatrix(mx4Batch);
+            if (isRecording) {
+                font.draw(batch, "" + (recCounter / 10f), 0, 0);
+            }
+
+
             batch.end();
         }
         //------------------------------------------------------------
