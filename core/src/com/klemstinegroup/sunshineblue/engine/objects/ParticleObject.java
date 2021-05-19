@@ -75,7 +75,7 @@ public class ParticleObject extends ScreenObject implements Drawable, Touchable 
 
         if (sd.visible) {
             batch.setColor(Color.WHITE);
-            particleEffect.setPosition(sd.position.x + sd.center.x, sd.position.y + sd.center.y);
+            particleEffect.setPosition(sd.position.x - sd.center.x, sd.position.y - sd.center.y);
             particleEffect.update(delta * speed);
             if (particleEffect.isComplete()) {
                 particleEffect.reset();
