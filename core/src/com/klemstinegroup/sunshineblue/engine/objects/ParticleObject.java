@@ -27,7 +27,12 @@ public class ParticleObject extends ScreenObject implements Drawable, Touchable 
     public String particleFileName;
     public float speed = 1;
     public ParticleEffect particleEffect;
-    public Vector2 transformVec=new Vector2();
+    public Vector2 transformVec = new Vector2();
+    Vector3 out1 = new Vector3();
+    Vector3 out2 = new Vector3();
+    Vector3 out3 = new Vector3();
+    Vector3 out4 = new Vector3();
+
 
     public ParticleObject(String particleFileName) {
         this(particleFileName, new ScreenData(), 1f);
@@ -44,61 +49,46 @@ public class ParticleObject extends ScreenObject implements Drawable, Touchable 
 
     public void setBounds() {
         if (particleEffect == null) return;
-//        nn = new GlyphLayout();
-//        nn.setText(font, fd.text);
         BoundingBox bb = particleEffect.getBoundingBox();
         sd.bounds.set(bb.getWidth(), bb.getHeight());
-        float cx = sd.center.x + bb.getCenterX();
-        float cy = sd.center.y + bb.getCenterY();
-//        float cx = bb.getCenterX();
-//        float cy = bb.getCenterY();
-        float hx = bb.getWidth() / 2 + cx;
-        float hy = bb.getHeight() / 2 + cy;
-        float lx = -bb.getWidth() / 2 + cx;
-        float ly = -bb.getHeight() / 2 + cy;
-        polygon = new Polygon(new float[]{lx, ly, hx, ly, hx, hy, lx, hy, lx, ly});
-        polygon.setOrigin(sd.center.x, sd.center.y);
-        polygon.setScale(sd.scale, sd.scale);
-        polygon.rotate(sd.rotation);
-//        polygon.translate(sd.position.x, sd.position.y);
-//        polygon.translate( - sd.center.x,  - sd.center.y);
+        bb.getCorner100(out1);
+        bb.getCorner000(out2);
+        bb.getCorner010(out3);
+        bb.getCorner110(out4);
+        polygon = new Polygon(new float[]{out1.x, out1.y, out2.x, out2.y, out3.x, out3.y, out4.x, out4.y, out1.x, out1.y});
+        polygon.translate(-(bb.getCenterX() + sd.center.x), -(bb.getCenterY() + sd.center.y));
+        polygon.setOrigin(0, 0);
     }
 
 
     @Override
     public void draw(Batch batch, float delta) {
         if (particleEffect == null) return;
-        transformVec.set(sd.center);
+        transformVec.set(sd.center.x, sd.center.y);
+        transformVec.scl(1f / sd.scale);
         transformVec.rotateDeg(-sd.rotation);
-        transformVec.scl(1f/sd.scale);
         batch.setTransformMatrix(new Matrix4().idt()
-                        .translate(-transformVec.x,-transformVec.y, 0)
-//                        .translate(sd.position.x, sd.position.y, 0)
                         .rotate(0, 0, 1, sd.rotation)
                         .scale(sd.scale, sd.scale, 1)
         );
         if (sd.visible) {
             batch.setColor(Color.WHITE);
-//            transformVec.set(sd.center);
-//            transformVec.scl(-1f);
             transformVec.set(sd.position);
             transformVec.rotateDeg(-sd.rotation);
-            transformVec.scl(1f/sd.scale);
-//            transformVec.add(sd.center);
+            transformVec.scl(1f / sd.scale);
+            transformVec.sub(sd.center);
 //            transformVec.set(sd.position);
-            particleEffect.setPosition(transformVec.x,transformVec.y);
+            particleEffect.setPosition(transformVec.x, transformVec.y);
             particleEffect.update(delta * speed);
             if (particleEffect.isComplete()) {
                 particleEffect.reset();
             }
             particleEffect.draw(batch);
-//            font.draw(batch, fd.text, 0 - sd.center.x, +sd.bounds.y - sd.center.y, Float.MAX_VALUE, Align.left, true);
 
 
             setBounds();
             if (SunshineBlue.instance.selectedObjects.contains(this, true)) {
                 batch.setTransformMatrix(new Matrix4().idt()
-//                        .translate(sd.center.x, sd.center.y, 0)
                                 .translate(sd.position.x, sd.position.y, 0)
                                 .rotate(0, 0, 1, sd.rotation)
                                 .scale(sd.scale, sd.scale, 1)
@@ -116,10 +106,6 @@ public class ParticleObject extends ScreenObject implements Drawable, Touchable 
                 SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
 
                 if (polygon != null) {
-                    batch.end();
-                    batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
-                    batch.begin();
-//                    SunshineBlue.instance.shapedrawer.setColor(Color.WHITE);
                     SunshineBlue.instance.shapedrawer.setColor(ColorUtil.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / ((float) SunshineBlue.instance.userObjects.size - 1)).cpy());
                     SunshineBlue.instance.shapedrawer.polygon(polygon, 5, JoinType.NONE);
                 }
@@ -172,6 +158,7 @@ public class ParticleObject extends ScreenObject implements Drawable, Touchable 
     public boolean isSelected(Polygon box) {
         setBounds();
         if (polygon != null) {
+            box.translate(-sd.position.x, -sd.position.y);
             return Intersector.overlapConvexPolygons(box, polygon);
         }
         return false;
