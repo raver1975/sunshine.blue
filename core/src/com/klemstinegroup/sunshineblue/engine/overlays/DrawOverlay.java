@@ -184,4 +184,9 @@ public class DrawOverlay extends ScreenObject implements Overlay, Touchable, Dra
     public void setObject(BaseObject doi) {
         this.drawObject = doi;
     }
+
+    @Override
+    public void dispose() {
+        stage.dispose();
+    }
 }

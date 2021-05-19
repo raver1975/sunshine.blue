@@ -570,4 +570,9 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
     public void setObject(BaseObject bo) {
 
     }
+
+    @Override
+    public void dispose() {
+        stage.dispose();
+    }
 }

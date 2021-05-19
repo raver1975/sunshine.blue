@@ -350,4 +350,9 @@ public class ParticleOverlay extends ScreenObject implements Overlay, Touchable,
             ((ParticleObject) particleObject).regenerate(assetManager);
         }
     }
+
+    @Override
+    public void dispose() {
+        stage.dispose();
+    }
 }

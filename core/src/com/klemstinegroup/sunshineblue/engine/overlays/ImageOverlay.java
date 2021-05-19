@@ -187,4 +187,9 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
     public void setObject(BaseObject bo) {
 
     }
+
+    @Override
+    public void dispose() {
+        stage.dispose();
+    }
 }

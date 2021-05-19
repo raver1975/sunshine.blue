@@ -505,6 +505,10 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
 
     @Override
     public void pinchStop() {
+    }
 
+    @Override
+    public void dispose() {
+        stage.dispose();
     }
 }

@@ -361,4 +361,9 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         selectBox.layout();
     }
 
+    @Override
+    public void dispose() {
+        stage.dispose();
+    }
+
 }

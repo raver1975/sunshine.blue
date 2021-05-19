@@ -156,4 +156,8 @@ public class LoopOverlay extends ScreenObject implements Overlay, Drawable {
 
     }
 
+    @Override
+    public void dispose() {
+        stage.dispose();
+    }
 }

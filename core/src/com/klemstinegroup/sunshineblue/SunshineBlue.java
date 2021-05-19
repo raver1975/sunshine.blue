@@ -85,6 +85,9 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     private GlyphLayout glyphLayout;
     public boolean pauseLoop = false;
     public VfxManager vfxManager;
+    private IncrementalAnimatedPNG apng;
+    private MemoryFileHandle mfh;
+    public AssetManager assetManager = new AssetManager();
 
 
 //    public Stack<Command> commandStack = new Stack<>();
@@ -114,10 +117,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
 //    public static Matrix4 mx4Batch = new Matrix4();
 
-    private IncrementalAnimatedPNG apng;
-    private MemoryFileHandle mfh;
 
-    public AssetManager assetManager = new AssetManager();
 
     public SunshineBlue(String cid) {
         super();
@@ -438,12 +438,23 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     }
 
 
-    /*@Override
+    @Override
     public void dispose() {
         batch.dispose();
         vfxManager.dispose();
         assetManager.dispose();
-    }*/
+        TRANSFORM_OVERLAY.dispose();
+        FONT_OVERLAY.dispose();
+        IMAGE_OVERLAY.dispose();
+        DRAW_OVERLAY.dispose();
+        BASIC_UI_OVERLAY.dispose();
+        BLANK_OVERLAY.dispose();
+        PARTICLE_OVERLAY.dispose();
+        BACKGROUND_OVERLAY.dispose();
+        LOOP_OVERLAY.dispose();
+        font.dispose();
+        apng.dispose();
+    }
 
     @Override
     public void resize(int width, int height) {

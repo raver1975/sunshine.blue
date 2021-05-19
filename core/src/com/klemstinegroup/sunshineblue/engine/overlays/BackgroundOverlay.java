@@ -245,4 +245,9 @@ public class BackgroundOverlay extends ScreenObject implements Overlay, Touchabl
     public void setObject(BaseObject doi) {
         this.drawObject = doi;
     }
+
+    @Override
+    public void dispose() {
+        stage.dispose();
+    }
 }
