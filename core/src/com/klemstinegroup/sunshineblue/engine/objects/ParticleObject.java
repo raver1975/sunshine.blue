@@ -68,18 +68,24 @@ public class ParticleObject extends ScreenObject implements Drawable, Touchable 
     @Override
     public void draw(Batch batch, float delta) {
         if (particleEffect == null) return;
+        transformVec.set(sd.center);
+        transformVec.rotateDeg(-sd.rotation);
+        transformVec.scl(1f/sd.scale);
         batch.setTransformMatrix(new Matrix4().idt()
-                        .translate(sd.center.x, sd.center.y, 0)
+                        .translate(-transformVec.x,-transformVec.y, 0)
 //                        .translate(sd.position.x, sd.position.y, 0)
                         .rotate(0, 0, 1, sd.rotation)
                         .scale(sd.scale, sd.scale, 1)
         );
         if (sd.visible) {
             batch.setColor(Color.WHITE);
+//            transformVec.set(sd.center);
+//            transformVec.scl(-1f);
             transformVec.set(sd.position);
-            transformVec.sub(sd.center);
             transformVec.rotateDeg(-sd.rotation);
             transformVec.scl(1f/sd.scale);
+//            transformVec.add(sd.center);
+//            transformVec.set(sd.position);
             particleEffect.setPosition(transformVec.x,transformVec.y);
             particleEffect.update(delta * speed);
             if (particleEffect.isComplete()) {
