@@ -7,7 +7,7 @@ public class ScreenObject extends BaseObject {
     public ScreenData sd=new ScreenData();
 
     public void recenter(Vector2 touchdragcpy) {
-        touchdragcpy.sub(sd.position.x , sd.position.y);
+        touchdragcpy.sub(sd.position);
         sd.position.add(touchdragcpy);
         touchdragcpy.scl(1f / sd.scale);
         touchdragcpy.rotateDeg(-sd.rotation);

@@ -23,7 +23,7 @@ public class CenterCommand extends Command {
         System.out.println(center+"\t"+oldcenter);
         BaseObject bo = Command.getBaseObject(actionOnUUID);
         if (bo != null) {
-            ((ScreenObject) bo).sd.center.set(this.center);
+            ((ScreenObject) bo).recenter(this.center);
         }
     }
 
@@ -31,7 +31,7 @@ public class CenterCommand extends Command {
     public void undo() {
         BaseObject bo = Command.getBaseObject(actionOnUUID);
         if (bo != null) {
-            ((ScreenObject) bo).sd.center.set(this.oldcenter);
+            ((ScreenObject) bo).recenter(this.oldcenter);
         }
     }
 
