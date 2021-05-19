@@ -1,7 +1,11 @@
 package com.klemstinegroup.sunshineblue.engine.commands;
 
+import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
+import com.klemstinegroup.sunshineblue.engine.objects.ParticleObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
 
 public class TransformCommand extends Command {
@@ -24,9 +28,7 @@ public class TransformCommand extends Command {
     public void execute() {
         BaseObject bo = Command.getBaseObject(actionOnUUID);
         if (bo != null) {
-            ((ScreenObject) bo).sd.position.add(this.posDelta);
-            ((ScreenObject) bo).sd.rotation+=this.rotDelta;
-            ((ScreenObject) bo).sd.scale+=this.scaleDelta;
+            ((ScreenObject) bo).transform(this.posDelta,rotDelta,scaleDelta);
         }
     }
 
@@ -34,9 +36,7 @@ public class TransformCommand extends Command {
     public void undo() {
         BaseObject bo = Command.getBaseObject(actionOnUUID);
         if (bo != null) {
-            ((ScreenObject) bo).sd.position.sub(this.posDelta);
-            ((ScreenObject) bo).sd.rotation-=this.rotDelta;
-            ((ScreenObject) bo).sd.scale-=this.scaleDelta;
+            ((ScreenObject) bo).invtransform(this.posDelta,rotDelta,scaleDelta);
         }
     }
 

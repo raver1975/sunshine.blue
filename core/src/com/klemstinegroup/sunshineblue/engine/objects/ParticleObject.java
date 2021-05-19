@@ -4,8 +4,11 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.math.collision.BoundingBox;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.data.ScreenData;
@@ -22,21 +25,20 @@ public class ParticleObject extends ScreenObject implements Drawable, Touchable 
     float angleRotateAnimAngle = 0;
     public Polygon polygon;
     public String particleFileName;
-    public float speed=1;
+    public float speed = 1;
     public ParticleEffect particleEffect;
 
     public ParticleObject(String particleFileName) {
-        this(particleFileName, new ScreenData(),1f);
+        this(particleFileName, new ScreenData(), 1f);
     }
 
-    public ParticleObject(String particleFileName, ScreenData sd,float speed) {
+    public ParticleObject(String particleFileName, ScreenData sd, float speed) {
         this.particleFileName = particleFileName;
         this.sd = sd;
-        this.speed=speed;
+        this.speed = speed;
         regenerate(SunshineBlue.instance.assetManager);
 //        sd.center.set(ParticleUtil.particleFiles.get(particleFileName).getBoundingBox().getCenterX(),ParticleUtil.particleFiles.get(particleFileName).getBoundingBox().getCenterY());
     }
-
 
 
     public void setBounds() {
@@ -45,8 +47,10 @@ public class ParticleObject extends ScreenObject implements Drawable, Touchable 
 //        nn.setText(font, fd.text);
         BoundingBox bb = particleEffect.getBoundingBox();
         sd.bounds.set(bb.getWidth(), bb.getHeight());
-        float cx = sd.center.x + bb.getCenterX();
-        float cy = sd.center.y + bb.getCenterY();
+//        float cx = sd.center.x + bb.getCenterX();
+//        float cy = sd.center.y + bb.getCenterY();
+        float cx = bb.getCenterX();
+        float cy = bb.getCenterY();
         float hx = bb.getWidth() / 2 + cx;
         float hy = bb.getHeight() / 2 + cy;
         float lx = -bb.getWidth() / 2 + cx;
@@ -55,15 +59,15 @@ public class ParticleObject extends ScreenObject implements Drawable, Touchable 
         polygon.setOrigin(sd.center.x, sd.center.y);
         polygon.setScale(sd.scale, sd.scale);
         polygon.rotate(sd.rotation);
-        polygon.translate(sd.position.x - sd.center.x, sd.position.y - sd.center.y);
+//        polygon.translate(sd.position.x - sd.center.x, sd.position.y - sd.center.y);
     }
 
 
     @Override
-    public void draw(Batch batch,float delta) {
+    public void draw(Batch batch, float delta) {
         if (particleEffect == null) return;
         batch.setTransformMatrix(new Matrix4().idt()
-                        .translate(sd.position.x, sd.position.y, 0)
+//                        .translate(sd.position.x, sd.position.y, 0)
                         .rotate(0, 0, 1, sd.rotation)
                         .scale(sd.scale, sd.scale, 1)
 //                        .translate(-center.x, -center.y, 0)
@@ -71,7 +75,7 @@ public class ParticleObject extends ScreenObject implements Drawable, Touchable 
 
         if (sd.visible) {
             batch.setColor(Color.WHITE);
-            particleEffect.setPosition(-sd.center.x, -sd.center.y);
+            particleEffect.setPosition(sd.position.x + sd.center.x, sd.position.y + sd.center.y);
             particleEffect.update(delta * speed);
             if (particleEffect.isComplete()) {
                 particleEffect.reset();
@@ -82,6 +86,10 @@ public class ParticleObject extends ScreenObject implements Drawable, Touchable 
 
             setBounds();
             if (SunshineBlue.instance.selectedObjects.contains(this, true)) {
+                batch.setTransformMatrix(new Matrix4().idt()
+                        .translate(sd.position.x, sd.position.y, 0)
+                        .rotate(0, 0, 1, sd.rotation)
+                        .scale(sd.scale, sd.scale, 1));
                 SunshineBlue.instance.shapedrawer.setColor(ColorUtil.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / (float) (SunshineBlue.instance.userObjects.size - 1)).cpy());
                 SunshineBlue.instance.shapedrawer.circle(0, 0, 10, 2);
                 angleCalc.set(0, 10);
@@ -98,9 +106,9 @@ public class ParticleObject extends ScreenObject implements Drawable, Touchable 
                     batch.end();
                     batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
                     batch.begin();
-//                SunshineBlue.instance.shapedrawer.setColor(Color.WHITE);
+//                    SunshineBlue.instance.shapedrawer.setColor(Color.WHITE);
                     SunshineBlue.instance.shapedrawer.setColor(ColorUtil.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / ((float) SunshineBlue.instance.userObjects.size - 1)).cpy());
-                    SunshineBlue.instance.shapedrawer.polygon(polygon,5, JoinType.NONE);
+                    SunshineBlue.instance.shapedrawer.polygon(polygon, 5, JoinType.NONE);
                 }
             }
         }
@@ -181,8 +189,8 @@ public class ParticleObject extends ScreenObject implements Drawable, Touchable 
         String particle = json.getString("particle");
         float speed = json.getFloat("speed");
         ScreenData sd1 = SerializeUtil.deserialize(json.get("screenData"), ScreenData.class);
-        ParticleObject ptemp=new ParticleObject(particle, sd1,speed);
-        ptemp.uuid=json.getString("UUID", ptemp.uuid);
+        ParticleObject ptemp = new ParticleObject(particle, sd1, speed);
+        ptemp.uuid = json.getString("UUID", ptemp.uuid);
         SunshineBlue.addUserObj(ptemp);
     }
 
@@ -191,8 +199,20 @@ public class ParticleObject extends ScreenObject implements Drawable, Touchable 
         particleEffect = new ParticleEffect();
         particleEffect.setEmittersCleanUpBlendFunction(true);
         particleEffect.load(ParticleUtil.particleFiles.get(particleFileName), ParticleUtil.particleAtlas);
+        for (ParticleEmitter pe : particleEffect.getEmitters()) {
+            pe.setAttached(false);
+        }
         particleEffect.start();
     }
 
+    @Override
+    public void transform(Vector2 posDelta, float rotDelta, float scaleDelta) {
+        super.transform(posDelta, rotDelta, scaleDelta);
+        Array<ParticleEmitter> emitters = particleEffect.getEmitters();
+        for (ParticleEmitter emitter : emitters) {
+            emitter.setPosition(emitter.getX() - posDelta.x, emitter.getY() - posDelta.y);
+        }
+    }
 
 }
+

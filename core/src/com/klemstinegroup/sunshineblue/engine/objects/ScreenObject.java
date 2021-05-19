@@ -14,4 +14,15 @@ public class ScreenObject extends BaseObject {
         sd.center.add(touchdragcpy);
     }
 
+    public void transform(Vector2 posDelta, float rotDelta, float scaleDelta) {
+        sd.position.add(posDelta);
+        sd.rotation+=rotDelta;
+        sd.scale+=scaleDelta;
+    }
+
+    public void invtransform(Vector2 posDelta, float rotDelta, float scaleDelta) {
+        sd.position.sub(posDelta);
+        sd.rotation-=rotDelta;
+        sd.scale-=scaleDelta;
+    }
 }
