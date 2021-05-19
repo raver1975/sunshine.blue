@@ -118,7 +118,6 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 //    public static Matrix4 mx4Batch = new Matrix4();
 
 
-
     public SunshineBlue(String cid) {
         super();
         loadCid = cid;
@@ -397,41 +396,43 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
             }
         }
 
-        batch.begin();
         if (overlay != null) {
+            batch.begin();
             ((Drawable) overlay).draw(batch, delta);
-        }
-        String text = loopStart + " / " + frameCount + " / " + loopEnd;
-        glyphLayout.setText(font, text);
-        batch.setColor(Color.WHITE);
-        shapedrawer.update();
-        shapedrawer.setColor(Color.GRAY);
-        shapedrawer.setDefaultLineWidth(12);
-        shapedrawer.line(10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (loopStart) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 13, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (loopEnd) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 13);
-        shapedrawer.setDefaultLineWidth(3);
+            if (overlay != SunshineBlue.instance.BLANK_OVERLAY) {
+                String text = loopStart + " / " + frameCount + " / " + loopEnd;
+                glyphLayout.setText(font, text);
+                batch.setColor(Color.WHITE);
+                shapedrawer.update();
+                shapedrawer.setColor(Color.GRAY);
+                shapedrawer.setDefaultLineWidth(12);
+                shapedrawer.line(10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (loopStart) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 13, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (loopEnd) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 13);
+                shapedrawer.setDefaultLineWidth(3);
 
-        for (int i = 0; i < temp.size; i++) {
-            shapedrawer.setColor(ColorUtil.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(temp.get(i), true) / (float) (SunshineBlue.instance.userObjects.size - 1)));
-            for (int j = 0; j < Statics.RECMAXFRAMES; j++) {
-                if (b[i][j] > 0) {
-                    shapedrawer.line(10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (j) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 9, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (j) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 17);
+                for (int i = 0; i < temp.size; i++) {
+                    shapedrawer.setColor(ColorUtil.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(temp.get(i), true) / (float) (SunshineBlue.instance.userObjects.size - 1)));
+                    for (int j = 0; j < Statics.RECMAXFRAMES; j++) {
+                        if (b[i][j] > 0) {
+                            shapedrawer.line(10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (j) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 9, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (j) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 17);
+                        }
+                    }
+
                 }
+                shapedrawer.setColor(Color.WHITE);
+                shapedrawer.line(10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (loopStart) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 5, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (loopStart) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 21);
+                shapedrawer.line(10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (loopEnd) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 5, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (loopEnd) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 21);
+                shapedrawer.setColor(Color.RED);
+                shapedrawer.line(10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (frameCount) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 5, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (frameCount) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 21);
+
+                font.draw(batch, text, SunshineBlue.instance.overlayViewport.getWorldWidth() - glyphLayout.width - 10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 23);
+                batch.setTransformMatrix(mx4Batch);
+                if (isRecording) {
+                    font.draw(batch, "" + (recCounter / 10f), 0, 0);
+                }
+
             }
-
+            batch.end();
         }
-        shapedrawer.setColor(Color.WHITE);
-        shapedrawer.line(10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (loopStart) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 5, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (loopStart) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 21);
-        shapedrawer.line(10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (loopEnd) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 5, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (loopEnd) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 21);
-        shapedrawer.setColor(Color.RED);
-        shapedrawer.line(10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (frameCount) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 5, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (frameCount) / (float) (Statics.RECMAXFRAMES)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 21);
-
-        font.draw(batch, text, SunshineBlue.instance.overlayViewport.getWorldWidth() - glyphLayout.width - 10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 23);
-        batch.setTransformMatrix(mx4Batch);
-        if (isRecording) {
-            font.draw(batch, "" + (recCounter / 10f), 0, 0);
-        }
-        batch.end();
-
         //------------------------------------------------------------
 
         //------------------------------------------------------------
