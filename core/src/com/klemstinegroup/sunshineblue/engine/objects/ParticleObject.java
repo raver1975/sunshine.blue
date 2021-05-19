@@ -205,14 +205,14 @@ public class ParticleObject extends ScreenObject implements Drawable, Touchable 
         particleEffect.start();
     }
 
-    @Override
-    public void transform(Vector2 posDelta, float rotDelta, float scaleDelta) {
-        super.transform(posDelta, rotDelta, scaleDelta);
-        Array<ParticleEmitter> emitters = particleEffect.getEmitters();
-        for (ParticleEmitter emitter : emitters) {
-            emitter.setPosition(emitter.getX() - posDelta.x, emitter.getY() - posDelta.y);
-        }
-    }
+//    @Override
+//    public void transform(Vector2 posDelta, float rotDelta, float scaleDelta) {
+//        super.transform(posDelta, rotDelta, scaleDelta);
+//        Array<ParticleEmitter> emitters = particleEffect.getEmitters();
+//        for (ParticleEmitter emitter : emitters) {
+//            emitter.setPosition(emitter.getX() - posDelta.x, emitter.getY() - posDelta.y);
+//        }
+//    }
 
 }
 
