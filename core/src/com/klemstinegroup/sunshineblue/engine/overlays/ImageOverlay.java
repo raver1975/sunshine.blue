@@ -54,7 +54,7 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
 
         TextButton submitButton = new TextButton("Shine!", skin);
         submitButton.setSize(100, 100);
-        submitButton.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 100, SunshineBlue.instance.overlayViewport.getWorldHeight() - 110);
+        submitButton.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 100, SunshineBlue.instance.overlayViewport.getWorldHeight() - 130);
         submitButton.addListener(new ClickListener() {
 
             @Override
@@ -68,7 +68,7 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
 
 
         Label tfield = new Label("JPG,PNG,GIF,IPFS,or DATA url", skin);
-        tfield.setPosition(250, SunshineBlue.instance.overlayViewport.getWorldHeight() - 130);
+        tfield.setPosition(250, SunshineBlue.instance.overlayViewport.getWorldHeight() - 150);
         tfield.setWidth(270);
         stage.addActor(tfield);
 
@@ -84,7 +84,7 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
         });
         ta.setTextFieldListener(tfl);
 
-        ta.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 110);
+        ta.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 130);
         ta.setWidth(SunshineBlue.instance.overlayViewport.getWorldWidth() - 110);
         ta.setHeight(100);
 
@@ -95,7 +95,7 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
                 ta.setText("");
             }
         });
-        clearButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 110);
+        clearButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 130);
         clearButton.setSize(20, 20);
 
 //ta.setZIndex(1);

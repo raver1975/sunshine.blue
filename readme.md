@@ -78,7 +78,7 @@
 
 * Java VM scripting engine<br/>
   Load and run arbitrary Java classes from the web. 
-  Suprisingly this survives the transpilation from Java to Javascript, which is *mind blowing*. The javascript in the web app is running java bytecode that is able to interact and modify it's own code, but it's running Javascript!     
+  Suprisingly this survives the transpilation from Java to Javascript, which is *mind blowing*. The javascript in the web app is running java bytecode that is able to interact and modify it's own code, but it's running Javascript!<br/>(Add this IPFS address for a java class in the image panel to test the script)<br/> "QmTeWj4DC2khBDCCvi6H41iRQ7qQJHmgrrMnj35LuaxP3J"
 
 
 
@@ -105,26 +105,26 @@ To get a local copy up and running follow these simple steps.
 
 ## Usage
 
-desktop:
+Online:
+[https://sunshine.blue](https://sunshine.blue)
 
+
+desktop:
 ```sh
    ./gradlew desktop:run
    ```
 
 HTML  (browse to [localhost:8080](localhost:8080)):
-
 ```sh
    ./gradlew html:superDev
    ```
 
 Android
-
 ```sh
 ./gradlew android:installDebug android:run
 ```
 
 IOS
-
 ```sh
 ./gradlew ios:launchIPhoneSimulator
 ```

@@ -8,7 +8,7 @@
 	<source path="com/github/tommyettinger/anim8" />
 <!--	<source path="com/badlogic/gdx/graphics/g2d" />-->
 <!--	<extend-configuration-property name="gdx.reflect.include" value="java.io." />-->
-<!--	<extend-configuration-property name="gdx.reflect.include" value="java.lang" />-->
+	<extend-configuration-property name="gdx.reflect.include" value="java.lang" />
 <!--	<extend-configuration-property name="gdx.reflect.include" value="java.lang.annotation" />-->
 <!--	<extend-configuration-property name="gdx.reflect.include" value="java.reflect" />-->
 <!--	<extend-configuration-property name="gdx.reflect.include" value="java.math" />-->
