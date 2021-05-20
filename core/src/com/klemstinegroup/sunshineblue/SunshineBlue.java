@@ -419,7 +419,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
                 shapedrawer.line(10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (loopEnd) / (float) (Statics.recframes)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 5, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (loopEnd) / (float) (Statics.recframes)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 21);
                 shapedrawer.setColor(Color.RED);
                 shapedrawer.line(10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (frameCount) / (float) (Statics.recframes)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 5, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (frameCount) / (float) (Statics.recframes)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 21);
-
+                shapedrawer.setDefaultLineWidth(3);
                 String text = loopStart + " / " + frameCount + " / " + loopEnd;
                 glyphLayout.setText(font, text);
                 font.draw(batch, text, SunshineBlue.instance.overlayViewport.getWorldWidth() - glyphLayout.width - 10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 23);
