@@ -222,7 +222,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
                         @Override
                         public void downloadFailed(Throwable t) {
-                            Gdx.app.log("downloading screenshot failed, taking evasive maneuvers", "eek!");
+                            Gdx.app.log("downloading screenshot failed, taking evasive manuevers", "eek!");
                             otherIndex++;
                             if (otherIndex > SunshineBlue.instance.otherCIDS.size() - 1) {
                                 otherIndex = 0;

@@ -26,6 +26,7 @@ import java.util.TimerTask;
 public class NativeGWT implements NativeInterface {
     ArrayMap<Integer, IPFSCIDListener> uploadListener = new ArrayMap<>();
     ArrayMap<Integer, IPFSFileListener> downloadListener = new ArrayMap<>();
+    private boolean succeed;
 
     public NativeGWT() {
         addpubsublistener();
@@ -123,16 +124,19 @@ public class NativeGWT implements NativeInterface {
         Timer.Task tt = new Timer.Task() {
             @Override
             public void run() {
-                listener.downloadFailed(new Throwable("img download error"));
+                if (!succeed) {
+                    listener.downloadFailed(new Throwable("img download error"));
+                }
             }
         };
-        Timer.schedule(tt,5);
+        Timer.schedule(tt, 5);
+        succeed = false;
         img.addLoadHandler(new LoadHandler() {
 
 
             @Override
             public void onLoad(LoadEvent event) {
-                tt.cancel();
+                succeed = true;
                 listener.downloadComplete(new Pixmap(ImageElement.as(img.getElement())));
             }
         });

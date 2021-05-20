@@ -138,6 +138,7 @@ public class LoopOverlay extends ScreenObject implements Overlay, Drawable {
         sliderLoopLength.setValue(Statics.recframes);
         sliderLoopStart.setValue(SunshineBlue.instance.loopStart);
         sliderLoopWidth.setValue(SunshineBlue.instance.loopEnd-SunshineBlue.instance.loopStart);
+        sliderLoopWidth.setRange(0,sliderLoopLength.getValue());
     }
 
     @Override
