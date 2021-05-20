@@ -145,13 +145,6 @@ public class NativeGWT implements NativeInterface {
                 listener.downloadComplete(new Pixmap(ImageElement.as(img.getElement())));
             }
         });
-        img.addErrorHandler(new ErrorHandler() {
-            @Override
-            public void onError(ErrorEvent event) {
-                listener.downloadFailed(new Throwable("img download error"));
-            }
-        });
-
     }
 
     @Override
