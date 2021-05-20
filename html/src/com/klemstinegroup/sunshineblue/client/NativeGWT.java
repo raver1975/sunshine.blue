@@ -5,7 +5,10 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.Base64Coder;
+import com.badlogic.gdx.utils.Timer;
 import com.google.gwt.dom.client.ImageElement;
+import com.google.gwt.event.dom.client.ErrorEvent;
+import com.google.gwt.event.dom.client.ErrorHandler;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.user.client.ui.Image;
@@ -17,6 +20,8 @@ import com.klemstinegroup.sunshineblue.engine.overlays.FontOverlay;
 import com.klemstinegroup.sunshineblue.engine.util.IPFSCIDListener;
 import com.klemstinegroup.sunshineblue.engine.util.IPFSFileListener;
 import com.klemstinegroup.sunshineblue.engine.util.NativeInterface;
+
+import java.util.TimerTask;
 
 public class NativeGWT implements NativeInterface {
     ArrayMap<Integer, IPFSCIDListener> uploadListener = new ArrayMap<>();
@@ -115,11 +120,26 @@ public class NativeGWT implements NativeInterface {
 
         root.add(img);
         img.setVisible(false);
+        Timer.Task tt = new Timer.Task() {
+            @Override
+            public void run() {
+                listener.downloadFailed(new Throwable("img download error"));
+            }
+        };
+        Timer.schedule(tt,5);
         img.addLoadHandler(new LoadHandler() {
+
+
             @Override
             public void onLoad(LoadEvent event) {
+                tt.cancel();
                 listener.downloadComplete(new Pixmap(ImageElement.as(img.getElement())));
-
+            }
+        });
+        img.addErrorHandler(new ErrorHandler() {
+            @Override
+            public void onError(ErrorEvent event) {
+                listener.downloadFailed(new Throwable("img download error"));
             }
         });
 

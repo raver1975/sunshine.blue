@@ -171,6 +171,12 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                                         Preferences prefs = Gdx.app.getPreferences("scenes");
                                         prefs.remove(cid);
                                         prefs.flush();
+                                        InputEvent ie1 = new InputEvent();
+                                        ie1.setType(InputEvent.Type.touchDown);
+                                        loadButton.fire(ie1);
+                                        InputEvent ie2 = new InputEvent();
+                                        ie2.setType(InputEvent.Type.touchUp);
+                                        loadButton.fire(ie2);
                                     } else if (object.equals(3L)) {
                                         String uri = "https://sunshine.blue/?" + cid;
                                         Gdx.app.getClipboard().setContents(uri);
@@ -216,17 +222,19 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
                         @Override
                         public void downloadFailed(Throwable t) {
+                            Gdx.app.log("downloading screenshot failed, taking evasive maneuvers", "eek!");
+                            otherIndex++;
+                            if (otherIndex > SunshineBlue.instance.otherCIDS.size() - 1) {
+                                otherIndex = 0;
+                            }
+
                             SunshineBlue.instance.otherCIDS.remove(cid);
-                            InputEvent ie1=new InputEvent();
+                            InputEvent ie1 = new InputEvent();
                             ie1.setType(InputEvent.Type.touchDown);
                             loadButton.fire(ie1);
-                            InputEvent ie2=new InputEvent();
+                            InputEvent ie2 = new InputEvent();
                             ie2.setType(InputEvent.Type.touchUp);
                             loadButton.fire(ie2);
-//                            otherIndex++;
-//                            if (otherIndex > SunshineBlue.instance.otherCIDS.size() - 1) {
-//                                otherIndex = 0;
-//                            }
                         }
 
                     });
