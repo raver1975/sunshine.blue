@@ -50,4 +50,9 @@ public class NativeJava implements NativeInterface {
         Gdx.app.log("scene saved",cid);
 //        SunshineBlue.instance.otherCIDS.add(cid);
     }
+
+    @Override
+    public void openKeyboard() {
+        Gdx.input.setOnscreenKeyboardVisible(true);
+    }
 }

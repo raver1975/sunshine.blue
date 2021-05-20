@@ -8,4 +8,5 @@ public interface NativeInterface {
     public void downloadFile(String url, boolean useCors, IPFSFileListener listener);
     public void downloadPixmap(String url, Pixmap.DownloadPixmapResponseListener listener);
     public void doneSavingScene(String cid,String screenshot);
+    public void openKeyboard();
 }

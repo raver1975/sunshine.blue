@@ -136,7 +136,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
         keyButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Gdx.input.setOnscreenKeyboardVisible(true);
+                SunshineBlue.nativeNet.openKeyboard();
             }
         });
         keyButton.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 120, 10);
@@ -232,6 +232,8 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
     @Override
     public void setObject(BaseObject fontObject) {
         this.fontObject = fontObject;
+//        SunshineBlue.instance.selectedObjects.clear();
+//        SunshineBlue.addUserObj(fontObject);
     }
 
     @Override

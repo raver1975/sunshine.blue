@@ -19,7 +19,7 @@ public class NativeGWT implements NativeInterface {
     ArrayMap<Integer, IPFSCIDListener> uploadListener = new ArrayMap<>();
     ArrayMap<Integer, IPFSFileListener> downloadListener = new ArrayMap<>();
 
-    public NativeGWT(){
+    public NativeGWT() {
         addpubsublistener();
     }
 
@@ -123,12 +123,23 @@ public class NativeGWT implements NativeInterface {
     }
 
     @Override
-    public void doneSavingScene(String cid,String screenshot) {
+    public void doneSavingScene(String cid, String screenshot) {
         Gdx.app.log("done", "done saving scene");
-        doneSavingSceneJS(cid,screenshot);
+        doneSavingSceneJS(cid, screenshot);
     }
 
-    native void doneSavingSceneJS(String cid,String screenshot) /*-{
+    @Override
+    public void openKeyboard() {
+        keyboard();
+    }
+
+    public native void keyboard() /*-{
+    console.log("keyboard open");
+      $wnd.prompt();
+    }-*/;
+
+
+    native void doneSavingSceneJS(String cid, String screenshot) /*-{
         $wnd.onpopstate=function(event){
             var currentState = event.state;
             console.log("onpopstate:"+currentState.cid);
