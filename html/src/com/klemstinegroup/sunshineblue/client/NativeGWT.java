@@ -137,6 +137,7 @@ public class NativeGWT implements NativeInterface {
             @Override
             public void onLoad(LoadEvent event) {
                 succeed = true;
+                tt.cancel();
                 listener.downloadComplete(new Pixmap(ImageElement.as(img.getElement())));
             }
         });
