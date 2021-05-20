@@ -362,7 +362,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         autoloadButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                SunshineBlue.instance.autoload = !SunshineBlue.instance.autoload;
+                SunshineBlue.instance.autoload = true;
                 Overlay.backOverlay();
                 SunshineBlue.instance.autoloadtime = TimeUtils.millis();
             }
