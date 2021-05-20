@@ -139,7 +139,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
                 SunshineBlue.nativeNet.openKeyboard();
             }
         });
-        keyButton.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 120, 10);
+        keyButton.setPosition(10, 130);
         stage.addActor(keyButton);
 
 

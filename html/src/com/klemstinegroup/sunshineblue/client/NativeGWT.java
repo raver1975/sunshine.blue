@@ -10,7 +10,10 @@ import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
+import com.klemstinegroup.sunshineblue.engine.objects.FontObject;
+import com.klemstinegroup.sunshineblue.engine.overlays.FontOverlay;
 import com.klemstinegroup.sunshineblue.engine.util.IPFSCIDListener;
 import com.klemstinegroup.sunshineblue.engine.util.IPFSFileListener;
 import com.klemstinegroup.sunshineblue.engine.util.NativeInterface;
@@ -134,9 +137,15 @@ public class NativeGWT implements NativeInterface {
     }
 
     public native void keyboard() /*-{
+    var self=this;
     console.log("keyboard open");
-      $wnd.prompt();
+      var text=$wnd.prompt("Text:");
+      self.@com.klemstinegroup.sunshineblue.client.NativeGWT::setText(Ljava/lang/String;)(text);
     }-*/;
+
+    public void setText(String text) {
+        ((FontObject) SunshineBlue.instance.FONT_OVERLAY.fontObject).fd.text = text;
+    }
 
 
     native void doneSavingSceneJS(String cid, String screenshot) /*-{
