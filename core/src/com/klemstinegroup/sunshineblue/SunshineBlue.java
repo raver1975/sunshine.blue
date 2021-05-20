@@ -403,13 +403,13 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
                 shapedrawer.setColor(Color.GRAY);
                 shapedrawer.setDefaultLineWidth(12);
                 shapedrawer.line(10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (loopStart) / (float) (Statics.recframes)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 13, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (loopEnd) / (float) (Statics.recframes)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 13);
-                shapedrawer.setDefaultLineWidth(3);
+//                shapedrawer.setDefaultLineWidth(3);
 
                 for (int i = 0; i < temp.size; i++) {
                     shapedrawer.setColor(ColorUtil.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(temp.get(i), true) / (float) (SunshineBlue.instance.userObjects.size - 1)));
-                    for (int j = 0; j < Statics.recframes; j++) {
+                    for (int j = 0; j < Statics.recframes-1; j++) {
                         if (b[i][j] > 0) {
-                            shapedrawer.line(10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (j) / (float) (Statics.recframes)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 9, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (j) / (float) (Statics.recframes)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 17);
+                            shapedrawer.line(10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (j) / (float) (Statics.recframes)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 13, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (j+1) / (float) (Statics.recframes)), SunshineBlue.instance.overlayViewport.getWorldHeight() -13);
                         }
                     }
 

@@ -217,6 +217,12 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                         @Override
                         public void downloadFailed(Throwable t) {
                             SunshineBlue.instance.otherCIDS.remove(cid);
+                            InputEvent ie1=new InputEvent();
+                            ie1.setType(InputEvent.Type.touchDown);
+                            loadButton.fire(ie1);
+                            InputEvent ie2=new InputEvent();
+                            ie2.setType(InputEvent.Type.touchUp);
+                            loadButton.fire(ie2);
 //                            otherIndex++;
 //                            if (otherIndex > SunshineBlue.instance.otherCIDS.size() - 1) {
 //                                otherIndex = 0;
