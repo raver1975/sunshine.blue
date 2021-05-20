@@ -311,6 +311,7 @@ function toBase64(dataArr){
       }
 
       else{
+         $wnd.node.pin.add(cid1).then();
          ggg($wnd.node.cat(cid1),new Uint8Array());
       }
       };
@@ -333,6 +334,7 @@ function toBase64(dataArr){
       else{
           $wnd.node.add(byteArray).then(function(fileAdded){
           console.log('Added file:', fileAdded.path);
+          $wnd.node.pin.add(fileAdded.path).then();
           self.@com.klemstinegroup.sunshineblue.client.NativeGWT::finishUpload(Ljava/lang/String;I)(fileAdded.path,iii);
       });
       }
