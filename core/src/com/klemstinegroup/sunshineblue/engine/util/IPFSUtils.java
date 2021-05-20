@@ -56,7 +56,7 @@ public class IPFSUtils {
         String CRLF = "\r\n"; // Line separator required by multipart/form-data.
 
         HttpRequestBuilder builder = new HttpRequestBuilder();
-        Net.HttpRequest request = builder.newRequest().method(Net.HttpMethods.POST).url(url).timeout(1000000).build();
+        Net.HttpRequest request = builder.newRequest().method(Net.HttpMethods.POST).url(url).timeout(5000).build();
         request.setHeader("Content-Type", "multipart/form-data; boundary=" + boundary);
         String out1 = "--" + boundary +
                 CRLF + "Content-Disposition: form-data; name=\"file\"" +

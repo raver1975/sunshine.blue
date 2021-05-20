@@ -1,10 +1,6 @@
 package com.klemstinegroup.sunshineblue.engine.overlays;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -12,8 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
-import com.klemstinegroup.sunshineblue.colorpicker.DialogColorPicker;
-import com.klemstinegroup.sunshineblue.colorpicker.Spinner;
 import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.commands.Command;
 import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
@@ -60,16 +54,16 @@ public class LoopOverlay extends ScreenObject implements Overlay, Drawable {
 //        Skin skin1=new Skin(Gdx.files.internal("skin-composer-ui/skin-composer-ui.json"));
 
 
-        sliderLoopLength = new Slider(1, 600, 1, true, skin);
+        sliderLoopLength = new Slider(1, Statics.RECMAXFRAMESMAX, 1, true, skin);
         sliderLoopLength.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 40, 80);
         sliderLoopLength.setSize(20, SunshineBlue.instance.overlayViewport.getWorldHeight() - 150);
-        sliderLoopLength.setValue(Statics.RECMAXFRAMES);
+        sliderLoopLength.setValue(Statics.recframes);
         sliderLoopLength.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 System.out.println(sliderLoopLength.getValue()+"\t"+sliderLoopStart.getValue()+"\t"+sliderLoopWidth.getValue());
-                Statics.RECMAXFRAMES= (int) sliderLoopLength.getValue();
-                float g = Math.max(0, Statics.RECMAXFRAMES - sliderLoopWidth.getValue());
+                Statics.recframes = (int) sliderLoopLength.getValue();
+                float g = Math.max(0, Statics.recframes - sliderLoopWidth.getValue());
                 System.out.println("range:"+g);
                 sliderLoopStart.setRange(0,g);
                 sliderLoopWidth.setRange(0,sliderLoopLength.getValue());
@@ -78,7 +72,7 @@ public class LoopOverlay extends ScreenObject implements Overlay, Drawable {
         ;
         stage.addActor(sliderLoopLength);
 
-        sliderLoopStart = new Slider(0, 600, 1, true, skin);
+        sliderLoopStart = new Slider(0, Statics.RECMAXFRAMESMAX, 1, true, skin);
         sliderLoopStart.setPosition(10, 80);
         sliderLoopStart.setSize(20, SunshineBlue.instance.overlayViewport.getWorldHeight() - 150);
         sliderLoopStart.setValue(0);
@@ -98,7 +92,7 @@ public class LoopOverlay extends ScreenObject implements Overlay, Drawable {
         ;
         stage.addActor(sliderLoopStart);
 
-        sliderLoopWidth = new Slider(0, 600, 1, true, skin);
+        sliderLoopWidth = new Slider(0, Statics.RECMAXFRAMESMAX, 1, true, skin);
         sliderLoopWidth.setPosition(40, 80);
         sliderLoopWidth.setSize(20, SunshineBlue.instance.overlayViewport.getWorldHeight() - 150);
         sliderLoopWidth.setValue(SunshineBlue.instance.loopEnd-SunshineBlue.instance.loopStart);
@@ -108,7 +102,7 @@ public class LoopOverlay extends ScreenObject implements Overlay, Drawable {
 //                if (sliderLoopStart.getValue()>= sliderLoopWidth.getValue()){
 //                    sliderLoopWidth.setValue(sliderLoopStart.getValue());
 //                }
-                sliderLoopStart.setRange(0,Statics.RECMAXFRAMES-sliderLoopWidth.getValue());
+                sliderLoopStart.setRange(0,Statics.recframes -sliderLoopWidth.getValue());
                 SunshineBlue.instance.loopEnd= (int) (sliderLoopStart.getValue()+sliderLoopWidth.getValue());
             }
         });
@@ -141,7 +135,7 @@ public class LoopOverlay extends ScreenObject implements Overlay, Drawable {
     @Override
     public void setInput() {
         SunshineBlue.instance.im.addProcessor(stage);
-        sliderLoopLength.setValue(Statics.RECMAXFRAMES);
+        sliderLoopLength.setValue(Statics.recframes);
         sliderLoopStart.setValue(SunshineBlue.instance.loopStart);
         sliderLoopWidth.setValue(SunshineBlue.instance.loopEnd-SunshineBlue.instance.loopStart);
     }

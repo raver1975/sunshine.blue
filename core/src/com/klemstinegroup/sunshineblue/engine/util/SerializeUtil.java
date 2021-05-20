@@ -5,7 +5,6 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
@@ -18,13 +17,11 @@ import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ImageObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
 import com.klemstinegroup.sunshineblue.engine.overlays.SerialInterface;
-import sun.security.provider.Sun;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Map;
 
 
@@ -173,8 +170,8 @@ public class SerializeUtil {
                     }
                     if (!merge) {
                         try {
-                            Statics.RECMAXFRAMES = val.getInt("looplength");
-                            SunshineBlue.instance.loopEnd = Statics.RECMAXFRAMES;
+                            Statics.recframes = val.getInt("looplength");
+                            SunshineBlue.instance.loopEnd = Statics.recframes;
                         } catch (Exception e) {
 
                         }
@@ -218,7 +215,7 @@ public class SerializeUtil {
                 val.addChild("cam_position_x", new JsonValue(SunshineBlue.instance.viewport.getCamera().position.x));
                 val.addChild("cam_position_y", new JsonValue(SunshineBlue.instance.viewport.getCamera().position.y));
                 val.addChild("cam_position_z", new JsonValue(SunshineBlue.instance.viewport.getCamera().position.z));
-                val.addChild("loopLength", new JsonValue(Statics.RECMAXFRAMES));
+                val.addChild("loopLength", new JsonValue(Statics.recframes));
 
                 SunshineBlue.instance.viewport.getCamera().position.set(val.getFloat("cam_position_x"), val.getFloat("cam_position_y"), val.getFloat("cam_position_z"));
                 ((OrthographicCamera) SunshineBlue.instance.viewport.getCamera()).zoom = val.getFloat("cam_zoom");

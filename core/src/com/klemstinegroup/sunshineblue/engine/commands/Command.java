@@ -14,7 +14,7 @@ public abstract class Command {
     transient String uuid = UUID.randomUUID().toString();
     public int framePos = 0;
     public int arrayPos = 0;
-    transient static boolean[] doneundun=new boolean[Statics.RECMAXFRAMES+1];
+    transient static boolean[] doneundun=new boolean[Statics.RECMAXFRAMESMAX+1];
     public Command() {
     }
 
