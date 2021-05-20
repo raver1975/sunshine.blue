@@ -19,6 +19,7 @@ import com.klemstinegroup.sunshineblue.engine.objects.FontObject;
 import com.klemstinegroup.sunshineblue.engine.overlays.FontOverlay;
 import com.klemstinegroup.sunshineblue.engine.util.IPFSCIDListener;
 import com.klemstinegroup.sunshineblue.engine.util.IPFSFileListener;
+import com.klemstinegroup.sunshineblue.engine.util.IPFSUtils;
 import com.klemstinegroup.sunshineblue.engine.util.NativeInterface;
 
 import java.util.TimerTask;
@@ -83,9 +84,12 @@ public class NativeGWT implements NativeInterface {
 
     @Override
     public void uploadIPFS(byte[] data, IPFSCIDListener listener) {
-        int j = MathUtils.random.nextInt();
+/*        int j = MathUtils.random.nextInt();
         this.uploadListener.put(j, listener);
-        uploadToIPFS(new String(Base64Coder.encode(data)), j);
+        uploadToIPFS(new String(Base64Coder.encode(data)), j);*/
+
+        //pin through ipfs gateway, otherwise gets lost because web ipfs nodes do not persist.
+        IPFSUtils.uploadFile(data,listener);
     }
 
     @Override
