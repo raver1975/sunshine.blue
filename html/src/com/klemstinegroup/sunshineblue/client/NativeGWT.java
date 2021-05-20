@@ -133,13 +133,13 @@ public class NativeGWT implements NativeInterface {
                 }
             }
         };
-        Timer.schedule(tt, 5);
+        Timer.schedule(tt, 15);
         succeed = false;
         img.addLoadHandler(new LoadHandler() {
 
 
             @Override
-            public void onLoad(LoadEvent event) { 
+            public void onLoad(LoadEvent event) {
                 succeed = true;
                 tt.cancel();
                 listener.downloadComplete(new Pixmap(ImageElement.as(img.getElement())));
