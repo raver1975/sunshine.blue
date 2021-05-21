@@ -347,7 +347,6 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 //                Statics.viewport.project(Statics.overlayViewport.unproject(vec));
 //                Statics.overlayViewport.unproject(Statics.viewport.project(vec));
 //                Statics.overlayViewport.project(Statics.viewport.unproject(vec));
-                System.out.println(vec);
                 ff.sd.position.set(vec);
                 Overlay.setOverlay(SunshineBlue.instance.FONT_OVERLAY);
 
