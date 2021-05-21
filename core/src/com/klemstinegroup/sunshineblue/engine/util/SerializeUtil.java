@@ -292,6 +292,10 @@ public class SerializeUtil {
     public static <T extends BaseObject> void copy(T si) {
         Gdx.app.log("copy class", si.getClass().getName());
         JsonValue temp = si.serialize();
+        String replace=temp.toJson(JsonWriter.OutputType.minimal);
+        String nuuid = UUID.randomUUID().toString();
+        replace = replace.replaceAll(si.uuid, nuuid);
+        temp=jsonReader.parse(replace);
 //        if (si instanceof ScreenObject){
 //            ((ScreenObject)si).sd.position.add(100,100);
 //        }
