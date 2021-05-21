@@ -9,7 +9,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'org.wisepersist:gwt-gradle-plugin:1.1.11'
+        classpath 'org.wisepersist:gwt-gradle-plugin:1.1.12'
         classpath 'org.gretty:gretty:3.0.4'
         classpath 'com.android.tools.build:gradle:4.0.2'
         classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.12'
