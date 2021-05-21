@@ -26,7 +26,7 @@ public class SpazObjects {
                 sd.rotation = -90;
             }
             if (sd.rotation != 0) {
-                sd.rotation -= sd.rotation / 10;
+                sd.rotation -= sd.rotation / 5;
             }
 
         } catch (Exception e) {
