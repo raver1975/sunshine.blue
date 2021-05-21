@@ -9,9 +9,9 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'org.wisepersist:gwt-gradle-plugin:1.0.13'
-        classpath 'org.gretty:gretty:3.0.3'
-        classpath 'com.android.tools.build:gradle:4.2.1'
+        classpath 'org.wisepersist:gwt-gradle-plugin:1.1.11'
+        classpath 'org.gretty:gretty:3.0.4'
+        classpath 'com.android.tools.build:gradle:7.0.0-alpha15'
         classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.12'
         
 
@@ -24,7 +24,8 @@ allprojects {
     version = '1.0'
     ext {
         appName = "SunshineBlue"
-        gdxVersion = '1.9.15-SNAPSHOT'
+        gdxVersion = '1.10.0'
+//        gdxVersion = '1.10.1-SNAPSHOT'
 //        gdxVersion = '1.9.14'
         roboVMVersion = '2.3.12'
 //        box2DLightsVersion = '1.5'
@@ -72,13 +73,11 @@ project(":android") {
     dependencies {
         implementation project(":core")
         api "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
-        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
 //        api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
-//        natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-armeabi"
 //        natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-armeabi-v7a"
 //        natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-arm64-v8a"
 //        natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86"
