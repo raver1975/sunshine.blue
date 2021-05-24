@@ -60,13 +60,13 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         HorizontalGroup hgScene = new HorizontalGroup();
         hgScene.setVisible(false);
         hgScene.space(10);
-        hgScene.setPosition(70, 10);
+        hgScene.setPosition(70, 130);
         stage.addActor(hgScene);
 
         HorizontalGroup hgSettings = new HorizontalGroup();
         hgSettings.setVisible(false);
         hgSettings.space(10);
-        hgSettings.setPosition(70, 10);
+        hgSettings.setPosition(70, 70);
         stage.addActor(hgSettings);
 
         HorizontalGroup hgObjects = new HorizontalGroup();
@@ -133,7 +133,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         hgScene.addActor(saveButton);
 
 
-        TextButton sceneButton = new TextButton(" % ", skin);
+        TextButton sceneButton = new TextButton(" / ", skin);
         sceneButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -141,7 +141,6 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 hgScene.pack();
                 hgObjects.setVisible(false);
                 hgObjects.pack();
-//                hgScene.setVisible(false);hgScene.pack();
                 hgSettings.setVisible(false);
                 hgSettings.pack();
             }

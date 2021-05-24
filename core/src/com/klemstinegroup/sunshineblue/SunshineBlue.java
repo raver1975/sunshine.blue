@@ -32,6 +32,7 @@ import com.klemstinegroup.sunshineblue.engine.objects.*;
 import com.klemstinegroup.sunshineblue.engine.overlays.*;
 import com.klemstinegroup.sunshineblue.engine.util.*;
 import space.earlygrey.shapedrawer.ShapeDrawer;
+import sun.security.provider.Sun;
 
 import java.util.*;
 
@@ -89,6 +90,8 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public AssetManager assetManager = new AssetManager();
     private Vector2 touchdown = new Vector2();
     private boolean tempPauseLoop;
+    private boolean loopEndDrag;
+    private boolean loopStartDrag;
 
 
 //    public Stack<Command> commandStack = new Stack<>();
@@ -490,16 +493,19 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        tempPauseLoop=pauseLoop;
-        pauseLoop=true;
+        tempPauseLoop = pauseLoop;
+        pauseLoop = true;
         return touched(screenX, screenY);
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        pauseLoop=true;
-        pauseLoop=tempPauseLoop;
-        return touched(screenX, screenY);
+        pauseLoop = true;
+        pauseLoop = tempPauseLoop;
+        boolean ret = touched(screenX, screenY);
+        loopEndDrag = false;
+        loopStartDrag = false;
+        return ret;
     }
 
     private boolean touched(int screenX, int screenY) {
@@ -508,7 +514,14 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
             if (touchdown.y >= overlayViewport.getWorldHeight() - 60) {
                 touchdown.sub(10, 0);
                 int frameCount1 = Math.max(0, (int) (Statics.recframes * touchdown.x / (overlayViewport.getWorldWidth() - 20)));
-                frameCount1 = Math.min(frameCount1,Statics.recframes);
+                frameCount1 = Math.min(frameCount1, Statics.recframes);
+                if (loopEndDrag || (frameCount1 >= SunshineBlue.instance.loopEnd && frameCount1 >= SunshineBlue.instance.loopStart)) {
+                    SunshineBlue.instance.loopEnd = frameCount1;
+                    loopEndDrag = true;
+                } else if (loopStartDrag || (frameCount1 <= SunshineBlue.instance.loopStart && frameCount1 <= SunshineBlue.instance.loopEnd)) {
+                    SunshineBlue.instance.loopStart = frameCount1;
+                    loopStartDrag = true;
+                }
                 Command.setToFrame(frameCount1);
                 //lastframeCount = (int) (Statics.recframes*touchdown.x/(overlayViewport.getWorldWidth()-20));
                 return true;
