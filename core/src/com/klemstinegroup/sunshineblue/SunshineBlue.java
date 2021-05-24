@@ -496,6 +496,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         if (touched(screenX, screenY)) {
             tempPauseLoop = pauseLoop;
             pauseLoop = true;
+            return true;
         }
         return false;
     }
@@ -504,11 +505,10 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         if (touched(screenX, screenY)) {
             pauseLoop = true;
-
             pauseLoop = tempPauseLoop;
-
             loopEndDrag = false;
             loopStartDrag = false;
+            return true;
         }
         return false;
     }
@@ -537,8 +537,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        touched(screenX, screenY);
-        return false;
+        return touched(screenX, screenY);
     }
 
     @Override
