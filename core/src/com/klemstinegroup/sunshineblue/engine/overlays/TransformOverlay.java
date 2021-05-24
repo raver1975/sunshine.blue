@@ -445,7 +445,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
     }
 
     @Override
-    public void setObject(BaseObject bo) {
+    public void setObject1(BaseObject bo) {
 
     }
 
@@ -463,15 +463,15 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
     public boolean longPress(float x, float y) {
         if (SunshineBlue.instance.selectedObjects.size == 1) {
             if (SunshineBlue.instance.selectedObjects.get(0) instanceof FontObject) {
-                SunshineBlue.instance.FONT_OVERLAY.setObject(SunshineBlue.instance.selectedObjects.get(0));
+                SunshineBlue.instance.FONT_OVERLAY.setObject1(SunshineBlue.instance.selectedObjects.get(0));
                 Overlay.setOverlay(SunshineBlue.instance.FONT_OVERLAY);
             }
             if (SunshineBlue.instance.selectedObjects.get(0) instanceof DrawObject) {
-                SunshineBlue.instance.DRAW_OVERLAY.setObject(SunshineBlue.instance.selectedObjects.get(0));
+                SunshineBlue.instance.DRAW_OVERLAY.setObject1(SunshineBlue.instance.selectedObjects.get(0));
                 Overlay.setOverlay(SunshineBlue.instance.DRAW_OVERLAY);
             }
             if (SunshineBlue.instance.selectedObjects.get(0) instanceof ParticleObject) {
-                SunshineBlue.instance.PARTICLE_OVERLAY.setObject(SunshineBlue.instance.selectedObjects.get(0));
+                SunshineBlue.instance.PARTICLE_OVERLAY.setObject1(SunshineBlue.instance.selectedObjects.get(0));
                 Overlay.setOverlay(SunshineBlue.instance.PARTICLE_OVERLAY);
             }
         }

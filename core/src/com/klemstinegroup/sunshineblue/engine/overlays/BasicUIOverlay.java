@@ -374,7 +374,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 Gdx.input.setOnscreenKeyboardVisible(true);
                 FontObject ff = new FontObject();
                 SunshineBlue.addUserObj(ff);
-                SunshineBlue.instance.FONT_OVERLAY.setObject(ff);
+                SunshineBlue.instance.FONT_OVERLAY.setObject1(ff);
                 SunshineBlue.instance.FONT_OVERLAY.generate(SunshineBlue.instance.assetManager, ff);
                 SunshineBlue.instance.FONT_OVERLAY.setList();
 //                ff.sd.position.set(-ff.sd.center.x, -ff.sd.center.y);
@@ -457,7 +457,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 doi.setColor(SunshineBlue.instance.DRAW_OVERLAY.picker.getSelectedColor());
                 SunshineBlue.addUserObj(doi);
 
-                SunshineBlue.instance.DRAW_OVERLAY.setObject(doi);
+                SunshineBlue.instance.DRAW_OVERLAY.setObject1(doi);
                 SunshineBlue.instance.DRAW_OVERLAY.setTouchable(doi);
                 Overlay.setOverlay(SunshineBlue.instance.DRAW_OVERLAY);
 //                pasteButton.setVisible(true);
@@ -476,7 +476,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 //                doi.setColor(SunshineBlue.instance.DRAW_OVERLAY.picker.getSelectedColor());
                 SunshineBlue.addUserObj(po);
 
-                SunshineBlue.instance.PARTICLE_OVERLAY.setObject(po);
+                SunshineBlue.instance.PARTICLE_OVERLAY.setObject1(po);
 //                SunshineBlue.instance.PARTICLE_OVERLAY.setTouchable(doi);
                 Overlay.setOverlay(SunshineBlue.instance.PARTICLE_OVERLAY);
 //                pasteButton.setVisible(true);
@@ -645,7 +645,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
 
     @Override
-    public void setObject(BaseObject bo) {
+    public void setObject1(BaseObject bo) {
 
     }
 

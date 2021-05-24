@@ -147,7 +147,7 @@ public class LoopOverlay extends ScreenObject implements Overlay, Drawable {
     }
 
     @Override
-    public void setObject(BaseObject bo) {
+    public void setObject1(BaseObject bo) {
 
     }
 

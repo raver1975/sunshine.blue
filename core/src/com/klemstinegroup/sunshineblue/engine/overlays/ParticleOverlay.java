@@ -247,10 +247,10 @@ public class ParticleOverlay extends ScreenObject implements Overlay, Touchable,
     }
 
     @Override
-    public void setObject(BaseObject object) {
+    public void setObject1(BaseObject object) {
         this.particleObject = object;
-//        SunshineBlue.instance.selectedObjects.clear();
-//        SunshineBlue.addUserObj(object);
+        SunshineBlue.instance.selectedObjects.clear();
+        SunshineBlue.instance.selectedObjects.add(object);
     }
 
     @Override

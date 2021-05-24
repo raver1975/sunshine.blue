@@ -493,19 +493,24 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        tempPauseLoop = pauseLoop;
-        pauseLoop = true;
-        return touched(screenX, screenY);
+        if (touched(screenX, screenY)) {
+            tempPauseLoop = pauseLoop;
+            pauseLoop = true;
+        }
+        return false;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        pauseLoop = true;
-        pauseLoop = tempPauseLoop;
-        boolean ret = touched(screenX, screenY);
-        loopEndDrag = false;
-        loopStartDrag = false;
-        return ret;
+        if (touched(screenX, screenY)) {
+            pauseLoop = true;
+
+            pauseLoop = tempPauseLoop;
+
+            loopEndDrag = false;
+            loopStartDrag = false;
+        }
+        return false;
     }
 
     private boolean touched(int screenX, int screenY) {
@@ -526,14 +531,14 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
                 //lastframeCount = (int) (Statics.recframes*touchdown.x/(overlayViewport.getWorldWidth()-20));
                 return true;
             }
-            ;
         }
         return false;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return touched(screenX, screenY);
+        touched(screenX, screenY);
+        return false;
     }
 
     @Override

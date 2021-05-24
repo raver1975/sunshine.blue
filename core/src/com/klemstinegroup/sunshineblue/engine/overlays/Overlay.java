@@ -51,7 +51,7 @@ public interface Overlay {
 
     void removeInput();
 
-    void setObject(BaseObject bo);
+    void setObject1(BaseObject bo);
 
     void dispose();
 }
