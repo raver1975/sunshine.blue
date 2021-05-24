@@ -486,6 +486,10 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+
+        if (overlay!=BLANK_OVERLAY){
+            System.out.println(screenX+"\t"+screenY);
+        }
         return false;
     }
 
