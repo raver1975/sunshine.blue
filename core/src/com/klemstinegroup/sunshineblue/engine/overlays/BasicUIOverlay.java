@@ -56,6 +56,71 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         });
         stage.addActor(exitButton);
 
+
+        HorizontalGroup hgScene = new HorizontalGroup();
+        hgScene.setVisible(false);
+        hgScene.space(10);
+        hgScene.setPosition(70, 10);
+        stage.addActor(hgScene);
+
+        HorizontalGroup hgSettings = new HorizontalGroup();
+        hgSettings.setVisible(false);
+        hgSettings.space(10);
+        hgSettings.setPosition(70, 10);
+        stage.addActor(hgSettings);
+
+        HorizontalGroup hgObjects = new HorizontalGroup();
+        hgObjects.setVisible(false);
+        hgObjects.space(10);
+        hgObjects.setPosition(70, 10);
+        stage.addActor(hgObjects);
+
+        Actor newButton = new TextButton("New", skin);
+        newButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 135);
+        newButton.addListener(new ClickListener() {
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Dialog dialog = new Dialog("Erase scene?", skin) {
+                    @Override
+                    protected void result(Object object) {
+                        if (object.equals(2)) {
+                            Preferences prefs = null;
+                            do {
+                                prefs = Gdx.app.getPreferences("scenes");
+                                for (String s : prefs.get().keySet()) {
+                                    prefs.remove(s);
+                                    prefs.flush();
+                                }
+                            }
+                            while (prefs != null && prefs.get().size() > 0);
+                            SunshineBlue.instance.otherCIDS.clear();
+                        }
+                        if (!object.equals(3)) {
+                            SunshineBlue.instance.selectedObjects.clear();
+                            Iterator<BaseObject> i = SunshineBlue.instance.userObjects.iterator();
+                            while (i.hasNext()) {
+                                SunshineBlue.removeUserObj(i.next());
+                            }
+                            SunshineBlue.instance.userObjects.clear();
+                            SunshineBlue.instance.selectedObjects.clear();
+                            SunshineBlue.instance.commands.clear();
+                            Overlay.setOverlay(SunshineBlue.instance.BASIC_UI_OVERLAY);
+                            SunshineBlue.instance.otherCIDS.remove(cid);
+                        }
+                        hide();
+                    }
+                };
+                dialog.setModal(true);
+                dialog.button("Erase Scene", 1);
+                dialog.button("Erase All", 2);
+                dialog.button("Cancel", 3);
+                dialog.show(stage);
+            }
+        });
+        hgScene.addActor(newButton);
+
+
         Actor saveButton = new TextButton("Save", skin);
         saveButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 135);
         saveButton.addListener(new ClickListener() {
@@ -65,54 +130,62 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 SerializeUtil.save();
             }
         });
-        stage.addActor(saveButton);
+        hgScene.addActor(saveButton);
 
-        HorizontalGroup hg1 = new HorizontalGroup();
-        hg1.setVisible(false);
-        hg1.space(10);
-        stage.addActor(hg1);
+
+        TextButton sceneButton = new TextButton(" % ", skin);
+        sceneButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                hgScene.setVisible(!hgScene.isVisible());
+                hgScene.pack();
+                hgObjects.setVisible(false);
+                hgObjects.pack();
+//                hgScene.setVisible(false);hgScene.pack();
+                hgSettings.setVisible(false);
+                hgSettings.pack();
+            }
+        });
+        sceneButton.setPosition(10, 130);
+        stage.addActor(sceneButton);
+
+        TextButton starButton = new TextButton(" * ", skin);
+        starButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                hgSettings.setVisible(!hgSettings.isVisible());
+                hgSettings.pack();
+                hgObjects.setVisible(false);
+                hgObjects.pack();
+                hgScene.setVisible(false);
+                hgScene.pack();
+//                hgSettings.setVisible(false);hgSettings.pack();
+            }
+        });
+        starButton.setPosition(10, 70);
+        stage.addActor(starButton);
+
         TextButton plusButton = new TextButton(" + ", skin);
         plusButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                hg1.setVisible(!hg1.isVisible());
-                hg1.pack();
+                hgObjects.setVisible(!hgObjects.isVisible());
+                hgObjects.pack();
+//                hgObjects.setVisible(false);hgObjects.pack();
+                hgScene.setVisible(false);
+                hgScene.pack();
+                hgSettings.setVisible(false);
+                hgSettings.pack();
             }
         });
         plusButton.setPosition(10, 10);
         stage.addActor(plusButton);
 
 
-        hg1.setPosition(70,10);
         Actor fontButton = new TextButton("Text", skin);
 
-        Actor popButton = new TextButton("Pop", skin);
-        popButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 315);
-        popButton.addListener(new ClickListener() {
 
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                SerializeUtil.save(new IPFSCIDListener() {
-                    @Override
-                    public void cid(String cid) {
-                        if (Gdx.app.getType() == Application.ApplicationType.Desktop) {
-                            Gdx.net.openURI("http://localhost:8080/?" + cid);
-                        } else {
-                            Gdx.net.openURI("https://sunshine.blue/?" + cid);
-                        }
-                    }
-
-                    @Override
-                    public void uploadFailed(Throwable t) {
-
-                    }
-                });
-
-            }
-        });
-        stage.addActor(popButton);
-
-        Actor apngButton = new TextButton("GIF", skin);
+        Actor apngButton = new TextButton("Gif", skin);
         apngButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 255);
         apngButton.addListener(new ClickListener() {
 
@@ -128,7 +201,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 }
             }
         });
-        stage.addActor(apngButton);
+        hgSettings.addActor(apngButton);
 
         Actor loadButton = new TextButton("Load", skin);
         loadButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 75);
@@ -255,59 +328,13 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         loadButton.addListener(new ActorGestureListener() {
             @Override
             public boolean longPress(Actor actor, float x, float y) {
-                Dialog dialog = new Dialog("Erase scene?", skin) {
-                    @Override
-                    protected void result(Object object) {
-                        if (object.equals(2)) {
-                            Preferences prefs = null;
-                            do {
-                                prefs = Gdx.app.getPreferences("scenes");
-                                for (String s : prefs.get().keySet()) {
-                                    prefs.remove(s);
-                                    prefs.flush();
-                                }
-                            }
-                            while (prefs != null && prefs.get().size() > 0);
-                            SunshineBlue.instance.otherCIDS.clear();
-                        } else if (object.equals(1)) {
-//                            SerializeUtil.save(new IPFSCIDListener() {
-//                                @Override
-//                                public void cid(String cid) {
-                            SunshineBlue.instance.selectedObjects.clear();
-                            Iterator<BaseObject> i = SunshineBlue.instance.userObjects.iterator();
-                            while (i.hasNext()) {
-                                SunshineBlue.removeUserObj(i.next());
-                            }
-                            SunshineBlue.instance.userObjects.clear();
-                            SunshineBlue.instance.selectedObjects.clear();
-                            SunshineBlue.instance.commands.clear();
-                            Overlay.setOverlay(SunshineBlue.instance.BASIC_UI_OVERLAY);
-//                                    Preferences prefs = Gdx.app.getPreferences("scenes");
-//                                    prefs.remove(cid);
-//                                    prefs.flush();
-                            SunshineBlue.instance.otherCIDS.remove(cid);
-//                                }
-//
-//                                @Override
-//                                public void uploadFailed(Throwable t) {
-//
-//                                }
-//                            });
-                        }
-                        hide();
-                    }
-                };
-                dialog.setModal(true);
-                dialog.button("Erase Scene", 1);
-                dialog.button("Erase All", 2);
-                dialog.button("Cancel", 3);
-                dialog.show(stage);
+
                 return true;
 
 
             }
         });
-        stage.addActor(loadButton);
+        hgScene.addActor(loadButton);
 
 
         Actor screenshotButton = new TextButton("Png", skin);
@@ -333,7 +360,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
             }
         });
 
-        stage.addActor(screenshotButton);
+        hgSettings.addActor(screenshotButton);
 
         fontButton.addListener(new ClickListener() {
 //            @Override
@@ -365,7 +392,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         });
         fontButton.setPosition(10, 10);
 //        stage.addActor(fontButton);
-        hg1.addActor(fontButton);
+        hgObjects.addActor(fontButton);
 
         autoloadButton = new TextButton("See", skin);
         autoloadButton.addListener(new ClickListener() {
@@ -378,7 +405,33 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         });
         autoloadButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 375);
         autoloadButton.setChecked(SunshineBlue.instance.autoload);
-        stage.addActor(autoloadButton);
+        hgScene.addActor(autoloadButton);
+
+        Actor popButton = new TextButton("Pop", skin);
+        popButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 315);
+        popButton.addListener(new ClickListener() {
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                SerializeUtil.save(new IPFSCIDListener() {
+                    @Override
+                    public void cid(String cid) {
+                        if (Gdx.app.getType() == Application.ApplicationType.Desktop) {
+                            Gdx.net.openURI("http://localhost:8080/?" + cid);
+                        } else {
+                            Gdx.net.openURI("https://sunshine.blue/?" + cid);
+                        }
+                    }
+
+                    @Override
+                    public void uploadFailed(Throwable t) {
+
+                    }
+                });
+
+            }
+        });
+        hgScene.addActor(popButton);
 
         Actor imageButton = new TextButton("Image", skin);
         imageButton.setPosition(70, 10);
@@ -390,7 +443,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 Overlay.setOverlay(SunshineBlue.instance.IMAGE_OVERLAY);
             }
         });
-        hg1.addActor(imageButton);
+        hgObjects.addActor(imageButton);
 
         Actor drawButton = new TextButton("Draw", skin);
         drawButton.setPosition(135, 10);
@@ -411,7 +464,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 //                pasteButton.setVisible(true);
             }
         });
-        hg1.addActor(drawButton);
+        hgObjects.addActor(drawButton);
         Actor fxButton = new TextButton("FX", skin);
         fxButton.setPosition(195, 10);
         fxButton.addListener(new ClickListener() {
@@ -430,7 +483,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 //                pasteButton.setVisible(true);
             }
         });
-        hg1.addActor(fxButton);
+        hgObjects.addActor(fxButton);
         Actor loopButton = new TextButton("Loop", skin);
         loopButton.setPosition(70, 70);
         loopButton.addListener(new ClickListener() {
@@ -441,7 +494,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 Overlay.setOverlay(SunshineBlue.instance.LOOP_OVERLAY);
             }
         });
-        stage.addActor(loopButton);
+        hgSettings.addActor(loopButton);
 
         Actor backgroundButton = new TextButton("BG", skin);
         backgroundButton.setPosition(10, 70);
@@ -453,7 +506,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 Overlay.setOverlay(SunshineBlue.instance.BACKGROUND_OVERLAY);
             }
         });
-        stage.addActor(backgroundButton);
+        hgSettings.addActor(backgroundButton);
 
     }
 
