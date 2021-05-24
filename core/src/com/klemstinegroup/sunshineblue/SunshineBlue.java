@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ArrayMap;
@@ -23,6 +24,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.crashinvaders.vfx.VfxManager;
 import com.github.tommyettinger.anim8.IncrementalAnimatedPNG;
+import com.igormaznitsa.jjjvm.impl.JJJVMClassFieldImpl;
 import com.igormaznitsa.jjjvm.impl.jse.JSEProviderImpl;
 import com.klemstinegroup.sunshineblue.engine.commands.Command;
 import com.klemstinegroup.sunshineblue.engine.Statics;
@@ -85,6 +87,8 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     private IncrementalAnimatedPNG apng;
     private MemoryFileHandle mfh;
     public AssetManager assetManager = new AssetManager();
+    private Vector2 touchdown = new Vector2();
+    private boolean tempPauseLoop;
 
 
 //    public Stack<Command> commandStack = new Stack<>();
@@ -407,9 +411,9 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
                 for (int i = 0; i < temp.size; i++) {
                     shapedrawer.setColor(ColorUtil.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(temp.get(i), true) / (float) (SunshineBlue.instance.userObjects.size - 1)));
-                    for (int j = 0; j < Statics.recframes-1; j++) {
+                    for (int j = 0; j < Statics.recframes - 1; j++) {
                         if (b[i][j] > 0) {
-                            shapedrawer.line(10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (j) / (float) (Statics.recframes)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 13, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (j+1) / (float) (Statics.recframes)), SunshineBlue.instance.overlayViewport.getWorldHeight() -13);
+                            shapedrawer.line(10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (j) / (float) (Statics.recframes)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 13, 10 + (SunshineBlue.instance.overlayViewport.getWorldWidth() - 20) * ((float) (j + 1) / (float) (Statics.recframes)), SunshineBlue.instance.overlayViewport.getWorldHeight() - 13);
                         }
                     }
 
@@ -453,7 +457,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         BACKGROUND_OVERLAY.dispose();
         LOOP_OVERLAY.dispose();
         font.dispose();
-        if (apng!=null)apng.dispose();
+        if (apng != null) apng.dispose();
     }
 
     @Override
@@ -486,21 +490,37 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        tempPauseLoop=pauseLoop;
+        pauseLoop=true;
+        return touched(screenX, screenY);
+    }
 
-        if (overlay!=BLANK_OVERLAY){
-            System.out.println(screenX+"\t"+screenY);
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        pauseLoop=true;
+        pauseLoop=tempPauseLoop;
+        return touched(screenX, screenY);
+    }
+
+    private boolean touched(int screenX, int screenY) {
+        SunshineBlue.instance.overlayViewport.unproject(touchdown.set(screenX, screenY));
+        if (overlay != BLANK_OVERLAY) {
+            if (touchdown.y >= overlayViewport.getWorldHeight() - 60) {
+                touchdown.sub(10, 0);
+                int frameCount1 = Math.max(0, (int) (Statics.recframes * touchdown.x / (overlayViewport.getWorldWidth() - 20)));
+                frameCount1 = Math.min(frameCount1,Statics.recframes);
+                Command.setToFrame(frameCount1);
+                //lastframeCount = (int) (Statics.recframes*touchdown.x/(overlayViewport.getWorldWidth()-20));
+                return true;
+            }
+            ;
         }
         return false;
     }
 
     @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
+        return touched(screenX, screenY);
     }
 
     @Override
