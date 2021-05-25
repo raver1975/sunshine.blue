@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.badlogic.gdx.utils.Timer;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.objects.*;
@@ -568,7 +569,9 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
     private void adjusthgScreenshot() {
         hgScreenshots.clear();
+        int cnt=0;
         for (Map.Entry<String, String> entry : SunshineBlue.instance.otherCIDS.entrySet()) {
+
             if (pixmapmap.containsKey(entry.getKey())) {
                 Image tt = new Image(new Texture(pixmapmap.get(entry.getKey())));
                 tt.addListener(new ClickListener() {
@@ -584,7 +587,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 hgScreenshots.invalidate();
                 hgScreenshots.layout();
             } else {
-                Gdx.app.postRunnable(new Runnable() {
+                Timer.instance().scheduleTask(new Timer.Task() {
                     @Override
                     public void run() {
                         SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + entry.getValue(), new Pixmap.DownloadPixmapResponseListener() {
@@ -634,7 +637,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                             }
                         });
                     }
-                });
+                },(cnt++)/4);
             }
         }
     }
