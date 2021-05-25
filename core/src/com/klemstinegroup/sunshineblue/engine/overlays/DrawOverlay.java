@@ -181,7 +181,7 @@ public class DrawOverlay extends ScreenObject implements Overlay, Touchable, Dra
     }
 
     @Override
-    public void setObject1(BaseObject doi) {
+    public void setObject(BaseObject doi) {
         this.drawObject = doi;
         SunshineBlue.instance.selectedObjects.clear();
         SunshineBlue.instance.selectedObjects.add(doi);

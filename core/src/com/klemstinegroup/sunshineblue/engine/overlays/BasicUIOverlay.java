@@ -19,8 +19,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
+import com.klemstinegroup.sunshineblue.colorpicker.GradientDrawable;
 import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.objects.*;
 import com.klemstinegroup.sunshineblue.engine.util.*;
@@ -33,17 +36,21 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
     public final Stage stage;
     public final TextButton autoloadButton;
+    private final Table hgScreenshots;
+    private final Table scrollableTable;
+    private final Skin skin;
     Vector2 touchdown = new Vector2();
     Vector2 oldtouch = new Vector2();
     Vector2 touchdownre = new Vector2();
     Vector2 oldtouchre = new Vector2();
     boolean touched = false;
     private int otherIndex = 0;
+    private ArrayMap<String, Pixmap> pixmapmap = new ArrayMap<>();
 
 
     public BasicUIOverlay() {
         SunshineBlue.instance.assetManager.finishLoadingAsset("skins/orange/skin/uiskin.json");
-        Skin skin = SunshineBlue.instance.assetManager.get("skins/orange/skin/uiskin.json", Skin.class);
+        skin = SunshineBlue.instance.assetManager.get("skins/orange/skin/uiskin.json", Skin.class);
         stage = new Stage(SunshineBlue.instance.overlayViewport);
         TextButton exitButton = new TextButton("X", skin);
         exitButton.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 60, 10);
@@ -57,16 +64,36 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         stage.addActor(exitButton);
 
 
+        hgScreenshots = new Table();
+        hgScreenshots.pad(10);
+        hgScreenshots.setPosition(70, 10);
+        scrollableTable = new Table();
+//        scrollableTable.setBackground(new GradientDrawable(Color.CLEAR,Color.CLEAR,Color.CLEAR,Color.CLEAR));
+//        hgScreenshots.setBackground(new GradientDrawable(Color.CLEAR,Color.CLEAR,Color.CLEAR,Color.CLEAR));
+        Pixmap bgPixmap = new Pixmap(1,1, Pixmap.Format.RGBA8888);
+        bgPixmap.setColor(Color.CLEAR);
+        bgPixmap.fill();
+        TextureRegionDrawable textureRegionDrawableBg = new TextureRegionDrawable(new TextureRegion(new Texture(bgPixmap)));
+        scrollableTable.setBackground(textureRegionDrawableBg);
+        hgScreenshots.setBackground(textureRegionDrawableBg);
+
+        scrollableTable.setVisible(false);
+        scrollableTable.setFillParent(true);
+        final ScrollPane scroll = new ScrollPane(hgScreenshots, skin);
+        scrollableTable.add(scroll).expand().fill();
+        stage.addActor(scrollableTable);
+
+
         HorizontalGroup hgScene = new HorizontalGroup();
         hgScene.setVisible(false);
         hgScene.space(10);
-        hgScene.setPosition(70, 130);
+        hgScene.setPosition(70, 10);
         stage.addActor(hgScene);
 
         HorizontalGroup hgSettings = new HorizontalGroup();
         hgSettings.setVisible(false);
         hgSettings.space(10);
-        hgSettings.setPosition(70, 70);
+        hgSettings.setPosition(70, 10);
         stage.addActor(hgSettings);
 
         HorizontalGroup hgObjects = new HorizontalGroup();
@@ -138,6 +165,8 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 hgScene.setVisible(!hgScene.isVisible());
+                scrollableTable.setVisible(!scrollableTable.isVisible());
+                scrollableTable.pack();
                 hgScene.pack();
                 hgObjects.setVisible(false);
                 hgObjects.pack();
@@ -158,6 +187,8 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 hgObjects.pack();
                 hgScene.setVisible(false);
                 hgScene.pack();
+                scrollableTable.setVisible(false);
+                scrollableTable.pack();
 //                hgSettings.setVisible(false);hgSettings.pack();
             }
         });
@@ -173,6 +204,8 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 //                hgObjects.setVisible(false);hgObjects.pack();
                 hgScene.setVisible(false);
                 hgScene.pack();
+                scrollableTable.setVisible(false);
+                scrollableTable.pack();
                 hgSettings.setVisible(false);
                 hgSettings.pack();
             }
@@ -202,126 +235,13 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         });
         hgSettings.addActor(apngButton);
 
-        Actor loadButton = new TextButton("Load", skin);
+   /*     Actor loadButton = new TextButton("Load", skin);
         loadButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 75);
         loadButton.addListener(new ClickListener() {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Preferences prefs = Gdx.app.getPreferences("scenes");
-                for (Map.Entry<String, ?> pref : prefs.get().entrySet()) {
-                    if (!pref.getKey().equals("current")) {
-                        SunshineBlue.instance.otherCIDS.put(pref.getKey(), (String) pref.getValue());
-                    }
-                }
-                if (SunshineBlue.instance.otherCIDS.size() > 0) {
 
-                    Iterator<Map.Entry<String, String>> iter = SunshineBlue.instance.otherCIDS.entrySet().iterator();
-                    if (otherIndex > SunshineBlue.instance.otherCIDS.size() - 1) {
-                        otherIndex = SunshineBlue.instance.otherCIDS.size() - 1;
-                    }
-                    for (int i = 0; i < otherIndex; i++) {
-                        iter.next();
-                    }
-                    Map.Entry<String, String> entry = iter.next();
-                    String screenshotCID = entry.getValue();
-                    String cid = entry.getKey();
-                    Gdx.app.log("load", cid + "\t" + screenshotCID);
-                    SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + screenshotCID, new Pixmap.DownloadPixmapResponseListener() {
-                        @Override
-                        public void downloadComplete(Pixmap pixmap) {
-                            Dialog dialog = new Dialog((otherIndex + 1) + " / " + (SunshineBlue.instance.otherCIDS.size()) + " : " + entry.getKey(), skin) {
-                                @Override
-                                protected void result(Object object) {
-                                    if (object.equals(1L)) {
-                                        if (--otherIndex < 0) {
-                                            otherIndex = SunshineBlue.instance.otherCIDS.size() - 1;
-                                        }
-                                        InputEvent event1 = new InputEvent();
-                                        event1.setType(InputEvent.Type.touchDown);
-                                        loadButton.fire(event1);
-
-                                        InputEvent event2 = new InputEvent();
-                                        event2.setType(InputEvent.Type.touchUp);
-                                        loadButton.fire(event2);
-                                    } else if (object.equals(2L)) {
-                                        SerializeUtil.load(cid, false);
-                                    } else if (object.equals(6L)) {
-                                        SerializeUtil.load(cid, true);
-                                    } else if (object.equals(7L)) {
-                                        SunshineBlue.instance.otherCIDS.remove(cid);
-                                        Preferences prefs = Gdx.app.getPreferences("scenes");
-                                        prefs.remove(cid);
-                                        prefs.flush();
-                                        InputEvent ie1 = new InputEvent();
-                                        ie1.setType(InputEvent.Type.touchDown);
-                                        loadButton.fire(ie1);
-                                        InputEvent ie2 = new InputEvent();
-                                        ie2.setType(InputEvent.Type.touchUp);
-                                        loadButton.fire(ie2);
-                                    } else if (object.equals(3L)) {
-                                        String uri = "https://sunshine.blue/?" + cid;
-                                        Gdx.app.getClipboard().setContents(uri);
-                                        Gdx.net.openURI(uri);
-                                    } else if (object.equals(4L)) {
-
-                                    } else if (object.equals(5L)) {
-                                        if (++otherIndex > SunshineBlue.instance.otherCIDS.size() - 1) {
-                                            otherIndex = 0;
-                                        }
-                                        InputEvent event1 = new InputEvent();
-                                        event1.setType(InputEvent.Type.touchDown);
-                                        loadButton.fire(event1);
-
-                                        InputEvent event2 = new InputEvent();
-                                        event2.setType(InputEvent.Type.touchUp);
-                                        loadButton.fire(event2);
-                                    }
-
-                                    this.hide();
-                                }
-                            };
-                            Pixmap pixmap2 = new Pixmap(pixmap.getWidth(), pixmap.getHeight(), pixmap.getFormat());
-                            pixmap2.setColor(new Color(0xbb6500ff));
-                            pixmap2.fill();
-                            pixmap2.drawPixmap(pixmap, 0, 0);
-
-                            pixmap.dispose();
-                            dialog.setBackground(new SpriteDrawable(new Sprite(new Texture(pixmap2))));
-                            dialog.button("prev", 1L);
-                            dialog.button("next", 5L);
-                            dialog.button("pop", 3L);
-                            dialog.button("load", 2L);
-                            dialog.button("merge", 6L);
-                            dialog.button("delete", 7L);
-                            dialog.button("cancel", 4L);
-
-
-                            dialog.setModal(true);
-                            dialog.show(stage);
-//                                    BasicUIOverlay.this.screenshotPixmap=new Texture(pixmap);
-                        }
-
-                        @Override
-                        public void downloadFailed(Throwable t) {
-                            Gdx.app.log("downloading screenshot failed, taking evasive manuevers", "eek!");
-                            otherIndex++;
-                            if (otherIndex > SunshineBlue.instance.otherCIDS.size() - 1) {
-                                otherIndex = 0;
-                            }
-
-                            SunshineBlue.instance.otherCIDS.remove(cid);
-                            InputEvent ie1 = new InputEvent();
-                            ie1.setType(InputEvent.Type.touchDown);
-                            loadButton.fire(ie1);
-                            InputEvent ie2 = new InputEvent();
-                            ie2.setType(InputEvent.Type.touchUp);
-                            loadButton.fire(ie2);
-                        }
-
-                    });
-
-                }
             }
         });
         loadButton.addListener(new ActorGestureListener() {
@@ -333,7 +253,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
             }
         });
-        hgScene.addActor(loadButton);
+        hgScene.addActor(loadButton);*/
 
 
         Actor screenshotButton = new TextButton("Png", skin);
@@ -374,7 +294,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 Gdx.input.setOnscreenKeyboardVisible(true);
                 FontObject ff = new FontObject();
                 SunshineBlue.addUserObj(ff);
-                SunshineBlue.instance.FONT_OVERLAY.setObject1(ff);
+                SunshineBlue.instance.FONT_OVERLAY.setObject(ff);
                 SunshineBlue.instance.FONT_OVERLAY.generate(SunshineBlue.instance.assetManager, ff);
                 SunshineBlue.instance.FONT_OVERLAY.setList();
 //                ff.sd.position.set(-ff.sd.center.x, -ff.sd.center.y);
@@ -457,7 +377,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 doi.setColor(SunshineBlue.instance.DRAW_OVERLAY.picker.getSelectedColor());
                 SunshineBlue.addUserObj(doi);
 
-                SunshineBlue.instance.DRAW_OVERLAY.setObject1(doi);
+                SunshineBlue.instance.DRAW_OVERLAY.setObject(doi);
                 SunshineBlue.instance.DRAW_OVERLAY.setTouchable(doi);
                 Overlay.setOverlay(SunshineBlue.instance.DRAW_OVERLAY);
 //                pasteButton.setVisible(true);
@@ -476,7 +396,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 //                doi.setColor(SunshineBlue.instance.DRAW_OVERLAY.picker.getSelectedColor());
                 SunshineBlue.addUserObj(po);
 
-                SunshineBlue.instance.PARTICLE_OVERLAY.setObject1(po);
+                SunshineBlue.instance.PARTICLE_OVERLAY.setObject(po);
 //                SunshineBlue.instance.PARTICLE_OVERLAY.setTouchable(doi);
                 Overlay.setOverlay(SunshineBlue.instance.PARTICLE_OVERLAY);
 //                pasteButton.setVisible(true);
@@ -621,6 +541,176 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         if (SunshineBlue.instance.isRecording) {
             SunshineBlue.instance.stopRecording();
         }
+
+
+        hgScreenshots.clear();
+        for (Map.Entry<String, String> entry : SunshineBlue.instance.otherCIDS.entrySet()) {
+            if (pixmapmap.containsKey(entry.getKey())) {
+                Image tt = new Image(new Texture(pixmapmap.get(entry.getKey())));
+                tt.addListener(new ActorGestureListener(){
+                    @Override
+                    public boolean longPress(Actor actor, float x, float y) {
+                        load();
+                        return false;
+                    }
+                });
+//                tt.setScale(.1f);
+                hgScreenshots.add(tt);
+                hgScreenshots.pack();
+                hgScreenshots.invalidate();
+                hgScreenshots.layout();
+            } else {
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + entry.getValue(), new Pixmap.DownloadPixmapResponseListener() {
+                            @Override
+                            public void downloadComplete(Pixmap pixmap) {
+                                System.out.println("loaded pixmap! " + entry.getKey() + "\t" + entry.getValue());
+                                pixmapmap.put(entry.getKey(), pixmap);
+                                Image tt = new Image(new Texture(pixmapmap.get(entry.getKey())));
+                                tt.addListener(new ActorGestureListener(){
+                                    @Override
+                                    public boolean longPress(Actor actor, float x, float y) {
+                                        load();
+                                        return false;
+                                    }
+                                });
+//                        tt.setScale(.1f);
+                                hgScreenshots.add(tt);
+                                hgScreenshots.pack();
+                                hgScreenshots.invalidate();
+                                hgScreenshots.layout();
+                            }
+
+                            @Override
+                            public void downloadFailed(Throwable t) {
+
+                            }
+                        });
+                    }
+                });
+            }
+        }
+
+//        sp.invalidate();
+    }
+
+    private void load() {
+        Preferences prefs = Gdx.app.getPreferences("scenes");
+        for (Map.Entry<String, ?> pref : prefs.get().entrySet()) {
+            if (!pref.getKey().equals("current")) {
+                SunshineBlue.instance.otherCIDS.put(pref.getKey(), (String) pref.getValue());
+            }
+        }
+        if (SunshineBlue.instance.otherCIDS.size() > 0) {
+
+            Iterator<Map.Entry<String, String>> iter = SunshineBlue.instance.otherCIDS.entrySet().iterator();
+            if (otherIndex > SunshineBlue.instance.otherCIDS.size() - 1) {
+                otherIndex = SunshineBlue.instance.otherCIDS.size() - 1;
+            }
+            for (int i = 0; i < otherIndex; i++) {
+                iter.next();
+            }
+            Map.Entry<String, String> entry = iter.next();
+            String screenshotCID = entry.getValue();
+            String cid = entry.getKey();
+            Gdx.app.log("load", cid + "\t" + screenshotCID);
+            SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + screenshotCID, new Pixmap.DownloadPixmapResponseListener() {
+                @Override
+                public void downloadComplete(Pixmap pixmap) {
+                    Dialog dialog = new Dialog((otherIndex + 1) + " / " + (SunshineBlue.instance.otherCIDS.size()) + " : " + entry.getKey(), skin) {
+                        @Override
+                        protected void result(Object object) {
+                            if (object.equals(1L)) {
+                                if (--otherIndex < 0) {
+                                    otherIndex = SunshineBlue.instance.otherCIDS.size() - 1;
+                                }
+                               /* InputEvent event1 = new InputEvent();
+                                event1.setType(InputEvent.Type.touchDown);
+                                loadButton.fire(event1);
+
+                                InputEvent event2 = new InputEvent();
+                                event2.setType(InputEvent.Type.touchUp);
+                                loadButton.fire(event2);*/
+                            } else if (object.equals(2L)) {
+                                SerializeUtil.load(cid, false);
+                            } else if (object.equals(6L)) {
+                                SerializeUtil.load(cid, true);
+                            } else if (object.equals(7L)) {
+                                SunshineBlue.instance.otherCIDS.remove(cid);
+                                Preferences prefs = Gdx.app.getPreferences("scenes");
+                                prefs.remove(cid);
+                                prefs.flush();
+                                /*InputEvent ie1 = new InputEvent();
+                                ie1.setType(InputEvent.Type.touchDown);
+                                loadButton.fire(ie1);
+                                InputEvent ie2 = new InputEvent();
+                                ie2.setType(InputEvent.Type.touchUp);
+                                loadButton.fire(ie2);*/
+                            } else if (object.equals(3L)) {
+                                String uri = "https://sunshine.blue/?" + cid;
+                                Gdx.app.getClipboard().setContents(uri);
+                                Gdx.net.openURI(uri);
+                            } else if (object.equals(4L)) {
+
+                            } else if (object.equals(5L)) {
+                                if (++otherIndex > SunshineBlue.instance.otherCIDS.size() - 1) {
+                                    otherIndex = 0;
+                                }
+                               /* InputEvent event1 = new InputEvent();
+                                event1.setType(InputEvent.Type.touchDown);
+                                loadButton.fire(event1);
+
+                                InputEvent event2 = new InputEvent();
+                                event2.setType(InputEvent.Type.touchUp);
+                                loadButton.fire(event2);*/
+                            }
+
+                            this.hide();
+                        }
+                    };
+                    Pixmap pixmap2 = new Pixmap(pixmap.getWidth(), pixmap.getHeight(), pixmap.getFormat());
+                    pixmap2.setColor(new Color(0xbb6500ff));
+                    pixmap2.fill();
+                    pixmap2.drawPixmap(pixmap, 0, 0);
+
+                    pixmap.dispose();
+                    dialog.setBackground(new SpriteDrawable(new Sprite(new Texture(pixmap2))));
+                    dialog.button("prev", 1L);
+                    dialog.button("next", 5L);
+                    dialog.button("pop", 3L);
+                    dialog.button("load", 2L);
+                    dialog.button("merge", 6L);
+                    dialog.button("delete", 7L);
+                    dialog.button("cancel", 4L);
+
+
+                    dialog.setModal(true);
+                    dialog.show(stage);
+//                                    BasicUIOverlay.this.screenshotPixmap=new Texture(pixmap);
+                }
+
+                @Override
+                public void downloadFailed(Throwable t) {
+                    Gdx.app.log("downloading screenshot failed, taking evasive manuevers", "eek!");
+                    otherIndex++;
+                    if (otherIndex > SunshineBlue.instance.otherCIDS.size() - 1) {
+                        otherIndex = 0;
+                    }
+
+                    SunshineBlue.instance.otherCIDS.remove(cid);
+                    InputEvent ie1 = new InputEvent();
+                    /*ie1.setType(InputEvent.Type.touchDown);
+                    loadButton.fire(ie1);
+                    InputEvent ie2 = new InputEvent();
+                    ie2.setType(InputEvent.Type.touchUp);
+                    loadButton.fire(ie2);*/
+                }
+
+            });
+
+        }
     }
 
     @Override
@@ -645,7 +735,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
 
     @Override
-    public void setObject1(BaseObject bo) {
+    public void setObject(BaseObject bo) {
 
     }
 

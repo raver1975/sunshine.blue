@@ -230,7 +230,7 @@ public class FontOverlay extends ScreenObject implements Overlay, Touchable, Dra
     }
 
     @Override
-    public void setObject1(BaseObject fontObject) {
+    public void setObject(BaseObject fontObject) {
         this.fontObject = fontObject;
         SunshineBlue.instance.selectedObjects.clear();
         SunshineBlue.instance.selectedObjects.add(fontObject);

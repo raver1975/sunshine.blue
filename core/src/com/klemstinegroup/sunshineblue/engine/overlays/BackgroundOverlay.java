@@ -245,7 +245,7 @@ public class BackgroundOverlay extends ScreenObject implements Overlay, Touchabl
     }
 
     @Override
-    public void setObject1(BaseObject doi) {
+    public void setObject(BaseObject doi) {
         this.drawObject = doi;
         SunshineBlue.instance.selectedObjects.clear();
         SunshineBlue.instance.selectedObjects.add(doi);
