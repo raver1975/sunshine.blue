@@ -570,6 +570,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
     private void adjusthgScreenshot() {
         hgScreenshots.clear();
         int cnt=0;
+        final int[] cnt2 = {0};
         for (Map.Entry<String, String> entry : SunshineBlue.instance.otherCIDS.entrySet()) {
 
             if (pixmapmap.containsKey(entry.getKey())) {
@@ -594,7 +595,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                             @Override
                             public void downloadComplete(Pixmap pixmap) {
                                 System.out.println("loaded pixmap! " + entry.getKey() + "\t" + entry.getValue());
-                                pixmap.setColor(Color.RED);
+                                pixmap.setColor(ColorUtil.numberToColorPercentage((float)(cnt2[0]++) /(float)SunshineBlue.instance.otherCIDS.size()));
                                 for (int i = 0; i < pixmap.getWidth(); i++) {
                                     for (int j = 0; j < pixmap.getHeight(); j++) {
 
@@ -609,6 +610,10 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                                         pixmap.drawPixel(pixmap.getWidth() - 2, j);
 
                                     }
+                                }
+                                Preferences prefs = Gdx.app.getPreferences("scenes");
+                                if (prefs.contains(entry.getKey())){
+                                    pixmap.fillCircle(12,12,8);
                                 }
                                 pixmapmap.put(entry.getKey(), pixmap);
                                 Image tt = new Image(new Texture(pixmapmap.get(entry.getKey())));
@@ -637,7 +642,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                             }
                         });
                     }
-                },(cnt++)/4);
+                },(cnt++)/2);
             }
         }
     }
