@@ -160,7 +160,7 @@ public class SerializeUtil {
                     }
                     SunshineBlue.nativeNet.doneSavingScene(cid, val.getString("screenshot"));
                     try {
-                        SunshineBlue.instance.bgColor.set(val.getInt("bgColor"));
+                        Color.rgba8888ToColor(SunshineBlue.instance.bgColor, val.getInt("bgColor"));
                     } catch (Exception e) {
                     }
                     try {
@@ -188,7 +188,7 @@ public class SerializeUtil {
     }
 
     public static void save(IPFSCIDListener ipfscidListener) {
-        int framePos=SunshineBlue.instance.frameCount;
+        int framePos = SunshineBlue.instance.frameCount;
         Command.setToFrame(0);
 //        SunshineBlue.instance.batch.begin();
         Pixmap screenshot = FrameBufferUtils.drawObjectsPix(SunshineBlue.instance.batch, SunshineBlue.instance.viewport, SunshineBlue.instance.userObjects, 400 * SunshineBlue.instance.viewport.getScreenWidth() / SunshineBlue.instance.viewport.getScreenHeight(), 400, true);
@@ -210,7 +210,8 @@ public class SerializeUtil {
             @Override
             public void cid(String cid) {
                 val.addChild("screenshot", new JsonValue(cid));
-                val.addChild("bgColor", new JsonValue(Color.rgb888(SunshineBlue.instance.bgColor)));
+
+                val.addChild("bgColor", new JsonValue(Color.rgba8888(SunshineBlue.instance.bgColor)));
                 val.addChild("cam_zoom", new JsonValue(((OrthographicCamera) SunshineBlue.instance.viewport.getCamera()).zoom));
                 val.addChild("cam_position_x", new JsonValue(SunshineBlue.instance.viewport.getCamera().position.x));
                 val.addChild("cam_position_y", new JsonValue(SunshineBlue.instance.viewport.getCamera().position.y));
@@ -292,10 +293,10 @@ public class SerializeUtil {
     public static <T extends BaseObject> void copy(T si) {
         Gdx.app.log("copy class", si.getClass().getName());
         JsonValue temp = si.serialize();
-        String replace=temp.toJson(JsonWriter.OutputType.minimal);
+        String replace = temp.toJson(JsonWriter.OutputType.minimal);
         String nuuid = UUID.randomUUID().toString();
         replace = replace.replaceAll(si.uuid, nuuid);
-        temp=jsonReader.parse(replace);
+        temp = jsonReader.parse(replace);
 //        if (si instanceof ScreenObject){
 //            ((ScreenObject)si).sd.position.add(100,100);
 //        }
@@ -305,7 +306,7 @@ public class SerializeUtil {
             Gdx.app.log("method", method.getName());
             method.invoke(null, temp);
         } catch (ReflectionException e) {
-            Statics.exceptionLog("copy error",e);
+            Statics.exceptionLog("copy error", e);
         }
     }
 

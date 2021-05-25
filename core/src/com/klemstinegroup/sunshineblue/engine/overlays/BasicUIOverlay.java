@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -16,14 +17,10 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
-import com.klemstinegroup.sunshineblue.colorpicker.GradientDrawable;
 import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.objects.*;
 import com.klemstinegroup.sunshineblue.engine.util.*;
@@ -39,12 +36,12 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
     private final Table hgScreenshots;
     private final Table scrollableTable;
     private final Skin skin;
+    private final HorizontalGroup hgScene;
     Vector2 touchdown = new Vector2();
     Vector2 oldtouch = new Vector2();
     Vector2 touchdownre = new Vector2();
     Vector2 oldtouchre = new Vector2();
     boolean touched = false;
-    private int otherIndex = 0;
     private ArrayMap<String, Pixmap> pixmapmap = new ArrayMap<>();
 
 
@@ -65,35 +62,38 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
 
         hgScreenshots = new Table();
-        hgScreenshots.pad(10);
-        hgScreenshots.setPosition(70, 10);
+        hgScreenshots.setPosition(0, 0);
         scrollableTable = new Table();
-//        scrollableTable.setBackground(new GradientDrawable(Color.CLEAR,Color.CLEAR,Color.CLEAR,Color.CLEAR));
-//        hgScreenshots.setBackground(new GradientDrawable(Color.CLEAR,Color.CLEAR,Color.CLEAR,Color.CLEAR));
-        Pixmap bgPixmap = new Pixmap(1,1, Pixmap.Format.RGBA8888);
-        bgPixmap.setColor(Color.CLEAR);
+        Pixmap bgPixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        bgPixmap.setColor(Color.BLACK);
         bgPixmap.fill();
         TextureRegionDrawable textureRegionDrawableBg = new TextureRegionDrawable(new TextureRegion(new Texture(bgPixmap)));
+//        NinePatch patch = new NinePatch(new Texture(bgPixmap),3, 3, 3, 3);
+//        NinePatchDrawable background = new NinePatchDrawable(patch);
+//        scrollableTable.setBackground(background);
+       /* Pixmap bgPixmap1 = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        bgPixmap1.setColor(Color.RED);
+        bgPixmap1.fill();
+        TextureRegionDrawable textureRegionDrawableBg1 = new TextureRegionDrawable(new TextureRegion(new Texture(bgPixmap1)));*/
         scrollableTable.setBackground(textureRegionDrawableBg);
         hgScreenshots.setBackground(textureRegionDrawableBg);
-
         scrollableTable.setVisible(false);
         scrollableTable.setFillParent(true);
         final ScrollPane scroll = new ScrollPane(hgScreenshots, skin);
         scrollableTable.add(scroll).expand().fill();
+        scroll.setFlickScroll(true);
         stage.addActor(scrollableTable);
 
-
-        HorizontalGroup hgScene = new HorizontalGroup();
+        hgScene = new HorizontalGroup();
         hgScene.setVisible(false);
         hgScene.space(10);
-        hgScene.setPosition(70, 10);
+        hgScene.setPosition(70, SunshineBlue.instance.overlayViewport.getWorldHeight() - 75);
         stage.addActor(hgScene);
 
         HorizontalGroup hgSettings = new HorizontalGroup();
         hgSettings.setVisible(false);
         hgSettings.space(10);
-        hgSettings.setPosition(70, 10);
+        hgSettings.setPosition(70, 70);
         stage.addActor(hgSettings);
 
         HorizontalGroup hgObjects = new HorizontalGroup();
@@ -154,7 +154,24 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                SerializeUtil.save();
+                SerializeUtil.save(new IPFSCIDListener() {
+                    @Override
+                    public void cid(String cid) {
+                        Gdx.app.postRunnable(new Runnable() {
+                            @Override
+                            public void run() {
+                                adjusthgScreenshot();
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void uploadFailed(Throwable t) {
+
+                    }
+                });
+
             }
         });
         hgScene.addActor(saveButton);
@@ -172,9 +189,10 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 hgObjects.pack();
                 hgSettings.setVisible(false);
                 hgSettings.pack();
+                SunshineBlue.instance.BASIC_UI_OVERLAY.adjusthgScreenshot();
             }
         });
-        sceneButton.setPosition(10, 130);
+        sceneButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 75);
         stage.addActor(sceneButton);
 
         TextButton starButton = new TextButton(" * ", skin);
@@ -530,7 +548,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 //        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 31, SunshineBlue.instance.overlayViewport.getWorldHeight() - 60);
 //        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 30, SunshineBlue.instance.overlayViewport.getWorldHeight() - 61);
         SunshineBlue.instance.font.setColor(Color.CYAN);
-        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 25);
+        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 45, SunshineBlue.instance.overlayViewport.getWorldHeight() - 27);
 
     }
 
@@ -543,20 +561,26 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         }
 
 
+        adjusthgScreenshot();
+
+//        sp.invalidate();
+    }
+
+    private void adjusthgScreenshot() {
         hgScreenshots.clear();
         for (Map.Entry<String, String> entry : SunshineBlue.instance.otherCIDS.entrySet()) {
             if (pixmapmap.containsKey(entry.getKey())) {
                 Image tt = new Image(new Texture(pixmapmap.get(entry.getKey())));
-                tt.addListener(new ActorGestureListener(){
+                tt.addListener(new ClickListener() {
                     @Override
-                    public boolean longPress(Actor actor, float x, float y) {
-                        load();
-                        return false;
+                    public void clicked(InputEvent event, float x, float y) {
+                        load(entry);
                     }
                 });
 //                tt.setScale(.1f);
                 hgScreenshots.add(tt);
                 hgScreenshots.pack();
+                hgScreenshots.getCell(tt).pad(10);
                 hgScreenshots.invalidate();
                 hgScreenshots.layout();
             } else {
@@ -567,18 +591,34 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                             @Override
                             public void downloadComplete(Pixmap pixmap) {
                                 System.out.println("loaded pixmap! " + entry.getKey() + "\t" + entry.getValue());
+                                pixmap.setColor(Color.RED);
+                                for (int i=0;i<pixmap.getWidth();i++) {
+                                    for (int j = 0; j < pixmap.getHeight(); j++) {
+
+                                        pixmap.drawPixel(i,0);
+                                        pixmap.drawPixel(i,pixmap.getHeight()-1);
+                                        pixmap.drawPixel(0,j);
+                                        pixmap.drawPixel(pixmap.getWidth()-1,j);
+
+                                        pixmap.drawPixel(i,1);
+                                        pixmap.drawPixel(i,pixmap.getHeight()-2);
+                                        pixmap.drawPixel(1,j);
+                                        pixmap.drawPixel(pixmap.getWidth()-2,j);
+
+                                    }
+                                }
                                 pixmapmap.put(entry.getKey(), pixmap);
                                 Image tt = new Image(new Texture(pixmapmap.get(entry.getKey())));
-                                tt.addListener(new ActorGestureListener(){
+                                tt.addListener(new ClickListener() {
                                     @Override
-                                    public boolean longPress(Actor actor, float x, float y) {
-                                        load();
-                                        return false;
+                                    public void clicked(InputEvent event, float x, float y) {
+                                        load(entry);
                                     }
                                 });
 //                        tt.setScale(.1f);
                                 hgScreenshots.add(tt);
                                 hgScreenshots.pack();
+                                hgScreenshots.getCell(tt).pad(10);
                                 hgScreenshots.invalidate();
                                 hgScreenshots.layout();
                             }
@@ -592,125 +632,133 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 });
             }
         }
-
-//        sp.invalidate();
     }
 
-    private void load() {
-        Preferences prefs = Gdx.app.getPreferences("scenes");
-        for (Map.Entry<String, ?> pref : prefs.get().entrySet()) {
-            if (!pref.getKey().equals("current")) {
-                SunshineBlue.instance.otherCIDS.put(pref.getKey(), (String) pref.getValue());
-            }
-        }
-        if (SunshineBlue.instance.otherCIDS.size() > 0) {
-
-            Iterator<Map.Entry<String, String>> iter = SunshineBlue.instance.otherCIDS.entrySet().iterator();
-            if (otherIndex > SunshineBlue.instance.otherCIDS.size() - 1) {
-                otherIndex = SunshineBlue.instance.otherCIDS.size() - 1;
-            }
-            for (int i = 0; i < otherIndex; i++) {
-                iter.next();
-            }
-            Map.Entry<String, String> entry = iter.next();
-            String screenshotCID = entry.getValue();
-            String cid = entry.getKey();
-            Gdx.app.log("load", cid + "\t" + screenshotCID);
-            SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + screenshotCID, new Pixmap.DownloadPixmapResponseListener() {
-                @Override
-                public void downloadComplete(Pixmap pixmap) {
-                    Dialog dialog = new Dialog((otherIndex + 1) + " / " + (SunshineBlue.instance.otherCIDS.size()) + " : " + entry.getKey(), skin) {
-                        @Override
-                        protected void result(Object object) {
-                            if (object.equals(1L)) {
-                                if (--otherIndex < 0) {
-                                    otherIndex = SunshineBlue.instance.otherCIDS.size() - 1;
-                                }
-                               /* InputEvent event1 = new InputEvent();
+    private void load(Map.Entry<String, String> entry) {
+//        Preferences prefs = Gdx.app.getPreferences("scenes");
+//        for (Map.Entry<String, ?> pref : prefs.get().entrySet()) {
+//            if (!pref.getKey().equals("current")) {
+//                SunshineBlue.instance.otherCIDS.put(pref.getKey(), (String) pref.getValue());
+//            }
+//        }
+//        if (SunshineBlue.instance.otherCIDS.size() > 0) {
+//
+//            Iterator<Map.Entry<String, String>> iter = SunshineBlue.instance.otherCIDS.entrySet().iterator();
+//            if (otherIndex > SunshineBlue.instance.otherCIDS.size() - 1) {
+//                otherIndex = SunshineBlue.instance.otherCIDS.size() - 1;
+//            }
+//            for (int i = 0; i < otherIndex; i++) {
+//                iter.next();
+//            }
+//            Map.Entry<String, String> entry = iter.next();
+        String screenshotCID = entry.getValue();
+        String cid = entry.getKey();
+        Gdx.app.log("load", cid + "\t" + screenshotCID);
+        SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + screenshotCID, new Pixmap.DownloadPixmapResponseListener() {
+            @Override
+            public void downloadComplete(Pixmap pixmap) {
+                Dialog dialog = new Dialog(entry.getKey(), skin) {
+                    @Override
+                    protected void result(Object object) {
+//                        hgScene.setVisible(!hgScene.isVisible());
+                        scrollableTable.setVisible(false);
+                        hgScene.setVisible(false);
+                        scrollableTable.pack();
+//                        hgScene.pack();
+//                        hgObjects.setVisible(false);
+//                        hgObjects.pack();
+//                        hgSettings.setVisible(false);
+//                        hgSettings.pack();
+                        SunshineBlue.instance.BASIC_UI_OVERLAY.adjusthgScreenshot();
+                        /*if (object.equals(1L)) {
+                            if (--otherIndex < 0) {
+                                otherIndex = SunshineBlue.instance.otherCIDS.size() - 1;
+                            }
+                               *//* InputEvent event1 = new InputEvent();
                                 event1.setType(InputEvent.Type.touchDown);
                                 loadButton.fire(event1);
 
                                 InputEvent event2 = new InputEvent();
                                 event2.setType(InputEvent.Type.touchUp);
-                                loadButton.fire(event2);*/
-                            } else if (object.equals(2L)) {
-                                SerializeUtil.load(cid, false);
-                            } else if (object.equals(6L)) {
-                                SerializeUtil.load(cid, true);
-                            } else if (object.equals(7L)) {
-                                SunshineBlue.instance.otherCIDS.remove(cid);
-                                Preferences prefs = Gdx.app.getPreferences("scenes");
-                                prefs.remove(cid);
-                                prefs.flush();
+                                loadButton.fire(event2);*//*
+                        } else*/
+                        if (object.equals(2L)) {
+                            SerializeUtil.load(cid, false);
+
+                        } else if (object.equals(6L)) {
+                            SerializeUtil.load(cid, true);
+                        } else if (object.equals(7L)) {
+                            SunshineBlue.instance.otherCIDS.remove(cid);
+                            Preferences prefs = Gdx.app.getPreferences("scenes");
+                            prefs.remove(cid);
+                            prefs.flush();
                                 /*InputEvent ie1 = new InputEvent();
                                 ie1.setType(InputEvent.Type.touchDown);
                                 loadButton.fire(ie1);
                                 InputEvent ie2 = new InputEvent();
                                 ie2.setType(InputEvent.Type.touchUp);
                                 loadButton.fire(ie2);*/
-                            } else if (object.equals(3L)) {
-                                String uri = "https://sunshine.blue/?" + cid;
-                                Gdx.app.getClipboard().setContents(uri);
-                                Gdx.net.openURI(uri);
-                            } else if (object.equals(4L)) {
+                        } else if (object.equals(3L)) {
+                            String uri = "https://sunshine.blue/?" + cid;
+                            Gdx.app.getClipboard().setContents(uri);
+                            Gdx.net.openURI(uri);
+                        } else if (object.equals(4L)) {
 
-                            } else if (object.equals(5L)) {
-                                if (++otherIndex > SunshineBlue.instance.otherCIDS.size() - 1) {
-                                    otherIndex = 0;
-                                }
-                               /* InputEvent event1 = new InputEvent();
+                        }/* else if (object.equals(5L)) {
+                            if (++otherIndex > SunshineBlue.instance.otherCIDS.size() - 1) {
+                                otherIndex = 0;
+                            }
+                               *//* InputEvent event1 = new InputEvent();
                                 event1.setType(InputEvent.Type.touchDown);
                                 loadButton.fire(event1);
 
                                 InputEvent event2 = new InputEvent();
                                 event2.setType(InputEvent.Type.touchUp);
-                                loadButton.fire(event2);*/
-                            }
+                                loadButton.fire(event2);*//*
+                        }*/
 
-                            this.hide();
-                        }
-                    };
-                    Pixmap pixmap2 = new Pixmap(pixmap.getWidth(), pixmap.getHeight(), pixmap.getFormat());
-                    pixmap2.setColor(new Color(0xbb6500ff));
-                    pixmap2.fill();
-                    pixmap2.drawPixmap(pixmap, 0, 0);
-
-                    pixmap.dispose();
-                    dialog.setBackground(new SpriteDrawable(new Sprite(new Texture(pixmap2))));
-                    dialog.button("prev", 1L);
-                    dialog.button("next", 5L);
-                    dialog.button("pop", 3L);
-                    dialog.button("load", 2L);
-                    dialog.button("merge", 6L);
-                    dialog.button("delete", 7L);
-                    dialog.button("cancel", 4L);
-
-
-                    dialog.setModal(true);
-                    dialog.show(stage);
-//                                    BasicUIOverlay.this.screenshotPixmap=new Texture(pixmap);
-                }
-
-                @Override
-                public void downloadFailed(Throwable t) {
-                    Gdx.app.log("downloading screenshot failed, taking evasive manuevers", "eek!");
-                    otherIndex++;
-                    if (otherIndex > SunshineBlue.instance.otherCIDS.size() - 1) {
-                        otherIndex = 0;
+                        this.hide();
                     }
+                };
+                Pixmap pixmap2 = new Pixmap(pixmap.getWidth(), pixmap.getHeight(), pixmap.getFormat());
+                pixmap2.setColor(new Color(0xbb6500ff));
+                pixmap2.fill();
+                pixmap2.drawPixmap(pixmap, 0, 0);
 
-                    SunshineBlue.instance.otherCIDS.remove(cid);
-                    InputEvent ie1 = new InputEvent();
+                pixmap.dispose();
+                dialog.setBackground(new SpriteDrawable(new Sprite(new Texture(pixmap2))));
+//                    dialog.button("prev", 1L);
+//                    dialog.button("next", 5L);
+                dialog.button("load", 2L);
+                dialog.button("merge", 6L);
+                dialog.button("delete", 7L);
+                dialog.button("pop", 3L);
+                dialog.button("cancel", 4L);
+
+
+                dialog.setModal(true);
+                dialog.show(stage);
+//                                    BasicUIOverlay.this.screenshotPixmap=new Texture(pixmap);
+            }
+
+            @Override
+            public void downloadFailed(Throwable t) {
+                Gdx.app.log("downloading screenshot failed, taking evasive manuevers", "eek!");
+//                otherIndex++;
+//                if (otherIndex > SunshineBlue.instance.otherCIDS.size() - 1) {
+//                    otherIndex = 0;
+//                }
+                SunshineBlue.instance.otherCIDS.remove(cid);
+//                InputEvent ie1 = new InputEvent();
                     /*ie1.setType(InputEvent.Type.touchDown);
                     loadButton.fire(ie1);
                     InputEvent ie2 = new InputEvent();
                     ie2.setType(InputEvent.Type.touchUp);
                     loadButton.fire(ie2);*/
-                }
+            }
 
-            });
+        });
 
-        }
     }
 
     @Override

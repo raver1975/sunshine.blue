@@ -516,7 +516,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     private boolean touched(int screenX, int screenY) {
         SunshineBlue.instance.overlayViewport.unproject(touchdown.set(screenX, screenY));
         if (overlay != BLANK_OVERLAY) {
-            if (touchdown.y >= overlayViewport.getWorldHeight() - 60) {
+            if (touchdown.y >= overlayViewport.getWorldHeight() - 30) {
                 touchdown.sub(10, 0);
                 int frameCount1 = Math.max(0, (int) (Statics.recframes * touchdown.x / (overlayViewport.getWorldWidth() - 20)));
                 frameCount1 = Math.min(frameCount1, Statics.recframes);
