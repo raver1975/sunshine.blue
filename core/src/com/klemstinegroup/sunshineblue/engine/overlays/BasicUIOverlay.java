@@ -548,7 +548,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 //        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 31, SunshineBlue.instance.overlayViewport.getWorldHeight() - 60);
 //        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 30, SunshineBlue.instance.overlayViewport.getWorldHeight() - 61);
         SunshineBlue.instance.font.setColor(Color.CYAN);
-        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 45, SunshineBlue.instance.overlayViewport.getWorldHeight() - 27);
+        SunshineBlue.instance.font.draw(batch, "" + SunshineBlue.instance.otherCIDS.size(), 15, SunshineBlue.instance.overlayViewport.getWorldHeight() - 27);
 
     }
 
@@ -592,18 +592,18 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                             public void downloadComplete(Pixmap pixmap) {
                                 System.out.println("loaded pixmap! " + entry.getKey() + "\t" + entry.getValue());
                                 pixmap.setColor(Color.RED);
-                                for (int i=0;i<pixmap.getWidth();i++) {
+                                for (int i = 0; i < pixmap.getWidth(); i++) {
                                     for (int j = 0; j < pixmap.getHeight(); j++) {
 
-                                        pixmap.drawPixel(i,0);
-                                        pixmap.drawPixel(i,pixmap.getHeight()-1);
-                                        pixmap.drawPixel(0,j);
-                                        pixmap.drawPixel(pixmap.getWidth()-1,j);
+                                        pixmap.drawPixel(i, 0);
+                                        pixmap.drawPixel(i, pixmap.getHeight() - 1);
+                                        pixmap.drawPixel(0, j);
+                                        pixmap.drawPixel(pixmap.getWidth() - 1, j);
 
-                                        pixmap.drawPixel(i,1);
-                                        pixmap.drawPixel(i,pixmap.getHeight()-2);
-                                        pixmap.drawPixel(1,j);
-                                        pixmap.drawPixel(pixmap.getWidth()-2,j);
+                                        pixmap.drawPixel(i, 1);
+                                        pixmap.drawPixel(i, pixmap.getHeight() - 2);
+                                        pixmap.drawPixel(1, j);
+                                        pixmap.drawPixel(pixmap.getWidth() - 2, j);
 
                                     }
                                 }
@@ -625,7 +625,12 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
                             @Override
                             public void downloadFailed(Throwable t) {
-
+                                SunshineBlue.instance.otherCIDS.remove(entry.getKey());
+                                Preferences prefs = Gdx.app.getPreferences("scenes");
+                                if (prefs.contains(entry.getKey())) {
+                                    prefs.remove(entry.getKey());
+                                }
+                                prefs.flush();
                             }
                         });
                     }
