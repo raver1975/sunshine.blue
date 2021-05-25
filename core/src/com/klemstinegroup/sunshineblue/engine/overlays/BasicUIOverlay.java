@@ -13,9 +13,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.ArrayMap;
@@ -80,14 +78,14 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         scrollableTable.setVisible(false);
         scrollableTable.setFillParent(true);
         final ScrollPane scroll = new ScrollPane(hgScreenshots, skin);
-        scroll.addListener(new DragListener() {
+        scroll.addListener(new EventListener() {
             @Override
-            public void drag(InputEvent event, float x, float y, int pointer) {
-                super.drag(event, x, y, pointer); System.out.println(scroll.getScrollX() / scroll.getMaxX());
+            public boolean handle(Event event) {
                 if (scroll.getScrollX() / scroll.getMaxX() > .99f) {
+                    System.out.println("get more screenshots");
                     getMoreScreenshots();
                 }
-
+                return true;
             }
         });
 
@@ -590,6 +588,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 tt.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
+                        System.out.println(event.toString());
                         load(entry);
                     }
                 });
@@ -601,56 +600,26 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 hgScreenshots.layout();
             }
         }
+        getMoreScreenshots();
     }
 
     private void load(Map.Entry<String, String> entry) {
-//        Preferences prefs = Gdx.app.getPreferences("scenes");
-//        for (Map.Entry<String, ?> pref : prefs.get().entrySet()) {
-//            if (!pref.getKey().equals("current")) {
-//                SunshineBlue.instance.otherCIDS.put(pref.getKey(), (String) pref.getValue());
-//            }
-//        }
-//        if (SunshineBlue.instance.otherCIDS.size() > 0) {
-//
-//            Iterator<Map.Entry<String, String>> iter = SunshineBlue.instance.otherCIDS.entrySet().iterator();
-//            if (otherIndex > SunshineBlue.instance.otherCIDS.size() - 1) {
-//                otherIndex = SunshineBlue.instance.otherCIDS.size() - 1;
-//            }
-//            for (int i = 0; i < otherIndex; i++) {
-//                iter.next();
-//            }
-//            Map.Entry<String, String> entry = iter.next();
         String screenshotCID = entry.getValue();
         String cid = entry.getKey();
         Gdx.app.log("load", cid + "\t" + screenshotCID);
-        SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + screenshotCID, new Pixmap.DownloadPixmapResponseListener() {
+        Pixmap.DownloadPixmapResponseListener runrun=new Pixmap.DownloadPixmapResponseListener() {
             @Override
             public void downloadComplete(Pixmap pixmap) {
                 Dialog dialog = new Dialog(entry.getKey(), skin) {
                     @Override
                     protected void result(Object object) {
 //                        hgScene.setVisible(!hgScene.isVisible());
-                        scrollableTable.setVisible(false);
-                        hgScene.setVisible(false);
-                        scrollableTable.pack();
-//                        hgScene.pack();
-//                        hgObjects.setVisible(false);
-//                        hgObjects.pack();
-//                        hgSettings.setVisible(false);
-//                        hgSettings.pack();
                         SunshineBlue.instance.BASIC_UI_OVERLAY.adjusthgScreenshot();
-                        /*if (object.equals(1L)) {
-                            if (--otherIndex < 0) {
-                                otherIndex = SunshineBlue.instance.otherCIDS.size() - 1;
-                            }
-                               *//* InputEvent event1 = new InputEvent();
-                                event1.setType(InputEvent.Type.touchDown);
-                                loadButton.fire(event1);
-
-                                InputEvent event2 = new InputEvent();
-                                event2.setType(InputEvent.Type.touchUp);
-                                loadButton.fire(event2);*//*
-                        } else*/
+                        if (!object.equals(4L)) {
+                            scrollableTable.setVisible(false);
+                            hgScene.setVisible(false);
+                            scrollableTable.pack();
+                        }
                         if (object.equals(2L)) {
                             SerializeUtil.load(cid, false);
 
@@ -661,32 +630,12 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                             Preferences prefs = Gdx.app.getPreferences("scenes");
                             prefs.remove(cid);
                             prefs.flush();
-                                /*InputEvent ie1 = new InputEvent();
-                                ie1.setType(InputEvent.Type.touchDown);
-                                loadButton.fire(ie1);
-                                InputEvent ie2 = new InputEvent();
-                                ie2.setType(InputEvent.Type.touchUp);
-                                loadButton.fire(ie2);*/
                         } else if (object.equals(3L)) {
                             String uri = "https://sunshine.blue/?" + cid;
                             Gdx.app.getClipboard().setContents(uri);
                             Gdx.net.openURI(uri);
-                        } else if (object.equals(4L)) {
-
-                        }/* else if (object.equals(5L)) {
-                            if (++otherIndex > SunshineBlue.instance.otherCIDS.size() - 1) {
-                                otherIndex = 0;
-                            }
-                               *//* InputEvent event1 = new InputEvent();
-                                event1.setType(InputEvent.Type.touchDown);
-                                loadButton.fire(event1);
-
-                                InputEvent event2 = new InputEvent();
-                                event2.setType(InputEvent.Type.touchUp);
-                                loadButton.fire(event2);*//*
-                        }*/
-
-                        this.hide();
+                        }
+                         hide();
                     }
                 };
                 Pixmap pixmap2 = new Pixmap(pixmap.getWidth(), pixmap.getHeight(), pixmap.getFormat());
@@ -694,7 +643,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 pixmap2.fill();
                 pixmap2.drawPixmap(pixmap, 0, 0);
 
-                pixmap.dispose();
+//                pixmap.dispose();
                 dialog.setBackground(new SpriteDrawable(new Sprite(new Texture(pixmap2))));
 //                    dialog.button("prev", 1L);
 //                    dialog.button("next", 5L);
@@ -726,7 +675,13 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                     loadButton.fire(ie2);*/
             }
 
-        });
+        };
+        if (pixmapmap.containsKey(cid)){
+            runrun.downloadComplete(pixmapmap.get(cid));
+        }
+        else {
+            SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + screenshotCID, runrun);
+        }
 
     }
 
@@ -783,40 +738,66 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                                 pixmap.drawPixel(1, j);
                                 pixmap.drawPixel(pixmap.getWidth() - 2, j);
 
+                                pixmap.drawPixel(i, 2);
+                                pixmap.drawPixel(i, pixmap.getHeight() - 3);
+                                pixmap.drawPixel(2, j);
+                                pixmap.drawPixel(pixmap.getWidth() - 3, j);
+
+                                pixmap.drawPixel(i, 3);
+                                pixmap.drawPixel(i, pixmap.getHeight() - 4);
+                                pixmap.drawPixel(3, j);
+                                pixmap.drawPixel(pixmap.getWidth() - 4, j);
+
+                                pixmap.drawPixel(i, 4);
+                                pixmap.drawPixel(i, pixmap.getHeight() - 5);
+                                pixmap.drawPixel(4, j);
+                                pixmap.drawPixel(pixmap.getWidth() - 5, j);
+
+                                pixmap.drawPixel(i, 5);
+                                pixmap.drawPixel(i, pixmap.getHeight() - 6);
+                                pixmap.drawPixel(5, j);
+                                pixmap.drawPixel(pixmap.getWidth() - 6, j);
+
                             }
                         }
+                        Pixmap pixmap1=new Pixmap(pixmap.getWidth()/2,pixmap.getHeight()/2, Pixmap.Format.RGBA8888);
+                        pixmap1.drawPixmap(pixmap,0,0,pixmap.getWidth(),pixmap.getHeight(),0,0,pixmap1.getWidth(),pixmap1.getHeight());
                         Preferences prefs = Gdx.app.getPreferences("scenes");
+
                         if (prefs.contains(s)) {
                             pixmap.fillCircle(12, 12, 8);
                         }
-                        pixmapmap.put(s, pixmap);
-                        Image tt = new Image(new Texture(pixmapmap.get(s)));
-                        tt.addListener(new ClickListener() {
-                            @Override
-                            public void clicked(InputEvent event, float x, float y) {
-                                load(new Map.Entry<String, String>() {
-                                    @Override
-                                    public String getKey() {
-                                        return s;
-                                    }
+                        pixmap.dispose();
+                        if (!pixmapmap.containsKey(s)) {
+                            pixmapmap.put(s, pixmap1);
+                            Image tt = new Image(new Texture(pixmapmap.get(s)));
+                            tt.addListener(new ClickListener() {
+                                @Override
+                                public void clicked(InputEvent event, float x, float y) {
+                                    load(new Map.Entry<String, String>() {
+                                        @Override
+                                        public String getKey() {
+                                            return s;
+                                        }
 
-                                    @Override
-                                    public String getValue() {
-                                        return SunshineBlue.instance.otherCIDS.get(s);
-                                    }
+                                        @Override
+                                        public String getValue() {
+                                            return SunshineBlue.instance.otherCIDS.get(s);
+                                        }
 
-                                    @Override
-                                    public String setValue(String value) {
-                                        return null;
-                                    }
-                                });
-                            }
-                        });
-                        hgScreenshots.add(tt);
-                        hgScreenshots.pack();
-                        hgScreenshots.getCell(tt).pad(10);
-                        hgScreenshots.invalidate();
-                        hgScreenshots.layout();
+                                        @Override
+                                        public String setValue(String value) {
+                                            return null;
+                                        }
+                                    });
+                                }
+                            });
+                            hgScreenshots.add(tt);
+                            hgScreenshots.pack();
+                            hgScreenshots.getCell(tt).pad(10);
+                            hgScreenshots.invalidate();
+                            hgScreenshots.layout();
+                        }
                     }
 
                     @Override
