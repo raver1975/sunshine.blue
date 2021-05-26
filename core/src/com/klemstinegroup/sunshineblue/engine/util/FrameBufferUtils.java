@@ -121,6 +121,7 @@ SunshineBlue.instance.vfxManager.cleanUpBuffers(SunshineBlue.instance.bgColor);
     }*/
 
     public static Pixmap drawObjectsPix(Batch batch, Viewport viewport, Array<BaseObject> objects, int w, int h, boolean flip) {
+        SunshineBlue.instance.selectedObjects.clear();
 //        Gdx.gl.glClearColor(SunshineBlue.instance.bgColor.r, SunshineBlue.instance.bgColor.g, SunshineBlue.instance.bgColor.b, SunshineBlue.instance.bgColor.a);
 //        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         SunshineBlue.instance.vfxManager.cleanUpBuffers(SunshineBlue.instance.bgColor);
