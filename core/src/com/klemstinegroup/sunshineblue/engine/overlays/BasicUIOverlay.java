@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
+import com.klemstinegroup.sunshineblue.colorpicker.GradientDrawable;
 import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.objects.*;
 import com.klemstinegroup.sunshineblue.engine.util.*;
@@ -642,17 +643,23 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                          hide();
                     }
                 };
-                Pixmap pixmap2 = new Pixmap(pixmap.getWidth(), pixmap.getHeight(), pixmap.getFormat());
-                pixmap2.setColor(new Color(0xbb6500ff));
-                pixmap2.fill();
-                pixmap2.drawPixmap(pixmap, 0, 0);
-                dialog.getContentTable().setBackground(new SpriteDrawable(new Sprite(new Texture(pixmap2))));
+//                Pixmap pixmap2 = new Pixmap(pixmap.getWidth(), pixmap.getHeight(), pixmap.getFormat());
+//                pixmap2.setColor(SunshineBlue.instance.bgColor);
+//                pixmap2.fill();
+//                pixmap2.drawPixmap(pixmap, 0, 0);
+               Image image=new Image(new SpriteDrawable(new Sprite(new Texture(pixmap))));
+                image.setSize(500,500);
+                dialog.getContentTable().add(image);
+                dialog.getContentTable().setBackground(new GradientDrawable(Color.CYAN,Color.BLACK,Color.RED,Color.WHITE));
+//                dialog.setSize(400,400);
                 dialog.button("load", 2L);
                 dialog.button("merge", 6L);
                 dialog.button("delete", 7L);
                 dialog.button("pop", 3L);
                 dialog.button("cancel", 4L);
                 dialog.setModal(true);
+//                dialog.pack();
+//                dialog.invalidate();
                 dialog.show(stage);
             }
 
