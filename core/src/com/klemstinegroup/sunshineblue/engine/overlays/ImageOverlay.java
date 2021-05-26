@@ -20,7 +20,6 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
 
     public final Stage stage;
     private final TextArea ta;
-    Touchable touchable;
 
     public ImageOverlay() {
         stage = new Stage(SunshineBlue.instance.overlayViewport);

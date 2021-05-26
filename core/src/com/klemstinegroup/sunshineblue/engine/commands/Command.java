@@ -58,7 +58,7 @@ public abstract class Command {
 
 
     public static float getStateTime(){
-        return SunshineBlue.instance.frameCount/SunshineBlue.fps;
+        return (float)SunshineBlue.instance.frameCount/SunshineBlue.fps;
     }
 
     public static void setToFrame(int frame) {
