@@ -767,13 +767,14 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
                             }
                         }
-                        Pixmap pixmap1=new Pixmap(pixmap.getWidth()/2,pixmap.getHeight()/2, Pixmap.Format.RGBA8888);
-                        pixmap1.drawPixmap(pixmap,0,0,pixmap.getWidth(),pixmap.getHeight(),0,0,pixmap1.getWidth(),pixmap1.getHeight());
                         Preferences prefs = Gdx.app.getPreferences("scenes");
-
                         if (prefs.contains(s)) {
                             pixmap.fillCircle(12, 12, 8);
                         }
+                        Pixmap pixmap1=new Pixmap(pixmap.getWidth()/2,pixmap.getHeight()/2, Pixmap.Format.RGBA8888);
+                        pixmap1.drawPixmap(pixmap,0,0,pixmap.getWidth(),pixmap.getHeight(),0,0,pixmap1.getWidth(),pixmap1.getHeight());
+
+
                         pixmap.dispose();
                         if (!pixmapmap.containsKey(s)) {
                             pixmapmap.put(s, pixmap1);
