@@ -81,21 +81,21 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         scrollableTable.setVisible(false);
         scrollableTable.setFillParent(true);
         final ScrollPane scroll = new ScrollPane(hgScreenshots, skin);
-        scroll.getStyle().background=textureRegionDrawableBg;
+        scroll.getStyle().background = textureRegionDrawableBg;
 
-        scroll.setScrollingDisabled(false,true);
+        scroll.setScrollingDisabled(false, true);
         scroll.addListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
                 if (scroll.getScrollX() / scroll.getMaxX() > .99f) {
-                    Gdx.app.log("screenshot","get more screenshots");
+                    Gdx.app.log("screenshot", "get more screenshots");
                     getMoreScreenshots();
                 }
                 return true;
             }
         });
 
-        scrollableTable.add(scroll).expand(1,0).fill();
+        scrollableTable.add(scroll).expand(1, 0).fill();
         scroll.setFlickScroll(true);
         stage.addActor(scrollableTable);
 
@@ -162,6 +162,19 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         });
         hgScene.addActor(newButton);
 
+        Actor loadButton = new TextButton("Load", skin);
+        loadButton.setPosition(200, SunshineBlue.instance.overlayViewport.getWorldHeight() - 135);
+        loadButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                scrollableTable.setVisible(!scrollableTable.isVisible());
+                scrollableTable.pack();
+                SunshineBlue.instance.BASIC_UI_OVERLAY.adjusthgScreenshot();
+                SunshineBlue.instance.BASIC_UI_OVERLAY.getMoreScreenshots();
+            }
+        });
+        hgScene.addActor(loadButton);
 
         Actor saveButton = new TextButton("Save", skin);
         saveButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 135);
@@ -197,8 +210,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 hgScene.setVisible(!hgScene.isVisible());
-                scrollableTable.setVisible(!scrollableTable.isVisible());
-                scrollableTable.pack();
+
                 hgScene.pack();
                 hgObjects.setVisible(false);
                 hgObjects.pack();
@@ -208,7 +220,6 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 SunshineBlue.instance.BASIC_UI_OVERLAY.getMoreScreenshots();
                 SunshineBlue.instance.BASIC_UI_OVERLAY.getMoreScreenshots();
                 SunshineBlue.instance.BASIC_UI_OVERLAY.getMoreScreenshots();
-
             }
         });
         sceneButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 75);
@@ -613,7 +624,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         String screenshotCID = entry.getValue();
         String cid = entry.getKey();
         Gdx.app.log("load", cid + "\t" + screenshotCID);
-        Pixmap.DownloadPixmapResponseListener runrun=new Pixmap.DownloadPixmapResponseListener() {
+        Pixmap.DownloadPixmapResponseListener runrun = new Pixmap.DownloadPixmapResponseListener() {
             @Override
             public void downloadComplete(Pixmap pixmap) {
                 Dialog dialog = new Dialog(entry.getKey(), skin) {
@@ -641,17 +652,17 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                             Gdx.app.getClipboard().setContents(uri);
                             Gdx.net.openURI(uri);
                         }
-                         hide();
+                        hide();
                     }
                 };
 //                Pixmap pixmap2 = new Pixmap(pixmap.getWidth(), pixmap.getHeight(), pixmap.getFormat());
 //                pixmap2.setColor(SunshineBlue.instance.bgColor);
 //                pixmap2.fill();
 //                pixmap2.drawPixmap(pixmap, 0, 0);
-               Image image=new Image(new SpriteDrawable(new Sprite(new Texture(pixmap))));
-                image.setSize(500,500);
+                Image image = new Image(new SpriteDrawable(new Sprite(new Texture(pixmap))));
+                image.setSize(500, 500);
                 dialog.getContentTable().add(image);
-                dialog.getContentTable().setBackground(new GradientDrawable(Color.CYAN,Color.BLACK,Color.RED,Color.WHITE));
+                dialog.getContentTable().setBackground(new GradientDrawable(Color.CYAN, Color.BLACK, Color.RED, Color.WHITE));
 //                dialog.setSize(400,400);
                 dialog.button("load", 2L);
                 dialog.button("merge", 6L);
@@ -681,10 +692,9 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
             }
 
         };
-        if (pixmapmap.containsKey(cid)){
+        if (pixmapmap.containsKey(cid)) {
             runrun.downloadComplete(pixmapmap.get(cid));
-        }
-        else {
+        } else {
             SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + screenshotCID, runrun);
         }
 
@@ -721,18 +731,19 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         stage.dispose();
     }
 
-    Array<String> pending=new Array<>();
+    Array<String> pending = new Array<>();
+
     public void getMoreScreenshots() {
-        Array<String> tempsort=new Array<>();
+        Array<String> tempsort = new Array<>();
         tempsort.addAll(SunshineBlue.instance.otherCIDS.keySet().toArray(new String[0]));
         tempsort.shuffle();
         for (String s : tempsort) {
-            if (!pixmapmap.containsKey(s) && !pending.contains(s,false)) {
+            if (!pixmapmap.containsKey(s) && !pending.contains(s, false)) {
                 pending.add(s);
                 SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + SunshineBlue.instance.otherCIDS.get(s), new Pixmap.DownloadPixmapResponseListener() {
                     @Override
                     public void downloadComplete(Pixmap pixmap) {
-                        pending.removeValue(s,false);
+                        pending.removeValue(s, false);
                         System.out.println("loaded pixmap! " + s + "\t" + SunshineBlue.instance.otherCIDS.get(s));
 //                                            pixmap.setColor(ColorUtil.numberToColorPercentage((float) (cnt2[0]++) / (float) SunshineBlue.instance.otherCIDS.size()));
                         pixmap.setColor(Color.ORANGE);
@@ -775,8 +786,8 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                         if (prefs.contains(s)) {
                             pixmap.fillCircle(15, 15, 8);
                         }
-                        Pixmap pixmap1=new Pixmap(pixmap.getWidth()/2,pixmap.getHeight()/2, Pixmap.Format.RGBA8888);
-                        pixmap1.drawPixmap(pixmap,0,0,pixmap.getWidth(),pixmap.getHeight(),0,0,pixmap1.getWidth(),pixmap1.getHeight());
+                        Pixmap pixmap1 = new Pixmap(pixmap.getWidth() / 2, pixmap.getHeight() / 2, Pixmap.Format.RGBA8888);
+                        pixmap1.drawPixmap(pixmap, 0, 0, pixmap.getWidth(), pixmap.getHeight(), 0, 0, pixmap1.getWidth(), pixmap1.getHeight());
 
 
                         pixmap.dispose();
@@ -814,7 +825,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
                     @Override
                     public void downloadFailed(Throwable t) {
-                        pending.removeValue(s,false);
+                        pending.removeValue(s, false);
                         SunshineBlue.instance.otherCIDS.remove(s);
                         Preferences prefs = Gdx.app.getPreferences("scenes");
                         if (prefs.contains(s)) {
