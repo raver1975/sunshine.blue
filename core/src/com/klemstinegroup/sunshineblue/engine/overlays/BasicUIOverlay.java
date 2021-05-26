@@ -16,6 +16,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
@@ -23,6 +24,7 @@ import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.objects.*;
 import com.klemstinegroup.sunshineblue.engine.util.*;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -199,6 +201,8 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 hgSettings.setVisible(false);
                 hgSettings.pack();
                 SunshineBlue.instance.BASIC_UI_OVERLAY.adjusthgScreenshot();
+                SunshineBlue.instance.BASIC_UI_OVERLAY.getMoreScreenshots();
+                SunshineBlue.instance.BASIC_UI_OVERLAY.getMoreScreenshots();
                 SunshineBlue.instance.BASIC_UI_OVERLAY.getMoreScreenshots();
                 SunshineBlue.instance.BASIC_UI_OVERLAY.getMoreScreenshots();
 
@@ -642,21 +646,14 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 pixmap2.setColor(new Color(0xbb6500ff));
                 pixmap2.fill();
                 pixmap2.drawPixmap(pixmap, 0, 0);
-
-//                pixmap.dispose();
-                dialog.setBackground(new SpriteDrawable(new Sprite(new Texture(pixmap2))));
-//                    dialog.button("prev", 1L);
-//                    dialog.button("next", 5L);
+                dialog.getContentTable().setBackground(new SpriteDrawable(new Sprite(new Texture(pixmap2))));
                 dialog.button("load", 2L);
                 dialog.button("merge", 6L);
                 dialog.button("delete", 7L);
                 dialog.button("pop", 3L);
                 dialog.button("cancel", 4L);
-
-
                 dialog.setModal(true);
                 dialog.show(stage);
-//                                    BasicUIOverlay.this.screenshotPixmap=new Texture(pixmap);
             }
 
             @Override
@@ -717,7 +714,10 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
     }
 
     public void getMoreScreenshots() {
-        for (String s : SunshineBlue.instance.otherCIDS.keySet()) {
+        Array<String> tempsort=new Array<>();
+        tempsort.addAll(SunshineBlue.instance.otherCIDS.keySet().toArray(new String[0]));
+        tempsort.shuffle();
+        for (String s : tempsort) {
             if (!pixmapmap.containsKey(s)) {
                 SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + SunshineBlue.instance.otherCIDS.get(s), new Pixmap.DownloadPixmapResponseListener() {
                     @Override
