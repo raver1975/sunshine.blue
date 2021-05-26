@@ -720,15 +720,18 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         stage.dispose();
     }
 
+    Array<String> pending=new Array<>();
     public void getMoreScreenshots() {
         Array<String> tempsort=new Array<>();
         tempsort.addAll(SunshineBlue.instance.otherCIDS.keySet().toArray(new String[0]));
         tempsort.shuffle();
         for (String s : tempsort) {
-            if (!pixmapmap.containsKey(s)) {
+            if (!pixmapmap.containsKey(s) && !pending.contains(s,false)) {
+                pending.add(s);
                 SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + SunshineBlue.instance.otherCIDS.get(s), new Pixmap.DownloadPixmapResponseListener() {
                     @Override
                     public void downloadComplete(Pixmap pixmap) {
+                        pending.removeValue(s,false);
                         System.out.println("loaded pixmap! " + s + "\t" + SunshineBlue.instance.otherCIDS.get(s));
 //                                            pixmap.setColor(ColorUtil.numberToColorPercentage((float) (cnt2[0]++) / (float) SunshineBlue.instance.otherCIDS.size()));
                         pixmap.setColor(Color.ORANGE);
@@ -769,7 +772,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                         }
                         Preferences prefs = Gdx.app.getPreferences("scenes");
                         if (prefs.contains(s)) {
-                            pixmap.fillCircle(12, 12, 8);
+                            pixmap.fillCircle(15, 15, 8);
                         }
                         Pixmap pixmap1=new Pixmap(pixmap.getWidth()/2,pixmap.getHeight()/2, Pixmap.Format.RGBA8888);
                         pixmap1.drawPixmap(pixmap,0,0,pixmap.getWidth(),pixmap.getHeight(),0,0,pixmap1.getWidth(),pixmap1.getHeight());
@@ -810,6 +813,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
                     @Override
                     public void downloadFailed(Throwable t) {
+                        pending.removeValue(s,false);
                         SunshineBlue.instance.otherCIDS.remove(s);
                         Preferences prefs = Gdx.app.getPreferences("scenes");
                         if (prefs.contains(s)) {
