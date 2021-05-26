@@ -108,7 +108,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         HorizontalGroup hgSettings = new HorizontalGroup();
         hgSettings.setVisible(false);
         hgSettings.space(10);
-        hgSettings.setPosition(70, 70);
+        hgSettings.setPosition(70, SunshineBlue.instance.overlayViewport.getWorldHeight() - 135);
         stage.addActor(hgSettings);
 
         HorizontalGroup hgObjects = new HorizontalGroup();
@@ -240,7 +240,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 //                hgSettings.setVisible(false);hgSettings.pack();
             }
         });
-        starButton.setPosition(10, 70);
+        starButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 135);
         stage.addActor(starButton);
 
         TextButton plusButton = new TextButton(" + ", skin);
