@@ -66,7 +66,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         hgScreenshots.setPosition(0, 0);
         scrollableTable = new Table();
         Pixmap bgPixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        bgPixmap.setColor(Color.BLACK);
+        bgPixmap.setColor(Color.CLEAR);
         bgPixmap.fill();
         TextureRegionDrawable textureRegionDrawableBg = new TextureRegionDrawable(new TextureRegion(new Texture(bgPixmap)));
 //        NinePatch patch = new NinePatch(new Texture(bgPixmap),3, 3, 3, 3);
@@ -81,18 +81,21 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         scrollableTable.setVisible(false);
         scrollableTable.setFillParent(true);
         final ScrollPane scroll = new ScrollPane(hgScreenshots, skin);
+        scroll.getStyle().background=textureRegionDrawableBg;
+
+        scroll.setScrollingDisabled(false,true);
         scroll.addListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
                 if (scroll.getScrollX() / scroll.getMaxX() > .99f) {
-                    System.out.println("get more screenshots");
+                    Gdx.app.log("screenshot","get more screenshots");
                     getMoreScreenshots();
                 }
                 return true;
             }
         });
 
-        scrollableTable.add(scroll).expand().fill();
+        scrollableTable.add(scroll).expand(1,0).fill();
         scroll.setFlickScroll(true);
         stage.addActor(scrollableTable);
 
@@ -202,7 +205,6 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 hgSettings.setVisible(false);
                 hgSettings.pack();
                 SunshineBlue.instance.BASIC_UI_OVERLAY.adjusthgScreenshot();
-                SunshineBlue.instance.BASIC_UI_OVERLAY.getMoreScreenshots();
                 SunshineBlue.instance.BASIC_UI_OVERLAY.getMoreScreenshots();
                 SunshineBlue.instance.BASIC_UI_OVERLAY.getMoreScreenshots();
                 SunshineBlue.instance.BASIC_UI_OVERLAY.getMoreScreenshots();
