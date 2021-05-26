@@ -595,7 +595,6 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 tt.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        System.out.println(event.toString());
                         load(entry);
                     }
                 });

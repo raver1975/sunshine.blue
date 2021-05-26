@@ -191,7 +191,7 @@ public class SerializeUtil {
         int framePos = SunshineBlue.instance.frameCount;
         Command.setToFrame(0);
 //        SunshineBlue.instance.batch.begin();
-        Pixmap screenshot = FrameBufferUtils.drawObjectsPix(SunshineBlue.instance.batch, SunshineBlue.instance.viewport, SunshineBlue.instance.userObjects, 300 * SunshineBlue.instance.viewport.getScreenWidth() / SunshineBlue.instance.viewport.getScreenHeight(), 300, true);
+        Pixmap screenshot = FrameBufferUtils.drawObjectsPix(SunshineBlue.instance.batch, SunshineBlue.instance.viewport, SunshineBlue.instance.userObjects, 200 * SunshineBlue.instance.viewport.getScreenWidth() / SunshineBlue.instance.viewport.getScreenHeight(), 200, true);
 //        SunshineBlue.instance.batch.end();
         JsonValue val = serializeScene();
         Command.setToFrame(framePos);
