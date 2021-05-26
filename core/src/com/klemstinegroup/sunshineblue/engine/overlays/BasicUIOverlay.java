@@ -210,7 +210,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 hgScene.setVisible(!hgScene.isVisible());
-
+                scrollableTable.setVisible(false);
                 hgScene.pack();
                 hgObjects.setVisible(false);
                 hgObjects.pack();
@@ -820,6 +820,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                             hgScreenshots.getCell(tt).pad(10);
                             hgScreenshots.invalidate();
                             hgScreenshots.layout();
+                            scrollableTable.pack();
                         }
                     }
 
