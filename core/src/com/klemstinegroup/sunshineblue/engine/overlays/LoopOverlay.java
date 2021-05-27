@@ -123,7 +123,7 @@ public class LoopOverlay extends ScreenObject implements Overlay, Drawable {
     float cflash = 0;
 
     @Override
-    public void draw(Batch batch, float delta) {
+    public void draw(Batch batch, float delta,boolean bounds) {
         cflash = (cflash + delta) % 1.0f;
         /*if (SunshineBlue.instance.recordRect!=null){
             SunshineBlue.instance.shapedrawer.rectangle(SunshineBlue.instance.recordRect,ColorHelper.numberToColorPercentage(cflash),6);

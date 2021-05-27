@@ -62,7 +62,7 @@ public class ParticleObject extends ScreenObject implements Drawable, Touchable 
 
 
     @Override
-    public void draw(Batch batch, float delta) {
+    public void draw(Batch batch, float delta,boolean bounds) {
         if (particleEffect == null) return;
         transformVec.set(sd.center.x, sd.center.y);
         transformVec.scl(1f / sd.scale);
@@ -87,7 +87,7 @@ public class ParticleObject extends ScreenObject implements Drawable, Touchable 
 
 
             setBounds();
-            if (SunshineBlue.instance.selectedObjects.contains(this, true)) {
+            if (bounds) {
                 batch.setTransformMatrix(new Matrix4().idt()
                                 .translate(sd.position.x, sd.position.y, 0)
                                 .rotate(0, 0, 1, sd.rotation)

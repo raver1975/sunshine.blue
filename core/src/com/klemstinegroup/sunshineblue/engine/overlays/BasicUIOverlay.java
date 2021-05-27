@@ -558,7 +558,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
     }
 
     @Override
-    public void draw(Batch batch, float delta) {
+    public void draw(Batch batch, float delta,boolean bounds) {
 
 //        mx4Overlay.set(mx4Overlay.idt());
 //        mx4Overlay.setToOrtho2D(0, 0, 100, 100);

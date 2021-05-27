@@ -149,7 +149,7 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
     }
 
     @Override
-    public void draw(Batch batch, float delta) {
+    public void draw(Batch batch, float delta,boolean bounds) {
         stage.act();
         stage.draw();
     }

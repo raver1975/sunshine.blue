@@ -21,6 +21,7 @@ import com.klemstinegroup.sunshineblue.engine.commands.VisibleCommand;
 import com.klemstinegroup.sunshineblue.engine.objects.*;
 import com.klemstinegroup.sunshineblue.engine.util.ColorUtil;
 import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
+import sun.security.provider.Sun;
 
 
 public class TransformOverlay extends BaseObject implements Overlay, Touchable, Drawable, Gestureable {
@@ -35,6 +36,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
     Vector2 touchdown = new Vector2();
     Vector2 tempVec = new Vector2();
     public Array<CheckBox> checkBoxArray = new Array<>();
+    private CompositeObject tempCompositeObject;
 
     public TransformOverlay() {
         stage = new Stage(SunshineBlue.instance.overlayViewport);
@@ -68,7 +70,25 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                 }
                 Overlay.backOverlay();
                 SunshineBlue.instance.selectedObjects.clear();
-                SunshineBlue.instance.selectedObjects.addAll(newselected);
+                if (reloadCB.isChecked()){
+                    for (BaseObject bo:newselected){
+                        SunshineBlue.removeUserObj(bo);
+                    }
+                    tempCompositeObject=new CompositeObject(newselected);
+                    SunshineBlue.addUserObj(tempCompositeObject);
+
+                }
+                else{
+                    if (tempCompositeObject!=null){
+                        SunshineBlue.removeUserObj(tempCompositeObject);
+                        for (BaseObject bo:tempCompositeObject.objects){
+                            SunshineBlue.addUserObj(bo);
+                        }
+                    }
+                }
+
+
+
                 Overlay.setOverlay(SunshineBlue.instance.TRANSFORM_OVERLAY);
             }
         });
@@ -345,7 +365,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
     }
 
     @Override
-    public void draw(Batch batch, float delta) {
+    public void draw(Batch batch, float delta,boolean bounds) {
 
 //        mx4Overlay.set(mx4Overlay.idt());
 //        mx4Overlay.setToOrtho2D(0, 0, 100, 100);
@@ -413,7 +433,9 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                 public boolean longPress(Actor actor, float x, float y) {
                     cb.setChecked(!cb.isChecked());
                     ((ScreenObject) ba).sd.visible = !((ScreenObject) ba).sd.visible;
-                    Command.insert(new VisibleCommand(((ScreenObject) ba).sd.visible, ba.uuid), ba);
+                    if (recButton.isChecked()){
+                        Command.insert(new VisibleCommand(((ScreenObject) ba).sd.visible, ba.uuid), ba);
+                    }
 //                        cb.setVisible(false);
 
                     return true;

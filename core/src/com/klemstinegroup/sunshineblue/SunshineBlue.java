@@ -259,8 +259,8 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         int frameCount1 = frameCount;
         if (!pauseLoop) {
             frameCount1 = ((int) ((TimeUtils.millis() - startTime) / (1000f / fps)));
-            if (isRecording){
-                frameCount1=frameCount+1;
+            if (isRecording) {
+                frameCount1 = frameCount + 1;
             }
             delta = isRecording ? (1f / fps) : Gdx.graphics.getDeltaTime();
         } else {
@@ -363,8 +363,8 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
                 bo.regenerate(assetManager);
             }
             if (bo instanceof Drawable) {
-
-                ((Drawable) bo).draw(batch, delta);
+                boolean bounds = SunshineBlue.instance.selectedObjects.contains(bo, true);
+                ((Drawable) bo).draw(batch, delta, bounds);
             }
             batch.setTransformMatrix(mx4Batch);
 //            }
@@ -405,7 +405,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
         if (overlay != null) {
             batch.begin();
-            ((Drawable) overlay).draw(batch, delta);
+            ((Drawable) overlay).draw(batch, delta,false);
             if (overlay != SunshineBlue.instance.BLANK_OVERLAY) {
 
                 batch.setColor(Color.WHITE);
