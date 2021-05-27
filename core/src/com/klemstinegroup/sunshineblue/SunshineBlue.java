@@ -434,11 +434,11 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
                 glyphLayout.setText(font, text);
                 font.draw(batch, text, SunshineBlue.instance.overlayViewport.getWorldWidth() - glyphLayout.width - 10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 23);
 
-                int ycnt=100;
+                /*int ycnt=100;
                 for (BaseObject bo:SunshineBlue.instance.userObjects){
                     font.draw(batch,bo.uuid+" "+bo.getClass().toString(),10,ycnt);
                     ycnt+=20;
-                }
+                }*/
             }
             batch.setTransformMatrix(mx4Batch);
             if (isRecording) {
