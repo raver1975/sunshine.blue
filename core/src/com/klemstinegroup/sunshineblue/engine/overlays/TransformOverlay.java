@@ -76,13 +76,16 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                     }
                     tempCompositeObject=new CompositeObject(newselected);
                     SunshineBlue.addUserObj(tempCompositeObject);
-
+                    SunshineBlue.instance.selectedObjects.clear();
+                    SunshineBlue.instance.selectedObjects.add(tempCompositeObject);
                 }
                 else{
                     if (tempCompositeObject!=null){
                         SunshineBlue.removeUserObj(tempCompositeObject);
+                        SunshineBlue.instance.selectedObjects.clear();
                         for (BaseObject bo:tempCompositeObject.objects){
                             SunshineBlue.addUserObj(bo);
+                            SunshineBlue.instance.selectedObjects.add(bo);
                         }
                     }
                 }
@@ -314,7 +317,8 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                             Command.insert(new TransformCommand(tempVec, 0, 0, bo.uuid), bo);
                         }
                         else{
-                            so.sd.position.add(tempVec);
+                            so.transform(tempVec,0,0);
+//                            so.sd.position.add(tempVec);
                         }
                         break;
                     case 1:
@@ -323,7 +327,8 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                             Command.insert(new TransformCommand(new Vector2(), rot, 0, bo.uuid), bo);
                         }
                         else{
-                            so.sd.rotation += rot;
+//                            so.sd.rotation += rot;
+                            so.transform(new Vector2(),rot,0);
                         }
                         break;
                     case 2:
@@ -332,7 +337,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                             Command.insert(new TransformCommand(new Vector2(), 0, scal, bo.uuid), bo);
                         }
                         else{
-                            so.sd.scale += scal;
+                            so.transform(new Vector2(),0,scal);
                         }
                         break;
                     case 3:

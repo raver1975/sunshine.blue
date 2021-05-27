@@ -15,6 +15,32 @@ public class CompositeObject extends ScreenObject implements Drawable, Touchable
         this.objects.addAll(objects);
     }
 
+    @Override
+    public void recenter(Vector2 touchdragcpy) {
+        for (BaseObject bo:objects) {
+            if (bo instanceof ScreenObject) {
+                ((ScreenObject) bo).recenter(touchdragcpy);
+            }
+        }
+    }
+
+    @Override
+    public void transform(Vector2 posDelta, float rotDelta, float scaleDelta) {
+        for (BaseObject bo:objects) {
+            if (bo instanceof ScreenObject) {
+                ((ScreenObject) bo).transform(posDelta, rotDelta, scaleDelta);
+            }
+        }
+    }
+
+    @Override
+    public void invtransform(Vector2 posDelta, float rotDelta, float scaleDelta) {
+        for (BaseObject bo:objects) {
+            if (bo instanceof ScreenObject) {
+                ((ScreenObject) bo).invtransform(posDelta, rotDelta, scaleDelta);
+            }
+        }
+    }
 
     @Override
     public void draw(Batch batch, float delta,boolean bounds) {
