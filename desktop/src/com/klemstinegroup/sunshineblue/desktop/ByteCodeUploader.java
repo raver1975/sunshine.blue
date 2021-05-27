@@ -29,7 +29,7 @@ public class ByteCodeUploader {
         Array<String> array=new Array<>();
         for (File f:files){
             cnt[0]++;
-            IPFSUtils.uploadFile(Files.readAllBytes(f.toPath()), new IPFSCIDListener() {
+            nativeJava.uploadIPFS(Files.readAllBytes(f.toPath()), new IPFSCIDListener() {
                 @Override
                 public void cid(String cid) {
                     array.add(f.getName()+"\t"+cid);
