@@ -304,8 +304,8 @@ public class SerializeUtil {
         replace = replace.replaceAll(si.uuid, nuuid);
         if (si instanceof CompositeObject){
             for (BaseObject bi:((CompositeObject)si).objects){
-                String nuuid1 = UUID.randomUUID().toString();
-                replace = replace.replaceAll(bi.uuid, nuuid1);
+                nuuid = UUID.randomUUID().toString();
+                replace = replace.replaceAll(bi.uuid, nuuid);
             }
         }
         temp = jsonReader.parse(replace);
