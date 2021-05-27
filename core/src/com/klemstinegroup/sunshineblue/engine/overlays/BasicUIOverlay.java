@@ -793,13 +793,13 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                         if (prefs.contains(s)) {
                             pixmap.fillCircle(15, 15, 8);
                         }
-                        Pixmap pixmap1 = new Pixmap(pixmap.getWidth() / 2, pixmap.getHeight() / 2, Pixmap.Format.RGBA8888);
-                        pixmap1.drawPixmap(pixmap, 0, 0, pixmap.getWidth(), pixmap.getHeight(), 0, 0, pixmap1.getWidth(), pixmap1.getHeight());
+//                        Pixmap pixmap1 = new Pixmap(pixmap.getWidth() / 2, pixmap.getHeight() / 2, Pixmap.Format.RGBA8888);
+//                        pixmap1.drawPixmap(pixmap, 0, 0, pixmap.getWidth(), pixmap.getHeight(), 0, 0, pixmap1.getWidth(), pixmap1.getHeight());
 
 
-                        pixmap.dispose();
+//                        pixmap.dispose();
                         if (!pixmapmap.containsKey(s)) {
-                            pixmapmap.put(s, pixmap1);
+                            pixmapmap.put(s, pixmap);
                             Image tt = new Image(new Texture(pixmapmap.get(s)));
                             tt.addListener(new ClickListener() {
                                 @Override
