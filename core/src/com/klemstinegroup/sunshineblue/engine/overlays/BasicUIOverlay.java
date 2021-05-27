@@ -216,10 +216,10 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 hgObjects.pack();
                 hgSettings.setVisible(false);
                 hgSettings.pack();
-                SunshineBlue.instance.BASIC_UI_OVERLAY.adjusthgScreenshot();
-                SunshineBlue.instance.BASIC_UI_OVERLAY.getMoreScreenshots();
-                SunshineBlue.instance.BASIC_UI_OVERLAY.getMoreScreenshots();
-                SunshineBlue.instance.BASIC_UI_OVERLAY.getMoreScreenshots();
+//                SunshineBlue.instance.BASIC_UI_OVERLAY.adjusthgScreenshot();
+//                SunshineBlue.instance.BASIC_UI_OVERLAY.getMoreScreenshots();
+//                SunshineBlue.instance.BASIC_UI_OVERLAY.getMoreScreenshots();
+//                SunshineBlue.instance.BASIC_UI_OVERLAY.getMoreScreenshots();
             }
         });
         sceneButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 75);
