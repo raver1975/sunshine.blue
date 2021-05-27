@@ -602,7 +602,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         isRecording = false;
         apng.end();
 //        SunshineBlue.nativeNet.uploadIPFS(mfh.readBytes(), null);
-        IPFSUtils.uploadFile(mfh.readBytes(), new IPFSCIDListener() {
+        SunshineBlue.nativeNet.uploadIPFS(mfh.readBytes(), new IPFSCIDListener() {
             @Override
             public void cid(String cid) {
                 IPFSUtils.openIPFSViewer(cid);

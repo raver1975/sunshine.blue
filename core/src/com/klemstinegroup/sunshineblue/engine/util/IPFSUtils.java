@@ -49,7 +49,7 @@ public class IPFSUtils {
         Gdx.net.sendHttpRequest(request, listener);
     }*/
 
-    public static void uploadFile(byte[] data, IPFSCIDListener listen) {
+    static void uploadFile(byte[] data, IPFSCIDListener listen) {
         Gdx.app.log("upload", data.length + " bytes uploading");
         String url = "https://ipfs.infura.io:5001/api/v0/add";
         String boundary = "12345678901234567890"; // Just generate some unique random value.
@@ -69,6 +69,7 @@ public class IPFSUtils {
         batemp.addAll(out2.getBytes());
 //                String datauri = "data:" + mime + ";base64," + new String(Base64Coder.encode(data));
         request.setContent(new ByteArrayInputStream(batemp.toArray()), batemp.size);
+
         Net.HttpResponseListener listener = new Net.HttpResponseListener() {
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {

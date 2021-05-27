@@ -25,7 +25,7 @@ public class ScriptObject extends BaseObject implements Actable {
     private JJJVMMethod method;
 
     public ScriptObject(byte[] data) {
-        IPFSUtils.uploadFile(data, new IPFSCIDListener() {
+        SunshineBlue.nativeNet.uploadIPFS(data, new IPFSCIDListener() {
             @Override
             public void cid(String cid) {
                 ScriptObject.this.cid=cid;
