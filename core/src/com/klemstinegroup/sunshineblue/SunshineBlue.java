@@ -259,6 +259,9 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         int frameCount1 = frameCount;
         if (!pauseLoop) {
             frameCount1 = ((int) ((TimeUtils.millis() - startTime) / (1000f / fps)));
+            if (isRecording){
+                frameCount1=frameCount+1;
+            }
             delta = isRecording ? (1f / fps) : Gdx.graphics.getDeltaTime();
         } else {
             startTime = TimeUtils.millis() - (long) ((frameCount * 1000f) / fps);
