@@ -62,7 +62,7 @@ public class FrameBufferUtils {
         batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
         for (BaseObject bo : objects) {
             if (bo instanceof Drawable) {
-                ((Drawable) bo).draw(batch, delta);
+                ((Drawable) bo).draw(batch, delta,false);
             }
             batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
 

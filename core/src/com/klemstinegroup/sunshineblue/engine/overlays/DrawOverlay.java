@@ -147,7 +147,7 @@ public class DrawOverlay extends ScreenObject implements Overlay, Touchable, Dra
     }
 
     @Override
-    public void draw(Batch batch, float delta) {
+    public void draw(Batch batch, float delta,boolean bounds) {
         stage.act();
         stage.draw();
     }

@@ -510,7 +510,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 
 
     @Override
-    public void draw(Batch batch, float delta) {
+    public void draw(Batch batch, float delta,boolean bounds) {
         batch.setTransformMatrix(new Matrix4().idt()
                         .translate(sd.position.x, sd.position.y, 0)
                         .rotate(0, 0, 1, sd.rotation)
@@ -536,7 +536,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
             }
 
             setBounds();
-            if (SunshineBlue.instance.selectedObjects.contains(this, true)) {
+            if (bounds) {
                 SunshineBlue.instance.shapedrawer.setColor(ColorUtil.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / (float) (SunshineBlue.instance.userObjects.size - 1)).cpy());
                 SunshineBlue.instance.shapedrawer.circle(0, 0, 10, 2);
                 angleCalc.set(0, 10);
@@ -632,6 +632,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 
         }
         val.addChild("class", new JsonValue(ImageObject.class.getName()));
+        val.addChild("UUID", new JsonValue(uuid));
         return val;
     }
 

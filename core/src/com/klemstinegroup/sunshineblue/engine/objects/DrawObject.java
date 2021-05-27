@@ -125,7 +125,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
 
 
     @Override
-    public void draw(Batch batch,float delta) {
+    public void draw(Batch batch,float delta, boolean bounds) {
         batch.setTransformMatrix(new Matrix4().idt()
                 .translate(sd.position.x, sd.position.y, 0)
                 .rotate(0, 0, 1, sd.rotation)
@@ -256,7 +256,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
 
 
             setBounds();
-            if (SunshineBlue.instance.selectedObjects.contains(this, true)) {
+            if (bounds) {
                 SunshineBlue.instance.shapedrawer.setColor(ColorUtil.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / (float) (SunshineBlue.instance.userObjects.size - 1)).cpy());
 //                float radius = 10 + 10 * SunshineBlue.instance.colorFlash;
                 SunshineBlue.instance.shapedrawer.circle(0, 0, 10, 2);
@@ -352,6 +352,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
             array.addChild(SerializeUtil.serialize(ar));
         }
         val.addChild("class", new JsonValue(DrawObject.class.getName()));
+        val.addChild("UUID", new JsonValue(uuid));
         return val;
     }
 
@@ -364,7 +365,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
             dd.path.add(vecAr);
         }
         DrawObject temp=new DrawObject(dd);
-        temp.uuid=json.getString("uuid", temp.uuid);
+        temp.uuid=json.getString("UUID", temp.uuid);
         SunshineBlue.addUserObj(temp);
     }
 

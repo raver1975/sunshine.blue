@@ -259,8 +259,8 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         int frameCount1 = frameCount;
         if (!pauseLoop) {
             frameCount1 = ((int) ((TimeUtils.millis() - startTime) / (1000f / fps)));
-            if (isRecording){
-                frameCount1=frameCount+1;
+            if (isRecording) {
+                frameCount1 = frameCount + 1;
             }
             delta = isRecording ? (1f / fps) : Gdx.graphics.getDeltaTime();
         } else {
@@ -363,8 +363,8 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
                 bo.regenerate(assetManager);
             }
             if (bo instanceof Drawable) {
-
-                ((Drawable) bo).draw(batch, delta);
+                boolean bounds = SunshineBlue.instance.selectedObjects.contains(bo, true);
+                ((Drawable) bo).draw(batch, delta, bounds);
             }
             batch.setTransformMatrix(mx4Batch);
 //            }
@@ -405,7 +405,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
         if (overlay != null) {
             batch.begin();
-            ((Drawable) overlay).draw(batch, delta);
+            ((Drawable) overlay).draw(batch, delta, false);
             if (overlay != SunshineBlue.instance.BLANK_OVERLAY) {
 
                 batch.setColor(Color.WHITE);
@@ -433,6 +433,12 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
                 String text = loopStart + " / " + frameCount + " / " + loopEnd;
                 glyphLayout.setText(font, text);
                 font.draw(batch, text, SunshineBlue.instance.overlayViewport.getWorldWidth() - glyphLayout.width - 10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 23);
+
+                /*int ycnt=100;
+                for (BaseObject bo:SunshineBlue.instance.userObjects){
+                    font.draw(batch,bo.uuid+" "+bo.getClass().toString(),10,ycnt);
+                    ycnt+=20;
+                }*/
             }
             batch.setTransformMatrix(mx4Batch);
             if (isRecording) {
@@ -620,13 +626,40 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 //        Gdx.graphics.setContinuousRendering(true);
     }
 
+    public static Array<String> prohibited = new Array<>();
+
     public static void addUserObj(BaseObject b) {
         Gdx.app.log("userobject added", (b.getClass().toString()));
-        SunshineBlue.instance.userObjects.add(b);
+        if (b instanceof CompositeObject) {
+            for (BaseObject ba : ((CompositeObject) b).objects) {
+                prohibited.add(ba.uuid);
+            }
+
+        }
+        Array<BaseObject> removed=new Array<>();
+        for (BaseObject ba : SunshineBlue.instance.userObjects) {
+            if (prohibited.contains(ba.uuid, false)) {
+//                    SunshineBlue.instance.userObjects.removeValue(ba,false);
+                System.out.println("found:"+ba.uuid);
+                removed.add(ba);
+            }
+        }
+        for (BaseObject ba:removed){
+            removeUserObj(ba);
+        }
+        if (!prohibited.contains(b.uuid, false)) {
+            SunshineBlue.instance.userObjects.add(b);
+        }
     }
 
     public static void removeUserObj(BaseObject b) {
         Gdx.app.log("userobject removed", (b.getClass().toString()));
-        SunshineBlue.instance.userObjects.removeValue(b, true);
+        if (b instanceof CompositeObject) {
+            for (BaseObject ba : ((CompositeObject) b).objects) {
+                prohibited.removeValue(ba.uuid,false);
+                addUserObj(ba);
+            }
+        }
+        SunshineBlue.instance.userObjects.removeValue(b, false);
     }
 }

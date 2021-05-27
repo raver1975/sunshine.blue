@@ -304,7 +304,7 @@ public class ParticleOverlay extends ScreenObject implements Overlay, Touchable,
     }
 
     @Override
-    public void draw(Batch batch,float delta) {
+    public void draw(Batch batch,float delta,boolean bounds) {
         stage.act();
         stage.draw();
 //        if (particleObject != null) {
