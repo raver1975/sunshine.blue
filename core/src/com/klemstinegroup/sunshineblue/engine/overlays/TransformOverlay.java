@@ -84,7 +84,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                         if (ba instanceof CompositeObject) {
                             SunshineBlue.removeUserObj(ba);
                             for (BaseObject bo : ((CompositeObject)ba).objects) {
-                                SunshineBlue.addUserObj(bo);
+//                                SunshineBlue.addUserObj(bo);
                                 SunshineBlue.instance.selectedObjects.add(bo);
                             }
                         }
@@ -450,7 +450,12 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
             }
 
         }
-        reloadCB.setChecked(reloadCB.isChecked());
+        reloadCB.setChecked(false);
+        for (BaseObject bo:SunshineBlue.instance.selectedObjects){
+            if (bo instanceof CompositeObject){
+                reloadCB.setChecked(true);
+            }
+        }
 
 //        transformGroup.setVisible(Statics.selectedObjects.size>0);
     }

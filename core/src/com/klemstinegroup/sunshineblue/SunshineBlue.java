@@ -433,6 +433,12 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
                 String text = loopStart + " / " + frameCount + " / " + loopEnd;
                 glyphLayout.setText(font, text);
                 font.draw(batch, text, SunshineBlue.instance.overlayViewport.getWorldWidth() - glyphLayout.width - 10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 23);
+
+                int ycnt=100;
+                for (BaseObject bo:SunshineBlue.instance.userObjects){
+                    font.draw(batch,bo.uuid+" "+bo.getClass().toString(),10,ycnt);
+                    ycnt+=20;
+                }
             }
             batch.setTransformMatrix(mx4Batch);
             if (isRecording) {
@@ -628,11 +634,18 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
             for (BaseObject ba : ((CompositeObject) b).objects) {
                 prohibited.add(ba.uuid);
             }
-            for (BaseObject ba : SunshineBlue.instance.userObjects) {
-                if (prohibited.contains(ba.uuid, false)) {
-                    SunshineBlue.instance.userObjects.removeValue(ba,false);
-                }
+
+        }
+        Array<BaseObject> removed=new Array<>();
+        for (BaseObject ba : SunshineBlue.instance.userObjects) {
+            if (prohibited.contains(ba.uuid, false)) {
+//                    SunshineBlue.instance.userObjects.removeValue(ba,false);
+                System.out.println("found:"+ba.uuid);
+                removed.add(ba);
             }
+        }
+        for (BaseObject ba:removed){
+            removeUserObj(ba);
         }
         if (!prohibited.contains(b.uuid, false)) {
             SunshineBlue.instance.userObjects.add(b);
@@ -644,6 +657,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
         if (b instanceof CompositeObject) {
             for (BaseObject ba : ((CompositeObject) b).objects) {
                 prohibited.removeValue(ba.uuid,false);
+                addUserObj(ba);
             }
         }
         SunshineBlue.instance.userObjects.removeValue(b, false);

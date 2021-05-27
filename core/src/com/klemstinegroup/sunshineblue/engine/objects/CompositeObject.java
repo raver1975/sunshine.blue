@@ -2,11 +2,13 @@ package com.klemstinegroup.sunshineblue.engine.objects;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
@@ -20,7 +22,7 @@ import space.earlygrey.shapedrawer.JoinType;
 
 public class CompositeObject extends ScreenObject implements Drawable, Touchable {
     public Array<BaseObject> objects = new Array<>();
-    private Vector2 angleCalc=new Vector2();
+    private Vector2 angleCalc = new Vector2();
     private int angleRotateAnimAngle;
 
     public CompositeObject(Array<BaseObject> objects) {
@@ -59,6 +61,11 @@ public class CompositeObject extends ScreenObject implements Drawable, Touchable
 
     @Override
     public void draw(Batch batch, float delta, boolean bounds) {
+        batch.setTransformMatrix(new Matrix4().idt()
+                .translate(sd.position.x, sd.position.y, 0)
+                .rotate(0, 0, 1, sd.rotation)
+                .scale(sd.scale, sd.scale, 1)
+        );
         for (BaseObject bo : objects) {
             if (bo instanceof Drawable) {
                 ((Drawable) bo).draw(batch, delta, bounds);
@@ -187,11 +194,23 @@ public class CompositeObject extends ScreenObject implements Drawable, Touchable
                 }
             }
         }
-        Array<BaseObject> tempob = new Array<>();
-        for (String s : uuids) {
-            tempob.add(Command.getBaseObject(s));
-        }
-        SunshineBlue.addUserObj(new CompositeObject(tempob));
+
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                Array<BaseObject> tempob = new Array<>();
+                for (String s : uuids) {
+                    System.out.println(s+"\t"+Command.getBaseObject(s));
+                    if (Command.getBaseObject(s) == null) {
+                        return;
+                    }
+                    tempob.add(Command.getBaseObject(s));
+                }
+                SunshineBlue.addUserObj(new CompositeObject(tempob));
+                this.cancel();
+            }
+        }, .1f, .1f);
+
     }
 
     @Override

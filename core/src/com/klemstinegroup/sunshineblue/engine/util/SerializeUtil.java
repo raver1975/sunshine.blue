@@ -14,6 +14,7 @@ import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.commands.Command;
 import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
+import com.klemstinegroup.sunshineblue.engine.objects.CompositeObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ImageObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
 import com.klemstinegroup.sunshineblue.engine.overlays.SerialInterface;
@@ -110,6 +111,12 @@ public class SerializeUtil {
                 String st = new String(file);
 
                 for (BaseObject bo : SunshineBlue.instance.userObjects) {
+                    if (bo instanceof CompositeObject){
+                        for (BaseObject bi:((CompositeObject)bo).objects){
+                            String nuuid = UUID.randomUUID().toString();
+                            st = st.replaceAll(bi.uuid, nuuid);
+                        }
+                    }
                     String nuuid = UUID.randomUUID().toString();
                     st = st.replaceAll(bo.uuid, nuuid);
                 }
@@ -295,6 +302,12 @@ public class SerializeUtil {
         String replace = temp.toJson(JsonWriter.OutputType.minimal);
         String nuuid = UUID.randomUUID().toString();
         replace = replace.replaceAll(si.uuid, nuuid);
+        if (si instanceof CompositeObject){
+            for (BaseObject bi:((CompositeObject)si).objects){
+                String nuuid1 = UUID.randomUUID().toString();
+                replace = replace.replaceAll(bi.uuid, nuuid1);
+            }
+        }
         temp = jsonReader.parse(replace);
 //        if (si instanceof ScreenObject){
 //            ((ScreenObject)si).sd.position.add(100,100);
@@ -302,7 +315,7 @@ public class SerializeUtil {
 //        Gdx.app.log("json",temp.toJson(JsonWriter.OutputType.json));
         try {
             Method method = ClassReflection.getMethod(ClassReflection.forName(si.getClass().getName()), "deserialize", JsonValue.class);
-            Gdx.app.log("method", method.getName());
+            Gdx.app.log("method", ClassReflection.forName(si.getClass().getName()).toString());
             method.invoke(null, temp);
         } catch (ReflectionException e) {
             Statics.exceptionLog("copy error", e);
