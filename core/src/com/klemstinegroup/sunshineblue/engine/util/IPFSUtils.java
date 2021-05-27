@@ -169,7 +169,7 @@ public class IPFSUtils {
     public static void uploadPngtoIPFS(Pixmap pixmap, IPFSCIDListener listener) {
         MemoryFileHandle mfh = new MemoryFileHandle();
         IPFSUtils.writePng(pixmap, mfh, null);
-        IPFSUtils.uploadFile(mfh.readBytes(), new IPFSCIDListener() {
+        SunshineBlue.nativeNet.uploadIPFS(mfh.readBytes(), new IPFSCIDListener() {
             @Override
             public void cid(String cid) {
                 listener.cid(cid);
