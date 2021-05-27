@@ -164,7 +164,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
         Actor loadButton = new TextButton("Load", skin);
         loadButton.setPosition(200, SunshineBlue.instance.overlayViewport.getWorldHeight() - 135);
-        loadButton.addListener(new ClickListener(){
+        loadButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
@@ -734,7 +734,13 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
     Array<String> pending = new Array<>();
 
+    long lastTime = 0;
+
     public void getMoreScreenshots() {
+        if (TimeUtils.millis() < lastTime + 500) {
+            return;
+        }
+        lastTime=TimeUtils.millis();
         Array<String> tempsort = new Array<>();
         tempsort.addAll(SunshineBlue.instance.otherCIDS.keySet().toArray(new String[0]));
         tempsort.shuffle();
