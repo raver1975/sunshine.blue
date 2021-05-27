@@ -12,6 +12,7 @@ import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.overlays.Actable;
 import com.klemstinegroup.sunshineblue.engine.util.IPFSCIDListener;
 import com.klemstinegroup.sunshineblue.engine.util.IPFSFileListener;
+import com.klemstinegroup.sunshineblue.engine.util.IPFSUtils;
 
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
@@ -24,7 +25,7 @@ public class ScriptObject extends BaseObject implements Actable {
     private JJJVMMethod method;
 
     public ScriptObject(byte[] data) {
-        SunshineBlue.nativeNet.uploadIPFS(data, new IPFSCIDListener() {
+        IPFSUtils.uploadFile(data, new IPFSCIDListener() {
             @Override
             public void cid(String cid) {
                 ScriptObject.this.cid=cid;

@@ -38,7 +38,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                     return;
                 }
                 if (cid == null || cid.isEmpty()) {
-                    SunshineBlue.nativeNet.uploadIPFS(data, new IPFSCIDListener() {
+                    IPFSUtils.uploadFile(data, new IPFSCIDListener() {
                         @Override
                         public void cid(String cid) {
                             ImageObject.this.cid = cid;
@@ -316,7 +316,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                 if (url.startsWith("data:")) {
                     try {
                         final byte[] b = Base64Coder.decode(url.split(",")[1]);
-                        SunshineBlue.nativeNet.uploadIPFS(b, new IPFSCIDListener() {
+                        IPFSUtils.uploadFile(b, new IPFSCIDListener() {
                             @Override
                             public void cid(String cid) {
                                 SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + cid, new Pixmap.DownloadPixmapResponseListener() {

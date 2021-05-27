@@ -6,10 +6,10 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 
 public class NativeJava implements NativeInterface {
-    @Override
-    public void uploadIPFS(byte[] data, IPFSCIDListener listener) {
-        IPFSUtils.uploadFile(data, listener);
-    }
+//    @Override
+//    public void uploadIPFS(byte[] data, IPFSCIDListener listener) {
+//        IPFSUtils.uploadFile(data, listener);
+//    }
 
     @Override
     public void downloadIPFS(String cid, IPFSFileListener listener) {

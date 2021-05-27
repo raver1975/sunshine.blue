@@ -223,7 +223,7 @@ public class SerializeUtil {
                 //replace uuids
                 String out = val.toJson(JsonWriter.OutputType.javascript);
 
-                SunshineBlue.nativeNet.uploadIPFS(out.getBytes(StandardCharsets.UTF_8), new IPFSCIDListener() {
+                IPFSUtils.uploadFile(out.getBytes(StandardCharsets.UTF_8), new IPFSCIDListener() {
                     @Override
                     public void cid(String cid) {
                         if (cid != null && !cid.isEmpty()) {
@@ -345,13 +345,13 @@ public class SerializeUtil {
         String[] cids = new String[mfh.children.size + 1];
         for (int i = 0; i < mfh.children.size; i++) {
             int finalI = i;
-            SunshineBlue.nativeNet.uploadIPFS(mfh.children.getValueAt(i).readBytes(), new IPFSCIDListener() {
+            IPFSUtils.uploadFile(mfh.children.getValueAt(i).readBytes(), new IPFSCIDListener() {
                 @Override
                 public void cid(String cid) {
                     cids[finalI + 1] = cid;
                     --cnt[0];
                     if (cnt[0] == 0) {
-                        SunshineBlue.nativeNet.uploadIPFS(mfh.readBytes(), new IPFSCIDListener() {
+                        IPFSUtils.uploadFile(mfh.readBytes(), new IPFSCIDListener() {
                             @Override
                             public void cid(String cid) {
                                 System.out.println("-----------------");

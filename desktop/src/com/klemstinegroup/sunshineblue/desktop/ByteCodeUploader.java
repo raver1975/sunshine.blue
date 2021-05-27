@@ -9,6 +9,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.utils.Array;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.util.IPFSCIDListener;
+import com.klemstinegroup.sunshineblue.engine.util.IPFSUtils;
 import com.klemstinegroup.sunshineblue.engine.util.NativeJava;
 
 import java.io.File;
@@ -28,7 +29,7 @@ public class ByteCodeUploader {
         Array<String> array=new Array<>();
         for (File f:files){
             cnt[0]++;
-            nativeJava.uploadIPFS(Files.readAllBytes(f.toPath()), new IPFSCIDListener() {
+            IPFSUtils.uploadFile(Files.readAllBytes(f.toPath()), new IPFSCIDListener() {
                 @Override
                 public void cid(String cid) {
                     array.add(f.getName()+"\t"+cid);

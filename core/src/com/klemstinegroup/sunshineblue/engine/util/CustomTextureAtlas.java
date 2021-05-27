@@ -69,7 +69,7 @@ public class CustomTextureAtlas implements Disposable {
         final int[] cnt = {data.getPages().size};
         for (TextureAtlasData.Page page : data.getPages()) {
             if (page.texture == null) {
-                SunshineBlue.nativeNet.uploadIPFS(page.textureFile.readBytes(), new IPFSCIDListener() {
+                IPFSUtils.uploadFile(page.textureFile.readBytes(), new IPFSCIDListener() {
                     @Override
                     public void cid(String cid) {
                         SunshineBlue.nativeNet.downloadPixmap(Statics.IPFSGateway + cid, new Pixmap.DownloadPixmapResponseListener() {
