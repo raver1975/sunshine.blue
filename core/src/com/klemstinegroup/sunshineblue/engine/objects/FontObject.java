@@ -209,6 +209,7 @@ public class FontObject extends ScreenObject implements Drawable, Touchable {
         val.addChild("screenData", SerializeUtil.serialize(sd));
         val.addChild("fontData", SerializeUtil.serialize(fd));
         val.addChild("class", new JsonValue(FontObject.class.getName()));
+        val.addChild("UUID", new JsonValue(uuid));
         return val;
     }
 

@@ -36,7 +36,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
     Vector2 touchdown = new Vector2();
     Vector2 tempVec = new Vector2();
     public Array<CheckBox> checkBoxArray = new Array<>();
-    private CompositeObject tempCompositeObject;
+//    private CompositeObject tempCompositeObject;
 
     public TransformOverlay() {
         stage = new Stage(SunshineBlue.instance.overlayViewport);
@@ -55,43 +55,42 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
         });
         stage.addActor(exitButton);
 
-        reloadCB = new CheckBox("", skin,"switch");
+        reloadCB = new CheckBox("", skin, "switch");
         reloadCB.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 120, 10);
         reloadCB.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
 
-                Array<BaseObject> newselected=new Array<>();
-                for (int i=0;i<checkBoxArray.size;i++){
-                    if (checkBoxArray.get(i).isChecked()){
+                Array<BaseObject> newselected = new Array<>();
+                for (int i = 0; i < checkBoxArray.size; i++) {
+                    if (checkBoxArray.get(i).isChecked()) {
                         newselected.add((BaseObject) checkBoxArray.get(i).getUserObject());
                     }
                 }
                 Overlay.backOverlay();
                 SunshineBlue.instance.selectedObjects.clear();
-                if (reloadCB.isChecked()){
-                    for (BaseObject bo:newselected){
+                CompositeObject tempCompositeObject;
+                if (reloadCB.isChecked()) {
+                    for (BaseObject bo : newselected) {
                         SunshineBlue.removeUserObj(bo);
                     }
-                    tempCompositeObject=new CompositeObject(newselected);
+                    tempCompositeObject = new CompositeObject(newselected);
                     SunshineBlue.addUserObj(tempCompositeObject);
-                    SunshineBlue.instance.selectedObjects.clear();
+//                    SunshineBlue.instance.selectedObjects.clear();
                     SunshineBlue.instance.selectedObjects.add(tempCompositeObject);
-                }
-                else{
-                    if (tempCompositeObject!=null){
-                        SunshineBlue.removeUserObj(tempCompositeObject);
-                        SunshineBlue.instance.selectedObjects.clear();
-                        for (BaseObject bo:tempCompositeObject.objects){
-                            SunshineBlue.addUserObj(bo);
-                            SunshineBlue.instance.selectedObjects.add(bo);
+                } else {
+                    for (BaseObject ba : newselected) {
+                        if (ba instanceof CompositeObject) {
+                            SunshineBlue.removeUserObj(ba);
+                            for (BaseObject bo : ((CompositeObject)ba).objects) {
+                                SunshineBlue.addUserObj(bo);
+                                SunshineBlue.instance.selectedObjects.add(bo);
+                            }
                         }
+
                     }
                 }
-
-
-
                 Overlay.setOverlay(SunshineBlue.instance.TRANSFORM_OVERLAY);
             }
         });
@@ -146,9 +145,9 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
         clearCommandsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                for (int i=SunshineBlue.instance.loopStart;i<=SunshineBlue.instance.loopEnd;i++){
-                    for (BaseObject so:SunshineBlue.instance.selectedObjects) {
-                        Command.remove(i,so.uuid);
+                for (int i = SunshineBlue.instance.loopStart; i <= SunshineBlue.instance.loopEnd; i++) {
+                    for (BaseObject so : SunshineBlue.instance.selectedObjects) {
+                        Command.remove(i, so.uuid);
                     }
                 }
             }
@@ -278,8 +277,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                     case 3:
                         if (recButton.isChecked()) {
                             Command.insert(new CenterCommand(touchdown, bo.uuid), bo);
-                        }
-                        else{
+                        } else {
                             so.recenter(touchdown.cpy());
                         }
                         break;
@@ -315,9 +313,8 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                         tempVec.set(touchdrag.cpy().sub(touchdown));
                         if (recButton.isChecked()) {
                             Command.insert(new TransformCommand(tempVec, 0, 0, bo.uuid), bo);
-                        }
-                        else{
-                            so.transform(tempVec,0,0);
+                        } else {
+                            so.transform(tempVec, 0, 0);
 //                            so.sd.position.add(tempVec);
                         }
                         break;
@@ -325,26 +322,23 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                         float rot = touchdrag.x - touchdown.x;
                         if (recButton.isChecked()) {
                             Command.insert(new TransformCommand(new Vector2(), rot, 0, bo.uuid), bo);
-                        }
-                        else{
+                        } else {
 //                            so.sd.rotation += rot;
-                            so.transform(new Vector2(),rot,0);
+                            so.transform(new Vector2(), rot, 0);
                         }
                         break;
                     case 2:
                         float scal = (touchdrag.x - touchdown.x) / 200f;
                         if (recButton.isChecked()) {
                             Command.insert(new TransformCommand(new Vector2(), 0, scal, bo.uuid), bo);
-                        }
-                        else{
-                            so.transform(new Vector2(),0,scal);
+                        } else {
+                            so.transform(new Vector2(), 0, scal);
                         }
                         break;
                     case 3:
                         if (recButton.isChecked()) {
                             Command.insert(new CenterCommand(touchdown, bo.uuid), bo);
-                        }
-                        else{
+                        } else {
                             so.recenter(touchdown.cpy());
                         }
                         break;
@@ -370,7 +364,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
     }
 
     @Override
-    public void draw(Batch batch, float delta,boolean bounds) {
+    public void draw(Batch batch, float delta, boolean bounds) {
 
 //        mx4Overlay.set(mx4Overlay.idt());
 //        mx4Overlay.setToOrtho2D(0, 0, 100, 100);
@@ -438,7 +432,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                 public boolean longPress(Actor actor, float x, float y) {
                     cb.setChecked(!cb.isChecked());
                     ((ScreenObject) ba).sd.visible = !((ScreenObject) ba).sd.visible;
-                    if (recButton.isChecked()){
+                    if (recButton.isChecked()) {
                         Command.insert(new VisibleCommand(((ScreenObject) ba).sd.visible, ba.uuid), ba);
                     }
 //                        cb.setVisible(false);

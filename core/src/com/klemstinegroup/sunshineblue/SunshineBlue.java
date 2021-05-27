@@ -405,7 +405,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 
         if (overlay != null) {
             batch.begin();
-            ((Drawable) overlay).draw(batch, delta,false);
+            ((Drawable) overlay).draw(batch, delta, false);
             if (overlay != SunshineBlue.instance.BLANK_OVERLAY) {
 
                 batch.setColor(Color.WHITE);
@@ -620,13 +620,32 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
 //        Gdx.graphics.setContinuousRendering(true);
     }
 
+    public static Array<String> prohibited = new Array<>();
+
     public static void addUserObj(BaseObject b) {
         Gdx.app.log("userobject added", (b.getClass().toString()));
-        SunshineBlue.instance.userObjects.add(b);
+        if (b instanceof CompositeObject) {
+            for (BaseObject ba : ((CompositeObject) b).objects) {
+                prohibited.add(ba.uuid);
+            }
+            for (BaseObject ba : SunshineBlue.instance.userObjects) {
+                if (prohibited.contains(ba.uuid, false)) {
+                    SunshineBlue.instance.userObjects.removeValue(ba,false);
+                }
+            }
+        }
+        if (!prohibited.contains(b.uuid, false)) {
+            SunshineBlue.instance.userObjects.add(b);
+        }
     }
 
     public static void removeUserObj(BaseObject b) {
         Gdx.app.log("userobject removed", (b.getClass().toString()));
-        SunshineBlue.instance.userObjects.removeValue(b, true);
+        if (b instanceof CompositeObject) {
+            for (BaseObject ba : ((CompositeObject) b).objects) {
+                prohibited.removeValue(ba.uuid,false);
+            }
+        }
+        SunshineBlue.instance.userObjects.removeValue(b, false);
     }
 }

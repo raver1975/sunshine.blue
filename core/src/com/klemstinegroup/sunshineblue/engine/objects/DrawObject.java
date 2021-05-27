@@ -352,6 +352,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
             array.addChild(SerializeUtil.serialize(ar));
         }
         val.addChild("class", new JsonValue(DrawObject.class.getName()));
+        val.addChild("UUID", new JsonValue(uuid));
         return val;
     }
 
@@ -364,7 +365,7 @@ public class DrawObject extends ScreenObject implements Drawable, Touchable {
             dd.path.add(vecAr);
         }
         DrawObject temp=new DrawObject(dd);
-        temp.uuid=json.getString("uuid", temp.uuid);
+        temp.uuid=json.getString("UUID", temp.uuid);
         SunshineBlue.addUserObj(temp);
     }
 

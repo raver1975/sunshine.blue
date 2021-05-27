@@ -277,7 +277,6 @@ public class SerializeUtil {
 //            }
             Gdx.app.log("scene", "adding:" + bo.getClass());
             JsonValue temp = ((SerialInterface) bo).serialize();
-            temp.addChild("UUID", new JsonValue(bo.uuid));
             array.addChild(temp);
         }
 

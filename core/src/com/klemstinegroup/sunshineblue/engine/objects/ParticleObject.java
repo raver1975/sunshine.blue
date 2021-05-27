@@ -181,6 +181,7 @@ public class ParticleObject extends ScreenObject implements Drawable, Touchable 
         val.addChild("particle", new JsonValue(particleFileName));
         val.addChild("speed", new JsonValue(speed));
         val.addChild("class", new JsonValue(ParticleObject.class.getName()));
+        val.addChild("UUID", new JsonValue(uuid));
         return val;
     }
 

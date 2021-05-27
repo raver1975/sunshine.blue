@@ -123,22 +123,10 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Dialog dialog = new Dialog("Erase scene?", skin) {
+                Dialog dialog = new Dialog("New scene?", skin) {
                     @Override
                     protected void result(Object object) {
-                        if (object.equals(2)) {
-                            Preferences prefs = null;
-                            do {
-                                prefs = Gdx.app.getPreferences("scenes");
-                                for (String s : prefs.get().keySet()) {
-                                    prefs.remove(s);
-                                    prefs.flush();
-                                }
-                            }
-                            while (prefs != null && prefs.get().size() > 0);
-                            SunshineBlue.instance.otherCIDS.clear();
-                        }
-                        if (!object.equals(3)) {
+                        if (object.equals(1)) {
                             SunshineBlue.instance.selectedObjects.clear();
                             Iterator<BaseObject> i = SunshineBlue.instance.userObjects.iterator();
                             while (i.hasNext()) {
@@ -154,8 +142,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                     }
                 };
                 dialog.setModal(true);
-                dialog.button("Erase Scene", 1);
-                dialog.button("Erase All", 2);
+                dialog.button("New Scene", 1);
                 dialog.button("Cancel", 3);
                 dialog.show(stage);
             }
@@ -206,6 +193,23 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
 
         TextButton sceneButton = new TextButton(" / ", skin);
+        sceneButton.addListener(new ActorGestureListener() {
+            @Override
+            public boolean longPress(Actor actor, float x, float y) {
+//                return super.longPress(actor, x, y);
+                Preferences prefs = null;
+                do {
+                    prefs = Gdx.app.getPreferences("scenes");
+                    for (String s : prefs.get().keySet()) {
+                        prefs.remove(s);
+                        prefs.flush();
+                    }
+                }
+                while (prefs != null && prefs.get().size() > 0);
+                SunshineBlue.instance.otherCIDS.clear();
+                return true;
+            }
+        });
         sceneButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -558,7 +562,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
     }
 
     @Override
-    public void draw(Batch batch, float delta,boolean bounds) {
+    public void draw(Batch batch, float delta, boolean bounds) {
 
 //        mx4Overlay.set(mx4Overlay.idt());
 //        mx4Overlay.setToOrtho2D(0, 0, 100, 100);
@@ -740,7 +744,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         if (TimeUtils.millis() < lastTime + 500) {
             return;
         }
-        lastTime=TimeUtils.millis();
+        lastTime = TimeUtils.millis();
         Array<String> tempsort = new Array<>();
         tempsort.addAll(SunshineBlue.instance.otherCIDS.keySet().toArray(new String[0]));
         tempsort.shuffle();

@@ -90,6 +90,7 @@ public class ScriptObject extends BaseObject implements Actable {
         JsonValue val = new JsonValue(JsonValue.ValueType.object);
         val.addChild("CID", new JsonValue(cid));
         val.addChild("class", new JsonValue(ScriptObject.class.getName()));
+        val.addChild("UUID", new JsonValue(uuid));
         return val;
     }
 

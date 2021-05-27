@@ -632,6 +632,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
 
         }
         val.addChild("class", new JsonValue(ImageObject.class.getName()));
+        val.addChild("UUID", new JsonValue(uuid));
         return val;
     }
 

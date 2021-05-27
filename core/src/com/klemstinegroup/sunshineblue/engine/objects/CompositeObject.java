@@ -10,22 +10,27 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
+import com.klemstinegroup.sunshineblue.engine.commands.Command;
 import com.klemstinegroup.sunshineblue.engine.data.ScreenData;
 import com.klemstinegroup.sunshineblue.engine.overlays.Drawable;
 import com.klemstinegroup.sunshineblue.engine.overlays.Touchable;
+import com.klemstinegroup.sunshineblue.engine.util.ColorUtil;
 import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
+import space.earlygrey.shapedrawer.JoinType;
 
 public class CompositeObject extends ScreenObject implements Drawable, Touchable {
     public Array<BaseObject> objects = new Array<>();
+    private Vector2 angleCalc=new Vector2();
+    private int angleRotateAnimAngle;
 
-    public CompositeObject(Array<BaseObject> objects){
+    public CompositeObject(Array<BaseObject> objects) {
         this.objects.addAll(objects);
     }
 
     @Override
     public void recenter(Vector2 touchdragcpy) {
         super.recenter(touchdragcpy);
-        for (BaseObject bo:objects) {
+        for (BaseObject bo : objects) {
             if (bo instanceof ScreenObject) {
                 ((ScreenObject) bo).recenter(touchdragcpy);
             }
@@ -34,8 +39,8 @@ public class CompositeObject extends ScreenObject implements Drawable, Touchable
 
     @Override
     public void transform(Vector2 posDelta, float rotDelta, float scaleDelta) {
-        super.transform(posDelta,rotDelta,scaleDelta);
-        for (BaseObject bo:objects) {
+        super.transform(posDelta, rotDelta, scaleDelta);
+        for (BaseObject bo : objects) {
             if (bo instanceof ScreenObject) {
                 ((ScreenObject) bo).transform(posDelta, rotDelta, scaleDelta);
             }
@@ -44,8 +49,8 @@ public class CompositeObject extends ScreenObject implements Drawable, Touchable
 
     @Override
     public void invtransform(Vector2 posDelta, float rotDelta, float scaleDelta) {
-        super.invtransform(posDelta,rotDelta,scaleDelta);
-        for (BaseObject bo:objects) {
+        super.invtransform(posDelta, rotDelta, scaleDelta);
+        for (BaseObject bo : objects) {
             if (bo instanceof ScreenObject) {
                 ((ScreenObject) bo).invtransform(posDelta, rotDelta, scaleDelta);
             }
@@ -53,11 +58,34 @@ public class CompositeObject extends ScreenObject implements Drawable, Touchable
     }
 
     @Override
-    public void draw(Batch batch, float delta,boolean bounds) {
+    public void draw(Batch batch, float delta, boolean bounds) {
         for (BaseObject bo : objects) {
             if (bo instanceof Drawable) {
                 ((Drawable) bo).draw(batch, delta, bounds);
             }
+        }
+        setBounds();
+        if (bounds) {
+            SunshineBlue.instance.shapedrawer.setColor(ColorUtil.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / (float) (SunshineBlue.instance.userObjects.size - 1)).cpy());
+            SunshineBlue.instance.shapedrawer.circle(0, 0, 10, 2);
+            angleCalc.set(0, 10);
+            angleCalc.rotateDeg(angleRotateAnimAngle += 1);
+            SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
+            angleCalc.rotateDeg(90);
+            SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
+            angleCalc.rotateDeg(90);
+            SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
+            angleCalc.rotateDeg(90);
+            SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
+
+            /*if (polygon != null) {
+                batch.end();
+                batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
+                batch.begin();
+//                SunshineBlue.instance.shapedrawer.setColor(Color.WHITE);
+                SunshineBlue.instance.shapedrawer.setColor(ColorUtil.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / ((float) SunshineBlue.instance.userObjects.size - 1)));
+                SunshineBlue.instance.shapedrawer.polygon(polygon,5, JoinType.NONE);
+            }*/
         }
     }
 
@@ -136,33 +164,40 @@ public class CompositeObject extends ScreenObject implements Drawable, Touchable
     public JsonValue serialize() {
         JsonValue val = new JsonValue(JsonValue.ValueType.object);
         JsonValue arr = new JsonValue(JsonValue.ValueType.array);
-        val.addChild("array",arr);
-        for (BaseObject bo:objects) {
+        val.addChild("array", arr);
+        for (BaseObject bo : objects) {
             arr.addChild(bo.serialize());
         }
         val.addChild("class", new JsonValue(CompositeObject.class.getName()));
+        val.addChild("UUID", new JsonValue(uuid));
         return val;
     }
 
 
     public static void deserialize(JsonValue json) {
-        JsonValue val=json.get("array");
-        if (val.isArray()){
-            for (JsonValue cal:val){
+        Array<String> uuids = new Array<>();
+        JsonValue val = json.get("array");
+        if (val.isArray()) {
+            for (JsonValue cal : val) {
                 try {
                     ClassReflection.getMethod(ClassReflection.forName(cal.getString("class")), "deserialize", JsonValue.class).invoke(null, cal);
+                    uuids.add(cal.getString("UUID"));
                 } catch (ReflectionException e) {
                     e.printStackTrace();
                 }
             }
         }
-
+        Array<BaseObject> tempob = new Array<>();
+        for (String s : uuids) {
+            tempob.add(Command.getBaseObject(s));
+        }
+        SunshineBlue.addUserObj(new CompositeObject(tempob));
     }
 
     @Override
     public void regenerate(AssetManager assetManager) {
         super.regenerate(assetManager);
-        for (BaseObject bo:objects){
+        for (BaseObject bo : objects) {
             bo.regenerate(assetManager);
         }
     }
