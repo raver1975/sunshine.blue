@@ -17,9 +17,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ArrayMap;
-import com.badlogic.gdx.utils.TimeUtils;
+import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.crashinvaders.vfx.VfxManager;
@@ -228,8 +226,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
                 Preferences prefs = Gdx.app.getPreferences("scenes");
                 loadCid = prefs.getString("current");
                 if (loadCid == null || loadCid.isEmpty()) {
-                    loadCid = Statics.splashCID;
-                    autoload = true;
+                    ParticleObject.deserialize(new JsonReader().parse(Statics.firstSceneJson));
                 }
 
             }

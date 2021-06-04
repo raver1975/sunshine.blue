@@ -31,7 +31,7 @@ public class CompositeObject extends ScreenObject implements Drawable, Touchable
 
     @Override
     public void recenter(Vector2 touchdragcpy) {
-        super.recenter(touchdragcpy);
+//        super.recenter(touchdragcpy);
         for (BaseObject bo : objects) {
             if (bo instanceof ScreenObject) {
                 ((ScreenObject) bo).recenter(touchdragcpy);
@@ -41,7 +41,7 @@ public class CompositeObject extends ScreenObject implements Drawable, Touchable
 
     @Override
     public void transform(Vector2 posDelta, float rotDelta, float scaleDelta) {
-        super.transform(posDelta, rotDelta, scaleDelta);
+//        super.transform(posDelta, rotDelta, scaleDelta);
         for (BaseObject bo : objects) {
             if (bo instanceof ScreenObject) {
                 ((ScreenObject) bo).transform(posDelta, rotDelta, scaleDelta);
@@ -51,7 +51,7 @@ public class CompositeObject extends ScreenObject implements Drawable, Touchable
 
     @Override
     public void invtransform(Vector2 posDelta, float rotDelta, float scaleDelta) {
-        super.invtransform(posDelta, rotDelta, scaleDelta);
+//        super.invtransform(posDelta, rotDelta, scaleDelta);
         for (BaseObject bo : objects) {
             if (bo instanceof ScreenObject) {
                 ((ScreenObject) bo).invtransform(posDelta, rotDelta, scaleDelta);
@@ -72,7 +72,7 @@ public class CompositeObject extends ScreenObject implements Drawable, Touchable
             }
         }
         setBounds();
-        if (bounds) {
+        /*if (bounds) {
             SunshineBlue.instance.shapedrawer.setColor(ColorUtil.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / (float) (SunshineBlue.instance.userObjects.size - 1)).cpy());
             SunshineBlue.instance.shapedrawer.circle(0, 0, 10, 2);
             angleCalc.set(0, 10);
@@ -85,15 +85,15 @@ public class CompositeObject extends ScreenObject implements Drawable, Touchable
             angleCalc.rotateDeg(90);
             SunshineBlue.instance.shapedrawer.line(new Vector2(), angleCalc, 2);
 
-            /*if (polygon != null) {
+            *//*if (polygon != null) {
                 batch.end();
                 batch.setTransformMatrix(SunshineBlue.instance.mx4Batch);
                 batch.begin();
 //                SunshineBlue.instance.shapedrawer.setColor(Color.WHITE);
                 SunshineBlue.instance.shapedrawer.setColor(ColorUtil.numberToColorPercentage((float) SunshineBlue.instance.userObjects.indexOf(this, true) / ((float) SunshineBlue.instance.userObjects.size - 1)));
                 SunshineBlue.instance.shapedrawer.polygon(polygon,5, JoinType.NONE);
-            }*/
-        }
+            }*//*
+        }*/
     }
 
     @Override

@@ -11,7 +11,8 @@ public class Statics {
     public static String IPFSGateway = "https://ipfs.io/ipfs/";
     public static final String CORSGateway="https://api.codetabs.com/v1/proxy?quest=";
     public static String IPFSMediaViewer="Qmd98X8gq4j722Zvy6Hmx4UEzCmyQP4pdREggjiF2dYZMQ";
-    public static String splashCID="QmQYequwMG6uxCNiskz6u6hZXxGcVnWKjWaH6Zyv2jXGK6";
+    public static String firstSceneJson="{screenData:{scale:8.764999999999995,bounds:{v:\"1121241064,1121370550\"},layer:8},particle:\"Particle Park Hallucinogen Full\",speed:1,class:\"com.klemstinegroup.sunshineblue.engine.objects.ParticleObject\",UUID:\"d8bf9910-45a4-41de-8384-f1c831144602\"}";
+//    public static String splashCID="QmQYequwMG6uxCNiskz6u6hZXxGcVnWKjWaH6Zyv2jXGK6";
 
     public Statics(){}
 

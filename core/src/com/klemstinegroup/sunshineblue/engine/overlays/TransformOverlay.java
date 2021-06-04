@@ -56,12 +56,25 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
         stage.addActor(exitButton);
 
         reloadCB = new CheckBox("", skin, "switch");
-        reloadCB.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 120, 10);
+        reloadCB.setPosition(SunshineBlue.instance.overlayViewport.getWorldWidth() - 135, 10);
+        final boolean[] dontflag = {false};
+        reloadCB.addListener(new ActorGestureListener(){
+            @Override
+            public boolean longPress(Actor actor, float x, float y) {
+                dontflag[0] =true;
+                reloadCB.setChecked(reloadCB.isChecked());
+                return true;
+            }
+        });
         reloadCB.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
 
+                if (dontflag[0]){
+                    dontflag[0] =false;
+                    return;
+                }
                 Array<BaseObject> newselected = new Array<>();
                 for (int i = 0; i < checkBoxArray.size; i++) {
                     if (checkBoxArray.get(i).isChecked()) {
@@ -69,6 +82,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                     }
                 }
                 Overlay.backOverlay();
+                if (newselected.size!=SunshineBlue.instance.selectedObjects.size)
                 SunshineBlue.instance.selectedObjects.clear();
                 CompositeObject tempCompositeObject;
                 if (reloadCB.isChecked()) {
@@ -441,6 +455,7 @@ public class TransformOverlay extends BaseObject implements Overlay, Touchable, 
                 }
             });
             cb.setPosition(sx + xc * 50, sy + yc * 30);
+            reloadCB.setPosition(reloadCB.getX(),sy + yc * 30+((xc%10==9)?30:0));
             stage.addActor(cb);
             checkBoxArray.add(cb);
             xc++;
