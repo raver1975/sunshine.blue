@@ -192,7 +192,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         hgScene.addActor(saveButton);
 
 
-        TextButton sceneButton = new TextButton(" / ", skin);
+        TextButton sceneButton = new TextButton("Scene", skin);
         sceneButton.addListener(new ActorGestureListener() {
             @Override
             public boolean longPress(Actor actor, float x, float y) {
@@ -229,7 +229,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
         sceneButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 75);
         stage.addActor(sceneButton);
 
-        TextButton starButton = new TextButton(" * ", skin);
+        TextButton starButton = new TextButton("Rec", skin);
         starButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -366,19 +366,6 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 //        stage.addActor(fontButton);
         hgObjects.addActor(fontButton);
 
-        autoloadButton = new TextButton("See", skin);
-        autoloadButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                SunshineBlue.instance.autoload = true;
-                Overlay.backOverlay();
-                SunshineBlue.instance.autoloadtime = TimeUtils.millis();
-            }
-        });
-        autoloadButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 375);
-        autoloadButton.setChecked(SunshineBlue.instance.autoload);
-        hgScene.addActor(autoloadButton);
-
         Actor popButton = new TextButton("Pop", skin);
         popButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 315);
         popButton.addListener(new ClickListener() {
@@ -404,6 +391,21 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
             }
         });
         hgScene.addActor(popButton);
+
+        autoloadButton = new CheckBox(" auto next", skin);
+        autoloadButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                SunshineBlue.instance.autoload = true;
+                Overlay.backOverlay();
+                SunshineBlue.instance.autoloadtime = TimeUtils.millis();
+            }
+        });
+        autoloadButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 375);
+        autoloadButton.setChecked(SunshineBlue.instance.autoload);
+        hgScene.addActor(autoloadButton);
+
+
 
         Actor imageButton = new TextButton("Image", skin);
         imageButton.setPosition(70, 10);
