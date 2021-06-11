@@ -176,6 +176,11 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                             @Override
                             public void run() {
                                 adjusthgScreenshot();
+                                if (Gdx.app.getType() == Application.ApplicationType.Desktop) {
+                                    Gdx.net.openURI("http://localhost:8080/?" + cid);
+                                } else {
+                                    Gdx.net.openURI("https://sunshine.blue/?" + cid);
+                                }
                             }
                         });
 
@@ -366,7 +371,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 //        stage.addActor(fontButton);
         hgObjects.addActor(fontButton);
 
-        Actor popButton = new TextButton("Pop", skin);
+        /*Actor popButton = new TextButton("Pop", skin);
         popButton.setPosition(10, SunshineBlue.instance.overlayViewport.getWorldHeight() - 315);
         popButton.addListener(new ClickListener() {
 
@@ -390,13 +395,13 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
 
             }
         });
-        hgScene.addActor(popButton);
+        hgScene.addActor(popButton);*/
 
         autoloadButton = new CheckBox(" auto next", skin);
         autoloadButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                SunshineBlue.instance.autoload = true;
+                SunshineBlue.instance.autoload = autoloadButton.isChecked();
                 Overlay.backOverlay();
                 SunshineBlue.instance.autoloadtime = TimeUtils.millis();
             }
