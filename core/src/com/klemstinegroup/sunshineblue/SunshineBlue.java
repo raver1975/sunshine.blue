@@ -66,7 +66,6 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
     public static SunshineBlue instance;
     public HashMap<String, String> otherCIDS = new HashMap<>();
     public Array<String> autoloaded = new Array<>();
-    public boolean autoload;
     public long autoloadtime;
     //    public Rectangle recordRect;
     private int recCounter;
@@ -270,7 +269,7 @@ public class SunshineBlue extends ApplicationAdapter implements InputProcessor {
             Command.compress(frameCount1);
 
             if (frameCount1 > loopEnd) {
-                if (autoload && TimeUtils.millis() > autoloadtime) {
+                if (BASIC_UI_OVERLAY.autoloadButton.isChecked() && TimeUtils.millis() > autoloadtime) {
                     Gdx.app.log("autoload", "");
                     autoloadtime = TimeUtils.millis() + Statics.AUTOLOADTIME;
                     if (otherCIDS.size() > 0) {

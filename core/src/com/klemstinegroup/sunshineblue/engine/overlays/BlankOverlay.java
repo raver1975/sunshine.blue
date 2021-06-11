@@ -82,7 +82,7 @@ public class BlankOverlay extends ScreenObject implements Overlay, Touchable,Dra
 
     @Override
     public void removeInput() {
-        SunshineBlue.instance.autoload=false;
+//        SunshineBlue.instance.autoload=false;
     }
 
     @Override

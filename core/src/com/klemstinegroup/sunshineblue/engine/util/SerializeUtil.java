@@ -97,7 +97,7 @@ public class SerializeUtil {
         if (cid == null || cid.isEmpty() || !cid.startsWith("Q")) {
             return;
         }
-        if (SunshineBlue.instance.autoload && cid.equals(lastLoaded)) {
+        if (SunshineBlue.instance.BASIC_UI_OVERLAY.autoloadButton.isChecked()&& cid.equals(lastLoaded)) {
             return;
         }
         Command.setToFrame(0);
