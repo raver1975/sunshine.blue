@@ -10,21 +10,24 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.klemstinegroup.sunshineblue.engine.util.NativeJava;
 
 public class AndroidLauncher extends AndroidApplication {
-	@Override
-	protected void onCreate (Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		config.depth=8;
-		Intent intent = getIntent();
-		String action = intent.getAction();
-		Uri data = intent.getData();
-		int l=data.toString().indexOf("?");
-		if (l>0) {
-			String cid = data.toString().substring(data.toString().indexOf('?')+1);
-			initialize(new SunshineBlue(new NativeJava(), cid), config);
-		}
-		else{
-			initialize(new SunshineBlue(),config);
-		}
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
+        config.depth = 8;
+        Intent intent = getIntent();
+//		String action = intent.getAction();
+        if (intent != null) {
+            Uri data = intent.getData();
+            if (data!=null) {
+				int l = data.toString().indexOf("?");
+				if (l > 0) {
+					String cid = data.toString().substring(data.toString().indexOf('?') + 1);
+					initialize(new SunshineBlue(new NativeJava(), cid), config);
+					return;
+				}
+			}
+        }
+        initialize(new SunshineBlue(), config);
+    }
 }
