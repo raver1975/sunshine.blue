@@ -20,8 +20,8 @@ android {
         applicationId "com.klemstinegroup.sunshineblue"
         minSdkVersion 24
         targetSdkVersion 30
-        versionCode 6
-        versionName "0.0.6"
+        versionCode 8
+        versionName "0.0.8"
         ndkVersion "22.1.7171670"
         ndk {
             debugSymbolLevel 'FULL'
