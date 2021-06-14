@@ -326,7 +326,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                 IPFSUtils.uploadPngtoIPFS(screenshot, new IPFSCIDListener() {
                     @Override
                     public void cid(String cid) {
-                        IPFSUtils.openIPFSViewer(cid);
+                        IPFSUtils.openIPFSViewer(cid,false);
                     }
 
                     @Override
