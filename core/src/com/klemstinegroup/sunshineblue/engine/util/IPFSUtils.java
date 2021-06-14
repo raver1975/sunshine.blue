@@ -125,11 +125,11 @@ public class IPFSUtils {
     }
 
 
-    public static void openIPFSViewer(String cid) {
+    public static void openIPFSViewer(String cid, boolean gif) {
         Gdx.app.postRunnable(new Runnable() {
             @Override
             public void run() {
-                Gdx.net.openURI(Statics.IPFSGateway + Statics.IPFSMediaViewer + "?url=" + cid);
+                Gdx.net.openURI(Statics.IPFSGateway + (gif ? Statics.IPFSMediaViewerGIF : Statics.IPFSMediaViewerPNG) + "?url=" + cid);
             }
         });
     }
