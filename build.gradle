@@ -11,10 +11,7 @@ buildscript {
     dependencies {
         classpath 'org.wisepersist:gwt-gradle-plugin:1.1.18'
         classpath 'org.gretty:gretty:4.0.1'
-        classpath 'com.android.tools.build:gradle:7.1.2'
-        classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.15'
-        
-
+        classpath 'com.android.tools.build:gradle:4.1.3'
     }
 }
 
@@ -46,77 +43,6 @@ allprojects {
     }
 }
 
-project(":desktop") {
-    apply plugin: "java-library"
-
-
-    dependencies {
-        implementation project(":core")
-        api "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-        api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-//        api "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
-//        api "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-//        api "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllersVersion"
-//        api "de.tomgrill.gdxfacebook:gdx-facebook-desktop:1.4.1"
-//        api "de.tomgrill.gdxdialogs:gdx-dialogs-desktop:1.2.5"
-//        api "de.golfgl.gdxgamesvcs:gdx-gamesvcs-core-gamejolt:1.0.2"
-        implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-
-    }
-}
-
-project(":android") {
-    apply plugin: "com.android.application"
-
-    configurations { natives }
-
-    dependencies {
-        implementation project(":core")
-        api "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
-        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
-        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
-        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
-        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
-//        api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
-//        natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-armeabi-v7a"
-//        natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-arm64-v8a"
-//        natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86"
-//        natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86_64"
-//        api "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"
-//        api "com.badlogicgames.ashley:ashley:$ashleyVersion"
-//        api "com.badlogicgames.gdx:gdx-ai:$aiVersion"
-//        api "com.badlogicgames.gdx-controllers:gdx-controllers-android:$gdxControllersVersion"
-//        api "de.tomgrill.gdxfacebook:gdx-facebook-android:1.4.1"
-//        api "de.tomgrill.gdxdialogs:gdx-dialogs-android:1.2.5"
-//        api "de.golfgl.gdxgamesvcs:gdx-gamesvcs-android-gpgs:1.0.2"
-        implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi-v7a"
-        natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-arm64-v8a"
-        natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86"
-        natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86_64"
-    }
-}
-
-project(":ios") {
-    apply plugin: "java-library"
-    apply plugin: "robovm"
-
-
-    dependencies {
-        implementation project(":core")
-        api "com.mobidevelop.robovm:robovm-rt:$roboVMVersion"
-        api "com.mobidevelop.robovm:robovm-cocoatouch:$roboVMVersion"
-        api "com.badlogicgames.gdx:gdx-backend-robovm:$gdxVersion"
-        api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-ios"
-//        api "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-ios"
-//        api "com.badlogicgames.gdx-controllers:gdx-controllers-ios:$gdxControllersVersion"
-//        api "de.tomgrill.gdxfacebook:gdx-facebook-ios:1.4.1"
-//        api "de.tomgrill.gdxdialogs:gdx-dialogs-ios:1.2.5"
-//        api "de.golfgl.gdxgamesvcs:gdx-gamesvcs-ios-gamecenter:1.0.2"
-        implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-ios"
-    }
-}
-
 project(":html") {
     apply plugin: "java-library"
     apply plugin: "gwt"
@@ -126,7 +52,9 @@ project(":html") {
 
     dependencies {
         implementation project(":core")
-        implementation "space.earlygrey:shapedrawer:$shapedrawerVersion:sources"
+//        implementation "space.earlygrey:shapedrawer:$shapedrawerVersion:sources"
+
+        implementation 'com.github.earlygrey:shapedrawer:v2.5.0:sources'
         api "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
         api "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
         api "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
@@ -171,7 +99,9 @@ project(":core") {
 
 
     dependencies {
-        implementation "space.earlygrey:shapedrawer:$shapedrawerVersion"
+        implementation 'com.github.earlygrey:shapedrawer:v2.5.0'
+
+//        implementation "space.earlygrey:shapedrawer:$shapedrawerVersion"
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
 //        api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
 //        api "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"
@@ -192,5 +122,25 @@ project(":core") {
         implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         implementation 'com.crashinvaders.vfx:gdx-vfx-core:0.5.0'
         implementation 'com.crashinvaders.vfx:gdx-vfx-effects:0.5.0'
+    }
+
+    project(":android") {
+        apply plugin: "com.android.application"
+
+        configurations { natives }
+
+        dependencies {
+            implementation project(":core")
+            api "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
+            natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
+            natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
+            natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
+            natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
+            implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+            natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi-v7a"
+            natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-arm64-v8a"
+            natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86"
+            natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86_64"
+        }
     }
 }
