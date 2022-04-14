@@ -11,7 +11,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://sunshine.blue">
+  <a href="https://raver1975.github.io">
     <img src="android/ic_launcher-web.png" alt="Logo" width="80" height="80">
   </a>
 
@@ -21,7 +21,7 @@
     Shine On!
     <br />
     <br />
-    <a href="https://sunshine.blue">View Demo</a>
+    <a href="https://raver1975.github.io">View Demo</a>
     ·
     <a href="https://github.com/raver1975/sunshine.blue/issues">Report Bug</a>
     ·
@@ -61,7 +61,7 @@
 
 ## About The Project
 
-<a ref="sunshine.blue"><img src="android/ic_launcher-web.png" alt="Logo" width="80" height="80"></a>
+<a ref="raver1975.github.io"><img src="android/ic_launcher-web.png" alt="Logo" width="80" height="80"></a>
 <br/>
 
 ### Features
@@ -106,7 +106,7 @@ To get a local copy up and running follow these simple steps.
 ## Usage
 
 Online:
-[https://sunshine.blue](https://sunshine.blue)
+[https://raver1975.github.io](https://raver1975.github.io)
 
 
 desktop:

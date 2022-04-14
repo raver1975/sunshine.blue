@@ -179,7 +179,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                                 if (Gdx.app.getType() == Application.ApplicationType.Desktop) {
                                     Gdx.net.openURI("http://localhost:8080/?" + cid);
                                 } else {
-                                    Gdx.net.openURI("https://sunshine.blue/?" + cid);
+                                    Gdx.net.openURI("https://raver1975.github.io/?" + cid);
                                 }
                             }
                         });
@@ -383,7 +383,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                         if (Gdx.app.getType() == Application.ApplicationType.Desktop) {
                             Gdx.net.openURI("http://localhost:8080/?" + cid);
                         } else {
-                            Gdx.net.openURI("https://sunshine.blue/?" + cid);
+                            Gdx.net.openURI("https://raver1975.github.io/?" + cid);
                         }
                     }
 
@@ -660,7 +660,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                             prefs.remove(cid);
                             prefs.flush();
                         } else if (object.equals(3L)) {
-                            String uri = "https://sunshine.blue/?" + cid;
+                            String uri = "https://raver1975.github.io/?" + cid;
                             Gdx.app.getClipboard().setContents(uri);
                             Gdx.net.openURI(uri);
                         }
