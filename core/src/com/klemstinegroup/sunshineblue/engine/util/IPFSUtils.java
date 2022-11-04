@@ -51,7 +51,7 @@ public class IPFSUtils {
 
     public static void uploadFile(byte[] data, IPFSCIDListener listen) {
         Gdx.app.log("upload", data.length + " bytes uploading");
-        String url = "https://infura-ipfs.io:5001/api/v0/add";
+        String url = "https://ipfs.io:5001/api/v0/add";
         String boundary = "12345678901234567890"; // Just generate some unique random value.
         String CRLF = "\r\n"; // Line separator required by multipart/form-data.
 
