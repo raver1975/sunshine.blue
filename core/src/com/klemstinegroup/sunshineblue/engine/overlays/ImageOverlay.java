@@ -1,6 +1,7 @@
 package com.klemstinegroup.sunshineblue.engine.overlays;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Net;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
@@ -10,6 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
 import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ImageObject;
@@ -44,7 +48,51 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
                     Gdx.input.setOnscreenKeyboardVisible(false);
                     Gdx.app.log("ta", ta.getText());
                     String text = ta.getText().replaceAll("\n", "");
-                    ImageObject.load(text);
+                    if (!text.isEmpty()) {
+                        if (text.startsWith("*")) {
+                            text = text.substring(1);
+                            Net.HttpRequest request = new Net.HttpRequest();
+                            request.setHeader("apikey", "0000000000");
+                            request.setHeader("Content-Type", "application/json");
+                            int width=1024;
+                            int height=1024;
+                            request.setContent("{\"prompt\":\""
+                                    + text
+                                    + "\", \"params\":{\"n\":1, \"width\": "+width+", \"height\": "+height+"}}");
+                            request.setUrl("https://stablehorde.net/api/v2/generate/sync");
+                            request.setTimeOut(0);
+                            request.setMethod("POST");
+
+                            Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {
+                                @Override
+                                public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                                    String result=httpResponse.getResultAsString();
+                                    JsonReader reader = new JsonReader();
+                                    JsonValue resultJSON = reader.parse(result);
+                                    JsonValue generations = resultJSON.get("generations");
+                                    String imgData = generations.get(0).getString("img");
+                                    if (generations!=null&& imgData!=null) {
+                                        Gdx.app.log("stable diffusion response",imgData.replaceAll("(.{80})", "$1\n"));
+                                        ImageObject.load("data:,"+imgData);
+                                    }
+
+                                }
+
+                                @Override
+                                public void failed(Throwable t) {
+
+                                }
+
+                                @Override
+                                public void cancelled() {
+
+                                }
+                            });
+
+                        } else {
+                            ImageObject.load(text);
+                        }
+                    }
                     ta.setText(null);
                     Overlay.backOverlay();
                 }
@@ -66,7 +114,7 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
         ta = new TextArea(null, skin, "default");
 
 
-        Label tfield = new Label("JPG,PNG,GIF,IPFS,or DATA url", skin);
+        Label tfield = new Label("JPG,PNG,GIF,IPFS,DATA url,*stable diffusion prompt", skin);
         tfield.setPosition(250, SunshineBlue.instance.overlayViewport.getWorldHeight() - 150);
         tfield.setWidth(270);
         stage.addActor(tfield);

@@ -12,14 +12,14 @@
             const ipfs = await Ipfs.create({
                 repo: 'ipfs-' + Math.random(),
                 EXPERIMENTAL: {
-                    pubsub: true
+                    pubsub: false
                 },
                 config: {
-                    Addresses: {
-                        Swarm: [
-                            '/dns4/stormy-meadow-13494.herokuapp.com/tcp/443/wss/p2p-webrtc-star/'
-                        ]
-                    }
+                    // Addresses: {
+                    //     Swarm: [
+                    //         '/dns4/stormy-meadow-13494.herokuapp.com/tcp/443/wss/p2p-webrtc-star/'
+                    //     ]
+                    // }
                 }
             })
             window.node = ipfs
