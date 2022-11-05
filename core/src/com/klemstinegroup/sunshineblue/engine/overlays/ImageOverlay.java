@@ -57,7 +57,7 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
                             if (split.length == 3) {
                                 width = Integer.parseInt(split[0]);
                                 height = Integer.parseInt(split[1]);
-                                text = split[3];
+                                text = split[2];
                             }
                             Net.HttpRequest request = new Net.HttpRequest();
                             request.setHeader("apikey", "0000000000");
