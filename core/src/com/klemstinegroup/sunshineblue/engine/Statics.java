@@ -8,10 +8,10 @@ public class Statics {
     public static final long AUTOLOADTIME = 10000;
     public static final int RECMAXFRAMESMAX = 600;
     public static int recframes = 30;
-    public static String IPFSGateway = "https://cloudflare-ipfs.com/ipfs/";
+    public static String IPFSGateway = "https://infura-ipfs.com/ipfs/";
     public static final String CORSGateway="https://api.codetabs.com/v1/proxy?quest=";
-    public static String IPFSMediaViewerGIF="Qmav8zGqAwmi71EN2WW8XJ26XaZTSM2BvywRuKcD4dJuvp";
-    public static String IPFSMediaViewerPNG="QmSsxNG6mAAXdGZU8pLrx54yvmKCzx9q59mVaSJU9uFHc1";
+    public static String IPFSMediaViewerGIF="QmQVRFwkXgdP4mVGbPkFrpkTgPrRdhrwAeKNeKFYmP84Cg";
+    public static String IPFSMediaViewerPNG="QmYbHET9xukvrAH19dwWYKL8HQebVbVLbDZo5GkQa61A2V";
     public static String firstSceneJson="{screenData:{scale:8.764999999999995,bounds:{v:\"1121241064,1121370550\"},layer:8},particle:\"Particle Park Hallucinogen Full\",speed:1,class:\"com.klemstinegroup.sunshineblue.engine.objects.ParticleObject\",UUID:\"d8bf9910-45a4-41de-8384-f1c831144602\"}";
 //    public static String splashCID="QmQYequwMG6uxCNiskz6u6hZXxGcVnWKjWaH6Zyv2jXGK6";
 
