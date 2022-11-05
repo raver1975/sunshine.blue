@@ -272,7 +272,7 @@ public class ImageObject extends ScreenObject implements Drawable, Touchable {
                         staticPixmap = new Pixmap(new MemoryFileHandle(data));
                     } catch (Exception e1) {
                         Gdx.app.log("error", "data is not a png or jpg");
-                        Gdx.app.log("data", new String(data));
+//                        Gdx.app.log("data", new String(data));
                         Statics.exceptionLog("not", e1);
                     }
                     if (staticPixmap != null) {
