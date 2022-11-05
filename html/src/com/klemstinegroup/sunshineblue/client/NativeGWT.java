@@ -179,16 +179,16 @@ public class NativeGWT implements NativeInterface {
         $wnd.history.pushState(stateObj, 'sunshine.blue', '/?' + cid);
 
 
-        function run() {
-            try {
-                console.log("publishing:" + cid);
-                $wnd.node.pubsub.publish("sunshine.blue", cid + "," + screenshot).then();
-            } catch (e) {
-                setTimeout(run, 1000);
-            }
-        }
-
-        run();
+//        function run() {
+//            try {
+//                console.log("publishing:" + cid);
+//                $wnd.node.pubsub.publish("sunshine.blue", cid + "," + screenshot).then();
+//            } catch (e) {
+//                setTimeout(run, 1000);
+//            }
+//        }
+//
+//        run();
 
 
     }-*/;
