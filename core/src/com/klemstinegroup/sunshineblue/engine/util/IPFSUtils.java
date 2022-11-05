@@ -130,7 +130,7 @@ public class IPFSUtils {
             @Override
             public void run() {
 //                Gdx.net.openURI(Statics.IPFSGateway + (gif ? Statics.IPFSMediaViewerGIF : Statics.IPFSMediaViewerPNG) + "?url=" + cid);
-                Gdx.net.openURI("?" + cid);
+                Gdx.net.openURI(Statics.IPFSGateway + cid);
             }
         });
     }
