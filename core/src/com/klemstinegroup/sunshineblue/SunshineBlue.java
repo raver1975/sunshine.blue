@@ -30,7 +30,6 @@ import com.klemstinegroup.sunshineblue.engine.objects.*;
 import com.klemstinegroup.sunshineblue.engine.overlays.*;
 import com.klemstinegroup.sunshineblue.engine.util.*;
 import space.earlygrey.shapedrawer.ShapeDrawer;
-import sun.security.provider.Sun;
 
 import java.util.*;
 
