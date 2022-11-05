@@ -30,10 +30,10 @@ public class NativeGWT implements NativeInterface {
     private boolean succeed;
 
     public NativeGWT() {
-        addpubsublistener();
+//        addpubsublistener();
     }
 
-    native void addpubsublistener()/*-{
+    /*native void addpubsublistener()*//*-{
         function Utf8ArrayToStr(array) {
             var out, i, len, c;
             var char2, char3;
@@ -74,8 +74,8 @@ public class NativeGWT implements NativeInterface {
 
             return out;
         }
-    }-*/;
-
+    }-*//*;
+*/
     @Override
     public void uploadIPFS(byte[] data, IPFSCIDListener listener) {
         //pin through ipfs gateway, otherwise gets lost because web ipfs nodes do not persist.
