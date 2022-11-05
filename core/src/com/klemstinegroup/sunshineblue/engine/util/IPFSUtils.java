@@ -129,7 +129,8 @@ public class IPFSUtils {
         Gdx.app.postRunnable(new Runnable() {
             @Override
             public void run() {
-                Gdx.net.openURI(Statics.IPFSGateway + (gif ? Statics.IPFSMediaViewerGIF : Statics.IPFSMediaViewerPNG) + "?url=" + cid);
+//                Gdx.net.openURI(Statics.IPFSGateway + (gif ? Statics.IPFSMediaViewerGIF : Statics.IPFSMediaViewerPNG) + "?url=" + cid);
+                Gdx.net.openURI("?" + cid);
             }
         });
     }
