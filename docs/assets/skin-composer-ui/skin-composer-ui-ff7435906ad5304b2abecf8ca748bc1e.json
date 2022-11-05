@@ -1,0 +1,1118 @@
+{
+
+"com.badlogic.gdx.graphics.g2d.BitmapFont": {
+	"title": {
+		"file": "font-title-export.fnt"
+	},
+	"font": {
+		"file": "skin-composer-ui/nirmala20.fnt"
+	}
+},
+"com.badlogic.gdx.graphics.Color": {
+	"black": {
+		"r": 0,
+		"g": 0,
+		"b": 0,
+		"a": 1
+	},
+	"button": {
+		"r": 0.27450982,
+		"g": 0.54901963,
+		"b": 0.49411765,
+		"a": 1
+	},
+	"clear": {
+		"r": 1,
+		"g": 1,
+		"b": 1,
+		"a": 0
+	},
+	"content": {
+		"r": 0.5372549,
+		"g": 0.27058825,
+		"b": 0.27058825,
+		"a": 0.2509804
+	},
+	"dark-gray": {
+		"r": 0.25333333,
+		"g": 0.25333333,
+		"b": 0.25333333,
+		"a": 1
+	},
+	"disabled": {
+		"r": 0.5800001,
+		"g": 0.5800001,
+		"b": 0.5800001,
+		"a": 1
+	},
+	"gray": {
+		"r": 0.8666666,
+		"g": 0.8666666,
+		"b": 0.8666666,
+		"a": 1
+	},
+	"invisible": {
+		"r": 1,
+		"g": 1,
+		"b": 1,
+		"a": 0
+	},
+	"link": {
+		"r": 0,
+		"g": 0,
+		"b": 1,
+		"a": 1
+	},
+	"link-pressed": {
+		"r": 0.78666687,
+		"g": 0,
+		"b": 1,
+		"a": 1
+	},
+	"marquee-red": {
+		"r": 1,
+		"g": 0,
+		"b": 0.37566662,
+		"a": 1
+	},
+	"more-background": {
+		"r": 0.38431373,
+		"g": 0.8352941,
+		"b": 0.7137255,
+		"a": 0.24333334
+	},
+	"nine-patch-dark": {
+		"r": 0.81960785,
+		"g": 0.8117647,
+		"b": 0.8117647,
+		"a": 1
+	},
+	"nine-patch-light": {
+		"r": 0.95686275,
+		"g": 0.95686275,
+		"b": 0.95686275,
+		"a": 1
+	},
+	"padding": {
+		"r": 0.27450982,
+		"g": 0.54901963,
+		"b": 0.49411765,
+		"a": 0.2509804
+	},
+	"pressed": {
+		"r": 0.07450981,
+		"g": 0.24705882,
+		"b": 0.21960784,
+		"a": 1
+	},
+	"required": {
+		"r": 0.51666665,
+		"g": 0,
+		"b": 0,
+		"a": 1
+	},
+	"scene-bg": {
+		"r": 0.5529412,
+		"g": 0.5254902,
+		"b": 0.7882353,
+		"a": 1
+	},
+	"scene-color": {
+		"r": 0.30588236,
+		"g": 0.007843138,
+		"b": 0.3137255,
+		"a": 1
+	},
+	"scene-dialog-bg": {
+		"r": 0.2987764,
+		"g": 0.2854902,
+		"b": 0.42823535,
+		"a": 0.45588234
+	},
+	"scene-disabled": {
+		"r": 0.14117648,
+		"g": 0.1254902,
+		"b": 0.21960784,
+		"a": 1
+	},
+	"scene-shadow": {
+		"r": 0,
+		"g": 0,
+		"b": 0,
+		"a": 0.7
+	},
+	"stage-background": {
+		"r": 0.38486663,
+		"g": 0.83666664,
+		"b": 0.71576,
+		"a": 0.40333334
+	},
+	"transparent-25": {
+		"r": 1,
+		"g": 1,
+		"b": 1,
+		"a": 0.2509804
+	},
+	"transparent-50": {
+		"r": 1,
+		"g": 1,
+		"b": 1,
+		"a": 0.49803922
+	},
+	"white": {
+		"r": 1,
+		"g": 1,
+		"b": 1,
+		"a": 1
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable": {
+	"running_animation_00": {
+		"region": "running_animation_00",
+		"minWidth": 22,
+		"minHeight": 22
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable": {
+	"pressed": {
+		"name": "white",
+		"color": "pressed"
+	},
+	"black": {
+		"name": "white",
+		"color": "black"
+	},
+	"button-color": {
+		"name": "white",
+		"color": "button"
+	},
+	"stage-background": {
+		"name": "white",
+		"color": "stage-background"
+	},
+	"link-c": {
+		"name": "link",
+		"color": "link"
+	},
+	"link-p": {
+		"name": "link",
+		"color": "link-pressed"
+	},
+	"class-bar-black": {
+		"name": "class-bar",
+		"color": "black"
+	},
+	"selectbox-disabled": {
+		"name": "selectbox",
+		"color": "disabled"
+	},
+	"nine-patch-dark": {
+		"name": "white",
+		"color": "nine-patch-dark"
+	},
+	"nine-patch-light": {
+		"name": "white",
+		"color": "nine-patch-light"
+	},
+	"gray": {
+		"name": "white",
+		"color": "gray"
+	},
+	"dark-gray": {
+		"name": "white",
+		"color": "dark-gray"
+	},
+	"clear": {
+		"name": "white",
+		"color": "clear"
+	},
+	"content": {
+		"name": "white",
+		"color": "content"
+	},
+	"padding": {
+		"name": "white",
+		"color": "padding"
+	},
+	"scene-color": {
+		"name": "white",
+		"color": "scene-color"
+	},
+	"scene-bg": {
+		"name": "white",
+		"color": "scene-bg"
+	},
+	"scene-dialog-bg": {
+		"name": "white",
+		"color": "scene-dialog-bg"
+	},
+	"more-background": {
+		"name": "white",
+		"color": "more-background"
+	},
+	"invisible": {
+		"name": "white",
+		"color": "invisible"
+	},
+	"list-invisible": {
+		"name": "list",
+		"color": "clear"
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle": {
+	"default": {
+		"up": "button",
+		"down": "button-pressed",
+		"over": "button-over"
+	},
+	"colorwheel": {
+		"up": "button-colorwheel",
+		"down": "button-colorwheel-pressed",
+		"over": "button-colorwheel-over"
+	},
+	"delete": {
+		"up": "button-delete",
+		"down": "button-delete-pressed",
+		"over": "button-delete-over",
+		"disabled": "button-delete-disabled"
+	},
+	"duplicate": {
+		"up": "button-duplicate",
+		"down": "button-duplicate-pressed",
+		"over": "button-duplicate-over",
+		"disabled": "button-duplicate-disabled"
+	},
+	"new": {
+		"up": "button-new",
+		"down": "button-new-pressed",
+		"over": "button-new-over"
+	},
+	"close": {
+		"up": "button-close",
+		"down": "button-close-pressed",
+		"over": "button-close-over"
+	},
+	"settings": {
+		"up": "button-settings",
+		"down": "button-settings-pressed",
+		"over": "button-settings-over",
+		"disabled": "button-settings-disabled"
+	},
+	"settings-small": {
+		"up": "button-settings-small",
+		"down": "button-settings-small-pressed",
+		"over": "button-settings-small-over"
+	},
+	"spinner-minus-h": {
+		"up": "button-spinner-minus-h",
+		"down": "button-spinner-minus-h-pressed",
+		"over": "button-spinner-minus-h-over"
+	},
+	"spinner-plus-h": {
+		"up": "button-spinner-plus-h",
+		"down": "button-spinner-plus-h-pressed",
+		"over": "button-spinner-plus-h-over"
+	},
+	"spinner-minus-v": {
+		"up": "button-spinner-minus-v",
+		"down": "button-spinner-minus-v-pressed",
+		"over": "button-spinner-minus-v-over"
+	},
+	"spinner-plus-v": {
+		"up": "button-spinner-plus-v",
+		"down": "button-spinner-plus-v-pressed",
+		"over": "button-spinner-plus-v-over"
+	},
+	"swatches": {
+		"up": "button-swatches",
+		"down": "button-swatches-pressed",
+		"over": "button-swatches-over"
+	},
+	"switch": {
+		"up": "toggle-off",
+		"down": "toggle-off-pressed",
+		"over": "toggle-off-over",
+		"checked": "toggle-on",
+		"checkedOver": "toggle-on-over"
+	},
+	"minimize": {
+		"up": "button-minimize",
+		"down": "button-minimize-over copy",
+		"over": "button-minimize-over"
+	},
+	"maximize": {
+		"up": "button-maximize",
+		"down": "button-maximize-pressed",
+		"over": "button-maximize-over"
+	},
+	"restore": {
+		"up": "button-restore",
+		"down": "button-restore-pressed",
+		"over": "button-restore-over"
+	},
+	"color-base": {
+		"up": "button-color-base",
+		"down": "button-color-base-pressed",
+		"over": "button-color-base-over"
+	},
+	"delete-small": {
+		"up": "button-delete-small",
+		"down": "button-delete-small-pressed",
+		"over": "button-delete-small-over"
+	},
+	"color-base-static": {
+		"up": "button-color-base"
+	},
+	"tiles": {
+		"up": "button-tiles",
+		"down": "button-tiles-pressed",
+		"over": "button-tiles-over"
+	},
+	"download": {
+		"up": "button-download",
+		"down": "button-download-pressed",
+		"over": "button-download-over"
+	},
+	"spinner-minus-h-reversed": {
+		"up": "button-spinner-minus-h-reversed",
+		"down": "button-spinner-minus-h-pressed-reversed",
+		"over": "button-spinner-minus-h-over-reversed"
+	},
+	"spinner-plus-h-reversed": {
+		"up": "button-spinner-plus-h-reversed",
+		"down": "button-spinner-plus-h-pressed-reversed",
+		"over": "button-spinner-plus-h-over-reversed"
+	},
+	"spinner-minus-v-reversed": {
+		"up": "button-spinner-minus-v-reversed",
+		"down": "button-spinner-minus-v-pressed-reversed",
+		"over": "button-spinner-minus-v-over-reversed"
+	},
+	"spinner-plus-v-reversed": {
+		"up": "button-spinner-plus-v-reversed",
+		"down": "button-spinner-plus-v-pressed-reversed",
+		"over": "button-spinner-plus-v-over-reveresed"
+	},
+	"filter": {
+		"up": "button-filter",
+		"down": "button-filter-pressed",
+		"over": "button-filter-over"
+	},
+	"color-selector": {
+		"up": "white",
+		"down": "gray"
+	},
+	"move-frame-right": {
+		"up": "move-frame-right",
+		"down": "move-frame-right-pressed",
+		"over": "move-frame-right-over"
+	},
+	"move-frame-left": {
+		"up": "move-frame-left",
+		"down": "move-frame-left-pressed",
+		"over": "move-frame-left-over"
+	},
+	"remove-frame": {
+		"up": "remove-frame",
+		"down": "remove-frame-pressed",
+		"over": "remove-frame-over"
+	},
+	"add-frame": {
+		"up": "add-frame",
+		"down": "add-frame-pressed",
+		"over": "add-frame-over"
+	},
+	"toggle": {
+		"up": "button",
+		"down": "button-pressed",
+		"over": "button-over",
+		"checked": "button-pressed"
+	},
+	"check": {
+		"up": "checkbox-off-over",
+		"down": "checkbox-off-pressed",
+		"checked": "checkbox-on-over"
+	},
+	"duplicate-small": {
+		"up": "button-duplicate-small",
+		"down": "button-duplicate-pressed-small",
+		"over": "button-duplicate-over-small"
+	},
+	"scene-close": {
+		"up": "scene-button-close",
+		"down": "scene-button-close-pressed",
+		"over": "scene-button-close-over"
+	},
+	"scene-minimize": {
+		"up": "scene-button-minimize",
+		"down": "scene-button-minimize-pressed",
+		"over": "scene-button-minimize-over"
+	},
+	"scene-spinner-plus": {
+		"up": "scene-spinner-plus",
+		"down": "scene-spinner-plus-pressed",
+		"disabled": "scene-spinner-plus-disabled"
+	},
+	"scene-spinner-minus": {
+		"up": "scene-spinner-minus",
+		"down": "scene-spinner-minus-pressed",
+		"disabled": "scene-spinner-minus-disabled"
+	},
+	"scene-table": {
+		"up": "scene-table-unselected",
+		"checked": "scene-table-selected"
+	},
+	"scene-plus": {
+		"up": "scene-button-add",
+		"down": "scene-button-add-pressed",
+		"over": "scene-button-add-over"
+	},
+	"scene-minus": {
+		"up": "scene-button-minus",
+		"down": "scene-button-minus-pressed",
+		"over": "scene-button-minus-over"
+	},
+	"scene-med": {
+		"up": "scene-button-med",
+		"down": "scene-button-med-pressed",
+		"disabled": "scene-button-med-disabled"
+	},
+	"more": {
+		"up": "button-more",
+		"down": "button-more-pressed",
+		"over": "button-more-over"
+	},
+	"scene-link": {
+		"up": "scene-button-link",
+		"down": "scene-button-link-pressed",
+		"checked": "scene-button-link-over"
+	},
+	"scene-add-left": {
+		"up": "scene-button-add-left",
+		"down": "scene-button-add-left-pressed",
+		"over": "scene-button-add-left-over",
+		"disabled": "scene-button-add-left-disabled"
+	},
+	"scene-add-right": {
+		"up": "scene-button-add-right",
+		"down": "scene-button-add-right-pressed",
+		"over": "scene-button-add-right-over",
+		"disabled": "scene-button-add-right-disabled"
+	},
+	"scene-add-up": {
+		"up": "scene-button-add-up",
+		"down": "scene-button-add-up-pressed",
+		"over": "scene-button-add-up-over",
+		"disabled": "scene-button-add-up-disabled"
+	},
+	"scene-add-down": {
+		"up": "scene-button-add-down",
+		"down": "scene-button-add-down-pressed",
+		"over": "scene-button-add-down-over",
+		"disabled": "scene-button-add-down-disabled"
+	},
+	"scene-add-down-row": {
+		"up": "scene-button-add-row-down",
+		"down": "scene-button-add-row-down-pressed",
+		"over": "scene-button-add-row-down-over",
+		"disabled": "scene-button-add-row-down-disabled"
+	},
+	"scene-add-up-row": {
+		"up": "scene-button-add-row-up",
+		"down": "scene-button-add-row-up-pressed",
+		"over": "scene-button-add-row-up-over",
+		"disabled": "scene-button-add-row-up-disabled"
+	},
+	"scene-duplicate-left": {
+		"up": "scene-button-duplicate-left",
+		"down": "scene-button-duplicate-left-pressed",
+		"over": "scene-button-duplicate-left-over",
+		"disabled": "scene-button-duplicate-left-disabled"
+	},
+	"scene-duplicate-right": {
+		"up": "scene-button-duplicate-right",
+		"down": "scene-button-duplicate-right-pressed",
+		"over": "scene-button-duplicate-right-over",
+		"disabled": "scene-button-duplicate-right-disabled"
+	},
+	"scene-duplicate-down": {
+		"up": "scene-button-duplicate-down",
+		"down": "scene-button-duplicate-down-pressed",
+		"over": "scene-button-duplicate-down-over",
+		"disabled": "scene-button-duplicate-down-disabled"
+	},
+	"scene-duplicate-up": {
+		"up": "scene-button-duplicate-up",
+		"down": "scene-button-duplicate-up-pressed",
+		"over": "scene-button-duplicate-up-over",
+		"disabled": "scene-button-duplicate-up-disabled"
+	},
+	"scene-duplicate-down-row": {
+		"up": "scene-button-duplicate-down-row",
+		"down": "scene-button-duplicate-down-row-pressed",
+		"over": "scene-button-duplicate-down-row-over",
+		"disabled": "scene-button-duplicate-down-row-disabled"
+	},
+	"scene-duplicate-up-row": {
+		"up": "scene-button-duplicate-up-row",
+		"down": "scene-button-duplicate-up-row-pressed",
+		"over": "scene-button-duplicate-up-row-over",
+		"disabled": "scene-button-duplicate-up-row-disabled"
+	},
+	"scene-move-left": {
+		"up": "scene-button-move-left",
+		"down": "scene-button-move-left-pressed",
+		"over": "scene-button-move-left-over",
+		"disabled": "scene-button-move-left-disabled"
+	},
+	"scene-move-right": {
+		"up": "scene-button-move-right",
+		"down": "scene-button-move-right-pressed",
+		"over": "scene-button-move-right-over",
+		"disabled": "scene-button-move-right-disabled"
+	},
+	"scene-move-up": {
+		"up": "scene-button-move-up",
+		"down": "scene-button-move-up-pressed",
+		"over": "scene-button-move-up-over",
+		"disabled": "scene-button-move-up-disabled"
+	},
+	"scene-move-down": {
+		"up": "scene-button-move-down",
+		"down": "scene-button-move-down-pressed",
+		"over": "scene-button-move-down-over",
+		"disabled": "scene-button-move-down-disabled"
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle": {
+	"default": {
+		"checkboxOn": "checkbox-on",
+		"checkboxOff": "checkbox-off",
+		"checkboxOver": "checkbox-off-over",
+		"font": "font",
+		"fontColor": "button"
+	},
+	"switch": {
+		"checkboxOn": "toggle-on",
+		"checkboxOff": "toggle-off",
+		"checkboxOver": "toggle-off-over",
+		"font": "font",
+		"fontColor": "button"
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle": {
+	"default": {
+		"up": "button",
+		"down": "button-pressed",
+		"over": "button-over"
+	},
+	"font": {
+		"imageUp": "icon-text",
+		"imageOver": "icon-text-over",
+		"up": "button",
+		"down": "button-pressed",
+		"over": "button-over"
+	},
+	"color": {
+		"imageUp": "icon-colorwheel",
+		"imageOver": "icon-colorwheel-over",
+		"up": "button",
+		"down": "button-pressed",
+		"over": "button-over"
+	},
+	"drawable": {
+		"imageUp": "icon-portrait",
+		"imageOver": "icon-portrait-over",
+		"up": "button",
+		"down": "button-pressed",
+		"over": "button-over"
+	},
+	"thumb-neon": {
+		"imageUp": "thumb-neon",
+		"up": "welcome-frame",
+		"down": "welcome-frame-pressed",
+		"over": "welcome-frame-over"
+	},
+	"thumb-neutralizer": {
+		"imageUp": "thumb-neutralizer",
+		"up": "welcome-frame",
+		"down": "welcome-frame-pressed",
+		"over": "welcome-frame-over"
+	},
+	"thumb-plain-james": {
+		"imageUp": "thumb-plain-james",
+		"up": "welcome-frame",
+		"down": "welcome-frame-pressed",
+		"over": "welcome-frame-over"
+	},
+	"thumb-scene2d": {
+		"imageUp": "thumb-scene2d",
+		"up": "welcome-frame",
+		"down": "welcome-frame-pressed",
+		"over": "welcome-frame-over"
+	},
+	"thumb-video": {
+		"imageUp": "thumb-video",
+		"up": "welcome-frame",
+		"down": "welcome-frame-pressed",
+		"over": "welcome-frame-over"
+	},
+	"thumb-vis-ui": {
+		"imageUp": "thumb-vis-ui",
+		"up": "welcome-frame",
+		"down": "welcome-frame-pressed",
+		"over": "welcome-frame-over"
+	},
+	"color-bg": {
+		"imageUp": "icon-bg-color",
+		"imageOver": "icon-bg-color-over",
+		"up": "button",
+		"down": "button-pressed",
+		"over": "button-over"
+	},
+	"resize": {
+		"imageUp": "icon-resize",
+		"imageOver": "icon-resize-over",
+		"up": "button",
+		"down": "button-pressed",
+		"over": "button-over"
+	},
+	"grid-light": {
+		"imageUp": "icon-grid-light",
+		"up": "button",
+		"down": "button-pressed",
+		"over": "button-over",
+		"checked": "button-pressed"
+	},
+	"grid-dark": {
+		"imageUp": "icon-grid-dark",
+		"up": "button",
+		"down": "button-pressed",
+		"over": "button-over",
+		"checked": "button-pressed"
+	},
+	"style": {
+		"imageUp": "icon-style",
+		"imageOver": "icon-style-over",
+		"up": "button",
+		"down": "button-pressed",
+		"over": "button-over"
+	},
+	"scene-color": {
+		"imageUp": "scene-color-button",
+		"up": "scene-button-small",
+		"down": "scene-button-small-pressed"
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle": {
+	"default": {
+		"font": "font",
+		"fontColor": "white",
+		"up": "button",
+		"down": "button-pressed",
+		"over": "button-over"
+	},
+	"checkbox": {
+		"imageUp": "checkbox-off",
+		"imageDown": "checkbox-on-pressed",
+		"imageOver": "checkbox-off-over",
+		"imageChecked": "checkbox-on",
+		"imageCheckedOver": "checkbox-on-over",
+		"font": "font",
+		"fontColor": "button"
+	},
+	"switch": {
+		"imageUp": "toggle-off",
+		"imageDown": "toggle-on-pressed",
+		"imageOver": "toggle-off-over",
+		"imageChecked": "toggle-on",
+		"imageCheckedOver": "toggle-on-over",
+		"font": "font",
+		"fontColor": "button"
+	},
+	"scene-checkbox": {
+		"imageUp": "scene-checkbox-unchecked",
+		"imageDown": "scene-checkbox-checked",
+		"imageChecked": "scene-checkbox-checked",
+		"font": "font",
+		"pressedOffsetY": -1
+	},
+	"scene-checkbox-colored": {
+		"imageUp": "scene-checkbox-unchecked",
+		"imageDown": "scene-checkbox-checked",
+		"imageChecked": "scene-checkbox-checked",
+		"font": "font",
+		"fontColor": "scene-color",
+		"pressedOffsetY": -1
+	},
+	"colorwheel": {
+		"imageUp": "button-colorwheel",
+		"imageDown": "button-colorwheel-pressed",
+		"imageOver": "button-colorwheel-over",
+		"font": "font",
+		"fontColor": "button",
+		"overFontColor": "pressed"
+	},
+	"swatches": {
+		"imageUp": "button-swatches",
+		"imageDown": "button-swatches-pressed",
+		"imageOver": "button-swatches-over",
+		"font": "font",
+		"fontColor": "button",
+		"overFontColor": "pressed"
+	},
+	"tiles": {
+		"imageUp": "button-tiles",
+		"imageDown": "button-tiles-pressed",
+		"imageOver": "button-tiles-over",
+		"font": "font",
+		"fontColor": "button",
+		"overFontColor": "pressed"
+	},
+	"tenpatch": {
+		"imageUp": "button-tenpatch",
+		"imageDown": "button-tenpatch-pressed",
+		"imageOver": "button-tenpatch-over",
+		"font": "font",
+		"fontColor": "button",
+		"overFontColor": "pressed"
+	},
+	"settings-small": {
+		"imageUp": "button-settings-small",
+		"imageDown": "button-settings-small-pressed",
+		"imageOver": "button-settings-small-over",
+		"font": "font",
+		"fontColor": "button",
+		"overFontColor": "pressed"
+	},
+	"duplicate-small": {
+		"imageUp": "button-duplicate-small",
+		"imageDown": "button-duplicate-pressed-small",
+		"imageOver": "button-duplicate-over-small",
+		"font": "font",
+		"fontColor": "button",
+		"overFontColor": "pressed"
+	},
+	"delete-small": {
+		"imageUp": "button-delete-small",
+		"imageDown": "button-delete-small-pressed",
+		"imageOver": "button-delete-small-over",
+		"font": "font",
+		"fontColor": "button",
+		"overFontColor": "pressed"
+	},
+	"visible": {
+		"imageUp": "button-visible",
+		"imageDown": "button-visible-pressed_1",
+		"imageOver": "button-visible-over",
+		"imageChecked": "button-visible-checked",
+		"imageCheckedOver": "button-visible-over_1",
+		"font": "font",
+		"fontColor": "button",
+		"overFontColor": "pressed"
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
+	"default": {
+		"font": "font",
+		"fontColor": "button"
+	},
+	"title": {
+		"font": "title",
+		"fontColor": "button",
+		"background": "class-bar"
+	},
+	"white": {
+		"font": "font",
+		"fontColor": "white"
+	},
+	"title-white": {
+		"font": "title",
+		"fontColor": "white"
+	},
+	"required": {
+		"font": "font",
+		"fontColor": "required"
+	},
+	"disabled": {
+		"font": "font",
+		"fontColor": "disabled"
+	},
+	"title-no-line": {
+		"font": "title",
+		"fontColor": "button"
+	},
+	"black": {
+		"font": "font",
+		"fontColor": "black"
+	},
+	"black-underline": {
+		"font": "font",
+		"fontColor": "black",
+		"background": "class-bar-black"
+	},
+	"filter": {
+		"font": "font",
+		"fontColor": "pressed",
+		"background": "textfield"
+	},
+	"scene-label": {
+		"font": "font",
+		"fontColor": "white"
+	},
+	"scene-label-colored": {
+		"font": "font",
+		"fontColor": "scene-color"
+	},
+	"scene-title": {
+		"font": "font",
+		"fontColor": "white"
+	},
+	"scene-title-colored": {
+		"font": "font",
+		"fontColor": "scene-color"
+	},
+	"scene-button": {
+		"font": "font",
+		"fontColor": "white"
+	},
+	"scene-button-colored": {
+		"font": "font",
+		"fontColor": "scene-color"
+	},
+	"scene-edit-tip": {
+		"font": "font",
+		"fontColor": "white",
+		"background": "scene-list-selection"
+	},
+	"scene-title-bg": {
+		"font": "font",
+		"fontColor": "white",
+		"background": "scene-menu-button-over"
+	},
+	"field": {
+		"font": "font",
+		"fontColor": "pressed",
+		"background": "textfield"
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle": {
+	"default": {
+		"font": "font",
+		"fontColorSelected": "white",
+		"fontColorUnselected": "white",
+		"selection": "pressed",
+		"background": "list"
+	},
+	"scene": {
+		"font": "font",
+		"fontColorSelected": "white",
+		"fontColorUnselected": "white",
+		"selection": "scene-list-selection"
+	},
+	"scene-dark": {
+		"font": "font",
+		"fontColorSelected": "white",
+		"fontColorUnselected": "scene-color",
+		"selection": "scene-list-selection-dark"
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle": {
+	"default": {
+		"hScroll": "scrollpane",
+		"hScrollKnob": "scrollpane-knob",
+		"vScroll": "scrollpane",
+		"vScrollKnob": "scrollpane-knob"
+	},
+	"scene": {
+		"hScrollKnob": "scene-scroll-horizontal",
+		"vScrollKnob": "scene-scroll-vertical"
+	},
+	"scene-selectbox": {
+		"background": "scene-list",
+		"hScrollKnob": "scene-scroll-list-horizontal",
+		"vScrollKnob": "scene-scroll-list-vertical"
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle": {
+	"default": {
+		"font": "font",
+		"fontColor": "button",
+		"background": "selectbox",
+		"scrollStyle": "default",
+		"listStyle": "default",
+		"backgroundOver": "selectbox-over",
+		"backgroundOpen": "selectbox-pressed",
+		"backgroundDisabled": "selectbox-disabled"
+	},
+	"scene": {
+		"font": "font",
+		"fontColor": "white",
+		"background": "scene-select-box",
+		"scrollStyle": "scene-selectbox",
+		"listStyle": "scene",
+		"backgroundOpen": "scene-select-box-pressed"
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle": {
+	"default-horizontal": {
+		"knobOver": "slider-knob-over",
+		"knobDown": "slider-knob-pressed",
+		"background": "slider-horizontal",
+		"knob": "slider-knob"
+	},
+	"default-vertical": {
+		"knobOver": "slider-knob-over",
+		"knobDown": "slider-knob-pressed",
+		"background": "slider-vertical",
+		"knob": "slider-knob"
+	},
+	"zoom-horizontal": {
+		"knobOver": "slider-zoom-handle-over",
+		"knobDown": "slider-zoom-handle-pressed",
+		"background": "slider-zoom",
+		"knob": "slider-zoom-handle"
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
+	"default": {
+		"font": "font",
+		"fontColor": "white",
+		"disabledFontColor": "disabled",
+		"up": "button",
+		"down": "button-pressed",
+		"over": "button-over",
+		"disabled": "button"
+	},
+	"new": {
+		"font": "font",
+		"fontColor": "white",
+		"up": "button-plus",
+		"down": "button-plus-pressed",
+		"over": "button-plus-over"
+	},
+	"file": {
+		"font": "font",
+		"up": "button-file",
+		"down": "button-file-pressed",
+		"over": "button-file-over",
+		"checked": "button-file-pressed"
+	},
+	"link": {
+		"font": "font",
+		"fontColor": "link",
+		"downFontColor": "link-pressed",
+		"up": "link-empty",
+		"down": "link-p",
+		"over": "link-c"
+	},
+	"menu-button": {
+		"font": "font",
+		"disabledFontColor": "disabled",
+		"up": "button-menu",
+		"down": "button-menu-pressed",
+		"over": "button-menu-over",
+		"disabled": "button-menu"
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle": {
+	"default": {
+		"font": "font",
+		"fontColor": "pressed",
+		"background": "textfield",
+		"focusedBackground": "textfield-pressed",
+		"cursor": "black",
+		"selection": "button-color"
+	},
+	"spinner": {
+		"font": "font",
+		"fontColor": "pressed",
+		"background": "textfield-spinner",
+		"focusedBackground": "textfield-spinner-pressed",
+		"cursor": "black",
+		"selection": "button-color"
+	},
+	"free-type-preview": {
+		"font": "font",
+		"fontColor": "white",
+		"background": "clear",
+		"cursor": "black",
+		"selection": "button-color"
+	},
+	"scene": {
+		"font": "font",
+		"fontColor": "scene-color",
+		"disabledFontColor": "scene-disabled",
+		"background": "scene-textfield",
+		"disabledBackground": "scene-textfield-disabled",
+		"cursor": "scene-textfield-cursor",
+		"selection": "scene-bg"
+	},
+	"scene-spinner": {
+		"font": "font",
+		"fontColor": "scene-color",
+		"background": "scene-spinner-textfield",
+		"disabledBackground": "scene-spinner-textfield-disabled",
+		"cursor": "scene-textfield-cursor",
+		"selection": "scene-bg"
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle": {
+	"default": {
+		"label": "white",
+		"background": "button-file-pressed"
+	},
+	"scene": {
+		"label": "scene-label",
+		"background": "scene-tooltip",
+		"wrapWidth": 250
+	}
+},
+"com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle": {
+	"default": {
+		"background": "window",
+		"titleFont": "font",
+		"titleFontColor": "white"
+	},
+	"dialog": {
+		"background": "window2",
+		"titleFont": "font",
+		"titleFontColor": "white",
+		"stageBackground": "stage-background"
+	},
+	"main": {
+		"background": "window-main",
+		"titleFont": "font",
+		"titleFontColor": "white"
+	},
+	"bg": {
+		"background": "window",
+		"titleFont": "font",
+		"titleFontColor": "white",
+		"stageBackground": "stage-background"
+	},
+	"welcome": {
+		"background": "window2",
+		"titleFont": "font",
+		"titleFontColor": "white",
+		"stageBackground": "stage-background"
+	},
+	"scene": {
+		"background": "scene-bg",
+		"titleFont": "font"
+	},
+	"scene-dialog": {
+		"background": "scene-dialog",
+		"titleFont": "font",
+		"stageBackground": "scene-dialog-bg"
+	},
+	"sc-window": {
+		"background": "sc-dialog-window",
+		"titleFont": "font",
+		"titleFontColor": "white",
+		"stageBackground": "scene-dialog-bg"
+	}
+}
+
+
+}
