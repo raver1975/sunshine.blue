@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.klemstinegroup.sunshineblue.SunshineBlue;
+import com.klemstinegroup.sunshineblue.engine.Statics;
 import com.klemstinegroup.sunshineblue.engine.objects.BaseObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ImageObject;
 import com.klemstinegroup.sunshineblue.engine.objects.ScreenObject;
@@ -73,13 +74,18 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
                                 @Override
                                 public void handleHttpResponse(Net.HttpResponse httpResponse) {
                                     String result = httpResponse.getResultAsString();
-                                    JsonReader reader = new JsonReader();
-                                    JsonValue resultJSON = reader.parse(result);
-                                    JsonValue generations = resultJSON.get("generations");
-                                    String imgData = generations.get(0).getString("img");
-                                    if (generations != null && imgData != null) {
-                                        Gdx.app.log("stable diffusion response", imgData.replaceAll("(.{80})", "$1\n"));
-                                        ImageObject.load("data:image/png;base64," + imgData);
+                                    Gdx.app.log("stable diffusion response:", result);
+                                    try {
+                                        JsonReader reader = new JsonReader();
+                                        JsonValue resultJSON = reader.parse(result);
+                                        JsonValue generations = resultJSON.get("generations");
+                                        String imgData = generations.get(0).getString("img");
+                                        if (generations != null && imgData != null) {
+//                                        Gdx.app.log("stable diffusion response", imgData.replaceAll("(.{80})", "$1\n"));
+                                            ImageObject.load("data:image/png;base64," + imgData);
+                                        }
+                                    } catch (Exception e) {
+                                        Statics.exceptionLog("stableai",e);
                                     }
 
                                 }
