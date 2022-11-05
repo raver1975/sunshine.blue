@@ -383,7 +383,7 @@ public class BasicUIOverlay extends ScreenObject implements Overlay, Touchable, 
                         if (Gdx.app.getType() == Application.ApplicationType.Desktop) {
                             Gdx.net.openURI("http://localhost:8080/?" + cid);
                         } else {
-                            Gdx.net.openURI("https://raver1975.github.io/?" + cid);
+                            Gdx.net.openURI("https://sunshineblue.onrender.com/?" + cid);
                         }
                     }
 
