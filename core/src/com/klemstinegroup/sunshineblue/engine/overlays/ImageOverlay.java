@@ -54,8 +54,8 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
                             Net.HttpRequest request = new Net.HttpRequest();
                             request.setHeader("apikey", "0000000000");
                             request.setHeader("Content-Type", "application/json");
-                            int width=1024;
-                            int height=1024;
+                            int width=512;
+                            int height=512;
                             request.setContent("{\"prompt\":\""
                                     + text
                                     + "\", \"params\":{\"n\":1, \"width\": "+width+", \"height\": "+height+"}}");
@@ -73,7 +73,7 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
                                     String imgData = generations.get(0).getString("img");
                                     if (generations!=null&& imgData!=null) {
                                         Gdx.app.log("stable diffusion response",imgData.replaceAll("(.{80})", "$1\n"));
-                                        ImageObject.load("data:,"+imgData);
+                                        ImageObject.load("data:image/png;base64,"+imgData);
                                     }
 
                                 }

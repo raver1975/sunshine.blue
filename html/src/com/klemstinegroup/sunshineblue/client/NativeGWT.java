@@ -85,7 +85,7 @@ public class NativeGWT implements NativeInterface {
     @Override
     public void uploadIPFS(byte[] data, IPFSCIDListener listener) {
         //pin through ipfs gateway, otherwise gets lost because web ipfs nodes do not persist.
-        IPFSUtils.uploadFile(data,null);
+        //IPFSUtils.uploadFile(data,null);
 
         int j = MathUtils.random.nextInt();
         this.uploadListener.put(j, listener);
