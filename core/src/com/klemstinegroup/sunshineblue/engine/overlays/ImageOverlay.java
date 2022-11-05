@@ -96,10 +96,11 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
                             });
 
                         } else {
+                            ta.setText(null);
                             ImageObject.load(text);
                         }
                     }
-                    ta.setText(null);
+
                     Overlay.backOverlay();
                 }
             }
