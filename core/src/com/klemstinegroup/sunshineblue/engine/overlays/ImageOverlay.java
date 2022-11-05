@@ -51,14 +51,20 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
                     if (!text.isEmpty()) {
                         if (text.startsWith("*")) {
                             text = text.substring(1);
+                            int width = 256;
+                            int height = 256;
+                            String[] split = text.split(":");
+                            if (split.length == 3) {
+                                width = Integer.parseInt(split[0]);
+                                height = Integer.parseInt(split[1]);
+                                text = split[3];
+                            }
                             Net.HttpRequest request = new Net.HttpRequest();
                             request.setHeader("apikey", "0000000000");
                             request.setHeader("Content-Type", "application/json");
-                            int width=1024;
-                            int height=1024;
                             request.setContent("{\"prompt\":\""
                                     + text
-                                    + "\", \"params\":{\"n\":1, \"width\": "+width+", \"height\": "+height+"}}");
+                                    + "\", \"params\":{\"n\":1, \"width\": " + width + ", \"height\": " + height + "}}");
                             request.setUrl("https://stablehorde.net/api/v2/generate/sync");
                             request.setTimeOut(0);
                             request.setMethod("POST");
@@ -66,14 +72,14 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
                             Gdx.net.sendHttpRequest(request, new Net.HttpResponseListener() {
                                 @Override
                                 public void handleHttpResponse(Net.HttpResponse httpResponse) {
-                                    String result=httpResponse.getResultAsString();
+                                    String result = httpResponse.getResultAsString();
                                     JsonReader reader = new JsonReader();
                                     JsonValue resultJSON = reader.parse(result);
                                     JsonValue generations = resultJSON.get("generations");
                                     String imgData = generations.get(0).getString("img");
-                                    if (generations!=null&& imgData!=null) {
-                                        Gdx.app.log("stable diffusion response",imgData.replaceAll("(.{80})", "$1\n"));
-                                        ImageObject.load("data:image/png;base64,"+imgData);
+                                    if (generations != null && imgData != null) {
+                                        Gdx.app.log("stable diffusion response", imgData.replaceAll("(.{80})", "$1\n"));
+                                        ImageObject.load("data:image/png;base64," + imgData);
                                     }
 
                                 }
@@ -114,10 +120,14 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
         ta = new TextArea(null, skin, "default");
 
 
-        Label tfield = new Label("JPG,PNG,GIF,IPFS,DATA url,*stable diffusion prompt", skin);
-        tfield.setPosition(250, SunshineBlue.instance.overlayViewport.getWorldHeight() - 150);
-        tfield.setWidth(270);
-        stage.addActor(tfield);
+        Label tfield1 = new Label("JPG,PNG,GIF,IPFS,DATA url", skin);
+        tfield1.setPosition(250, SunshineBlue.instance.overlayViewport.getWorldHeight() - 150);
+        tfield1.setWidth(270);
+        Label tfield2 = new Label("AI> *prompt or *width:height:prompt", skin);
+        tfield2.setPosition(250, SunshineBlue.instance.overlayViewport.getWorldHeight() - 170);
+        tfield2.setWidth(270);
+        stage.addActor(tfield1);
+        stage.addActor(tfield2);
 
 
         ta.addListener(new ActorGestureListener() {
@@ -197,7 +207,7 @@ public class ImageOverlay extends ScreenObject implements Overlay, Touchable, Dr
     }
 
     @Override
-    public void draw(Batch batch, float delta,boolean bounds) {
+    public void draw(Batch batch, float delta, boolean bounds) {
         stage.act();
         stage.draw();
     }
