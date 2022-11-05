@@ -8,7 +8,7 @@ public class Statics {
     public static final long AUTOLOADTIME = 10000;
     public static final int RECMAXFRAMESMAX = 600;
     public static int recframes = 30;
-    public static String IPFSGateway = "https://via0.com/ipfs/";
+    public static String IPFSGateway = "https://cf-ipfs.com/ipfs/";
     public static final String CORSGateway="https://api.codetabs.com/v1/proxy?quest=";
 //    public static String IPFSMediaViewerGIF="QmPorramQapKitUg6c7qiYwSRT4PmDiPa1VqQzAyUhQTHi";
 //    public static String IPFSMediaViewerPNG="QmdFcxAZnhY9KjJWnYTdpxpk2bjUKQEMCcuBavEfs3zXC5";
