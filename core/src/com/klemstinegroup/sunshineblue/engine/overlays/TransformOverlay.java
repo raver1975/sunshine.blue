@@ -21,8 +21,6 @@ import com.klemstinegroup.sunshineblue.engine.commands.VisibleCommand;
 import com.klemstinegroup.sunshineblue.engine.objects.*;
 import com.klemstinegroup.sunshineblue.engine.util.ColorUtil;
 import com.klemstinegroup.sunshineblue.engine.util.SerializeUtil;
-import sun.security.provider.Sun;
-
 
 public class TransformOverlay extends BaseObject implements Overlay, Touchable, Drawable, Gestureable {
 
